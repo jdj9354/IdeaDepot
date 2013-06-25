@@ -1,0 +1,4 @@
+thinkmine
+=========
+
+Idea creation tool.
