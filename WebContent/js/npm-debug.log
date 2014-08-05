@@ -1,0 +1,522 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'D:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'D:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'java' ]
+2 info using npm@1.3.24
+3 info using node@v0.10.25
+4 verbose node symlink D:\Program Files\nodejs\\node.exe
+5 verbose cache add [ 'java', null ]
+6 verbose cache add name=undefined spec="java" args=["java",null]
+7 verbose parsed url { protocol: null,
+7 verbose parsed url   slashes: null,
+7 verbose parsed url   auth: null,
+7 verbose parsed url   host: null,
+7 verbose parsed url   port: null,
+7 verbose parsed url   hostname: null,
+7 verbose parsed url   hash: null,
+7 verbose parsed url   search: null,
+7 verbose parsed url   query: null,
+7 verbose parsed url   pathname: 'java',
+7 verbose parsed url   path: 'java',
+7 verbose parsed url   href: 'java' }
+8 silly lockFile 23524be9-java java
+9 verbose lock java E:\Users\Jang\AppData\Roaming\npm-cache\23524be9-java.lock
+10 silly lockFile 23524be9-java java
+11 silly lockFile 23524be9-java java
+12 verbose addNamed [ 'java', '' ]
+13 verbose addNamed [ null, '*' ]
+14 silly lockFile 0f6a664b-java java@
+15 verbose lock java@ E:\Users\Jang\AppData\Roaming\npm-cache\0f6a664b-java.lock
+16 silly addNameRange { name: 'java', range: '*', hasData: false }
+17 verbose url raw java
+18 verbose url resolving [ 'https://registry.npmjs.org/', './java' ]
+19 verbose url resolved https://registry.npmjs.org/java
+20 info trying registry request attempt 1 at 23:55:09
+21 verbose etag "E4E22H2YPOPQ41MVOB2B25EV1"
+22 http GET https://registry.npmjs.org/java
+23 http 304 https://registry.npmjs.org/java
+24 silly registry.get cb [ 304,
+24 silly registry.get   { date: 'Thu, 15 May 2014 14:55:13 GMT',
+24 silly registry.get     server: 'Apache',
+24 silly registry.get     via: '1.1 varnish',
+24 silly registry.get     'last-modified': 'Thu, 15 May 2014 14:55:13 GMT',
+24 silly registry.get     'cache-control': 'max-age=1',
+24 silly registry.get     etag: '"E4E22H2YPOPQ41MVOB2B25EV1"',
+24 silly registry.get     'x-served-by': 'cache-ty68-TYO',
+24 silly registry.get     'x-cache': 'MISS',
+24 silly registry.get     'x-cache-hits': '0',
+24 silly registry.get     'x-timer': 'S1400165713.371098280,VS0,VE196',
+24 silly registry.get     vary: 'Accept',
+24 silly registry.get     'content-length': '0',
+24 silly registry.get     'keep-alive': 'timeout=10, max=50',
+24 silly registry.get     connection: 'Keep-Alive' } ]
+25 verbose etag java from cache
+26 silly addNameRange number 2 { name: 'java', range: '*', hasData: true }
+27 silly addNameRange versions [ 'java',
+27 silly addNameRange   [ '0.0.1',
+27 silly addNameRange     '0.0.2',
+27 silly addNameRange     '0.0.3',
+27 silly addNameRange     '0.0.4',
+27 silly addNameRange     '0.0.5',
+27 silly addNameRange     '0.0.6',
+27 silly addNameRange     '0.1.0',
+27 silly addNameRange     '0.1.1',
+27 silly addNameRange     '0.1.2',
+27 silly addNameRange     '0.1.3',
+27 silly addNameRange     '0.2.0',
+27 silly addNameRange     '0.2.1',
+27 silly addNameRange     '0.2.2',
+27 silly addNameRange     '0.2.3',
+27 silly addNameRange     '0.2.4',
+27 silly addNameRange     '0.2.5',
+27 silly addNameRange     '0.2.6',
+27 silly addNameRange     '0.2.7',
+27 silly addNameRange     '0.2.8',
+27 silly addNameRange     '0.2.9',
+27 silly addNameRange     '0.3.0',
+27 silly addNameRange     '0.3.1',
+27 silly addNameRange     '0.3.2' ] ]
+28 verbose addNamed [ 'java', '0.3.2' ]
+29 verbose addNamed [ '0.3.2', '0.3.2' ]
+30 silly lockFile 71b46b0a-java-0-3-2 java@0.3.2
+31 verbose lock java@0.3.2 E:\Users\Jang\AppData\Roaming\npm-cache\71b46b0a-java-0-3-2.lock
+32 silly lockFile 71b46b0a-java-0-3-2 java@0.3.2
+33 silly lockFile 71b46b0a-java-0-3-2 java@0.3.2
+34 silly lockFile 0f6a664b-java java@
+35 silly lockFile 0f6a664b-java java@
+36 silly resolved [ { name: 'java',
+36 silly resolved     description: 'Bridge API to connect with existing Java APIs.',
+36 silly resolved     author: { name: 'Joe Ferner', email: 'joe@fernsroth.com' },
+36 silly resolved     keywords: [ 'java', 'jvm', 'bridge' ],
+36 silly resolved     version: '0.3.2',
+36 silly resolved     engines: { node: '>=0.6.0' },
+36 silly resolved     maintainers: [ [Object] ],
+36 silly resolved     bugs: { url: 'https://github.com/joeferner/node-java/issues' },
+36 silly resolved     license: 'MIT',
+36 silly resolved     repository:
+36 silly resolved      { type: 'git',
+36 silly resolved        url: 'https://github.com/joeferner/node-java.git' },
+36 silly resolved     dependencies: { 'find-java-home': '0.0.7' },
+36 silly resolved     devDependencies: { nodeunit: '~0.6.4', memwatch: '~0.2.0', async: '~0.1.22' },
+36 silly resolved     scripts: { test: 'nodeunit test', install: 'node-gyp rebuild' },
+36 silly resolved     main: './index.js',
+36 silly resolved     gypfile: true,
+36 silly resolved     readme: '# java\n\nBridge API to connect with existing Java APIs.\n\n[Google Groups Discussion Forum](https://groups.google.com/forum/#!forum/node-java)\n\n## Installation Linux\n\n```bash\n$ export JAVA_HOME=/usr/local/share/jdk1.6.0_30\n$ npm install java\n```\n\nNotes:\n* node-gyp requires python 2.x not python 3.x. See https://github.com/TooTallNate/node-gyp/issues/155 for more details.\n* If you see an error such as "No rule to make target \'/opt/jdk1.7.0_09/jre/lib/amd64/server/libjvm.so\', needed by \'build/depsVerified\'.  Stop."\n      this means that your JAVA_HOME is not set correctly and you need to verify the location of libjvm.so or jvm.lib.\n* If you see an error such as "Call to \'node findJavaHome.js\' returned exit status 1"\n      Try running `node findJavaHome.js` in the node-java directory to see the full failure message.\n* If you are having problems finding \'jni.h\'. Make sure you have the JDK installed not just the JRE. If you are using\n      OpenJDK you want the openjdk-7-jdk package, not openjdk-7-jre.\n\n## Installation Windows\n\n```bash\n$ set JAVA_HOME=C:\\Program Files (x86)\\Java\\jdk1.6.0_18\\\n$ npm install java\n```\n\nNotes:\n* If you see an error such as "Error: The specified module could not be found. \n      xxxxxx\\node_modules\\java\\build\\Release\\nodejavabridge_bindings.node".\n      Ensure the directory where jvm.dll exists is in your PATH. (e.g. C:\\Program Files (x86)\\Java\\jdk1.6.0_18\\jre\\bin\\client).\n      This path cannot have quotes.\n* node-gyp requires python 2.x not python 3.x. See https://github.com/TooTallNate/node-gyp/issues/155 for more details.\n* For 64 bit installs with 32 bit node\n * you need the 32 bit JDK, with the 64 bit JDK you will see LNK2001   \n   errormessages (http://stackoverflow.com/questions/10309304/what-library-to-link-to-on-windows-7-for-jni-createjavavm).\n * when using the windows SDK 7.1 command prompt (64 bits) be sure to setenv.cmd /Release /x86\n* If you see an error such as "Call to \'node findJavaHome.js\' returned exit status 1"\n      Try running `node findJavaHome.js` in the node-java directory to see the full failure message.\n* If you are having problems finding \'jni.h\'. Make sure you have the JDK installed not just the JRE. If you are using\n      OpenJDK you want the openjdk-7-jdk package, not openjdk-7-jre.\n\n## Installation Mac\n\n```bash\n$ npm install java\n```\n\n_Mavericks Users: If you are having problems finding \'jni.h\' please see [Issue #86](https://github.com/nearinfinity/node-java/issues/86)_\n\n## Installation ARM (Raspberry Pi)\n\n```bash\nGYP_DEFINES="armv7=0" CCFLAGS=\'-march=armv6\' CXXFLAGS=\'-march=armv6\' npm install java\n```\n\n## Manual compile (Using node-gyp)\n\n```bash\n./compile-java-code.sh\nnode-gyp configure build\nnpm test\n```\n\n_NOTE: You will need node-gyp installed using "npm install -g node-gyp"_\n\n## Quick Examples\n\n```javascript\nvar java = require("java");\njava.classpath.push("commons-lang3-3.1.jar");\njava.classpath.push("commons-io.jar");\n\nvar list = java.newInstanceSync("java.util.ArrayList");\n\njava.newInstance("java.util.ArrayList", function(err, list) {\n  list.addSync("item1");\n  list.addSync("item2");\n});\n\nvar ArrayList = java.import(\'java.util.ArrayList\');\nvar list = new ArrayList();\nlist.addSync(\'item1\');\n```\n\n### Create a char array\n\n```javascript\nvar charArray = java.newArray("char", "hello world\\n".split(\'\'));\n```\n\n### Create a byte array\n\n```javascript\nvar byteArray = java.newArray(\n  "byte",\n  "hello world\\n"\n    .split(\'\')\n    .map(function(c) { return java.newByte(str.charCodeAt(c)); });\n```\n\n### Using java.lang.Long and long\n\nJavaScript only supports 32-bit integers. Because of this java longs must be treated specially.\nWhen getting a long result the value may be truncated. If you need the original value there is\na property off of the result called "longValue" which contains the un-truncated value as a string.\nIf you are calling a method that takes a long you must create it using [java.newInstance](#javaNewInstance).\n\n```javascript\nvar javaLong = java.newInstanceSync("java.lang.Long", 5);\nconsole.log(\'Possibly truncated long value: \' + javaLong);\nconsole.log(\'Original long value (as a string): \' + javaLong.longValue);\njava.callStaticMethodSync("Test", "staticMethodThatTakesALong", javaLong);\n```\n\n### Exceptions\n\nExceptions from calling methods either caught using JavaScript try/catch block or passed\nto a callback as the first parameter may have a property named "cause" which has a reference\nto the Java Exception object which caused the error.\n\n```javascript\ntry {\n  java.methodThatThrowsExceptionSync();\n} catch(ex) {\n  console.log(ex.cause.getMessageSync());\n}\n```\n\n# Release Notes\n\n### v0.2.0\n\n* java.lang.Long and long primitives are handled better. See\n  \\([Issue #37](https://github.com/nearinfinity/node-java/issues/37)\\) and\n  \\([Issue #40](https://github.com/nearinfinity/node-java/issues/40)\\).\n\n# Index\n\n## java\n * [classpath](#javaClasspath)\n * [options](#javaOptions)\n * [import](#javaImport)\n * [newInstance](#javaNewInstance)\n * [instanceOf](#javaInstanceOf)\n * [callStaticMethod](#javaCallStaticMethod)\n * [getStaticFieldValue](#javaGetStaticFieldValue)\n * [setStaticFieldValue](#javaSetStaticFieldValue)\n * [newArray](#javaNewArray)\n * [newByte](#javaNewByte)\n * [newShort](#javaNewShort)\n * [newLong](#javaNewLong)\n * [newChar](#javaNewChar)\n * [newDouble](#javaNewDouble)\n * [newFloat](#javaNewFloat)\n * [newProxy](#javaNewProxy)\n\n## java objects\n * [Call Method](#javaObjectCallMethod)\n * [Get/Set Field](#javaObjectGetSetField)\n\n# API Documentation\n\n<a name="java"/>\n## java\n\n<a name="javaClasspath" />\n**java.classpath**\n\nArray of paths or jars to pass to the creation of the JVM.\n\nAll items must be added to the classpath before calling any other node-java methods.\n\n__Example__\n\n    java.classpath.push(\'commons.io.jar\');\n\n<a name="javaOptions" />\n**java.options**\n\nArray of options to pass to the creation of the JVM.\n\nAll items must be added to the options before calling any other node-java methods.\n\n__Example__\n\n    java.options.push(\'-Djava.awt.headless=true\');\n    java.options.push(\'-Xmx1024m\');\n\n<a name="javaImport" />\n**java.import(className)**\n\nLoads the class given by className such that it acts and feels like a javascript object.\n\n__Arguments__\n\n * className - The name of the class to create. For subclasses seperate using a \'$\' (eg. com.nearinfinty.MyClass$SubClass)\n\n__Example__\n\n    var Test = java.import(\'Test\');\n    Test.someStaticMethodSync(5);\n    console.log(Test.someStaticField);\n\n    var test = new Test();\n    list.instanceMethodSync(\'item1\');\n\n<a name="javaNewInstance" />\n**java.newInstance(className, [args...], callback)**\n\n**java.newInstanceSync(className, [args...]) : result**\n\nCreates an instance of the specified class. If you are using the sync method an exception will be throw if an error occures,\notherwise it will be the first argument in the callback.\n\n__Arguments__\n\n * className - The name of the class to create. For subclasses seperate using a \'$\' (eg. com.nearinfinty.MyClass$SubClass)\n * callback(err, item) - Callback to be called when the class is created.\n\n__Example__\n\n    var list = java.newInstanceSync("java.util.ArrayList");\n\n    java.newInstance("java.util.ArrayList", function(err, list) {\n      if(err) { console.error(err); return; }\n      // new list\n    });\n\n<a name="javaInstanceOf" />\n**java.instanceOf(javaObject, className)**\n\nDetermines of a javaObject is an instance of a class.\n\n__Arguments__\n\n * javaObject - Instance of a java object returned from a method or from newInstance.\n * className - A string class name.\n\n__Example__\n\n    var obj = java.newInstanceSync("my.package.SubClass");\n\n    if(java.instanceOf(obj, "my.package.SuperClass")) {\n      console.log("obj is an instance of SuperClass");\n    }\n\n<a name="javaCallStaticMethod" />\n**java.callStaticMethod(className, methodName, [args...], callback)**\n\n**java.callStaticMethodSync(className, methodName, [args...]) : result**\n\nCalls a static method on the specified class. If you are using the sync method an exception will be throw if an error occures,\notherwise it will be the first argument in the callback.\n\n__Arguments__\n\n * className - The name of the class to call the method on. For subclasses seperate using a \'$\' (eg. com.nearinfinty.MyClass$SubClass)\n * methodName - The name of the method to call.\n * callback(err, item) - Callback to be called when the class is created.\n\n__Example__\n\n    var result = java.callStaticMethodSync("com.nearinfinty.MyClass", "doSomething", 42, "test");\n\n    java.callStaticMethod("com.nearinfinty.MyClass", "doSomething", 42, "test", function(err, results) {\n      if(err) { console.error(err); return; }\n      // results from doSomething\n    });\n\n<a name="javaGetStaticFieldValue" />\n**java.getStaticFieldValue(className, fieldName)**\n\nGets a static field value from the specified class.\n\n__Arguments__\n\n * className - The name of the class to get the value from. For subclasses seperate using a \'$\' (eg. com.nearinfinty.MyClass$SubClass)\n * fieldName - The name of the field to get the value from.\n\n__Example__\n\n    var data = java.getStaticFieldValue("com.nearinfinty.MyClass", "data");\n\n<a name="javaSetStaticFieldValue" />\n**java.setStaticFieldValue(className, fieldName, newValue)**\n\nSets a static field value on the specified class.\n\n__Arguments__\n\n * className - The name of the class to set the value on. For subclasses seperate using a \'$\' (eg. com.nearinfinty.MyClass$SubClass)\n * fieldName - The name of the field to set the value on.\n * newValue - The new value to assign to the field.\n\n__Example__\n\n    java.getStaticFieldValue("com.nearinfinty.MyClass", "data", "Hello World");\n\n<a name="javaNewArray" />\n**java.newArray(className, values[])**\n\nCreates a new java array of type class.\n\n__Arguments__\n\n * className - The name of the type of array elements. For subclasses seperate using a \'$\' (eg. com.nearinfinty.MyClass$SubClass)\n * values - A javascript array of values to assign to the java array.\n\n__Example__\n\n    var newArray = java.newArray("java.lang.String", ["item1", "item2", "item3"]);\n\n<a name="javaNewByte" />\n**java.newByte(val)**\n\nCreates a new java byte. This is needed because javascript does not have the concept of a byte.\n\n__Arguments__\n\n * val - The value of the java byte.\n\n__Example__\n\n    var b = java.newByte(12);\n\n<a name="javaNewShort" />\n**java.newShort(val)**\n\nCreates a new java short. This is needed because javascript does not have the concept of a short.\n\n__Arguments__\n\n * val - The value of the java short.\n\n__Example__\n\n    var s = java.newShort(12);\n\n<a name="javaNewLong" />\n**java.newLong(val)**\n\nCreates a new java long. This is needed because javascript does not have the concept of a long.\n\n__Arguments__\n\n * val - The value of the java long.\n\n__Example__\n\n    var s = java.newLong(12);\n\n<a name="javaNewChar" />\n**java.newChar(val)**\n\nCreates a new java char. This is needed because javascript does not have the concept of a char.\n\n__Arguments__\n\n * val - The value of the java char.\n\n__Example__\n\n    var ch = java.newChar(\'a\');\n\n<a name="javaNewDouble" />\n**java.newDouble(val)**\n\nCreates a new java double. This is needed to force javascript\'s number to a double to call some methods.\n\n__Arguments__\n\n * val - The value of the java double.\n\n__Example__\n\n    var d = java.newDouble(3.14);\n\n<a name="javaNewFloat" />\n**java.newFloat(val)**\n\nCreates a new java float. This is needed to force javascript\'s number to a float to call some methods.\n\n__Arguments__\n\n * val - The value of the java float.\n\n__Example__\n\n    var f = java.newFloat(3.14);\n\n<a name="javaNewProxy" />\n**java.newProxy(interfaceName, functions)**\n\nCreates a new java Proxy for the given interface. Functions passed in will run on the v8 main thread and not a new thread.\n\nThe returned object has two methods ref() and unref() which you can use to maintain references to prevent premature\ngarbage collection. You must call these methods to ensure the proxy stays around.\n\n__Arguments__\n\n * interfaceName - The name of the interface to proxy. For subclasses seperate using a \'$\' (eg. com.nearinfinty.MyClass$SubClass)\n * functions - A hash of functions matching the function in the interface.\n\n__Example__\n\n    var myProxy = java.newProxy(\'java.lang.Runnable\', {\n      run: function () {\n        // This is actually run on the v8 thread and not the new java thread\n        console.log("hello from thread");\n      }\n    });\n\n    var thread = java.newInstanceSync("java.lang.Thread", myProxy);\n    thread.start();\n\n<a name="javaObject"/>\n## java object\n\n<a name="javaObjectCallMethod" />\n**obj._methodName_([args...], callback)**\n\n**obj._methodNameSync_([args...]) : result**\n\nOnce you have a java object either by creating a new instance or as a result of a method call you can then call methods on that object.\nAll public, non-static methods are exposed in synchronous and asynchronous flavors.\n\n__Arguments__\n\n * args - The arguments to pass to the method.\n * callback(err, item) - Callback to be called when the method has completed.\n\n__Example__\n\n    var list = java.newInstanceSync("java.util.ArrayList");\n    list.addSync("item1");\n    list.add("item2", function(err, result) {\n      if(err) { console.error(err); return; }\n    });\n\n<a name="javaObjectGetSetField" />\n**obj._fieldName_ = val**\n\n**val = obj._fieldName_**\n\nOnce you have a java object either by creating a new instance or as a result of a method call you can get instance\nfield values.\n\n__Example__\n\n    var list = java.newInstanceSync("com.nearinfinty.MyClass");\n    list.data = "test";\n    var data = list.data;\n\n# Signal Handling\n\nThe JVM intercepts signals (Ctrl+C, etc.) before node/v8 gets to handle them. To fix this there are a couple options.\n\n## Signal Handling Option 1\n\nOne option to capture these events is to add the following flag:\n\n```javascript\njava.options.push(\'-Xrs\');\n```\n\nAs `man java` says, the `-Xrs` flag will “reduce usage of operating-system signals by [the] Java virtual machine (JVM)”, to avoid issues when developing “applications that embed the JVM”.\n\n## Signal Handling Option 2\n\nHook into the runtime shutdown hook.\n\nFirst create a java wrapper around the Runtime.addShutdownHook method to allow using a proxy object.\n\n```java\npublic class ShutdownHookHelper {\n  public static void setShutdownHook(final Runnable r) {\n    Runtime.getRuntime().addShutdownHook(new Thread() {\n      @Override\n      public void run() {\n        r.run();\n      }\n    });\n  }\n}\n```\n\nCompile ShutdownHookHelper and then use it as follows.\n\n```javascript\nvar java = require(\'./\');\njava.classpath.push(\'.\');\nvar ShutdownHookHelper = java.import(\'ShutdownHookHelper\');\n\nShutdownHookHelper.setShutdownHookSync(java.newProxy(\'java.lang.Runnable\', {\n  run: function () {\n    console.log("do shutdown stuff here instead.");\n  }\n}));\n```\n\n# Object lifetime\n\nWhen you call a Java method through node-java, any arguments (V8/JavaScript objects) will be converted to Java objects  on the v8 main thread via a call to v8ToJava (found in utils.cpp). The JavaScript object is not held on to and can be garbage collected by v8. If this is an async call, the reference count on the Java objects will be incremented. The Java method will be invoked in a node.js async thread (see uv_queue_work). When the method returns, the resulting object will be returned to the main v8 thread and converted to JavaScript objects via a call to javaToV8 and the Java object\'s reference count will then be decremented to allow for garbage collection. The resulting v8 object will then be returned to the callers callback function.\n\n## License\n\n(The MIT License)\n\nCopyright (c) 2012 Near Infinity Corporation\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n"Software"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n',
+36 silly resolved     readmeFilename: 'README.md',
+36 silly resolved     homepage: 'https://github.com/joeferner/node-java',
+36 silly resolved     _id: 'java@0.3.2',
+36 silly resolved     _from: 'java@' } ]
+37 info install java@0.3.2 into D:\개발\개인 Project\ThinkMineWeb\WebContent\js
+38 info installOne java@0.3.2
+39 info D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java unbuild
+40 verbose tar unpack E:\Users\Jang\AppData\Roaming\npm-cache\java\0.3.2\package.tgz
+41 silly lockFile cc8fd90e--WebContent-js-node-modules-java tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java
+42 verbose lock tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java E:\Users\Jang\AppData\Roaming\npm-cache\cc8fd90e--WebContent-js-node-modules-java.lock
+43 silly lockFile dcc27ea4-npm-cache-java-0-3-2-package-tgz tar://E:\Users\Jang\AppData\Roaming\npm-cache\java\0.3.2\package.tgz
+44 verbose lock tar://E:\Users\Jang\AppData\Roaming\npm-cache\java\0.3.2\package.tgz E:\Users\Jang\AppData\Roaming\npm-cache\dcc27ea4-npm-cache-java-0-3-2-package-tgz.lock
+45 silly gunzTarPerm modes [ '755', '644' ]
+46 silly gunzTarPerm extractEntry package.json
+47 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+48 silly gunzTarPerm extractEntry .npmignore
+49 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+50 silly gunzTarPerm extractEntry README.md
+51 silly gunzTarPerm modified mode [ 'README.md', 438, 420 ]
+52 silly gunzTarPerm extractEntry LICENSE
+53 silly gunzTarPerm modified mode [ 'LICENSE', 438, 420 ]
+54 silly gunzTarPerm extractEntry testHelpers.js
+55 silly gunzTarPerm modified mode [ 'testHelpers.js', 438, 420 ]
+56 silly gunzTarPerm extractEntry findJavaHome.js
+57 silly gunzTarPerm modified mode [ 'findJavaHome.js', 438, 420 ]
+58 silly gunzTarPerm extractEntry index.js
+59 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+60 silly gunzTarPerm extractEntry mnm.js
+61 silly gunzTarPerm modified mode [ 'mnm.js', 438, 420 ]
+62 silly gunzTarPerm extractEntry compile-java-code.sh
+63 silly gunzTarPerm modified mode [ 'compile-java-code.sh', 438, 420 ]
+64 silly gunzTarPerm extractEntry lib/nodeJavaBridge.js
+65 silly gunzTarPerm modified mode [ 'lib/nodeJavaBridge.js', 438, 420 ]
+66 silly gunzTarPerm extractEntry binding.gyp
+67 silly gunzTarPerm modified mode [ 'binding.gyp', 438, 420 ]
+68 silly gunzTarPerm extractEntry examples/lucene/example.js
+69 silly gunzTarPerm modified mode [ 'examples/lucene/example.js', 438, 420 ]
+70 silly gunzTarPerm extractEntry examples/lucene/lucene-core-3.5.0.jar
+71 silly gunzTarPerm modified mode [ 'examples/lucene/lucene-core-3.5.0.jar', 438, 420 ]
+72 silly gunzTarPerm extractEntry examples/mixJavaAndNode/runMyClass.js
+73 silly gunzTarPerm modified mode [ 'examples/mixJavaAndNode/runMyClass.js', 438, 420 ]
+74 silly gunzTarPerm extractEntry examples/mixJavaAndNode/src/com/nearinfinity/nodeJava/MyClass.class
+75 silly gunzTarPerm modified mode [ 'examples/mixJavaAndNode/src/com/nearinfinity/nodeJava/MyClass.class',
+75 silly gunzTarPerm   438,
+75 silly gunzTarPerm   420 ]
+76 silly gunzTarPerm extractEntry examples/mixJavaAndNode/src/com/nearinfinity/nodeJava/MyClass.java
+77 silly gunzTarPerm modified mode [ 'examples/mixJavaAndNode/src/com/nearinfinity/nodeJava/MyClass.java',
+77 silly gunzTarPerm   438,
+77 silly gunzTarPerm   420 ]
+78 silly gunzTarPerm extractEntry projectFilesBackup/.idea/libraries/sass_stdlib.xml
+79 silly gunzTarPerm modified mode [ 'projectFilesBackup/.idea/libraries/sass_stdlib.xml',
+79 silly gunzTarPerm   438,
+79 silly gunzTarPerm   420 ]
+80 silly gunzTarPerm extractEntry projectFilesBackup1/.idea/libraries/sass_stdlib.xml
+81 silly gunzTarPerm modified mode [ 'projectFilesBackup1/.idea/libraries/sass_stdlib.xml',
+81 silly gunzTarPerm   438,
+81 silly gunzTarPerm   420 ]
+82 silly gunzTarPerm extractEntry jarjar.rule
+83 silly gunzTarPerm modified mode [ 'jarjar.rule', 438, 420 ]
+84 silly gunzTarPerm extractEntry src/methodCallBaton.cpp
+85 silly gunzTarPerm modified mode [ 'src/methodCallBaton.cpp', 438, 420 ]
+86 silly gunzTarPerm extractEntry src/java.cpp
+87 silly gunzTarPerm modified mode [ 'src/java.cpp', 438, 420 ]
+88 silly gunzTarPerm extractEntry src/javaObject.cpp
+89 silly gunzTarPerm modified mode [ 'src/javaObject.cpp', 438, 420 ]
+90 silly gunzTarPerm extractEntry src/javaObject.h
+91 silly gunzTarPerm modified mode [ 'src/javaObject.h', 438, 420 ]
+92 silly gunzTarPerm extractEntry src/javaScope.cpp
+93 silly gunzTarPerm modified mode [ 'src/javaScope.cpp', 438, 420 ]
+94 silly gunzTarPerm extractEntry src/javaScope.h
+95 silly gunzTarPerm modified mode [ 'src/javaScope.h', 438, 420 ]
+96 silly gunzTarPerm extractEntry src/java.h
+97 silly gunzTarPerm modified mode [ 'src/java.h', 438, 420 ]
+98 silly gunzTarPerm extractEntry src/methodCallBaton.h
+99 silly gunzTarPerm modified mode [ 'src/methodCallBaton.h', 438, 420 ]
+100 silly gunzTarPerm extractEntry src/nodeJavaBridge.cpp
+101 silly gunzTarPerm modified mode [ 'src/nodeJavaBridge.cpp', 438, 420 ]
+102 silly gunzTarPerm extractEntry src/node_NodeDynamicProxyClass.h
+103 silly gunzTarPerm modified mode [ 'src/node_NodeDynamicProxyClass.h', 438, 420 ]
+104 silly gunzTarPerm extractEntry src/utils.cpp
+105 silly gunzTarPerm modified mode [ 'src/utils.cpp', 438, 420 ]
+106 silly gunzTarPerm extractEntry src/utils.h
+107 silly gunzTarPerm modified mode [ 'src/utils.h', 438, 420 ]
+108 silly gunzTarPerm extractEntry src-java/node/NodeDynamicProxyClass.class
+109 silly gunzTarPerm modified mode [ 'src-java/node/NodeDynamicProxyClass.class', 438, 420 ]
+110 silly gunzTarPerm extractEntry src-java/node/NodeDynamicProxyClass.java
+111 silly gunzTarPerm modified mode [ 'src-java/node/NodeDynamicProxyClass.java', 438, 420 ]
+112 silly gunzTarPerm extractEntry test/awt-test.js
+113 silly gunzTarPerm modified mode [ 'test/awt-test.js', 438, 420 ]
+114 silly gunzTarPerm extractEntry test/dynamicProxy-test.js
+115 silly gunzTarPerm modified mode [ 'test/dynamicProxy-test.js', 438, 420 ]
+116 silly gunzTarPerm extractEntry test/importClass-test.js
+117 silly gunzTarPerm modified mode [ 'test/importClass-test.js', 438, 420 ]
+118 silly gunzTarPerm extractEntry test/instanceof-test.js
+119 silly gunzTarPerm modified mode [ 'test/instanceof-test.js', 438, 420 ]
+120 silly gunzTarPerm extractEntry test/java-callStaticMethod-test.js
+121 silly gunzTarPerm modified mode [ 'test/java-callStaticMethod-test.js', 438, 420 ]
+122 silly gunzTarPerm extractEntry test/java-newInstance-test.js
+123 silly gunzTarPerm modified mode [ 'test/java-newInstance-test.js', 438, 420 ]
+124 silly gunzTarPerm extractEntry test/java-staticField-test.js
+125 silly gunzTarPerm modified mode [ 'test/java-staticField-test.js', 438, 420 ]
+126 silly gunzTarPerm extractEntry test/javaObject-test.js
+127 silly gunzTarPerm modified mode [ 'test/javaObject-test.js', 438, 420 ]
+128 silly gunzTarPerm extractEntry test/simple-test.js
+129 silly gunzTarPerm modified mode [ 'test/simple-test.js', 438, 420 ]
+130 silly gunzTarPerm extractEntry test/utils-types-test.js
+131 silly gunzTarPerm modified mode [ 'test/utils-types-test.js', 438, 420 ]
+132 silly gunzTarPerm extractEntry test/Test$SubClass.class
+133 silly gunzTarPerm modified mode [ 'test/Test$SubClass.class', 438, 420 ]
+134 silly gunzTarPerm extractEntry test/RunInterface$Interface0Arg.class
+135 silly gunzTarPerm modified mode [ 'test/RunInterface$Interface0Arg.class', 438, 420 ]
+136 silly gunzTarPerm extractEntry test/RunInterface$InterfaceWithReturn.class
+137 silly gunzTarPerm modified mode [ 'test/RunInterface$InterfaceWithReturn.class', 438, 420 ]
+138 silly gunzTarPerm extractEntry test/RunInterface.class
+139 silly gunzTarPerm modified mode [ 'test/RunInterface.class', 438, 420 ]
+140 silly gunzTarPerm extractEntry test/RunInterface.java
+141 silly gunzTarPerm modified mode [ 'test/RunInterface.java', 438, 420 ]
+142 silly gunzTarPerm extractEntry test/nodejs.png
+143 silly gunzTarPerm modified mode [ 'test/nodejs.png', 438, 420 ]
+144 silly gunzTarPerm extractEntry test/commons-lang3-3.1.jar
+145 silly gunzTarPerm modified mode [ 'test/commons-lang3-3.1.jar', 438, 420 ]
+146 silly gunzTarPerm extractEntry test/Test$SuperClass.class
+147 silly gunzTarPerm modified mode [ 'test/Test$SuperClass.class', 438, 420 ]
+148 silly gunzTarPerm extractEntry test/Test.class
+149 silly gunzTarPerm modified mode [ 'test/Test.class', 438, 420 ]
+150 silly gunzTarPerm extractEntry test/Test.java
+151 silly gunzTarPerm modified mode [ 'test/Test.java', 438, 420 ]
+152 silly gunzTarPerm extractEntry test/TestExceptions.class
+153 silly gunzTarPerm modified mode [ 'test/TestExceptions.class', 438, 420 ]
+154 silly gunzTarPerm extractEntry test/TestExceptions.java
+155 silly gunzTarPerm modified mode [ 'test/TestExceptions.java', 438, 420 ]
+156 silly gunzTarPerm extractEntry test/RunInterface$Interface1Arg.class
+157 silly gunzTarPerm modified mode [ 'test/RunInterface$Interface1Arg.class', 438, 420 ]
+158 silly gunzTarPerm extractEntry commons-lang3-node-java.jar
+159 silly gunzTarPerm modified mode [ 'commons-lang3-node-java.jar', 438, 420 ]
+160 silly gunzTarPerm extractEntry touch.py
+161 silly gunzTarPerm modified mode [ 'touch.py', 438, 420 ]
+162 silly lockFile cc8fd90e--WebContent-js-node-modules-java tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java
+163 silly lockFile cc8fd90e--WebContent-js-node-modules-java tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java
+164 silly lockFile dcc27ea4-npm-cache-java-0-3-2-package-tgz tar://E:\Users\Jang\AppData\Roaming\npm-cache\java\0.3.2\package.tgz
+165 silly lockFile dcc27ea4-npm-cache-java-0-3-2-package-tgz tar://E:\Users\Jang\AppData\Roaming\npm-cache\java\0.3.2\package.tgz
+166 info preinstall java@0.3.2
+167 verbose readDependencies using package.json deps
+168 verbose readDependencies using package.json deps
+169 verbose cache add [ 'find-java-home@0.0.7', null ]
+170 verbose cache add name=undefined spec="find-java-home@0.0.7" args=["find-java-home@0.0.7",null]
+171 verbose parsed url { protocol: null,
+171 verbose parsed url   slashes: null,
+171 verbose parsed url   auth: null,
+171 verbose parsed url   host: null,
+171 verbose parsed url   port: null,
+171 verbose parsed url   hostname: null,
+171 verbose parsed url   hash: null,
+171 verbose parsed url   search: null,
+171 verbose parsed url   query: null,
+171 verbose parsed url   pathname: 'find-java-home@0.0.7',
+171 verbose parsed url   path: 'find-java-home@0.0.7',
+171 verbose parsed url   href: 'find-java-home@0.0.7' }
+172 verbose cache add name="find-java-home" spec="0.0.7" args=["find-java-home","0.0.7"]
+173 verbose parsed url { protocol: null,
+173 verbose parsed url   slashes: null,
+173 verbose parsed url   auth: null,
+173 verbose parsed url   host: null,
+173 verbose parsed url   port: null,
+173 verbose parsed url   hostname: null,
+173 verbose parsed url   hash: null,
+173 verbose parsed url   search: null,
+173 verbose parsed url   query: null,
+173 verbose parsed url   pathname: '0.0.7',
+173 verbose parsed url   path: '0.0.7',
+173 verbose parsed url   href: '0.0.7' }
+174 verbose addNamed [ 'find-java-home', '0.0.7' ]
+175 verbose addNamed [ '0.0.7', '0.0.7' ]
+176 silly lockFile 7ebc4c74-find-java-home-0-0-7 find-java-home@0.0.7
+177 verbose lock find-java-home@0.0.7 E:\Users\Jang\AppData\Roaming\npm-cache\7ebc4c74-find-java-home-0-0-7.lock
+178 verbose url raw find-java-home/0.0.7
+179 verbose url resolving [ 'https://registry.npmjs.org/', './find-java-home/0.0.7' ]
+180 verbose url resolved https://registry.npmjs.org/find-java-home/0.0.7
+181 info trying registry request attempt 1 at 23:55:10
+182 verbose etag "B1D771S53GZNT9HR1131K2FL2"
+183 http GET https://registry.npmjs.org/find-java-home/0.0.7
+184 http 304 https://registry.npmjs.org/find-java-home/0.0.7
+185 silly registry.get cb [ 304,
+185 silly registry.get   { date: 'Thu, 15 May 2014 14:55:13 GMT',
+185 silly registry.get     server: 'Apache',
+185 silly registry.get     via: '1.1 varnish',
+185 silly registry.get     'last-modified': 'Thu, 15 May 2014 14:55:14 GMT',
+185 silly registry.get     'cache-control': 'max-age=1',
+185 silly registry.get     etag: '"B1D771S53GZNT9HR1131K2FL2"',
+185 silly registry.get     'x-served-by': 'cache-ty66-TYO',
+185 silly registry.get     'x-cache': 'MISS',
+185 silly registry.get     'x-cache-hits': '0',
+185 silly registry.get     'x-timer': 'S1400165713.999305487,VS0,VE288',
+185 silly registry.get     vary: 'Accept',
+185 silly registry.get     'content-length': '0',
+185 silly registry.get     'keep-alive': 'timeout=10, max=50',
+185 silly registry.get     connection: 'Keep-Alive' } ]
+186 verbose etag find-java-home/0.0.7 from cache
+187 silly lockFile 7ebc4c74-find-java-home-0-0-7 find-java-home@0.0.7
+188 silly lockFile 7ebc4c74-find-java-home-0-0-7 find-java-home@0.0.7
+189 silly resolved [ { name: 'find-java-home',
+189 silly resolved     version: '0.0.7',
+189 silly resolved     description: 'Find JAVA_HOME on any system',
+189 silly resolved     main: 'index.js',
+189 silly resolved     scripts: { test: 'mocha -r should test.js' },
+189 silly resolved     repository:
+189 silly resolved      { type: 'git',
+189 silly resolved        url: 'https://github.com/jsdevel/node-find-java-home.git' },
+189 silly resolved     dependencies: { 'find-in-path': '*' },
+189 silly resolved     keywords: [ 'JAVA_HOME', 'find', 'java', 'home' ],
+189 silly resolved     author: { name: 'Joseph Spencer' },
+189 silly resolved     license: 'Apache 2.0',
+189 silly resolved     bugs: { url: 'https://github.com/jsdevel/node-find-java-home/issues' },
+189 silly resolved     homepage: 'https://github.com/jsdevel/node-find-java-home',
+189 silly resolved     devDependencies: { mocha: '~1.18.2', should: '~3.3.0' },
+189 silly resolved     readme: '#node-find-java-home\n\nReturns the location of JAVA_HOME as an absolute path on windows, mac, and \nlinux.  It runs asynchronously.\n\n##Algorithm\n1. This module will first attempt to check for JAVA_HOME.  If that\'s set it\nsimply returns that value.  \n2. On windows the registry is queried.\n3. If neither of the previous methods worked, then the PATH is scanned for javac\n4. On mac, the parent directory of javac is checked for a java_home binary.  If that binary exists then it is executed and the result is used\n5. The grandparent directory of javac is used.  This is similar to `$(dirname $(dirname $(readlink $(which javac))))`\n\n##Example\n````javascript\nrequire(\'find-java-home\')(function(err, home){\n  if(err)return console.log(err);\n  console.log(home);\n});\n````\n\n##License\n````\nCopyright 2013 Joseph Spencer.\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n      http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n````\n',
+189 silly resolved     readmeFilename: 'README.md',
+189 silly resolved     _id: 'find-java-home@0.0.7',
+189 silly resolved     _from: 'find-java-home@0.0.7' } ]
+190 info install find-java-home@0.0.7 into D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java
+191 info installOne find-java-home@0.0.7
+192 info D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home unbuild
+193 verbose tar unpack E:\Users\Jang\AppData\Roaming\npm-cache\find-java-home\0.0.7\package.tgz
+194 silly lockFile 9eb6cc68-java-node-modules-find-java-home tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home
+195 verbose lock tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home E:\Users\Jang\AppData\Roaming\npm-cache\9eb6cc68-java-node-modules-find-java-home.lock
+196 silly lockFile 18337d53-find-java-home-0-0-7-package-tgz tar://E:\Users\Jang\AppData\Roaming\npm-cache\find-java-home\0.0.7\package.tgz
+197 verbose lock tar://E:\Users\Jang\AppData\Roaming\npm-cache\find-java-home\0.0.7\package.tgz E:\Users\Jang\AppData\Roaming\npm-cache\18337d53-find-java-home-0-0-7-package-tgz.lock
+198 silly gunzTarPerm modes [ '755', '644' ]
+199 silly gunzTarPerm extractEntry package.json
+200 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+201 silly gunzTarPerm extractEntry .npmignore
+202 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+203 silly gunzTarPerm extractEntry README.md
+204 silly gunzTarPerm modified mode [ 'README.md', 438, 420 ]
+205 silly gunzTarPerm extractEntry LICENSE
+206 silly gunzTarPerm modified mode [ 'LICENSE', 438, 420 ]
+207 silly gunzTarPerm extractEntry index.js
+208 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+209 silly gunzTarPerm extractEntry test.js
+210 silly gunzTarPerm modified mode [ 'test.js', 438, 420 ]
+211 silly lockFile 9eb6cc68-java-node-modules-find-java-home tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home
+212 silly lockFile 9eb6cc68-java-node-modules-find-java-home tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home
+213 silly lockFile 18337d53-find-java-home-0-0-7-package-tgz tar://E:\Users\Jang\AppData\Roaming\npm-cache\find-java-home\0.0.7\package.tgz
+214 silly lockFile 18337d53-find-java-home-0-0-7-package-tgz tar://E:\Users\Jang\AppData\Roaming\npm-cache\find-java-home\0.0.7\package.tgz
+215 info preinstall find-java-home@0.0.7
+216 verbose readDependencies using package.json deps
+217 verbose readDependencies using package.json deps
+218 verbose cache add [ 'find-in-path@*', null ]
+219 verbose cache add name=undefined spec="find-in-path@*" args=["find-in-path@*",null]
+220 verbose parsed url { protocol: null,
+220 verbose parsed url   slashes: null,
+220 verbose parsed url   auth: null,
+220 verbose parsed url   host: null,
+220 verbose parsed url   port: null,
+220 verbose parsed url   hostname: null,
+220 verbose parsed url   hash: null,
+220 verbose parsed url   search: null,
+220 verbose parsed url   query: null,
+220 verbose parsed url   pathname: 'find-in-path@*',
+220 verbose parsed url   path: 'find-in-path@*',
+220 verbose parsed url   href: 'find-in-path@*' }
+221 verbose cache add name="find-in-path" spec="*" args=["find-in-path","*"]
+222 verbose parsed url { protocol: null,
+222 verbose parsed url   slashes: null,
+222 verbose parsed url   auth: null,
+222 verbose parsed url   host: null,
+222 verbose parsed url   port: null,
+222 verbose parsed url   hostname: null,
+222 verbose parsed url   hash: null,
+222 verbose parsed url   search: null,
+222 verbose parsed url   query: null,
+222 verbose parsed url   pathname: '*',
+222 verbose parsed url   path: '*',
+222 verbose parsed url   href: '*' }
+223 verbose addNamed [ 'find-in-path', '*' ]
+224 verbose addNamed [ null, '*' ]
+225 silly lockFile debe952a-find-in-path find-in-path@*
+226 verbose lock find-in-path@* E:\Users\Jang\AppData\Roaming\npm-cache\debe952a-find-in-path.lock
+227 silly addNameRange { name: 'find-in-path', range: '*', hasData: false }
+228 verbose url raw find-in-path
+229 verbose url resolving [ 'https://registry.npmjs.org/', './find-in-path' ]
+230 verbose url resolved https://registry.npmjs.org/find-in-path
+231 info trying registry request attempt 1 at 23:55:11
+232 verbose etag "2Y5UTXOTTP9MFGIOE3AN9W2DZ"
+233 http GET https://registry.npmjs.org/find-in-path
+234 http 304 https://registry.npmjs.org/find-in-path
+235 silly registry.get cb [ 304,
+235 silly registry.get   { date: 'Thu, 15 May 2014 14:55:14 GMT',
+235 silly registry.get     server: 'Apache',
+235 silly registry.get     via: '1.1 varnish',
+235 silly registry.get     'last-modified': 'Thu, 15 May 2014 14:55:14 GMT',
+235 silly registry.get     'cache-control': 'max-age=1',
+235 silly registry.get     etag: '"2Y5UTXOTTP9MFGIOE3AN9W2DZ"',
+235 silly registry.get     'x-served-by': 'cache-ty67-TYO',
+235 silly registry.get     'x-cache': 'MISS',
+235 silly registry.get     'x-cache-hits': '0',
+235 silly registry.get     'x-timer': 'S1400165714.501993418,VS0,VE286',
+235 silly registry.get     vary: 'Accept',
+235 silly registry.get     'content-length': '0',
+235 silly registry.get     'keep-alive': 'timeout=10, max=50',
+235 silly registry.get     connection: 'Keep-Alive' } ]
+236 verbose etag find-in-path from cache
+237 silly addNameRange number 2 { name: 'find-in-path', range: '*', hasData: true }
+238 silly addNameRange versions [ 'find-in-path', [ '0.0.0', '0.0.1' ] ]
+239 verbose addNamed [ 'find-in-path', '0.0.1' ]
+240 verbose addNamed [ '0.0.1', '0.0.1' ]
+241 silly lockFile bbeae006-find-in-path-0-0-1 find-in-path@0.0.1
+242 verbose lock find-in-path@0.0.1 E:\Users\Jang\AppData\Roaming\npm-cache\bbeae006-find-in-path-0-0-1.lock
+243 silly lockFile bbeae006-find-in-path-0-0-1 find-in-path@0.0.1
+244 silly lockFile bbeae006-find-in-path-0-0-1 find-in-path@0.0.1
+245 silly lockFile debe952a-find-in-path find-in-path@*
+246 silly lockFile debe952a-find-in-path find-in-path@*
+247 silly resolved [ { name: 'find-in-path',
+247 silly resolved     version: '0.0.1',
+247 silly resolved     description: 'Find a directory or file from the PATH and return the absolute path.',
+247 silly resolved     main: 'find-in-path.js',
+247 silly resolved     scripts: { test: 'echo "Error: no test specified" && exit 1' },
+247 silly resolved     repository:
+247 silly resolved      { type: 'git',
+247 silly resolved        url: 'https://github.com/jsdevel/node-find-in-path.git' },
+247 silly resolved     keywords: [ 'find', 'path' ],
+247 silly resolved     author: { name: 'Joseph Spencer' },
+247 silly resolved     license: 'APACHE 2.0',
+247 silly resolved     bugs: { url: 'https://github.com/jsdevel/node-find-in-path/issues' },
+247 silly resolved     readme: '#node-find-in-path\n\nFind a directory or file in your path.\n\n##Example\n````javascript\nvar mod = require(\'./find-in-path\');\n\nmod(\'netstat\', function(err, path){\n   console.log(err);\n   console.log(path);\n});\n````\n\nPrints `/bin/netstat` on linux;\n\n##License\n````\nCopyright 2013 Joseph Spencer.\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n      http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n````\n',
+247 silly resolved     readmeFilename: 'README.md',
+247 silly resolved     homepage: 'https://github.com/jsdevel/node-find-in-path',
+247 silly resolved     _id: 'find-in-path@0.0.1',
+247 silly resolved     _from: 'find-in-path@*' } ]
+248 info install find-in-path@0.0.1 into D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home
+249 info installOne find-in-path@0.0.1
+250 info D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home\node_modules\find-in-path unbuild
+251 verbose tar unpack E:\Users\Jang\AppData\Roaming\npm-cache\find-in-path\0.0.1\package.tgz
+252 silly lockFile 9a0287f4-a-home-node-modules-find-in-path tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home\node_modules\find-in-path
+253 verbose lock tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home\node_modules\find-in-path E:\Users\Jang\AppData\Roaming\npm-cache\9a0287f4-a-home-node-modules-find-in-path.lock
+254 silly lockFile 39068b5a-e-find-in-path-0-0-1-package-tgz tar://E:\Users\Jang\AppData\Roaming\npm-cache\find-in-path\0.0.1\package.tgz
+255 verbose lock tar://E:\Users\Jang\AppData\Roaming\npm-cache\find-in-path\0.0.1\package.tgz E:\Users\Jang\AppData\Roaming\npm-cache\39068b5a-e-find-in-path-0-0-1-package-tgz.lock
+256 silly gunzTarPerm modes [ '755', '644' ]
+257 silly gunzTarPerm extractEntry package.json
+258 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+259 silly gunzTarPerm extractEntry README.md
+260 silly gunzTarPerm modified mode [ 'README.md', 438, 420 ]
+261 silly gunzTarPerm extractEntry LICENSE
+262 silly gunzTarPerm modified mode [ 'LICENSE', 438, 420 ]
+263 silly gunzTarPerm extractEntry find-in-path.js
+264 silly gunzTarPerm modified mode [ 'find-in-path.js', 438, 420 ]
+265 silly gunzTarPerm extractEntry test.js
+266 silly gunzTarPerm modified mode [ 'test.js', 438, 420 ]
+267 silly lockFile 9a0287f4-a-home-node-modules-find-in-path tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home\node_modules\find-in-path
+268 silly lockFile 9a0287f4-a-home-node-modules-find-in-path tar://D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home\node_modules\find-in-path
+269 silly lockFile 39068b5a-e-find-in-path-0-0-1-package-tgz tar://E:\Users\Jang\AppData\Roaming\npm-cache\find-in-path\0.0.1\package.tgz
+270 silly lockFile 39068b5a-e-find-in-path-0-0-1-package-tgz tar://E:\Users\Jang\AppData\Roaming\npm-cache\find-in-path\0.0.1\package.tgz
+271 info preinstall find-in-path@0.0.1
+272 verbose readDependencies using package.json deps
+273 verbose readDependencies using package.json deps
+274 silly resolved []
+275 verbose about to build D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home\node_modules\find-in-path
+276 info build D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home\node_modules\find-in-path
+277 verbose linkStuff [ false,
+277 verbose linkStuff   false,
+277 verbose linkStuff   false,
+277 verbose linkStuff   'D:\\개발\\개인 Project\\ThinkMineWeb\\WebContent\\js\\node_modules\\java\\node_modules\\find-java-home\\node_modules' ]
+278 info linkStuff find-in-path@0.0.1
+279 verbose linkBins find-in-path@0.0.1
+280 verbose linkMans find-in-path@0.0.1
+281 verbose rebuildBundles find-in-path@0.0.1
+282 info install find-in-path@0.0.1
+283 info postinstall find-in-path@0.0.1
+284 verbose about to build D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home
+285 info build D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java\node_modules\find-java-home
+286 verbose linkStuff [ false,
+286 verbose linkStuff   false,
+286 verbose linkStuff   false,
+286 verbose linkStuff   'D:\\개발\\개인 Project\\ThinkMineWeb\\WebContent\\js\\node_modules\\java\\node_modules' ]
+287 info linkStuff find-java-home@0.0.7
+288 verbose linkBins find-java-home@0.0.7
+289 verbose linkMans find-java-home@0.0.7
+290 verbose rebuildBundles find-java-home@0.0.7
+291 verbose rebuildBundles [ 'find-in-path' ]
+292 info install find-java-home@0.0.7
+293 info postinstall find-java-home@0.0.7
+294 verbose about to build D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java
+295 info build D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java
+296 verbose linkStuff [ false,
+296 verbose linkStuff   false,
+296 verbose linkStuff   false,
+296 verbose linkStuff   'D:\\개발\\개인 Project\\ThinkMineWeb\\WebContent\\js\\node_modules' ]
+297 info linkStuff java@0.3.2
+298 verbose linkBins java@0.3.2
+299 verbose linkMans java@0.3.2
+300 verbose rebuildBundles java@0.3.2
+301 verbose rebuildBundles [ 'find-java-home' ]
+302 info install java@0.3.2
+303 verbose unsafe-perm in lifecycle true
+304 info java@0.3.2 Failed to exec install script
+305 info D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules\java unbuild
+306 info preuninstall java@0.3.2
+307 info uninstall java@0.3.2
+308 verbose true,D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules,D:\개발\개인 Project\ThinkMineWeb\WebContent\js\node_modules unbuild java@0.3.2
+309 info postuninstall java@0.3.2
+310 error java@0.3.2 install: `node-gyp rebuild`
+310 error Exit status 1
+311 error Failed at the java@0.3.2 install script.
+311 error This is most likely a problem with the java package,
+311 error not with npm itself.
+311 error Tell the author that this fails on your system:
+311 error     node-gyp rebuild
+311 error You can get their info via:
+311 error     npm owner ls java
+311 error There is likely additional logging output above.
+312 error System Windows_NT 6.1.7600
+313 error command "D:\\Program Files\\nodejs\\\\node.exe" "D:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "java"
+314 error cwd D:\개발\개인 Project\ThinkMineWeb\WebContent\js
+315 error node -v v0.10.25
+316 error npm -v 1.3.24
+317 error code ELIFECYCLE
+318 verbose exit [ 1, true ]

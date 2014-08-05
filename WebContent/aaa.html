@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>onpaste event example</title>
+</head>
+
+<body>
+
+<div class="code">
+    <code>
+        <script type="text/javascript"><!--
+            function copy_trackback(trb) {
+                var IE=(document.all)?true:false;
+                if (IE) {
+                    if(confirm("이 글의 트랙백 주소를 클립보드에 복사하시겠습니까?"))
+                        window.clipboardData.setData("Text", trb);
+                } else {
+                    temp = prompt("이 글의 트랙백 주소입니다. Ctrl+C를 눌러 클립보드로 복사하세요", trb);
+                }
+            }
+        //--></script>
+    </code>
+</div>
+
+
+<div class="entry fix" style="padding: 0 5px; border: solid 1px #CCCCCC">
+    <center>이 글의 트랙백 주소 복사하기 :
+        <code>
+            <a href="http://aaaa.com/aaa/12312" onclick="copy_trackback(this.href); return false;">aaaaaaaaa
+            </a>
+        </code>
+    </center>
+</div>
+
+<h1>Play with this editor!</h1>
+<textarea id="editor" rows="3" cols="80">
+Try pasting text into this area!
+</textarea>
+
+<script>
+function log(txt) {
+  document.getElementById("log").appendChild(document.createTextNode(txt + "\n"));
+}
+  
+function pasteIntercept(evt) {
+  log("Pasting!");
+}
+  
+
+document.addEventListener("paste", pasteIntercept, false);
+</script>
+
+<h2>Log</h2>
+<textarea rows="15" cols="80" id="log" readonly="true"></textarea>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<script src="ThinkMineLib.js"></script>
+	<script type="text/javascript">
+		window.onload = function() {
+			//setUpPaperLib('myCanvas');
+			
+
+
+			
+	
+			var inter = new PaerperJS_DrawingInterface("PaperJS",'myCanvas');
+			
+	
+			var layer = new paper.Layer();
+
+			
+			var TMCanvas = new ThinkMineCanvas(inter);
+			
+			var onMD = function(event){
+				TMCanvas.onMouseDownInterface(event.point.x,event.point.y,0);
+			}
+			
+			var onMU = function(event){
+				TMCanvas.onMouseUpInterface(event.point.x,event.point.y,0);
+			}
+			
+			var onMDr = function(event){
+				TMCanvas.onMouseDragInterface(event.point.x,event.point.y,0);
+			}
+
+			layer.on({mousedown : onMD,
+				mouseup : onMU,
+				mousedrag : onMDr});
+
+			TMCanvas.connectToServer();
+			TMCanvas.initWithMindMap([0,0]);
+			
+			
+			var lastDownTarget, canvas;
+
+			
+			canvas = document.getElementById('myCanvas');
+			
+			
+			
+			document.addEventListener('mousedown', function(event) {
+				lastDownTarget = event.target;			   
+			}, false);
+
+			    
+			document.addEventListener('paste', function(event) {			        
+				if(lastDownTarget == canvas) {
+					alert("aa");
+					//window.clipboardData.setData("text","aaaa");
+					alert(window.clipboardData.getData("text"));
+					//TMCanvas.onPaste(event);			        
+				}			    
+			}, false);
+			
+			
+		}
+
+
+		
+	</script>
+</head>
+<body>
+	<canvas id="myCanvas" height = "600" width="1000"></canvas>
+	<div id="videosArea"></div>
+</body>
+</html>

@@ -1,0 +1,244 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<script>
+
+
+
+
+
+
+ 
+  
+//셀렉션 함수 
+document.getSelection2 = function(evt, document) { 
+  
+    var result = { 
+        text : "", 
+        st : -1, 
+        ed : -1 
+    }; 
+  
+    if (document.getSelection) { //FF, Chrome 
+  
+        var selection = document.getSelection(); 
+        var startOffset = -1; 
+        var previousSibling = null; 
+        if ( selection.anchorOffset >= selection.focusOffset ) { 
+            startOffset = selection.focusOffset; 
+            previousSibling = selection.focusNode.previousSibling; 
+        } else { 
+            startOffset = selection.anchorOffset; 
+            previousSibling = selection.anchorNode.previousSibling; 
+        } 
+  
+        while( previousSibling != null ) { 
+            var node = previousSibling; 
+            if ( node.nodeType == 3 ) { 
+                startOffset += node.data.length; 
+            } else { 
+                startOffset += node.find(".dragtag").text().length; 
+            } 
+            previousSibling = node.previousSibling; 
+        } 
+  
+        result.text = node.trim(selection.toString()); 
+        result.st = startOffset + (selection.toString().length - selection.toString().replace(/^\s*/,'').length); 
+        result.ed = startOffset + selection.toString().replace(/\s*$/, '').length; 
+  
+    } else if (document.selection) { //IE 
+  
+        var selection = document.selection.createRange(); 
+        var selection2 = document.selection.createRange(); 
+        selection2.moveToElementText(selection.parentElement()); 
+        selection2.setEndPoint('EndToStart', selection); 
+        result.text = $.trim(selection.text); 
+        result.st = selection2.text.length + (selection.text.length - selection.text.replace(/^\s*/,'').length); 
+        result.ed = selection2.text.length + selection.text.replace(/\s*$/, '').length; 
+  
+    } 
+  
+    return result; 
+};
+function allowDrop(ev)
+{
+ev.preventDefault();
+}
+
+function drag(ev)
+{
+ev.dataTransfer.setData("Text",ev.target.id);
+}
+
+function drop(ev)
+{
+alert("aaaaaaaaaa");
+ev.preventDefault();
+var data = ev.dataTransfer.getData("Text");
+ev.target.appendChild(document.getElementById(data));
+}
+
+    function dragEnter(event) {
+        event.target.style.border = "2px dashed #ff0000";
+    }
+
+    function dragOver(event) {
+        event.preventDefault();
+        return false;
+    }
+
+    function dragLeave(event) {
+        event.target.style.border = "none";
+    }
+</script>
+</head>
+<body onLoad="on();">
+
+아무 키나 입력해보세요.
+<br>char <input type='text' id='keychar' />
+<br>keycode <input type='text' id='keycode' />
+<br>Alt키 <input type='checkbox' id='altkey' />
+<br>왼쪽 Ctrl키 <input type='checkbox' id='left_ctrl' />
+<br>오른쪽 Ctrl키 <input type='checkbox' id='right_ctrl' />
+
+
+adsfasdfasdfasdf
+asdfasdf
+asdf
+<br>
+adsfasdfa
+<br>
+adfadsfsdㅁㅁㅁㅁ
+<br>
+<img id="drag1" src="http://cfile25.uf.tistory.com/image/167A813D4ED44F211FEC86" draggable="true"
+ondragstart="drag(event)" width="336" height="336">
+
+
+
+<iframe  id="naver" src="http://www.naver.com" width="700" height="800" scrolling="auto"> </iframe>
+
+<iframe id="test" src="b.html" width="700" height="800" scrolling="auto" draggable="true"> </iframe>
+<<div contentEditable="true" id="edit" > Type here. You can insert images too </div>
+<!--<div contentEditable="true" id="edit" style="display:none;"> Type here. You can insert images too </div>-->
+<div id="dtarget">aaaaaaaa </div>
+
+<script>
+function on(){
+//처리 이벤트 
+var a =document.getElementById("naver").contentWindow;
+//var a =document.getElementById("test").contentWindow;
+var b;
+//alert(document.getElementById("test").contentWindow.document.getElementById("drag1").src);
+
+a.document.onmouseup= function( evt ){ 
+//document.onmouseup= function( evt ){ 
+
+    alert( getSelectionHtml(a) ); 
+}; 
+
+}
+var cc =  document.getElementById("edit");
+cc;
+
+function getSelectionHtml(s) {
+
+    var html = "";
+    if (typeof s.window.getSelection != "undefined") {
+
+        var sel = s.window.getSelection();
+        if (sel.rangeCount) {
+            var container = s.document.createElement("div");
+            for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                container.appendChild(sel.getRangeAt(i).cloneContents());
+            }
+            html = container.innerHTML;
+        }
+    } else if (typeof s.document.selection != "undefined") {
+	
+        if (s.document.selection.type == "Text") {
+            html = s.document.selection.createRange().htmlText;
+        }
+    }
+    return html;
+}
+
+var b;
+
+
+document.getElementById("dtarget").addEventListener('drop',drop,false);
+document.getElementById("dtarget").addEventListener('dragenter', dragEnter  , false);
+document.getElementById("dtarget").addEventListener('dragover' , dragOver   , false);
+document.getElementById("dtarget").addEventListener('dragleave', dragLeave  , false);
+
+
+document.addEventListener('paste', function(event){
+	alert(event.clipboardData.getData('text/plain'));
+	document.getElementById("edit").value = event.clipboardData;
+},false);
+document.getElementById("edit").focus();
+alert(document.getElementById("edit").innerHTML);
+document.getElementById("edit").addEventListener('keypress', function(event){
+alert(document.getElementById("edit").innerHTML);
+},false);
+document.getElementById("edit").setAttribute('height',0);
+document.getElementById("edit").setAttribute('width',0);
+document.addEventListener('keypress', function(event){
+
+	if (!event) { /* This will happen in IE*/ 
+		event = window.event;
+	}
+		
+	var keyCode = event.keyCode;
+	if(keyCode != 8)
+	alert(event.keyCode);	
+	/*if (keyCode == 8 &&
+		((event.target || event.srcElement).tagName != "TEXTAREA") && 
+		((event.target || event.srcElement).tagName != "INPUT")) { 
+		
+		if (navigator.userAgent.toLowerCase().indexOf("msie") == -1) {
+			event.stopPropagation();
+		} else {
+			alert("prevented");
+			event.returnValue = false;
+		}
+		
+		return false;
+	}*/
+
+
+	//alert(event.keyCode);	
+},false);
+document.onkeydown = 
+   function (event) {
+	
+	if (!event) {  /*This will happen in IE */
+		event = window.event;
+	}
+		
+	var keyCode = event.keyCode;
+	
+	if (keyCode == 8 &&
+		((event.target || event.srcElement).tagName != "TEXTAREA") && 
+		((event.target || event.srcElement).tagName != "INPUT")) { 
+		
+			
+		if (navigator.userAgent.toLowerCase().indexOf("msie") == -1) {
+			event.stopPropagation();
+		} else {
+			alert("prevented");
+			event.returnValue = false;
+		}
+		
+		return false;
+	}
+	
+
+	
+	//alert(event.keyCode +" " +String.fromCharCode(event.keyCode));
+};
+
+</script>
+
+
+</body>
+</html>
