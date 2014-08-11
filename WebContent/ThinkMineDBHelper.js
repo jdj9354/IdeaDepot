@@ -118,15 +118,16 @@ this.prepareDB = function(){
 	
 	dbObj.open(function(err,db){
 		
-		if(err != null){
-			
+		if (err) {
+			//sys.puts(err);
+		} else {
+			mindMapCollection = db.collection(MIND_MAP_COLLECTION_NAME);	
+			mindObjectCollection = db.collection(MIND_OBJECT_COLLECTION_NAME);
+			shapeCollection = db.collection(SHAPE_COLLECTION_NAME);
+			contentsCollection = db.collection(CONTENTS_COLLECTION_NAME);
+			edgeCollection = db.collection(EDGE_COLLECTION_NAME);		
 		}
 		
-		mindMapCollection = db.collection(MIND_MAP_COLLECTION_NAME);	
-		mindObjectCollection = db.collection(MIND_OBJECT_COLLECTION_NAME);
-		shapeCollection = db.collection(SHAPE_COLLECTION_NAME);
-		contentsCollection = db.collection(CONTENTS_COLLECTION_NAME);
-		edgeCollection = db.collection(EDGE_COLLECTION_NAME);		
 	});
 	
 	// var testa = this.makeCommunicationMindMap([0,0]);
