@@ -157,8 +157,35 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 	
 	
 
+	//Compose new Root Mindmap
+	if(mindMapId == ""){
+		var newId = new ObjectID();		
 		
-	console.log(mindMapId);
+		communicationMindMap.Code = CODE_MIND_MAP_REQUEST_MIND_INFO;
+		communicationMindMap.MMID = newId+'';
+			console.log(communicationMindMap.MMID);
+		communicationMindMap.PMOID = '';			
+		communicationMindMap.CMOS = new Array();
+		communicationMindMap.MAXRD = 300;
+		communicationMindMap.MAXOC = 100;
+		
+		process.send({replyRequestSocketId : requestSocketId,
+				reply : {retObject : communicationMindMap}});
+				
+				
+		var newMindMap = {};
+		
+		newMindMap._id = communicationMindMap.MMID;
+		newMindMap.max_mind_object_count = communicationMindMap.MAXRD;
+		newMindMap.max_rel_distance = communicationMindMap.MAXOC;
+		newMindMap.mind_objects = communicationMindMap.CMOS;
+		newMindMap.parent_mind_map = communicationMindMap.PMOID;
+		
+		mindMapCollection.insert(newMindMap,function(err, result) {});
+		
+		return;
+		
+	}
 	
 	mindMapCollection.findOne({"_id": new ObjectID(mindMapId)},function(err, resultItem) {
 		if(err!=null){
@@ -181,7 +208,8 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 		
 		var loopFunction = function(err,childMindObjectInfo){
 			if (err != null){
-				
+				process.send({replyRequestSocketId : requestSocketId,
+				reply : {retObject : communicationMindMap}});
 			}
 			
 			
