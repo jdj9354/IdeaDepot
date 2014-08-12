@@ -87,31 +87,7 @@ this.prepareDB = function(){
 
 			console.log("MongoDB connected");
 			
-			var collection = db.collection('mindmap');
-			var doc1 = {'hello':'doc1'};
-			
-		// collection.insert(doc1,function(err, result) {});
-			
-			var aa=null;
-			var f = false;
-			
-			var etest = new process.EventEmitter();
-			
-			etest.on('found',function(){console.log(aa.text); f = true;});
-			
-		// console.log(c+'');
-			collection.findOne({"_id" : new ObjectID("536f9de336ace5e65af718f1")},function(err, item){if(item==null) console.log("null!");aa=item;
-			console.log(item);
-			var b = item._id+'';
-			console.log(b);});
-			
-			console.log("Pass!");
-			// while(aa==null){}
-			
-			// aa = collection.find().toArray(function(err,
-			// documents){console.log(documents[0]);});
-			
-			// console.log(aa[0].author);
+	
 			
 		
 	});
