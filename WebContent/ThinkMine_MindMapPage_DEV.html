@@ -114,6 +114,10 @@
 			wrappedEventHandler.setOnMouseDrag(function(event){
 													TMCanvas.onMouseDragInterface(event.point.x,event.point.y,0);
 												});
+			//wrappedEventHandler.setOnKeyDown(TMCanvas.onKeyDownInterface);
+			//wrappedEventHandler.setOnCompositionStart(TMCanvas.onCompositionEventStartInterface);
+		//	wrappedEventHandler.setOnCompositionUpdate(TMCanvas.onCompositionEventUpdateInterface);
+			//wrappedEventHandler.setOnCompositionEnd(TMCanvas.onCompositionEventEndInterface);
 			
 			initPaperJSMindMap(1000,600,wrappedEventHandler);
 

@@ -113,8 +113,9 @@ const CODE_MIND_PULL_OUT = "MPO";
 const CODE_MIND_CONNECT_TO = 37;
 const CODE_MIND_DISCONNECT_FROM = 38;
 const CODE_MIND_CHANGE_COLOR_OF_CONTENTS = 39;
+const CODE_MIND_CHANGE_VALUE_OF_CONTENTS = 40;
 const CODE_MIND_CHANGE_CONTENTS = "MCC";
-const CODE_MIND_CHANGE_COLOR_OF_SHAPE = 41;
+const CODE_MIND_CHANGE_COLOR_OF_SHAPE = 42;
 const CODE_MIND_CHANGE_SHAPE = "MCS";
 const CODE_MIND_CHANGE_PARENT_MINDMAP = "MCPMM";
 const CODE_MIND_MAP_REQUEST_MIND_INFO = 65;
@@ -163,9 +164,12 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 	var fMovingObject = null;
 	var fIsDragging = false;
 	
+	var fIsCompositionEventStarted = false;
+	var fIsContentsChanged = false;
+	
 	this.fMindMap = null;
 	
-
+	
 
 	
 	this.onPasteInterface = function(e){
@@ -175,15 +179,64 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		this.addMindObject(e.point.x,e.point.y,0,tempShape,tempContents);
 	};
 	
-	this.onKeyDown = function(characterValue){
-		if(fSelectedObject !=null){
+	this.onKeyDownInterface = function (event) {
+	
+		if (!event) {  /*This will happen in IE */
+			event = window.event;
+		}
+			
+		var keyCode = event.keyCode;
+		
+		if (keyCode == 8 &&
+			((event.target || event.srcElement).tagName != "TEXTAREA") && 
+			((event.target || event.srcElement).tagName != "INPUT")) { 
+			
+				
+			if (navigator.userAgent.toLowerCase().indexOf("msie") == -1) {
+				event.stopPropagation();
+			} else {
+				alert("prevented");
+				event.returnValue = false;
+			}
+			
+			return false;
+		}
+	};
+	
+	this.onCompositionEventStartInterface = function(event){
+		fIsCompositionEventStarted = true;
+	};
+	
+	this.onCompositionEventUpdateInterface = function(event){
+		if(fSelectedObject != null){
 			switch(fSelectedObject.fContents.fContentsType){
-			case "TextContents" :
+			case "TextContents" :			
+				var currentText = fSelectedObject.fContents.fValue;
+				currentText += event.data;
+				
+				fSelectedObject.fContents.fValue = currentText;
+				fIsContentsChanged = true;
+				
+				var tempMindObjectForDrawing = {fX : fSelectedObject.fX ,
+												fY : fSelectedObject.fY ,
+												fZ : fSelectedObject.fZ ,
+												fContents : {fContentsType : ""+fSelectedObject.fContents.fContentsType,
+															 fContentsTypeDependentInfo : fSelectedObject.fContents.fContentsTypeDependentInfo,
+															 fValue : ""+currentText},
+												fMindObjectId : ""+fJobHandler.getMindMap().fMindMapId													
+												};
+				fDrawingObj.pushNewJob([CODE_MIND_CHANGE_VALUE_OF_CONTENTS,
+										tempMindObjectForDrawing
+										]);			
 				break;
 			default : 
 				break;
 			}
 		}
+	};
+	
+	this.onCompositionEventEndInterface = function(event){
+		fIsCompositionEventStarted = false;
 	};
 
 	
@@ -305,13 +358,38 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 				}
 				fSelectedObject = curSelectedObject;
 				
+				var contentsEditor = document.createElement('input');
+				contentsEditor.setAttribute('id',"ContentsEditor");
+				contentsEditor.setAttribute('type','text');
+				contentsEditor.value = fSelectedObject.fContents.fValue;
+				document.body.appendChild(contentsEditor);
+				
+				var applyButton = document.createElement('button');
+				applyButton.setAttribute('id','ApplyButton');
+				applyButton.innerText = 'Apply';
+				
+				var changeValueOfContentsRef = this.changeValueOfContents;
+				applyButton.onclick = function (){
+					changeValueOfContentsRef(fSelectedObject.fMindObjectId, fSelectedObject.fContents.fContentsType, contentsEditor.value);
+				};
+				document.body.appendChild(applyButton);
+				
 			}
 			else{
 				if(fSelectedObject !=null){
 					fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
 					fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
 				}
-				fSelectedObject = null;
+							
+				//this.changeValueOfContents(fSelectedObject.fMindObjectId, fSelectedObject.fContents.fContentsType ,fSelectedObject.fContents.fValue);
+				fSelectedObject = null;	
+				fIsContentsChanged = false;
+				
+				var contentsEditor = document.getElementById('ContentsEditor');
+				contentsEditor.parentNode.removeChild(contentsEditor);				
+				
+				var applyButton = document.getElementById('ApplyButton');
+				applyButton.parentNode.removeChild(applyButton);
 			}
 		
 		}	
@@ -552,6 +630,26 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		fSocketHelper.fSocketDataCommuHelperSender.mindObjectChangeColorOfContentsSend(fJobHandler.getMindMap().fMindMapId,
 																						 mindObjectId,
 																						 color);		
+	};
+	
+	this.changeValueOfContents = function(mindObjectId, contentsType ,contentsValue){
+		if(mindObjectId == null || mindObjectId == undefined){
+			console.log("ThinkMineCanvas - changeColorOfContents Error : mindObjectId is invalid");
+			return;		
+		}		
+		if(contentsValue == null || contentsValue == undefined || typeof(contentsValue) != "string"){
+			console.log("ThinkMineCanvas - changeValueOfContents Error : contentsValue is invalid");
+			return;
+		}
+		if(contentsType == null || contentsType == undefined || typeof(contentsType) != "string"){
+			console.log("ThinkMineCanvas - changeValueOfContents Error : contentsType is invalid");
+			return;
+		}
+		fSocketHelper.fSocketDataCommuHelperSender.mindObjectChangeValueOfContentsSend(fJobHandler.getMindMap().fMindMapId, 
+																						mindObjectId, 
+																						contentsType, 
+																						contentsValue)
+		
 	};
 	
 	
@@ -1097,6 +1195,9 @@ function JobHandler(drawingObj){
 		case CODE_MIND_CHANGE_COLOR_OF_CONTENTS :
 			handleChangeColorOfContentsEvent(eventCode);
 			break;
+		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS : 
+			handleChangeValueOfContentsEvent(eventCode);
+			break;
 		case CODE_MIND_CHANGE_CONTENTS :
 			break;
 		case CODE_MIND_CHANGE_COLOR_OF_SHAPE :
@@ -1608,6 +1709,43 @@ function JobHandler(drawingObj){
 		
 	};
 	
+	var handleChangeValueOfContentsEvent = function(eventCode){
+	
+		var targetIndex = -1;
+		
+		for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
+			if(compareIdValue(fMindMap.getMindObjectOnIndex(i).fMindObjectId,eventCode.MOID)){
+				targetIndex = i;
+			}
+		}
+		
+		if(targetIndex == -1)
+			return;
+		
+		if(fMindMap.getMindObjectOnIndex(targetIndex).fContents == undefined ||
+			fMindMap.getMindObjectOnIndex(targetIndex).fContents == null)
+			return;
+		
+		if(fMindMap.getMindObjectOnIndex(targetIndex).fContents.fValue == undefined || 
+			fMindMap.getMindObjectOnIndex(targetIndex).fContents.fValue == null)
+			return;
+		
+		fMindMap.getMindObjectOnIndex(targetIndex).fContents.fValue = eventCode.CV;
+		
+		var tempMindObjectForDrawing = {fX : fMindMap.getMindObjectOnIndex(targetIndex).fX ,
+										fY : fMindMap.getMindObjectOnIndex(targetIndex).fY ,
+										fZ : fMindMap.getMindObjectOnIndex(targetIndex).fZ ,
+										fContents : {fContentsType : ""+fMindMap.getMindObjectOnIndex(targetIndex).fContents.fContentsType,
+													 fContentsTypeDependentInfo : fMindMap.getMindObjectOnIndex(targetIndex).fContents.fContentsTypeDependentInfo,
+													 fValue : ""+eventCode.CV},
+										fMindObjectId : ""+eventCode.MOID													
+										};
+		fDrawingObj.pushNewJob([CODE_MIND_CHANGE_VALUE_OF_CONTENTS,
+								tempMindObjectForDrawing
+								]);
+
+	};
+	
 	var handleChangeColorOfShapeEvent = function(eventCode){
 		var targetIndex = -1;
 		
@@ -1892,6 +2030,17 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 			MOID : mindObjectId,
 			CC : colorCode});	
 	};
+	this.mindObjectChangeValueOfContentsSend = function(mindMapId, mindObjectId, contentsType, contentsValue){
+		if(fJobHandler == null || fWSocket == null){
+			console.log("SocketDataCommuHelperSender : Object is not Initialized");
+			return;
+		}
+		fWSocket.emit('NewEvent',{Code : CODE_MIND_CHANGE_VALUE_OF_CONTENTS,
+			MMID : mindMapId,
+			MOID : mindObjectId,
+			CT : fEncoder.encodeContentsType(contentsType),
+			CV : contentsValue});	
+	};
 	this.mindObjectChangeContentsSend = function(mindMapId, mindObjectId, contentsType, contents){
 		if(fJobHandler == null || fWSocket == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
@@ -1909,7 +2058,7 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 			MMID : mindMapId,
 			MOID : mindObjectId,
 			CC : colorCode});	
-	};
+	};	
 	this.mindObjectChangeShape = function(mindMapId, mindObjectId, shapeType){
 		if(fJobHandler == null || fWSocket == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
@@ -2080,7 +2229,11 @@ function DrawingObj(drawingInterface){
 		case CODE_MIND_CHANGE_COLOR_OF_CONTENTS :
 			changeColorOfContents(drawingJob[1],drawingJob[2]);
 			break;
+		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS : 
+			changeValueOfContents(drawingJob[1]);
+			break;
 		case CODE_MIND_CHANGE_CONTENTS :
+			change
 			break;
 		case CODE_MIND_CHANGE_COLOR_OF_SHAPE :
 			changeColorOfShape(drawingJob[1],drawingJob[2]);
@@ -2228,6 +2381,16 @@ function DrawingObj(drawingInterface){
 	var changeColorOfContents = function(mindObjectInfo, colorCode){
 		getDrawingFunctionRef(mindObjectInfo.fContents.fContentsType,"changeColor")(colorCode,
 																					mindObjectInfo.fMindObjectId);
+	};
+	
+	var changeValueOfContents = function(mindObjectInfo){
+		getDrawingFunctionRef(mindObjectInfo.fContents.fContentsType,"erase")(mindObjectInfo.fMindObjectId);
+		getDrawingFunctionRef(mindObjectInfo.fContents.fContentsType,"draw")(mindObjectInfo.fX,
+																				mindObjectInfo.fY,
+																				mindObjectInfo.fZ,
+																				mindObjectInfo.fContents.fContentsTypeDependentInfo,
+																				mindObjectInfo.fContents.fValue,
+																				mindObjectInfo.fMindObjectId);
 	};
 	
 	var changeColorOfShape = function(mindObjectInfo, colorCode){
@@ -2990,12 +3153,19 @@ function initPaperJSMindMap(canvasWidth, canvasHeight, wrappedEventHandler){
 	
 	var layer = paper.project.activeLayer;
 	layer.on(wrappedEventHandler);
+	
+	//document.onkeydown = wrappedEventHandler.keydown;
+	//document.adfadf
 }
 
 function WrappedPaperJSEventHandler() {
 	this.mousedown;
 	this.mouseup;
 	this.mousedrag;
+	this.keydown;
+	this.compositionstart;
+	this.compositionupdate;
+	this.compositionend;
 	this.setOnMouseDown = function(onMouseDown){
 		this.mousedown = onMouseDown;
 	}
@@ -3004,6 +3174,18 @@ function WrappedPaperJSEventHandler() {
 	}
 	this.setOnMouseDrag = function(onMouseDrag){
 		this.mousedrag = onMouseDrag;
+	}
+	this.setOnKeyDown = function(onKeyDown){
+		this.keydown = onKeydown;
+	}
+	this.setOnCompositionStart = function(onCompositionStart){
+		this.compositionstart = onCompositionStart;
+	}
+	this.setOnCompositionUpdate = function(onCompositionUpdate){
+		this.compositionupdate = onCompositionUpdate;
+	}
+	this.setOnCompositionEnd = function(onCompositionEnd){
+		this.compositionend = onCompositionEnd;
 	}
 }
 

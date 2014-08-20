@@ -6,8 +6,9 @@ const CODE_MIND_PULL_OUT = "MPO";
 const CODE_MIND_CONNECT_TO = 37;
 const CODE_MIND_DISCONNECT_FROM = 38;
 const CODE_MIND_CHANGE_COLOR_OF_CONTENTS = 39;
+const CODE_MIND_CHANGE_VALUE_OF_CONTENTS = 40;
 const CODE_MIND_CHANGE_CONTENTS = "MCC";
-const CODE_MIND_CHANGE_COLOR_OF_SHAPE = 41;
+const CODE_MIND_CHANGE_COLOR_OF_SHAPE = 42;
 const CODE_MIND_CHANGE_SHAPE = "MCS";
 const CODE_MIND_CHANGE_PARENT_MINDMAP = "MCPMM";
 const CODE_MIND_MAP_REQUEST_MIND_INFO = 65;
@@ -323,6 +324,17 @@ io.sockets.on('connection', function (socket){
 			io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_CHANGE_COLOR_OF_CONTENTS :
+			io.sockets.emit('NewEvent',data);
+			break;
+		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS : 
+			/*var message = {
+				requestSocketId : socket.id,
+				operationType : 3,
+				collectionName : "mindobject",
+				info : data
+			};*/
+			
+			//dbHelperProcess.send(message);
 			io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_CHANGE_COLOR_OF_SHAPE:
