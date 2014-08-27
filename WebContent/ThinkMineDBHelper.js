@@ -589,6 +589,35 @@ this.disconnectMindObjectAndReply = function(info, requestSocketId){
 	});
 };
 
+this.changeMindObjectContentsAndReply = function(info, requestSocketId){
+	var message = {};
+	message.Code = CODE_MIND_CHANGE_VALUE_OF_CONTENTS;
+	
+	mindObjectCollection.findOne({"_id" : new ObjectID(info.MOID)}, function(err, result){
+		if(err != null){
+			message.retString = "changeMindObjectContentsAndReply : Couldn't find MindObject" + info.MOID;				
+			return;
+		}
+		
+		var contentsId = result.contents.oid;
+		contentsCollection.update({"_id" : contentsId}, {"$set" : {"value" : info.CV}},function(err,result){
+			if(err != null){
+				message.retString = "changeMindObjectContentsAndReply : failed to update(change Contents) Contents of MindObject" + info.MOID;				
+				return;
+			}
+			
+			
+			message.retString = "changeMindObjectContentsAndReply : Succeeded to update(change Contents) Contents of MindObject" + info.MOID;
+			message.retObject = info;
+			process.send({replyRequestSocketId : requestSocketId,
+							reply : message});
+		
+			return;
+		});		
+	});
+	
+};
+
 
 this.insertMindObject = function(mindObject){	
 	mindObjectCollection.insert(mindObject,function(err, result) {});
@@ -621,7 +650,34 @@ this.nodeJSCallBackFunction = function(m){
 	var collectionName = m.collectionName;
 	var info = m.info;
 	var requestSocketId = m.requestSocketId;
-	switch(operationType){
+	switch(m.info.Code){
+	case CODE_MIND_ADD :
+		tmdb.createMindObjectAndReply(info,requestSocketId);
+		break;
+	case CODE_MIND_DEL :
+		tmdb.removeMindObjectAndReply(info,requestSocketId);
+		break;
+	case CODE_MIND_MOVE :
+		tmdb.moveMindObjectAndReply(info,requestSocketId);
+		break;
+	case CODE_MIND_CONNECT_TO :
+		tmdb.connectMindObjectAndReply(info,requestSocketId);
+		break;
+	case CODE_MIND_DISCONNECT_FROM :
+		tmdb.disconnectMindObjectAndReply(info, requestSocketId);
+		break;
+	case CODE_MIND_CHANGE_COLOR_OF_CONTENTS :
+		break;
+	case CODE_MIND_CHANGE_VALUE_OF_CONTENTS : 
+		tmdb.changeMindObjectContentsAndReply(info, requestSocketId);
+		break;
+	case CODE_MIND_CHANGE_COLOR_OF_SHAPE :
+		break;
+	case CODE_MIND_MAP_REQUEST_MIND_INFO :
+		tmdb.composeCommunicationMindMapAndReply(info.MMID,requestSocketId);
+		break;
+	}
+	/*switch(operationType){
 	case 0:	
 		switch(collectionName){
 		case MIND_MAP_COLLECTION_NAME :			
@@ -657,12 +713,13 @@ this.nodeJSCallBackFunction = function(m){
 		break;
 	case 3:
 		switch(collectionName){
-		case MIND_OBJECT_COLLECTION_NAME :
+		case MIND_OBJECT_COLLECTION_NAME :			
 			tmdb.moveMindObjectAndReply(info,requestSocketId);
+			break;
 		}
 	default:
 		break;
-	}
+	}*/
 };
 
 };

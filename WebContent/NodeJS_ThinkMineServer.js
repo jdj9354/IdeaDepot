@@ -89,6 +89,9 @@ dbCallBackFunction = function(m){
 		case CODE_MIND_MOVE :
 			io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
+		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS :
+			io.sockets.emit('NewEvent',m.reply.retObject);
+			break;
 		default :
 			break;
 		}
@@ -118,7 +121,7 @@ io.sockets.on('connection', function (socket){
 				requestSocketId : socket.id,
 				operationType : 0,
 				collectionName : "mindmap",
-				info : {mindMapId : data.MMID},				
+				info : data,				
 			};
 			
 			dbHelperProcess.send(message);
@@ -327,15 +330,15 @@ io.sockets.on('connection', function (socket){
 			io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS : 
-			/*var message = {
+			var message = {
 				requestSocketId : socket.id,
 				operationType : 3,
-				collectionName : "mindobject",
+				collectionName : "contents",
 				info : data
-			};*/
+			};
 			
-			//dbHelperProcess.send(message);
-			io.sockets.emit('NewEvent',data);
+			dbHelperProcess.send(message);
+			//io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_CHANGE_COLOR_OF_SHAPE:
 			io.sockets.emit('NewEvent',data);
