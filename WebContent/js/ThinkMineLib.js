@@ -108,7 +108,7 @@ function linearInterpolation(x1,y1,z1, x2,y2,z2, n){
 const CODE_MIND_ADD = 32;
 const CODE_MIND_DEL = 33;
 const CODE_MIND_MOVE = 34;
-const CODE_MIND_PUT_INTO = "MPI";
+const CODE_MIND_PUT_INTO = 35;
 const CODE_MIND_PULL_OUT = "MPO";
 const CODE_MIND_CONNECT_TO = 37;
 const CODE_MIND_DISCONNECT_FROM = 38;
@@ -420,6 +420,15 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 				//			}
 						
 				}
+				else{
+					for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
+						if(fCollisionInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i)) && 
+								MindMap.getMindObjectOnIndex(i) != fMovingObject){
+							this.putIntoMindObject(fMovingObject.fMindObjectId, MindMap.getMindObjectOnIndex(i).fMindObjectId);
+							break;;
+						}
+					}	
+				}
 				// Test Code Block end
 				fIsDragging = false;
 				fMovingObject = null;
@@ -453,7 +462,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 				this.moveMindObject(fMovingObject.fMindObjectId,x,y,z);
 			}
 			
-			var maxRelDistanceBySquare = MindMap.fMaxRelDistance*MindMap.fMaxRelDistance;
+			var maxRelDistanceBySquare = MindMap.getMaxRelDistance()*MindMap.getMaxRelDistance();
 			
 			for(var i=0; i<MindMap.lenOfMindObjectsArray(); i++){
 				var currentMindObject = MindMap.getMindObjectOnIndex(i);
@@ -573,7 +582,25 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 																			mindObjectId,
 																			x,
 																			y,
-																			z)};
+																			z);
+																			
+	};
+	
+	this.putIntoMindObject = function(mindObjectId, dstMindMapId){
+		if(mindObjectId == null || dstMindMapId == undefined || dstMindMapId == null || mindObjectId == undefined){
+			console.log("ThinkMineCanvas - putIntoMindObject Error : mindObjectId or dstMindMapId is invalid");
+			return;
+		}
+		var x = Math.random();
+		var y = Math.random();
+		var z = Math.random();
+		fSocketHelper.fSocketDataCommuHelperSender.mindObjectPutIntoSend(fJobHandler.getMindMap().fMindMapId, 
+																		mindObjectId, 
+																		dstMindMapId, 
+																		x, 
+																		y, 
+																		z);
+	};
 																			
 	this.connectMindObject = function (srcMindObjectId, dstMindObjectId, edgeType, edgeTypeDependentInfo){
 		if(srcMindObjectId == null || srcMindObjectId == undefined
@@ -682,11 +709,15 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 function MindMap(mindMapId, parentMindObjectId){
 	
 	this.fMindMapId = mindMapId;
+	this.fTitle = "";
 	this.fParentMindObjectId = parentMindObjectId;
 	
 	var fMindObjects = new Array();
 	var fMaxRelDistance = 300;
-	var fMaxMindObjectCount = 100;		
+	var fMaxMindObjectCount = 100;
+	var fLimitX = 1200;
+	var fLimitY = 800;
+	var fLimitZ = 1000;
 
 	
 	/*this.setMindObjects = function(m_mindobjects){
@@ -703,12 +734,34 @@ function MindMap(mindMapId, parentMindObjectId){
 		return fMaxRelDistance;
 	};
 	
+	this.setLimitX = function(limitX){
+		fLimitX = limitX;
+	};
+	this.getLimitX = function(){
+		return fLimitX;
+	};
+
+	this.setLimitY = function(limitY){
+		fLimitY = limitY;
+	};
+	this.getLimitY = function(){
+		return fLimitY;
+	};
+	
+	this.setLimitZ = function(limitZ){
+		fLimitZ = limitZ;
+	};
+	this.getLimitZ = function(){
+		return fLimitZ;
+	};
+	
 	this.setMaxMindObjectCount = function(maxMindObjectCount){
 		fMaxMindObjectCount = maxMindObjectCount;
 	};
 	this.getMaxMindObjectCount = function(){
 		return fMaxMindObjectCount;
-	};	
+	};
+	
 	this.pushNewMindObject = function(mindObject){
 		if(fMindObjects.length == fMaxMindObjectCount)
 			return false;
@@ -912,7 +965,7 @@ function MindObject (mindObjectId, childMindMapId, parentMindMapId, shape, conte
 		this.fShape = shape;
 	};
 	this.putInto = function(mindMap){
-		
+		this.removeMindObject();
 	};
 	this.pullFrom = function(mindMap){
 		
@@ -1183,6 +1236,7 @@ function JobHandler(drawingObj){
 			handleMindObjectMoveEvent(eventCode);			
 			break;
 		case CODE_MIND_PUT_INTO :
+			handleMindObjectPutIntoEvent(eventCode);
 			break;
 		case CODE_MIND_PULL_OUT :
 			break;
@@ -1219,7 +1273,8 @@ function JobHandler(drawingObj){
 			return;
 					
 		var mindMapTemp = new MindMap(-1,-1);			
-		var mindMapId = eventCode.MMID;					
+		var mindMapId = eventCode.MMID;
+		var title = eventCode.TT;
 		var parentMindObjectId = eventCode.PMOID;
 					
 		var mindObjectsArrayForDrawing = new Array();
@@ -1297,6 +1352,10 @@ function JobHandler(drawingObj){
 		var maxRelDistance = eventCode.MAXRD;
 		var maxMindObjectCount = eventCode.MAXOC;
 		
+		var limitX = eventCode.LX;
+		var limitY = eventCode.LY;
+		var limitZ = eventCode.LZ;
+		
 		
 		//MaxRelDistance,MaxObjectCount 처리, 연관 마인드 오브젝트 커넥트 처리
 		
@@ -1354,10 +1413,15 @@ function JobHandler(drawingObj){
 				}				
 			}
 		}
-		mindMapTemp.fMindMapId = mindMapId;			
+		mindMapTemp.fMindMapId = mindMapId;
+		mindMapTemp.fTitle = title;
 		mindMapTemp.fParentMindObjectId = parentMindObjectId;
-		mindMapTemp.fMaxRelDistance = maxRelDistance;
-		mindMapTemp.fMaxMindObjectCount = maxMindObjectCount;
+		
+		mindMapTemp.setMaxRelDistance(maxRelDistance);
+		mindMapTemp.setMaxMindObjectCount(maxMindObjectCount);
+		mindMapTemp.setLimitX(limitX);
+		mindMapTemp.setLimitY(limitY);
+		mindMapTemp.setLimitZ(limitZ);
 		
 		fMindMap = mindMapTemp;
 		
@@ -1561,6 +1625,52 @@ function JobHandler(drawingObj){
 				                        tempMindObjectForDrawing,
 				                        tempEdgeArrayForDrawing,
 				                        pointArray]);
+				
+				break;
+			}
+		}
+	};
+	
+	var handleMindObjectPutIntoEvent = function(eventCode){
+	
+		for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
+			if(compareIdValue(fMindMap.getMindObjectOnIndex(i).fMindObjectId,eventCode.MOID)) {
+				
+				var tempDelMindObject = fMindMap.getMindObjectOnIndex(i);
+				
+				tempShapeType = "" + tempDelMindObject.fShape.fShapeType;
+				tempContentsType = "" + tempDelMindObject.fContents.fContentsType;
+				
+				tempShapeTypeForDrawing = "" + tempDelMindObject.fShape.fShapeType;
+				tempContentsTypeForDrawing = "" + tempDelMindObject.fContents.fContentsType;
+				
+				var tempDelMindObjectInfoForDrawing = {fShape : {fShapeType : tempShapeTypeForDrawing},
+														fContents : {fContentsType : tempContentsTypeForDrawing},
+														fMindObjectId : tempDelMindObject.fMindObjectId									
+													};
+				
+				var tempDelEdgeInfoArrayForDrawing = new Array();
+				
+				for(var j=0; j<tempDelMindObject.lenOfConnectedEdgesArray(); j++){
+					var tempDelEdge = tempDelMindObject.getConnectedEdgeOnIndex(j);
+					
+					tempDelEdgeInfoForDrawing = {fFirstMindObject : {fMindObjectId : tempDelEdge.fFirstMindObject.fMindObjectId},
+													fSecondMindObject : {fMindObjectId : tempDelEdge.fSecondMindObject.fMindObjectId},
+													fEdgeType : tempDelEdge.fEdgeType
+												};
+					
+					tempDelEdgeInfoArrayForDrawing.push(tempDelEdgeInfoForDrawing);
+				}
+				
+				fMindMap.getMindObjectOnIndex(i).putInto(null);
+				fMindMap.removeMindObjectOnIndex(i);
+				
+				var drawingJob = new Array();
+				drawingJob.push(CODE_MIND_PUT_INTO);
+				drawingJob.push(tempDelMindObjectInfoForDrawing);
+				drawingJob.push(tempDelEdgeInfoArrayForDrawing);
+				
+				fDrawingObj.pushNewJob(drawingJob);					
 				
 				break;
 			}
@@ -1966,7 +2076,14 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
-		var SendInfo = "";
+		var SendInfo = {Code : CODE_MIND_PUT_INTO,
+						MMID : mindMapId,
+						MOID : mindObjectId,
+						DMMID : destinationMindMapId,
+						X : x,
+						Y : y,
+						Z : z
+						};
 		
 		
 		fWSocket.emit('NewEvent',SendInfo);
@@ -2217,6 +2334,7 @@ function DrawingObj(drawingInterface){
 			moveMindObject(drawingJob[1], drawingJob[2], drawingJob[3]);
 			break;
 		case CODE_MIND_PUT_INTO :
+			putIntoMindObject(drawingJob[1], drawingJob[2]);
 			break;
 		case CODE_MIND_PULL_OUT :
 			break;
@@ -2359,6 +2477,20 @@ function DrawingObj(drawingInterface){
 		
 		
 		
+	};
+	
+	var putIntoMindObject = function(delMindObjectInfo, delEdgeInfo){
+		
+		//빠져들어가는 효과로 변경 필요
+		
+		getDrawingFunctionRef(delMindObjectInfo.fShape.fShapeType, "erase")(delMindObjectInfo.fMindObjectId);
+
+		getDrawingFunctionRef(delMindObjectInfo.fContents.fContentsType, "erase")(delMindObjectInfo.fMindObjectId);
+		
+		for(var i=0; i<delEdgeInfo.length; i++){
+			getDrawingFunctionRef(delEdgeInfo[i].fEdgeType, "erase")(delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
+																	delEdgeInfo[i].fSecondMindObject.fMindObjectId);
+		}		
 	};
 	
 	var drawEdge = function(newEdgeInfo){

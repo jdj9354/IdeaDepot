@@ -11,7 +11,7 @@ const EDGE_COLLECTION_NAME = "edge";
 const CODE_MIND_ADD = 32;
 const CODE_MIND_DEL = 33;
 const CODE_MIND_MOVE = 34;
-const CODE_MIND_PUT_INTO = "MPI";
+const CODE_MIND_PUT_INTO = 35;
 const CODE_MIND_PULL_OUT = "MPO";
 const CODE_MIND_CONNECT_TO = 37;
 const CODE_MIND_DISCONNECT_FROM = 38;
@@ -33,6 +33,23 @@ var contentsCollection = null;
 var edgeCollection = null;		
 
 var Db = null;
+
+
+var composeMindMapDocument = function(_id, title, parent_mind_object, mind_objects, max_rel_distance, max_mind_object_count, limit_x, limit_y, limit_z){
+	var ret = {};
+	
+	ret._id = _id;
+	ret.title = title;
+	ret.parent_mind_object = parent_mind_object;
+	ret.mind_objects = mind_objects;
+	ret.max_rel_distance = max_rel_distance;
+	ret.max_mind_object_count = max_mind_object_count;
+	ret.limit_x = limit_x;
+	ret.limit_y = limit_y;
+	ret.limit_z = limit_z;	
+	
+	return ret;
+}
 
 this.sequentialFind = function(conditionArray,collection){
 	if(conditionArray == null || collection == null){
@@ -140,24 +157,29 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 		var newId = new ObjectID();		
 		
 		communicationMindMap.Code = CODE_MIND_MAP_REQUEST_MIND_INFO;
-		communicationMindMap.MMID = newId+'';
-			console.log(communicationMindMap.MMID);
+		communicationMindMap.MMID = newId+'';			
+		communicationMindMap.TT = "No Title";
 		communicationMindMap.PMOID = '';			
 		communicationMindMap.CMOS = new Array();
 		communicationMindMap.MAXRD = 300;
 		communicationMindMap.MAXOC = 100;
+		communicationMindMap.LX = 1000;
+		communicationMindMap.LY = 600;
+		communicationMindMap.LZ = 1000;
 		
 		process.send({replyRequestSocketId : requestSocketId,
 				reply : {retObject : communicationMindMap}});
 				
 				
-		var newMindMap = {};
-		
-		newMindMap._id = communicationMindMap.MMID;
-		newMindMap.max_mind_object_count = communicationMindMap.MAXRD;
-		newMindMap.max_rel_distance = communicationMindMap.MAXOC;
-		newMindMap.mind_objects = communicationMindMap.CMOS;
-		newMindMap.parent_mind_map = communicationMindMap.PMOID;
+		var newMindMap = composeMindMapDocument(newId,
+												communicationMindMap.TT,
+												'',
+												new Array(),
+												300,
+												100,
+												1000,
+												600,
+												1000);
 		
 		mindMapCollection.insert(newMindMap,function(err, result) {});
 		
@@ -177,10 +199,14 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 		
 		communicationMindMap.Code = CODE_MIND_MAP_REQUEST_MIND_INFO;
 		communicationMindMap.MMID = resultItem._id+'';			
+		communicationMindMap.TT = resultItem.title+'';
 		communicationMindMap.PMOID = resultItem.parent_mind_object.oid+'';			
 		communicationMindMap.CMOS = new Array();
 		communicationMindMap.MAXRD = resultItem.max_rel_distance;
 		communicationMindMap.MAXOC = resultItem.max_mind_object_count;
+		communicationMindMap.LX = resultItem.limit_x;
+		communicationMindMap.LY = resultItem.limit_y;
+		communicationMindMap.LZ = resultItem.limit_z;
 		
 		var childCount = -1;			
 		
@@ -260,8 +286,8 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 								if(relCount == childMindObjectInfo.related_mind_objects.length){
 									childCount++;
 									if(childCount == resultItem.mind_objects.length){
-										console.log("efef");
-										console.log(communicationMindMap.CMOS[2][13]);											
+										//console.log("efef");
+										//console.log(communicationMindMap.CMOS[2][13]);											
 										process.send({replyRequestSocketId : requestSocketId,
 														reply : {retObject : communicationMindMap}});
 										return;
@@ -327,6 +353,7 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 
 this.createMindObjectAndReply = function(info,requestSocketId){
 	var message = {};
+
 	//message.Code = CODE_MIND_ADD;
 	if(info == null || info == undefined){
 		message.retString = "Failed to insert MindObject " + info.CV;
@@ -349,6 +376,7 @@ this.createMindObjectAndReply = function(info,requestSocketId){
 		contents_type_dependent_info : info.CTDI,
 		value : info.CV
 	};
+	
 	
 	var newMindObject = {
 		_id : newId,
@@ -419,7 +447,7 @@ this.createMindObjectAndReply = function(info,requestSocketId){
 					
 					message.retString = "Succeeded to create MindObject";
 					process.send({replyRequestSocketId : requestSocketId,
-									reply : message});
+									reply : message});						
 					return;
 				});
 				return;
@@ -465,8 +493,223 @@ this.moveMindObjectAndReply = function(info,requestSocketId){
 	
 };
 
-this.removeMindObjectAndReply = function(info,requestSocketId){
+this.putIntoMindObjectAndReply = function(info,requestSocketId) {
+	var message = {};
+	message.Code = CODE_MIND_PUT_INTO;
 	
+
+	
+	if(info ==null || info == undefined){
+		message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+		console.log(message.retString);
+		process.send({replyRequestSocketId : requestSocketId,
+						reply : null});						
+	}
+
+	
+
+	
+	mindMapCollection.findOne({"_id" : new ObjectID(info.MOID)}, function(err, result){
+		if(err !=null){
+			message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+			message.retObject = info;
+			process.send({replyRequestSocketId : requestSocketId,
+						reply : message});
+		}
+		if(result == undefined){
+			message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+			message.retObject = info;
+			process.send({replyRequestSocketId : requestSocketId,
+						reply : message});
+		}
+		console.log(result);
+		if(result != null){
+			putIntoHelperFunction(message,info);
+		}
+		else{
+		
+			var newMindMap = composeMindMapDocument(new ObjectID(info.DMMID),
+													"No Title",
+													new ObjectID(info.MMID),
+													new Array(),
+													300,
+													100,
+													1000,
+													600,
+													1000);
+													
+			mindMapCollection.insert(newMindMap,function(err,result){
+				if(err !=null){
+					message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+					message.retObject = info;
+					process.send({replyRequestSocketId : requestSocketId,
+								reply : message});
+				}
+				if(result == null || result == undefined){
+					message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+					message.retObject = info;
+					process.send({replyRequestSocketId : requestSocketId,
+								reply : message});
+				}
+				putIntoHelperFunction(message,info);				
+			});
+		}
+	});
+	
+	
+	var putIntoHelperFunction = function(message, info){
+		var newIdOriginMindMap = new ObjectID(info.MMID);
+		var newIdMindObject = new ObjectID(info.MOID);
+		var newIdDstMindMap = new ObjectID(info.DMMID);
+		
+		var relatedMindObjects;	
+		
+		var limitX;
+		var limitY;
+		var limitZ;
+		
+		var newX;
+		var newY;
+		var newZ;
+		
+		mindMapCollection.findOne({"_id" : newIdOriginMindMap}, function(err, result){
+			if(err !=null){
+				message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+				message.retObject = info;
+				process.send({replyRequestSocketId : requestSocketId,
+							reply : message});
+			}
+			if(result == null || result == undefined){
+				message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+				message.retObject = info;
+				process.send({replyRequestSocketId : requestSocketId,
+							reply : message});
+			}
+			limitX = result.limit_x;
+			limitY = result.limit_y;
+			limitZ = result.limit_z;
+			
+			newX = parseInt(limitX * info.X);
+			newY = parseInt(limitY * info.Y);
+			newZ = parseInt(limitZ * info.Z);
+
+			mindObjectCollection.findOne({"_id" : newIdMindObject}, function(err, result){
+				if(err !=null){
+					message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+					message.retObject = info;
+					process.send({replyRequestSocketId : requestSocketId,
+								reply : message});
+					return;
+				}
+				if(result == null || result == undefined){
+					message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+					message.retObject = info;
+					process.send({replyRequestSocketId : requestSocketId,
+								reply : message});
+					return;
+				}
+				
+				relatedMindObjects = result.related_mind_objects;
+				
+				mindMapCollection.update({"_id" : newIdOriginMindMap},{"$pull" : {"mind_objects" : {"$ref" : "mindobject" , "$id" : newIdMindObject}}}, function(err, result){
+			
+					if(err != null){
+						message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+						message.retObject = info;
+						process.send({replyRequestSocketId : requestSocketId,
+									reply : message});
+						return;
+					}
+							
+					/*if(result == null || result == undefined){
+						message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+						message.retObject = info;
+						process.send({replyRequestSocketId : requestSocketId,
+									reply : message});
+						return;
+					}*/
+					
+					mindMapCollection.update({"_id" : newIdDstMindMap},{"$push" : {"mind_objects" : new DBRef("mindobject", newIdMindObject)}},function(err,result){
+						if(err != null){
+							message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+							message.retObject = info;
+							process.send({replyRequestSocketId : requestSocketId,
+										reply : message});
+							return;
+						}
+						
+						
+						mindObjectCollection.update({"_id" : newIdMindObject},{"$set" : {"parent_mind_map" : new DBRef("mindmap",newIdDstMindMap), 
+																						"related_mind_objects" : {},
+																						"x" : newX,
+																						"y" : newY,
+																						"z" : newZ}}, function(err,result){
+							if(err != null){
+								message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+								message.retObject = info;
+								process.send({replyRequestSocketId : requestSocketId,
+											reply : message});
+								return;
+							}
+							edgeCollection.remove({"$or" : [{"first_mind_object_id" : new ObjectID(info.MOID)},{"second_mind_object_id" : new ObjectID(info.MOID)}]}
+							,function(err, result){
+								if(err !=null){
+									message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
+									message.retObject = info;
+									process.send({replyRequestSocketId : requestSocketId,
+												reply : message});
+									return;								
+								}
+								
+							});
+							
+							var queryCount = 0;
+							var mutex = false;
+							
+							for(var i=0; i<relatedMindObjects.length; i++){
+								mindObjectCollection.update({"_id" : relatedMindObjects[i].oid},{"$pull" : {"related_mind_objects" : {"$ref" : "mindobject","$id" : new ObjectID(info.MOID)}}},function (err,result){
+									if(err != null){									
+									}
+									
+									if(result == null || result == undefined){
+									}
+									while(mutex){
+										;
+									}
+									mutex = true;
+									queryCount++;
+									mutex = false;
+									console.log(queryCount);
+									if(queryCount == relatedMindObjects.length){										
+										message.retObject = {Code : CODE_MIND_PUT_INTO,
+															 MMID : info.MMID,
+															 MOID : info.MOID,
+															 DMMID : info.DMMID,
+															 X : newX,
+															 Y : newY,
+															 Z : newZ};
+										
+										message.retString = "Succeeded to change Parent MindMap of MindObject("+info.MOID+")";
+										process.send({replyRequestSocketId : requestSocketId,
+														reply : message});
+										
+									}
+								});
+							}
+							
+						});
+					});
+				});
+			});
+		});	
+
+	};
+};
+
+this.removeMindObjectAndReply = function(info,requestSocketId){
+
+	//Need to add removing Edge Info, And it should returns some object.
+
 	mindObjectCollection.findOne({"_id" : new ObjectID(info.MOID)}, function(err, result){
 		if(err != null){
 			
@@ -514,10 +757,11 @@ this.removeMindObjectAndReply = function(info,requestSocketId){
 						if(result == null || result == undefined){
 							
 						}
-					});
+					});					
+
 					
 					for(var i=0; i<relatedMindObjects.length; i++){
-						mindObjectCollection.update({"_id" : relatedMindObjects[i].oid},{"$pull" : {"_id" : info.MOID}},function (err,result){
+						mindObjectCollection.update({"_id" : relatedMindObjects[i].oid},{"$pull" : {"$ref" : "mindobject","$id" : new ObjectID(info.MOID)}},function (err,result){
 							if(err != null){
 								
 							}
@@ -526,8 +770,7 @@ this.removeMindObjectAndReply = function(info,requestSocketId){
 								
 							}
 						});
-					}
-					
+					}					
 				});
 				
 			});
@@ -659,6 +902,9 @@ this.nodeJSCallBackFunction = function(m){
 		break;
 	case CODE_MIND_MOVE :
 		tmdb.moveMindObjectAndReply(info,requestSocketId);
+		break;
+	case CODE_MIND_PUT_INTO : 
+		tmdb.putIntoMindObjectAndReply(info,requestSocketId);
 		break;
 	case CODE_MIND_CONNECT_TO :
 		tmdb.connectMindObjectAndReply(info,requestSocketId);
