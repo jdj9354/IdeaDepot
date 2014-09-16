@@ -424,7 +424,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 					for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
 						if(fCollisionInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i)) && 
 								MindMap.getMindObjectOnIndex(i) != fMovingObject){
-							this.putIntoMindObject(fMovingObject.fMindObjectId, MindMap.getMindObjectOnIndex(i).fMindObjectId);
+							this.putIntoMindObject(fMovingObject, MindMap.getMindObjectOnIndex(i).fMindObjectId);
 							break;;
 						}
 					}	
@@ -586,8 +586,8 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 																			
 	};
 	
-	this.putIntoMindObject = function(mindObjectId, dstMindMapId){
-		if(mindObjectId == null || dstMindMapId == undefined || dstMindMapId == null || mindObjectId == undefined){
+	this.putIntoMindObject = function(mindObject, dstMindMapId){
+		if(mindObject == null || dstMindMapId == undefined || dstMindMapId == null || mindObject == undefined){
 			console.log("ThinkMineCanvas - putIntoMindObject Error : mindObjectId or dstMindMapId is invalid");
 			return;
 		}
@@ -595,7 +595,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		var y = Math.random();
 		var z = Math.random();
 		fSocketHelper.fSocketDataCommuHelperSender.mindObjectPutIntoSend(fJobHandler.getMindMap().fMindMapId, 
-																		mindObjectId, 
+																		mindObject, 
 																		dstMindMapId, 
 																		x, 
 																		y, 
@@ -1632,48 +1632,118 @@ function JobHandler(drawingObj){
 	};
 	
 	var handleMindObjectPutIntoEvent = function(eventCode){
-	
-		for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
-			if(compareIdValue(fMindMap.getMindObjectOnIndex(i).fMindObjectId,eventCode.MOID)) {
-				
-				var tempDelMindObject = fMindMap.getMindObjectOnIndex(i);
-				
-				tempShapeType = "" + tempDelMindObject.fShape.fShapeType;
-				tempContentsType = "" + tempDelMindObject.fContents.fContentsType;
-				
-				tempShapeTypeForDrawing = "" + tempDelMindObject.fShape.fShapeType;
-				tempContentsTypeForDrawing = "" + tempDelMindObject.fContents.fContentsType;
-				
-				var tempDelMindObjectInfoForDrawing = {fShape : {fShapeType : tempShapeTypeForDrawing},
-														fContents : {fContentsType : tempContentsTypeForDrawing},
-														fMindObjectId : tempDelMindObject.fMindObjectId									
+		if(eventCode.MMID == fMindMap.fMindMapId){
+			for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
+				if(compareIdValue(fMindMap.getMindObjectOnIndex(i).fMindObjectId,eventCode.MOID)) {
+					
+					var tempDelMindObject = fMindMap.getMindObjectOnIndex(i);
+					
+					tempShapeType = "" + tempDelMindObject.fShape.fShapeType;
+					tempContentsType = "" + tempDelMindObject.fContents.fContentsType;
+					
+					tempShapeTypeForDrawing = "" + tempDelMindObject.fShape.fShapeType;
+					tempContentsTypeForDrawing = "" + tempDelMindObject.fContents.fContentsType;
+					
+					var tempDelMindObjectInfoForDrawing = {fShape : {fShapeType : tempShapeTypeForDrawing},
+															fContents : {fContentsType : tempContentsTypeForDrawing},
+															fMindObjectId : tempDelMindObject.fMindObjectId									
+														};
+					
+					var tempDelEdgeInfoArrayForDrawing = new Array();
+					
+					for(var j=0; j<tempDelMindObject.lenOfConnectedEdgesArray(); j++){
+						var tempDelEdge = tempDelMindObject.getConnectedEdgeOnIndex(j);
+						
+						tempDelEdgeInfoForDrawing = {fFirstMindObject : {fMindObjectId : tempDelEdge.fFirstMindObject.fMindObjectId},
+														fSecondMindObject : {fMindObjectId : tempDelEdge.fSecondMindObject.fMindObjectId},
+														fEdgeType : tempDelEdge.fEdgeType
 													};
-				
-				var tempDelEdgeInfoArrayForDrawing = new Array();
-				
-				for(var j=0; j<tempDelMindObject.lenOfConnectedEdgesArray(); j++){
-					var tempDelEdge = tempDelMindObject.getConnectedEdgeOnIndex(j);
+						
+						tempDelEdgeInfoArrayForDrawing.push(tempDelEdgeInfoForDrawing);
+					}
 					
-					tempDelEdgeInfoForDrawing = {fFirstMindObject : {fMindObjectId : tempDelEdge.fFirstMindObject.fMindObjectId},
-													fSecondMindObject : {fMindObjectId : tempDelEdge.fSecondMindObject.fMindObjectId},
-													fEdgeType : tempDelEdge.fEdgeType
-												};
+					fMindMap.getMindObjectOnIndex(i).putInto(null);
+					fMindMap.removeMindObjectOnIndex(i);
 					
-					tempDelEdgeInfoArrayForDrawing.push(tempDelEdgeInfoForDrawing);
+					var drawingJob = new Array();
+					drawingJob.push(CODE_MIND_PUT_INTO);
+					drawingJob.push(0);
+					drawingJob.push(tempDelMindObjectInfoForDrawing);
+					drawingJob.push(tempDelEdgeInfoArrayForDrawing);
+					
+					fDrawingObj.pushNewJob(drawingJob);					
+					
+					break;
 				}
-				
-				fMindMap.getMindObjectOnIndex(i).putInto(null);
-				fMindMap.removeMindObjectOnIndex(i);
-				
-				var drawingJob = new Array();
-				drawingJob.push(CODE_MIND_PUT_INTO);
-				drawingJob.push(tempDelMindObjectInfoForDrawing);
-				drawingJob.push(tempDelEdgeInfoArrayForDrawing);
-				
-				fDrawingObj.pushNewJob(drawingJob);					
-				
-				break;
 			}
+		}
+		else if(eventCode.DMMID == fMindMap.fMindMapId){
+			for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
+				if(compareIdValue(fMindMap.getMindObjectOnIndex(i).fMindObjectId,eventCode.MOID))
+					return;
+			}
+			
+			var tempShape;
+			var tempShapeType = fDecoder.decodeShapeType(eventCode.ST);
+			var tempShapeTypeDependentInfo;
+			
+			var tempShapeForDrawing;
+			var tempShapeTypeForDrawing = fDecoder.decodeShapeType(eventCode.ST);
+			var tempShapeTypeDependentInfoForDrawing;	
+			
+			
+			tempShapeTypeDependentInfo = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);						
+			tempShapeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);			
+
+			
+			tempShape = new Shape(tempShapeType, tempShapeTypeDependentInfo);
+			tempShapeForDrawing = new Shape(tempShapeTypeForDrawing, tempShapeTypeDependentInfoForDrawing);
+						
+			var tempContents;
+			var tempContentsType = fDecoder.decodeContentsType(eventCode.CT);
+			var tempContentsTypeDependentInfo;
+			var tempContentsValue = eventCode.CV;
+			
+			var tempContentsForDrawing;
+			var tempContentsTypeForDrawing = fDecoder.decodeContentsType(eventCode.CT);
+			var tempContentsTypeDependentInfoForDrawing;
+			var tempContentsValueForDrawing = ""+eventCode.CV;	
+			
+			
+			tempContentsTypeDependentInfo = getObjTypeDependentInfo(tempContentsType, eventCode.CTDI);
+			tempContentsTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempContentsType, eventCode.CTDI);
+
+			
+			tempContents = new Contents(tempContentsType, tempContentsTypeDependentInfo, tempContentsValue);
+			
+			tempContentsForDrawing = new Contents(tempContentsTypeForDrawing, tempContentsTypeDependentInfoForDrawing, tempContentsValueForDrawing);
+			
+			var tempMindObject = new MindObject (eventCode.MOID,										//MindObjectID1,2
+													eventCode.MOID,										//ChildMindMapID1,2
+													eventCode.DMMID,										//MindMapID1,2
+													tempShape,											//Shape
+													tempContents,										//Contents
+													eventCode.X,										//x
+													eventCode.Y,										//y
+													eventCode.Z											//z
+													);
+			fMindMap.pushNewMindObject(tempMindObject);
+			
+			var tempMindObjectForDrawing = {fX : tempMindObject.fX,
+											fY : tempMindObject.fY,
+											fZ : tempMindObject.fZ,
+											fShape : tempShapeForDrawing,
+											fContents : tempContentsForDrawing,
+											fMindObjectId : tempMindObject.fMindObjectId							
+											};
+			var drawingJob = new Array();
+			drawingJob.push(CODE_MIND_PUT_INTO);
+			drawingJob.push(1);
+			drawingJob.push(tempMindObjectForDrawing);
+			fDrawingObj.pushNewJob(drawingJob);	
+		}
+		else{
+			//do nothing
 		}
 	};
 	
@@ -1891,9 +1961,24 @@ function JobHandler(drawingObj){
 		fMutexLocked = true;
 		var latestJob = fJobQ[0];
 		fJobQ.splice(0,1);
-		var ret = handleEventCode(latestJob);
+		var ret = 0;
+		if(fMindMap != null){
+			if(latestJob.MMID == fMindMap.fMindMapId) 
+				ret = handleEventCode(latestJob);			
+			else {
+				if(latestJob.Code == CODE_MIND_PUT_INTO) {
+					if(latestJob.DMMID == fMindMap.fMindMapId){
+						ret = handleEventCode(latestJob);
+					}
+				}
+			}			
+		}
+		else{
+			if(latestJob.Code == CODE_MIND_MAP_REQUEST_MIND_INFO)
+				ret = handleEventCode(latestJob);
+		}
 		if(ret == 0){
-			//오류 메세지 출력 및 MindMap 재 초기화
+			;//오류 메세지 출력 및 MindMap 재 초기화
 		}
 		fMutexLocked = false;
 	};
@@ -2071,19 +2156,56 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 									Z : z});		
 		
 	};
-	this.mindObjectPutIntoSend = function(mindMapId, mindObjectId, destinationMindMapId, x, y, z){
+	this.mindObjectPutIntoSend = function(mindMapId, mindObject, destinationMindMapId, x, y, z){
 		if(fJobHandler == null || fWSocket == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
+		
+		var tempShapeType = mindObject.fShape.fShapeType;
+		var tempShapeTypeDependentInfo = mindObject.fShape.fShapeTypeDependentInfo;
+		var tempShapeTypeDependentInfoArray;
+		
+		
+		
+		
+		tempShapeTypeDependentInfoArray = genArrayForCommu(tempShapeType, tempShapeTypeDependentInfo);
+		
+		if(tempShapeTypeDependentInfoArray == null){			
+			console.log("SocketDataCommuHelperSender - mindObjectPutIntoSend : There is no matched type");			
+			return;
+		}
+		
+		
+		
+		var tempContentsType = mindObject.fContents.fContentsType;
+		var tempContentsTypeDependentInfo = mindObject.fContents.fContentsTypeDependentInfo;
+		var tempContentsTypeDependentInfoArray;
+		var tempContentsValue = mindObject.fContents.fValue;
+		
+		
+		
+		
+		tempContentsTypeDependentInfoArray = genArrayForCommu(tempContentsType, tempContentsTypeDependentInfo);
+		
+		if(tempContentsTypeDependentInfoArray == null){			
+			console.log("SocketDataCommuHelperSender - mindObjectPutIntoSend : There is no matched type");			
+			return;
+		}
+		
+		
 		var SendInfo = {Code : CODE_MIND_PUT_INTO,
 						MMID : mindMapId,
-						MOID : mindObjectId,
+						MOID : mindObject.fMindObjectId,
 						DMMID : destinationMindMapId,
 						X : x,
 						Y : y,
-						Z : z
-						};
+						Z : z,
+						ST : fEncoder.encodeShapeType(tempShapeType),
+						STDI : tempShapeTypeDependentInfoArray,
+						CT : fEncoder.encodeContentsType(tempContentsType),
+						CTDI : tempContentsTypeDependentInfoArray,
+						CV : tempContentsValue};	
 		
 		
 		fWSocket.emit('NewEvent',SendInfo);
@@ -2264,13 +2386,28 @@ function SocketDataCommuHelperRecv (jobHandler,wSocket) {
 		fJobHandler.pushNewJob(loadingInfo);
 	};
 	this.onGetLatestEventRecv = function(newJob){
-		//여기에 나중에 MindMapID에 따른 필터 추가 --> MindMapID이 안맞으면 전부 PASS, MindMapID가 맞는데 MindMap이 null이면 임시 잡큐에 push	
 		if(fJobHandler == null || fWSocket == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
+		
+		fJobHandler.pushNewJob(newJob);
+	
+		/*if(fJobHandler.getMindMap() == null)
+			fJobHandler.pushNewJob(newJob);
+		else {
+			if(newJob.MMID == fJobHandler.getMindMap().fMindMapId)
+				fJobHandler.pushNewJob(newJob);
+			else{
+				if(newJob.Code == CODE_MIND_PUT_INTO)
+					
+			}
+		}
+		*/
+		//여기에 나중에 MindMapID에 따른 필터 추가 --> MindMapID이 안맞으면 전부 PASS, MindMapID가 맞는데 MindMap이 null이면 임시 잡큐에 push	
+
 		//console.log("push new job");
-		fJobHandler.pushNewJob(newJob);		
+		//fJobHandler.pushNewJob(newJob);		
 	};	
 }
 
@@ -2334,7 +2471,7 @@ function DrawingObj(drawingInterface){
 			moveMindObject(drawingJob[1], drawingJob[2], drawingJob[3]);
 			break;
 		case CODE_MIND_PUT_INTO :
-			putIntoMindObject(drawingJob[1], drawingJob[2]);
+			putIntoMindObject(drawingJob[1], drawingJob[2], drawingJob[3]);
 			break;
 		case CODE_MIND_PULL_OUT :
 			break;
@@ -2479,18 +2616,32 @@ function DrawingObj(drawingInterface){
 		
 	};
 	
-	var putIntoMindObject = function(delMindObjectInfo, delEdgeInfo){
+	var putIntoMindObject = function(flagValue, delMindObjectInfo_or_addMindObjectInfo, delEdgeInfo){
 		
 		//빠져들어가는 효과로 변경 필요
-		
-		getDrawingFunctionRef(delMindObjectInfo.fShape.fShapeType, "erase")(delMindObjectInfo.fMindObjectId);
+		if(flagValue == 0){
+			var delMindObjectInfo = delMindObjectInfo_or_addMindObjectInfo;
+			getDrawingFunctionRef(delMindObjectInfo.fShape.fShapeType, "erase")(delMindObjectInfo.fMindObjectId);
 
-		getDrawingFunctionRef(delMindObjectInfo.fContents.fContentsType, "erase")(delMindObjectInfo.fMindObjectId);
-		
-		for(var i=0; i<delEdgeInfo.length; i++){
-			getDrawingFunctionRef(delEdgeInfo[i].fEdgeType, "erase")(delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
-																	delEdgeInfo[i].fSecondMindObject.fMindObjectId);
-		}		
+			getDrawingFunctionRef(delMindObjectInfo.fContents.fContentsType, "erase")(delMindObjectInfo.fMindObjectId);
+			
+			for(var i=0; i<delEdgeInfo.length; i++){
+				getDrawingFunctionRef(delEdgeInfo[i].fEdgeType, "erase")(delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
+																		delEdgeInfo[i].fSecondMindObject.fMindObjectId);
+			}		
+		}
+		else{
+			var mindObject = delMindObjectInfo_or_addMindObjectInfo;
+			
+			getDrawingFunctionRef(mindObject.fShape.fShapeType, "draw")(mindObject.fX, mindObject.fY, mindObject.fZ,
+												mindObject.fShape.fShapeTypeDependentInfo,
+												mindObject.fMindObjectId);
+	
+			getDrawingFunctionRef(mindObject.fContents.fContentsType, "draw")(mindObject.fX, mindObject.fY, mindObject.fZ,
+															mindObject.fContents.fContentsTypeDependentInfo,
+															mindObject.fContents.fValue,
+															mindObject.fMindObjectId);	
+		}
 	};
 	
 	var drawEdge = function(newEdgeInfo){

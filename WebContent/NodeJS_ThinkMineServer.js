@@ -175,7 +175,7 @@ io.sockets.on('connection', function (socket){
 			
 			break;
 		case CODE_MIND_PUT_INTO :
-			
+			console.log("aaaa");
 			var message = {
 				requestSocketId : socket.id,
 				operationType : 3,

@@ -562,7 +562,7 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 		var newIdMindObject = new ObjectID(info.MOID);
 		var newIdDstMindMap = new ObjectID(info.DMMID);
 		
-		var relatedMindObjects;	
+		var relatedMindObjects;		
 		
 		var limitX;
 		var limitY;
@@ -687,7 +687,12 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 															 DMMID : info.DMMID,
 															 X : newX,
 															 Y : newY,
-															 Z : newZ};
+															 Z : newZ,
+															 ST : info.ST,
+															 STDI : info.STDI,
+															 CT : info.CT,
+															 CTDI : info.CTDI,
+															 CV : info.CV};
 										
 										message.retString = "Succeeded to change Parent MindMap of MindObject("+info.MOID+")";
 										process.send({replyRequestSocketId : requestSocketId,
