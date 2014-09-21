@@ -509,7 +509,7 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 	
 
 	
-	mindMapCollection.findOne({"_id" : new ObjectID(info.MOID)}, function(err, result){
+	mindMapCollection.findOne({"_id" : new ObjectID(info.DMMID)}, function(err, result){
 		if(err !=null){
 			message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
 			message.retObject = info;
@@ -522,7 +522,9 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 			process.send({replyRequestSocketId : requestSocketId,
 						reply : message});
 		}
+				console.log("ccc");
 		console.log(result);
+				console.log("ccc");
 		if(result != null){
 			putIntoHelperFunction(message,info);
 		}
@@ -592,7 +594,8 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 			newX = parseInt(limitX * info.X);
 			newY = parseInt(limitY * info.Y);
 			newZ = parseInt(limitZ * info.Z);
-
+			
+			console.log("a");
 			mindObjectCollection.findOne({"_id" : newIdMindObject}, function(err, result){
 				if(err !=null){
 					message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
@@ -608,6 +611,7 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 								reply : message});
 					return;
 				}
+				console.log("aa");
 				
 				relatedMindObjects = result.related_mind_objects;
 				
@@ -620,6 +624,8 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 									reply : message});
 						return;
 					}
+					
+					console.log("aaa");
 							
 					/*if(result == null || result == undefined){
 						message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
@@ -640,13 +646,14 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 						
 						
 						mindObjectCollection.update({"_id" : newIdMindObject},{"$set" : {"parent_mind_map" : new DBRef("mindmap",newIdDstMindMap), 
-																						"related_mind_objects" : {},
+																						"related_mind_objects" : [],
 																						"x" : newX,
 																						"y" : newY,
 																						"z" : newZ}}, function(err,result){
 							if(err != null){
 								message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
 								message.retObject = info;
+								console.log(message.retString);
 								process.send({replyRequestSocketId : requestSocketId,
 											reply : message});
 								return;
@@ -656,6 +663,7 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 								if(err !=null){
 									message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
 									message.retObject = info;
+									console.log(message.retString);
 									process.send({replyRequestSocketId : requestSocketId,
 												reply : message});
 									return;								
@@ -678,6 +686,7 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 									}
 									mutex = true;
 									queryCount++;
+									console.log(queryCount + " / " + relatedMindObjects.length);
 									mutex = false;
 									console.log(queryCount);
 									if(queryCount == relatedMindObjects.length){										
@@ -792,22 +801,18 @@ this.connectMindObjectAndReply = function(info,requestSocketId) {
 					"edge_type" : info.ET,
 					"edge_type_dependent_info" : info.ETDI
 			
-	};
+	};	
 	edgeCollection.insert(newEdge,function(err, result){
-		if(err != null){
-			
-		}
-		mindObjectCollection.update({"_id" : new ObjectID(info.MOID)},{"$push" : {"related_mind_objects" : {"$ref" : "mindobject","$id" : new ObjectID(info.TMOID)}}},function(err,result){
-			if(err !=null){
-				
+		if(err != null){			
+		}		
+		mindObjectCollection.update({"_id" : new ObjectID(info.MOID)},{"$push" : {"related_mind_objects" : {"$ref" : "mindobject","$id" : new ObjectID(info.TMOID)}}},function(err,result2){
+			if(err !=null){				
 			}
 			
-			mindObjectCollection.update({"_id" : new ObjectID(info.TMOID)},{"$push" : {"related_mind_objects" : {"$ref" : "mindobject","$id" : new ObjectID(info.MOID)}}},function(err,result){
-				if(err !=null){
-					
-				}
-			});
-			
+			mindObjectCollection.update({"_id" : new ObjectID(info.TMOID)},{"$push" : {"related_mind_objects" : {"$ref" : "mindobject","$id" : new ObjectID(info.MOID)}}},function(err,result3){
+				if(err !=null){					
+				}				
+			});			
 		});
 	});
 	

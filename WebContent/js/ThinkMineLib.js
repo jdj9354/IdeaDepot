@@ -466,7 +466,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 			
 			for(var i=0; i<MindMap.lenOfMindObjectsArray(); i++){
 				var currentMindObject = MindMap.getMindObjectOnIndex(i);
-				var Distance = distanceOfTwoPointsBySquare(currentMindObject.fX,currentMindObject.fY,currentMindObject.fZ,fMovingObject.fX,fMovingObject.fY,0);
+				var Distance = distanceOfTwoPointsBySquare(currentMindObject.fX,currentMindObject.fY,currentMindObject.fZ,fMovingObject.fX,fMovingObject.fY,fMovingObject.fZ);
 				//console.log(Distance);
 				var isConnectedMindObject = false;
 				for(var j=0; j<fMovingObject.lenOfRelatedObjectsArray(); j++){
@@ -610,6 +610,11 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		}
 		if(edgeType == null || edgeType == undefined || typeof(edgeType) != "string"){
 			console.log("ThinkeMineCanvas - connectMindObject Error : edgeType is invalid");
+			return;
+		}
+		
+		if(srcMindObjectId == dstMindObjectId){
+			console.log("ThinkeMineCanvas - connectMindObject Error : srcMindObjectId and dstMindMapId are same");
 			return;
 		}
 		
@@ -2390,7 +2395,7 @@ function SocketDataCommuHelperRecv (jobHandler,wSocket) {
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
-		
+		console.log(newJob);
 		fJobHandler.pushNewJob(newJob);
 	
 		/*if(fJobHandler.getMindMap() == null)

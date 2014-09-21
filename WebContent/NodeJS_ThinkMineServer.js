@@ -90,6 +90,7 @@ dbCallBackFunction = function(m){
 			io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
 		case CODE_MIND_PUT_INTO :
+			console.log(m.reply.retObject);
 			io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
 		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS :
