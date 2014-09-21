@@ -167,7 +167,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 	var fIsCompositionEventStarted = false;
 	var fIsContentsChanged = false;
 	
-	this.fMindMap = null;
+	//this.fMindMap = null;
 	
 	
 
