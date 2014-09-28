@@ -147,6 +147,18 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 	
 	var communicationMindMap = {};
 	
+	
+	communicationMindMap.Code = CODE_MIND_MAP_REQUEST_MIND_INFO;
+	communicationMindMap.MMID = null;			
+	communicationMindMap.TT = null;
+	communicationMindMap.PMOID = null;			
+	communicationMindMap.CMOS = null;
+	communicationMindMap.MAXRD = 0;
+	communicationMindMap.MAXOC = 0;
+	communicationMindMap.LX = 0;
+	communicationMindMap.LY = 0;
+	communicationMindMap.LZ = 0;
+	
 	// var eventEmitter = new process.EventEmitter();
 	
 	
@@ -193,7 +205,7 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 		}
 		if(resultItem == null){				
 			process.send({replyRequestSocketId : requestSocketId,
-							reply : null});
+							reply : {retObject : communicationMindMap}});
 			return;
 		}
 		

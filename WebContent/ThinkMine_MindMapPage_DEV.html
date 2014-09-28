@@ -105,14 +105,17 @@
 			
 			
 			var wrappedEventHandler = new WrappedPaperJSEventHandler();
-			wrappedEventHandler.setOnMouseDown(function(event){
+			wrappedEventHandler.setOnMouseDown(function(event){													
+													wrappedEventHandler.dragCount = 0;
 													TMCanvas.onMouseDownInterface(event.point.x,event.point.y,0);
 												});
-			wrappedEventHandler.setOnMouseUp(function(event){
+			wrappedEventHandler.setOnMouseUp(function(event){								
 													TMCanvas.onMouseUpInterface(event.point.x,event.point.y,0);
 												});
 			wrappedEventHandler.setOnMouseDrag(function(event){
-													TMCanvas.onMouseDragInterface(event.point.x,event.point.y,0);
+													wrappedEventHandler.dragCount++;
+													if(wrappedEventHandler.dragCount>1)
+														TMCanvas.onMouseDragInterface(event.point.x,event.point.y,0);
 												});
 			//wrappedEventHandler.setOnKeyDown(TMCanvas.onKeyDownInterface);
 			//wrappedEventHandler.setOnCompositionStart(TMCanvas.onCompositionEventStartInterface);
@@ -155,7 +158,7 @@
 			//TMCanvas.initWithMindMap("5419a2a443caa5a02237ae41");
 			
 			//TMCanvas.initWithMindMap("541afd10c856c42401abdc16");
-			TMCanvas.initWithMindMap("541e8e9074b542d82eaca9bd");
+			TMCanvas.initWithMindMap("");
 			
 			var lastDownTarget, canvas;
 
