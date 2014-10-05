@@ -134,6 +134,7 @@ const moveCountLimit = 5;
 
 var CreatingCircle;
 var CreatingImageCircle;
+var CreatingRectangle;
 var DeletingCircle;
 //------------------- ThinkMineCanvas Section------------------------------
 
@@ -327,6 +328,18 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 			}
 			return;*/
 		}
+		else if(CreatingRectangle.contains(new paper.Point(x,y))){
+			var tempShape;
+			var tempShapeTypeDependentInfo = new RectangleShapeTypeDependentInfo(70,70,"#FFFF00",true);
+			
+			var tempContents;
+			var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
+			
+			tempShape = new Shape("RectangleShape",tempShapeTypeDependentInfo);
+			tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"Ok!!!");
+			
+			this.addMindObject(x,y,z,tempShape,tempContents);
+		}
 		// Test Code Block end
 		else {
 			for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
@@ -406,6 +419,8 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 						
 					}
 					else{
+						fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
+						fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
 						resetTMCanvas();
 						//Should implement some effect which is expanding, in order to the user can do anything.
 						this.onDoubleMouseDownInterface(x,y,z);
@@ -1118,6 +1133,16 @@ CircleShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 CircleShapeTypeDependentInfo.constructor = CircleShapeTypeDependentInfo; 
 
 
+function RectangleShapeTypeDependentInfo(width, height, color, isRounded){
+	this.fWidth = width;
+	this.fHeight = height;
+	this.fColor = color;
+	this.fIsRounded = isRounded;
+}
+RectangleShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
+RectangleShapeTypeDependentInfo.constructor = RectangleShapeTypeDependentInfo; 
+
+
 //------------------- Contents Section------------------------------------
 
 
@@ -1169,6 +1194,9 @@ function Encoder(){
 		case "CircleShape" :
 			ret = 16777216;
 			break;
+		case "RectangleShape" :
+			ret = 33554432;
+			break;
 		default :
 			ret = 0;
 			break;		
@@ -1216,6 +1244,9 @@ function Decoder(){
 		switch (shapeType){
 		case 16777216 :
 			ret = "CircleShape";
+			break;
+		case 33554432 :
+			ret = "RectangleShape";
 			break;
 		default :
 			ret = null;
@@ -2085,6 +2116,9 @@ function JobHandler(drawingObj){
 		case "CircleShape" :
 			ret = new CircleShapeTypeDependentInfo(parameterArray[0], parameterArray[1]);
 			break;
+		case "RectangleShape" :
+			ret = new RectangleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+			break;
 		//Contents
 		case "TextContents" :
 			ret = new TextContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
@@ -2420,6 +2454,13 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 		case  "CircleShape" :
 			ret = [typeDependentInfo.fRadius,	//Radius
                    typeDependentInfo.fColor];	//Color
+			break;
+				//Shape
+		case  "RectangleShape" :
+			ret = [typeDependentInfo.fWidth,	//Width
+                   typeDependentInfo.fHeight,	//Height
+				   typeDependentInfo.fColor,	//Color
+				   typeDependentInfo.fIsRounded];	//IsRounded
 			break;
 		//Contents
 		case "TextContents" :
@@ -2814,6 +2855,9 @@ function DrawingObj(drawingInterface){
 			case "EllipseShape" :
 				retFunc = fDrawingInterface.drawEllipseShape;
 				break;
+			case "RectangleShape" :
+				retFunc = fDrawingInterface.drawRectangleShape;
+				break;
 			case "TextContents" :
 				retFunc = fDrawingInterface.drawTextContents;
 				break;
@@ -2835,6 +2879,9 @@ function DrawingObj(drawingInterface){
 				break;
 			case "EllipseShape" :
 				retFunc = fDrawingInterface.eraseEllipseShape;
+				break;
+			case "RectangleShape" :
+				retFunc = fDrawingInterface.eraseRectangleShape;
 				break;
 			case "TextContents" :
 				retFunc = fDrawingInterface.eraseTextContents;
@@ -2860,6 +2907,9 @@ function DrawingObj(drawingInterface){
 			case "EllipseShape" :
 				retFunc = fDrawingInterface.moveEllipseShape;
 				break;
+			case "RectangleShape" :
+				retFunc = fDrawingInterface.moveRectangleShape;
+				break;
 			case "TextContents" :
 				retFunc = fDrawingInterface.moveTextContents;
 				break;
@@ -2879,6 +2929,9 @@ function DrawingObj(drawingInterface){
 			case "CircleShape" :
 				retFunc = fDrawingInterface.changeColorOfCircleShape;
 				break;
+			case "RectangleShape" : 
+				retFunc = fDrawingInterface.changeColorOfRectangleShape;
+				break;
 			case "TextContents" :
 				retFunc = fDrawingInterface.changeColorOfTextContents;
 			}
@@ -2890,6 +2943,9 @@ function DrawingObj(drawingInterface){
 				break;
 			case "EllipseShape" :
 				retFunc = fDrawingInterface.changeOpacityOfEllipseShape;
+				break;
+			case "RectangleShape" :
+				retFunc = fDrawingInterface.changeOpacityOfRectangleShape;
 				break;
 			case "TextContents" :
 				retFunc = fDrawingInterface.changeOpacityOfTextContents;
@@ -2950,6 +3006,24 @@ function DrawingInterface(backBoneType){
 	};
 	
 	this.changeOpacityOfEllipseShape = function(opacity, mindObjectId){
+		
+	};
+	
+	
+	this.drawRectangleShape = function(x, y, z, info, mindObjectId){
+		
+	};
+	this.eraseRectangleShape = function(mindObjectId){
+		
+	};
+	this.moveRectangleShape = function(x, y, z, mindObjectId){
+		
+	};	
+	this.changeColorOfRectangleShape = function(colorCode, mindObjectId){
+		
+	};
+	
+	this.changeOpacityOfRectangleShape = function(opacity, mindObjectId){
 		
 	};
 	
@@ -3147,6 +3221,74 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 		}
 	};
 	
+	
+	this.drawRectangleShape = function(x, y, z, info, mindObjectId){
+	
+		var position = new paper.Point(x - info.fWidth/2,y - info.fHeight/2);
+		var rectangle = new paper.Rectangle(position, new paper.Size(info.fWidth, info.fHeight));
+		var drawingObject = null;
+		if(info.fIsRounded)
+			drawingObject = new paper.Path.Rectangle(rectangle, new paper.Size(10,10));	
+		else
+			drawingObject = new paper.Path.Rectangle(rectangle);	
+			
+		drawingObject.strokeColor = info.fColor;
+		drawingObject.fillColor = info.fColor;
+		drawingObject.fMindObjectId = mindObjectId;
+		paper.view.draw();
+		
+		fShapeObjects.push(drawingObject);
+	
+		
+	};
+	this.eraseRectangleShape = function(mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){					
+				fShapeObjects[i].remove();
+				paper.view.draw();
+				
+				fShapeObjects.splice(i,1);
+				break;
+			}
+		}		
+	};
+	this.moveRectangleShape = function(x, y, z, mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				var newPoint = new paper.Point(x,y);
+				fShapeObjects[i].position = newPoint;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};	
+	this.changeColorOfRectangleShape = function(colorCode, mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				fShapeObjects[i].fillColor = colorCode;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};
+	
+	this.changeOpacityOfRectangleShape = function(opacity, mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				fShapeObjects[i].opacity = opacity;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};
+	
+	
 	//Contents Section
 	
 	this.drawTextContents = function(x, y, z, info, value, mindObjectId){
@@ -3328,6 +3470,11 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 				paper.view.draw();
 				
 				fContentsObjects.splice(i,1);
+				
+				var videoTag = document.getElementById("divvid"+mindObjectId);
+				if(videoTag !=null)
+					videoTag.parentNode.removeChild(videoTag);
+				
 				break;
 			}
 				
@@ -3505,6 +3652,11 @@ function PaperJS_CollisionCheckInterface(){
 				strokeColor : 'black'
 			});
 			break;
+		case "RectangleShape" :
+			var tempRectangle = new paper.Rectangle(new paper.Point(mindObject.fX - shapeTypeDependentInfo.fWidth/2,mindObject.fY - shapeTypeDependentInfo.fHeight/2), new paper.Size(shapeTypeDependentInfo.fWidth, shapeTypeDependentInfo.fHeight));
+			var tempCornerSize = new paper.Size(10,10);			
+			paperObject = new paper.Path.Rectangle(tempRectangle, tempCornerSize);
+			break;
 		default :
 			break;		
 		}
@@ -3551,7 +3703,10 @@ function initPaperJSMindMap(canvasWidth, canvasHeight, wrappedEventHandler){
 	DeletingCircle = new paper.Path.Circle(new paper.Point(500,70), 50);
 	DeletingCircle.fillColor = 'black';	
 	
-	
+	var rectangle = new paper.Rectangle(new paper.Point(665, 35), new paper.Size(70, 70));
+	CreatingRectangle = new paper.Path.Rectangle(rectangle, new paper.Size(10,10));
+	CreatingRectangle.strokeColor = '#00FF00';	
+	CreatingRectangle.fillColor = '#00FF00';
 	
 	paper.view.draw();
 	
