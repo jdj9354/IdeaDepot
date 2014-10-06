@@ -129,13 +129,19 @@ const DEFAULT_TYPE_EDGE = "SimplePathEdge";
 const DEFAULT_OPACITY_SELECTED_MIND_OBJECT = 0.7;
 const DEFAULT_OPACITY_MOVING_MIND_OBJECT = 0.7;
 
-const SERVER_ADDR = "192.168.0.1";
+const MEDIA_SERVER_ADDR = "127.0.0.1";
+const WEB_PREVIEW_PORT = "52274";
 const moveCountLimit = 5;
 
 var CreatingCircle;
 var CreatingImageCircle;
 var CreatingRectangle;
 var DeletingCircle;
+
+//Dummy Data For Test
+//We need to get this value from user by closing ThinkMineLibrary Global Scope, and implementing Constructor
+var currentUserId = "jdj9354"; 
+
 //------------------- ThinkMineCanvas Section------------------------------
 
 function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterface){ //MindMap객체를 가지고 이객체를 DrawingObj에개 그리도록 Data ByPass
@@ -333,10 +339,10 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 			var tempShapeTypeDependentInfo = new RectangleShapeTypeDependentInfo(70,70,"#FFFF00",true);
 			
 			var tempContents;
-			var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
+			var tempContentsTypeDependentInfo = new WebPreviewContentsTypeDependentInfo(500,500, "1280X840",0.7); //TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
 			
 			tempShape = new Shape("RectangleShape",tempShapeTypeDependentInfo);
-			tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"Ok!!!");
+			tempContents = new Contents("WebPreviewContents",tempContentsTypeDependentInfo,"http://www.melon.com");
 			
 			this.addMindObject(x,y,z,tempShape,tempContents);
 		}
@@ -1182,8 +1188,15 @@ function MovieContentsTypeDependentInfo(width, height){
 	this.fHeight = height;	
 }
 
-MovieContentsTypeDependentInfo.prototype = new ContentsTypeDependentInfo();
-MovieContentsTypeDependentInfo.constructor = MovieContentsTypeDependentInfo;
+function WebPreviewContentsTypeDependentInfo(width, height, resolution, opacity){
+	this.fWidth = width;
+	this.fHeight = height;
+	this.fResolution = resolution;
+	this.fOpacity = opacity;	
+}
+
+WebPreviewContentsTypeDependentInfo.prototype = new ContentsTypeDependentInfo();
+WebPreviewContentsTypeDependentInfo.constructor = WebPreviewContentsTypeDependentInfo;
 
 //------------------- Decoder/Encoder Section -------------------------------
 
@@ -1217,6 +1230,9 @@ function Encoder(){
 			break;
 		case "MovieContents" :
 			ret = 67108864;
+			break;
+		case "WebPreviewContents" :
+			ret = 83886080;
 			break;
 		default :
 			ret = 0;
@@ -1268,6 +1284,9 @@ function Decoder(){
 			break;
 		case 67108864 :
 			ret = "MovieContents";
+			break;
+		case 83886080 :
+			ret = "WebPreviewContents";
 			break;
 		default :
 			ret = null;
@@ -2129,6 +2148,9 @@ function JobHandler(drawingObj){
 		case "MovieContents" :
 			ret = new MovieContentsTypeDependentInfo(parameterArray[0], parameterArray[1]);
 			break;
+		case "WebPreviewContents" :
+			ret = new WebPreviewContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+			break;
 		//Edge
 		case "SimplePathEdge" :
 			ret = new SimplePathEdgeTypeDependentInfo(parameterArray[0], parameterArray[1]);
@@ -2477,6 +2499,12 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 		case "MovieContents" :
 			ret = [typeDependentInfo.fWidth,			//Width
                    typeDependentInfo.fHeight];			//Height                                      
+			break;
+		case "WebPreviewContents" :
+			ret = [typeDependentInfo.fWidth,			//Width
+                   typeDependentInfo.fHeight,			//Height
+				   typeDependentInfo.fResolution,		//Resolution
+                   typeDependentInfo.fOpacity];			//Opacity  
 			break;
 		case "SimplePathEdge" :
 			ret = [typeDependentInfo.fWidth, typeDependentInfo.fColor];
@@ -2867,6 +2895,9 @@ function DrawingObj(drawingInterface){
 			case "MovieContents" :
 				retFunc = fDrawingInterface.drawMovieContents;
 				break;
+			case "WebPreviewContents" :
+				retFunc = fDrawingInterface.drawWebPreviewContents;
+				break;
 			case "SimplePathEdge" :
 				retFunc = fDrawingInterface.drawSimplePathEdge;
 				break;
@@ -2891,6 +2922,9 @@ function DrawingObj(drawingInterface){
 				break;
 			case "MovieContents" :
 				retFunc = fDrawingInterface.eraseMovieContents;
+				break;
+			case "WebPreviewContents" :
+				retFunc = fDrawingInterface.eraseWebPreviewContents;
 				break;
 			case "SimplePathEdge" :
 				retFunc = fDrawingInterface.eraseSimplePathEdge;
@@ -2918,6 +2952,9 @@ function DrawingObj(drawingInterface){
 				break;
 			case "MovieContents" :
 				retFunc = fDrawingInterface.moveMovieContents;
+				break;
+			case "WebPreviewContents" :
+				retFunc = fDrawingInterface.moveWebPreviewContents;
 				break;
 			case "SimplePathEdge" :
 				retFunc = fDrawingInterface.moveSimplePathEdge;
@@ -2955,6 +2992,9 @@ function DrawingObj(drawingInterface){
 				break;
 			case "MovieContents" :
 				retFunc = fDrawingInterface.changeOpacityOfMovieContents;
+				break;
+			case "WebPreviewContents" :
+				retFunc = fDrawingInterface.changeOpacityOfWebPreviewContents;
 				break;
 			}
 			break;
@@ -3070,6 +3110,19 @@ function DrawingInterface(backBoneType){
 		
 	};
 	this.changeOpacityOfMovieContents = function(opacity, mindObjectId){
+		
+	};
+	
+	this.drawWebPreviewContents = function(x, y, z, info, value, mindObjectId){
+		
+	};
+	this.eraseWebPreviewContents = function(mindObjectId){
+		
+	};
+	this.moveWebPreviewContents = function(x, y, z, mindObjectId){
+		
+	};
+	this.changeOpacityOfWebPreviewContents = function(opacity, mindObjectId){
 		
 	};
 	
@@ -3501,6 +3554,49 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 	};
 	
 	this.changeOpacityOfMovieContents = function(opacity, mindObjectId){
+		
+	};
+	
+	
+	this.drawWebPreviewContents = function(x, y, z, info, value, mindObjectId){	
+		var webPreviewSrcUrl = "http://"+MEDIA_SERVER_ADDR+":"+WEB_PREVIEW_PORT+"?url="+value+"&resolution="+info.fResolution+"&userId="+currentUserId;		
+		var contentsObject = new paper.Raster(webPreviewSrcUrl);
+		contentsObject.position = new paper.Point(x,y);
+		//contentsObject.
+		//paper.view.draw();
+		//contentsObject.scale((info.fWidth/contentsObject.width),(info.fHeight/contentsObject.height));
+		contentsObject.scale(0.7);
+		contentsObject.fMindObjectId = mindObjectId;
+		paper.view.draw();
+		
+		fContentsObjects.push(contentsObject);
+		contentsObject;
+	};
+	this.eraseWebPreviewContents = function(mindObjectId){
+		for(var i=0; i<fContentsObjects.length;i++){
+			if(compareIdValue(fContentsObjects[i].fMindObjectId,mindObjectId)){
+				fContentsObjects[i].remove();				
+				paper.view.draw();
+				
+				fContentsObjects.splice(i,1);
+				break;
+			}
+				
+		}
+	};
+	this.moveWebPreviewContents = function(x, y, z, mindObjectId){
+		for(var i=0; i<fContentsObjects.length;i++){
+			if(compareIdValue(fContentsObjects[i].fMindObjectId,mindObjectId)){
+				var newPoint = new paper.Point(x,y);
+				fContentsObjects[i].position = newPoint;
+				//fContentsObjects[i].scale(fContentsObjects[i].width,fContentsObjects[i].height);
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};
+	this.changeOpacityOfWebPreviewContents = function(opacity, mindObjectId){
 		
 	};
 		
