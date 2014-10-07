@@ -136,6 +136,8 @@ const moveCountLimit = 5;
 var CreatingCircle;
 var CreatingImageCircle;
 var CreatingRectangle;
+var CreatingStar;
+var CreatingPolygon;
 var DeletingCircle;
 
 //Dummy Data For Test
@@ -343,6 +345,30 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 			
 			tempShape = new Shape("RectangleShape",tempShapeTypeDependentInfo);
 			tempContents = new Contents("WebPreviewContents",tempContentsTypeDependentInfo,"http://www.melon.com");
+			
+			this.addMindObject(x,y,z,tempShape,tempContents);
+		}
+		else if(CreatingStar.contains(new paper.Point(x,y))){
+			var tempShape;
+			var tempShapeTypeDependentInfo = new StarShapeTypeDependentInfo(5,200,100,"#0FEF1F");
+			
+			var tempContents;
+			var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
+			
+			tempShape = new Shape("StarShape",tempShapeTypeDependentInfo);
+			tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"This is a Star Shape");
+			
+			this.addMindObject(x,y,z,tempShape,tempContents);
+		}
+		else if(CreatingPolygon.contains(new paper.Point(x,y))){
+			var tempShape;
+			var tempShapeTypeDependentInfo = new PolygonShapeTypeDependentInfo(12,200,"#FF0F0F");
+			
+			var tempContents;
+			var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
+			
+			tempShape = new Shape("PolygonShape",tempShapeTypeDependentInfo);
+			tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"This is a Polygon Shape");
 			
 			this.addMindObject(x,y,z,tempShape,tempContents);
 		}
@@ -1149,6 +1175,27 @@ RectangleShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 RectangleShapeTypeDependentInfo.constructor = RectangleShapeTypeDependentInfo; 
 
 
+
+function StarShapeTypeDependentInfo(nrPoints, firstRadius, secondRadius,color){
+	this.fNrPoints = nrPoints;
+	this.fFirstRadius = firstRadius;
+	this.fSecondRadius = secondRadius;
+	this.fColor = color;
+}
+StarShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
+StarShapeTypeDependentInfo.constructor = StarShapeTypeDependentInfo; 
+
+
+
+function PolygonShapeTypeDependentInfo(nrSides, radius, color){
+	this.fNrSides = nrSides;
+	this.fRadius = radius;
+	this.fColor = color;
+}
+PolygonShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
+PolygonShapeTypeDependentInfo.constructor = PolygonShapeTypeDependentInfo; 
+
+
 //------------------- Contents Section------------------------------------
 
 
@@ -1210,6 +1257,12 @@ function Encoder(){
 		case "RectangleShape" :
 			ret = 33554432;
 			break;
+		case "StarShape" : 
+			ret = 50331648;
+			break;
+		case "PolygonShape" : 
+			ret = 67108864;
+			break;
 		default :
 			ret = 0;
 			break;		
@@ -1263,6 +1316,12 @@ function Decoder(){
 			break;
 		case 33554432 :
 			ret = "RectangleShape";
+			break;
+		case 50331648 :
+			ret = "StarShape";
+			break;
+		case 67108864:
+			ret = "PolygonShape";
 			break;
 		default :
 			ret = null;
@@ -2138,6 +2197,12 @@ function JobHandler(drawingObj){
 		case "RectangleShape" :
 			ret = new RectangleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 			break;
+		case "StarShape" :
+			ret = new StarShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+			break;
+		case "PolygonShape" :
+			ret = new PolygonShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
+			break;
 		//Contents
 		case "TextContents" :
 			ret = new TextContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
@@ -2483,6 +2548,17 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
                    typeDependentInfo.fHeight,	//Height
 				   typeDependentInfo.fColor,	//Color
 				   typeDependentInfo.fIsRounded];	//IsRounded
+			break;
+		case  "StarShape" :
+			ret = [typeDependentInfo.fNrPoints,	//Nr of Points
+                   typeDependentInfo.fFirstRadius,	//First Radius
+				   typeDependentInfo.fSecondRadius,	//Second Radius
+				   typeDependentInfo.fColor];	//Color
+			break;
+		case  "PolygonShape" :
+			ret = [typeDependentInfo.fNrSides,	//Nr of Sides
+                   typeDependentInfo.fRadius,	//Radius
+				   typeDependentInfo.fColor];	//Color
 			break;
 		//Contents
 		case "TextContents" :
@@ -2886,6 +2962,12 @@ function DrawingObj(drawingInterface){
 			case "RectangleShape" :
 				retFunc = fDrawingInterface.drawRectangleShape;
 				break;
+			case "StarShape" :
+				retFunc = fDrawingInterface.drawStarShape;
+				break;
+			case "PolygonShape" :
+				retFunc = fDrawingInterface.drawPolygonShape;
+				break;
 			case "TextContents" :
 				retFunc = fDrawingInterface.drawTextContents;
 				break;
@@ -2913,6 +2995,12 @@ function DrawingObj(drawingInterface){
 				break;
 			case "RectangleShape" :
 				retFunc = fDrawingInterface.eraseRectangleShape;
+				break;
+			case "StarShape" :
+				retFunc = fDrawingInterface.eraseStarShape;
+				break;
+			case "PolygonShape" :
+				retFunc = fDrawingInterface.erasePolygonShape;
 				break;
 			case "TextContents" :
 				retFunc = fDrawingInterface.eraseTextContents;
@@ -2944,6 +3032,12 @@ function DrawingObj(drawingInterface){
 			case "RectangleShape" :
 				retFunc = fDrawingInterface.moveRectangleShape;
 				break;
+			case "StarShape" :
+				retFunc = fDrawingInterface.moveStarShape;
+				break;
+			case "PolygonShape" :
+				retFunc = fDrawingInterface.movePolygonShape;
+				break;
 			case "TextContents" :
 				retFunc = fDrawingInterface.moveTextContents;
 				break;
@@ -2969,6 +3063,12 @@ function DrawingObj(drawingInterface){
 			case "RectangleShape" : 
 				retFunc = fDrawingInterface.changeColorOfRectangleShape;
 				break;
+			case "StarShape" :
+				retFunc = fDrawingInterface.changeColorOfStarShape;
+				break;
+			case "PolygonShape" :
+				retFunc = fDrawingInterface.changeColorOfPolygonShape;
+				break;
 			case "TextContents" :
 				retFunc = fDrawingInterface.changeColorOfTextContents;
 			}
@@ -2983,6 +3083,12 @@ function DrawingObj(drawingInterface){
 				break;
 			case "RectangleShape" :
 				retFunc = fDrawingInterface.changeOpacityOfRectangleShape;
+				break;
+			case "StarShape" :
+				retFunc = fDrawingInterface.changeOpacityOfStarShape;
+				break;
+			case "PolygonShape" :
+				retFunc = fDrawingInterface.changeOpacityOfPolygonShape;
 				break;
 			case "TextContents" :
 				retFunc = fDrawingInterface.changeOpacityOfTextContents;
@@ -3064,6 +3170,43 @@ function DrawingInterface(backBoneType){
 	};
 	
 	this.changeOpacityOfRectangleShape = function(opacity, mindObjectId){
+		
+	};
+	
+	
+	this.drawStarShape = function(x, y, z, info, mindObjectId){
+		
+	};
+	this.eraseStarShape = function(mindObjectId){
+		
+	};
+	this.moveStarShape = function(x, y, z, mindObjectId){
+		
+	};	
+	this.changeColorOfStarShape = function(colorCode, mindObjectId){
+		
+	};
+	
+	this.changeOpacityOfStarShape = function(opacity, mindObjectId){
+		
+	};
+	
+	
+	
+	this.drawPolygonShape = function(x, y, z, info, mindObjectId){
+		
+	};
+	this.erasePolygonShape = function(mindObjectId){
+		
+	};
+	this.movePolygonShape = function(x, y, z, mindObjectId){
+		
+	};	
+	this.changeColorOfPolygonShape = function(colorCode, mindObjectId){
+		
+	};
+	
+	this.changeOpacityOfPolygonShape = function(opacity, mindObjectId){
 		
 	};
 	
@@ -3330,6 +3473,131 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 	};
 	
 	this.changeOpacityOfRectangleShape = function(opacity, mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				fShapeObjects[i].opacity = opacity;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};
+	
+	
+	this.drawStarShape = function(x, y, z, info, mindObjectId){
+	
+		var position = new paper.Point(x,y);
+	
+		var drawingObject = new paper.Path.Star(position, info.fNrPoints, info.fFirstRadius, info.fSecondRadius);				
+
+		drawingObject.fillColor = info.fColor;
+		drawingObject.fMindObjectId = mindObjectId;
+		paper.view.draw();
+		
+		fShapeObjects.push(drawingObject);
+	
+		
+	};
+	this.eraseStarShape = function(mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){					
+				fShapeObjects[i].remove();
+				paper.view.draw();
+				
+				fShapeObjects.splice(i,1);
+				break;
+			}
+		}		
+	};
+	this.moveStarShape = function(x, y, z, mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				var newPoint = new paper.Point(x,y);
+				fShapeObjects[i].position = newPoint;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};	
+	this.changeColorOfStarShape = function(colorCode, mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				fShapeObjects[i].fillColor = colorCode;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};
+	
+	this.changeOpacityOfStarShape = function(opacity, mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				fShapeObjects[i].opacity = opacity;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};
+	
+	
+	
+	this.drawPolygonShape = function(x, y, z, info, mindObjectId){
+	
+		var position = new paper.Point(x,y);
+	
+		var drawingObject = new paper.Path.RegularPolygon(position, info.fNrSides, info.fRadius);				
+
+		drawingObject.fillColor = info.fColor;
+		drawingObject.fMindObjectId = mindObjectId;
+		paper.view.draw();
+		
+		fShapeObjects.push(drawingObject);
+	
+		
+	};
+	this.erasePolygonShape = function(mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){					
+				fShapeObjects[i].remove();
+				paper.view.draw();
+				
+				fShapeObjects.splice(i,1);
+				break;
+			}
+		}		
+	};
+	this.movePolygonShape = function(x, y, z, mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				var newPoint = new paper.Point(x,y);
+				fShapeObjects[i].position = newPoint;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};	
+	this.changeColorOfPolygonShape = function(colorCode, mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				fShapeObjects[i].fillColor = colorCode;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};
+	
+	this.changeOpacityOfPolygonShape = function(opacity, mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
 				fShapeObjects[i].opacity = opacity;
@@ -3753,6 +4021,23 @@ function PaperJS_CollisionCheckInterface(){
 			var tempCornerSize = new paper.Size(10,10);			
 			paperObject = new paper.Path.Rectangle(tempRectangle, tempCornerSize);
 			break;
+		case "StarShape" : 				
+			paperObject = new paper.Path.Star({
+				center : [mindObject.fX, mindObject.fY],
+				points : shapeTypeDependentInfo.fNrPoints,
+				radius1 : shapeTypeDependentInfo.fFirstRadius,
+				radius2 : shapeTypeDependentInfo.fSecondRadius,				
+				strokeColor : 'black'
+			});			
+			break;
+		case "PolygonShape" : 				
+			paperObject = new paper.Path.RegularPolygon({
+				center : [mindObject.fX, mindObject.fY],
+				sides : shapeTypeDependentInfo.fNrSides,
+				radius : shapeTypeDependentInfo.fRadius,				
+				strokeColor : 'black'
+			});			
+			break;
 		default :
 			break;		
 		}
@@ -3803,6 +4088,13 @@ function initPaperJSMindMap(canvasWidth, canvasHeight, wrappedEventHandler){
 	CreatingRectangle = new paper.Path.Rectangle(rectangle, new paper.Size(10,10));
 	CreatingRectangle.strokeColor = '#00FF00';	
 	CreatingRectangle.fillColor = '#00FF00';
+	
+	CreatingStar = new paper.Path.Star(new paper.Point(900, 70), 12, 70,50);
+	CreatingStar.fillColor = '#1237F2';
+	
+	CreatingPolygon = new paper.Path.RegularPolygon(new paper.Point(100, 200), 3, 70);
+	CreatingPolygon.fillColor = '2F7321';
+	
 	
 	paper.view.draw();
 	
