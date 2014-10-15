@@ -20,11 +20,12 @@ function addJavascript(jsname) {
 	th.appendChild(s);
 }
 
-addJavascript("/paper.js");
+addJavascript("/paper-full.js");
 addJavascript("/socket.io/socket.io.js");
 addJavascript("/DrawingWorker.js");
 addJavascript("/EventParserWorker.js");
 addJavascript("/kinetic-v5.0.2.min.js");
+
 
 function compareIdValue(firstIdValue,secondIdValue){
 	if(firstIdValue == secondIdValue)
@@ -125,17 +126,19 @@ const Nested_SocketCommuDelimiter_1 = ",";
 const Nested_SocketCommuDelimiter_2 = "/";
 const Nested_SocketCommuDelimiter_3 = ".";*/
 
+
 const DEFAULT_TYPE_EDGE = "SimplePathEdge";
 const DEFAULT_OPACITY_SELECTED_MIND_OBJECT = 0.7;
 const DEFAULT_OPACITY_MOVING_MIND_OBJECT = 0.7;
 
-const MEDIA_SERVER_ADDR = "127.0.0.1";
+const MEDIA_SERVER_ADDR = "192.168.0.2";
 const WEB_PREVIEW_PORT = "52274";
 const moveCountLimit = 5;
 
 var CreatingCircle;
 var CreatingImageCircle;
 var CreatingRectangle;
+var CreatingEllipse;
 var CreatingStar;
 var CreatingPolygon;
 var DeletingCircle;
@@ -163,9 +166,37 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 	var fSelectedContentsType = "TextContents";
 	var fSelectedContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
 	
-
+	//Outter Menu Selection related variables
 	
 
+	var fMenuAvailableShape = ["CircleShape",
+								"RectangleShape",
+								"StarShape",
+								"PolygonShape"];
+								
+	var fMenuSelectedShape = fMenuAvailableShape[0];								
+	var fMenuInsertedSDI = null;
+	//var fMenuInsertedSDI = new CircleShapeTypeDependentInfo(50,"#FF0000");
+	
+	var fMenuAvailableContents = ["TextContents",
+									"ImageContents",
+									"MovieContents",
+									"WebPreviewContents"];
+									
+	var fMenuSelectedContents = fMenuAvailableContents[0];									
+	var fMenuInsertedCDI = null;
+	//var fMenuInsertedCDI = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
+	
+	var fMenuInsertedCV = "";
+	//var fMenuInsertedCV = "Test";
+	
+	var fObjectAddMode = false;
+	//fObjectAddMode = true;
+	var fVirtualMindObject = null;
+	
+	//
+	
+	
 	
 	var fIsConnectedToServer = false;
 	var fSelectedObject = null;
@@ -179,6 +210,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 	
 	//this.fMindMap = null;
 	
+	//Utility Functions
 	
 	var resetTMCanvas = function(){
 
@@ -190,6 +222,10 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		var fIsCompositionEventStarted = false;
 		var fIsContentsChanged = false;
 		
+									
+		var fObjectAddMode = false;
+		var fVirtualMindObject = null;		
+		
 		var contentsEditor = document.getElementById('ContentsEditor');
 		if(contentsEditor != null)
 			contentsEditor.parentNode.removeChild(contentsEditor);				
@@ -199,6 +235,45 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 			applyButton.parentNode.removeChild(applyButton);
 		
 	};
+	
+	//Menu Interaction Functions
+	
+	this.enableObjectAddMode = function(){
+		fObjectAddMode = true;
+	};
+	
+	this.disableObjectAddMode = function(){
+		fObjectAddMode = false;
+	};
+	
+	this.setMenuSelectedShape = function(shapeIndex){
+		this.enableObjectAddMode();
+		if(fVirtualMindObject != null){
+			fDrawingInterface["erase"+fMenuSelectedShape]("virtual");
+			fDrawingInterface["erase"+fMenuSelectedContents]("virtual");
+			fVirtualMindObject = null;
+		}
+			
+		fMenuSelectedShape = fMenuAvailableShape[shapeIndex];		
+	};
+	
+	this.setMenuInsertedSDI = function(shapeDependentInfo){
+		fMenuInsertedSDI = shapeDependentInfo;
+	};
+	
+	this.setMenuSelectedContents = function(contentsIndex){
+		fMenuSelectedContents = fMenuAvailableContents[contentsIndex];
+	};
+		
+	this.setMenuInsertedCDI = function(contentsDependentInfo){
+		fMenuInsertedCDI = contentsDependentInfo;
+	};
+	
+	this.setMenuInsertedCV = function(contentsValue){
+		fMenuInsertedCV = contentsValue;
+	};
+	
+	//Event Listener Interface
 	
 	this.onPasteInterface = function(e){
 		var clipBoardContents = e.clipboardData.getData('text/plain');
@@ -289,124 +364,143 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 			return;
 		}*/
 		// Test Code Block start
-		if(CreatingCircle.contains(new paper.Point(x,y))){
-			
-			var tempShape;
-			var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,"#FF0000");
-			
-			var tempContents;
-			var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
-			
-			tempShape = new Shape("CircleShape",tempShapeTypeDependentInfo);
-			tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"Ok!!!");
-			
-			this.addMindObject(x,y,z,tempShape,tempContents);
-			
+		if(!fObjectAddMode) {
+			if(CreatingCircle.contains(new paper.Point(x,y))){
+				
+				var tempShape;
+				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,"#FF0000");
+				
+				var tempContents;
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
+				
+				tempShape = new Shape("CircleShape",tempShapeTypeDependentInfo);
+				tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"Ok!!!");
+				
+				this.addMindObject(x,y,z,tempShape,tempContents);
+				
 
-			
-		}	
-		else if(CreatingImageCircle.contains(new paper.Point(x,y))){
-			
-			var tempShape;
-			var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(290,"#FF0000");
-			
-			var tempContents;
-			//var tempContentsTypeDependentInfo = new ImageContentsTypeDependentInfo(400,400);
-			var tempContentsTypeDependentInfo = new MovieContentsTypeDependentInfo(400,400);
-			
-			tempShape = new Shape("CircleShape",tempShapeTypeDependentInfo);
-			//tempContents = new Contents("ImageContents",tempContentsTypeDependentInfo,"http://cfile27.uf.tistory.com/image/0151AC3F51D28D6F2CF37B");
-			tempContents = new Contents("MovieContents",tempContentsTypeDependentInfo,"Mr.chu.mp4");
-			
-			
-			this.addMindObject(x,y,z,tempShape,tempContents);
-			
-			//var newMindObject = new MindObject(0,0,0,new EllipseShape(),new TextContents("ThinkTest"),x,y,0);		
-			//newMindObject.DrawMindObject();
-			//this.MindObjects.push(newMindObject);
-			
-			//this.SelectedObject = newMindObject;
-			
-			/*for(i=0; i< this.MindObjects.length; i++){
-				this.SelectedObject.Shape.position;
-				var Distance = this.SelectedObject.Shape.DrawingObject.position.getDistance(this.MindObjects[i].Shape.DrawingObject.position);
-				if(Distance !=0 && Distance <= this.MaxRelDistance){
-					this.SelectedObject.ConnectTo(this.MindObjects[i], "SimplePathEdge");
+				
+			}	
+			/*else if(CreatingEllipse.contains(new paper.Point(x,y))){
+				var tempShape;
+				var tempShapeTypeDependentInfo = new EllipseShapeTypeDependentInfo(150,250,"#F361A6");
+				
+				var tempContents;
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
+				
+				tempShape = new Shape("EllipseShape",tempShapeTypeDependentInfo);
+				tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"This is a Ellipse Shape");
+				
+				this.addMindObject(x,y,z,tempShape,tempContents);
+			}*/
+			else if(CreatingImageCircle.contains(new paper.Point(x,y))){
+				
+				var tempShape;
+				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(290,"#FF0000");
+				
+				var tempContents;
+				//var tempContentsTypeDependentInfo = new ImageContentsTypeDependentInfo(400,400);
+				var tempContentsTypeDependentInfo = new MovieContentsTypeDependentInfo(400,400);
+				
+				tempShape = new Shape("CircleShape",tempShapeTypeDependentInfo);
+				//tempContents = new Contents("ImageContents",tempContentsTypeDependentInfo,"http://cfile27.uf.tistory.com/image/0151AC3F51D28D6F2CF37B");
+				tempContents = new Contents("MovieContents",tempContentsTypeDependentInfo,"Mr.chu.mp4");
+				
+				
+				this.addMindObject(x,y,z,tempShape,tempContents);
+				
+				//var newMindObject = new MindObject(0,0,0,new EllipseShape(),new TextContents("ThinkTest"),x,y,0);		
+				//newMindObject.DrawMindObject();
+				//this.MindObjects.push(newMindObject);
+				
+				//this.SelectedObject = newMindObject;
+				
+				/*for(i=0; i< this.MindObjects.length; i++){
+					this.SelectedObject.Shape.position;
+					var Distance = this.SelectedObject.Shape.DrawingObject.position.getDistance(this.MindObjects[i].Shape.DrawingObject.position);
+					if(Distance !=0 && Distance <= this.MaxRelDistance){
+						this.SelectedObject.ConnectTo(this.MindObjects[i], "SimplePathEdge");
+					}
+				}
+				return;*/
+			}
+			else if(CreatingRectangle.contains(new paper.Point(x,y))){
+				var tempShape;
+				var tempShapeTypeDependentInfo = new RectangleShapeTypeDependentInfo(70,70,"#FFFF00",true);
+				
+				var tempContents;
+				var tempContentsTypeDependentInfo = new WebPreviewContentsTypeDependentInfo(500,500, "1280X840",0.7); //TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
+				
+				tempShape = new Shape("RectangleShape",tempShapeTypeDependentInfo);
+				tempContents = new Contents("WebPreviewContents",tempContentsTypeDependentInfo,"http://www.melon.com");
+				
+				this.addMindObject(x,y,z,tempShape,tempContents);
+			}
+			else if(CreatingStar.contains(new paper.Point(x,y))){
+				var tempShape;
+				var tempShapeTypeDependentInfo = new StarShapeTypeDependentInfo(5,200,100,"#0FEF1F");
+				
+				var tempContents;
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
+				
+				tempShape = new Shape("StarShape",tempShapeTypeDependentInfo);
+				tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"This is a Star Shape");
+				
+				this.addMindObject(x,y,z,tempShape,tempContents);
+			}
+			else if(CreatingPolygon.contains(new paper.Point(x,y))){
+				var tempShape;
+				var tempShapeTypeDependentInfo = new PolygonShapeTypeDependentInfo(12,200,"#FF0F0F");
+				
+				var tempContents;
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
+				
+				tempShape = new Shape("PolygonShape",tempShapeTypeDependentInfo);
+				tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"This is a Polygon Shape");
+				
+				this.addMindObject(x,y,z,tempShape,tempContents);
+			}
+			// Test Code Block end
+			else {
+				for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
+					if(fCollisionInterface.isContaining(x,y,z,MindMap.getMindObjectOnIndex(i))){
+						fMovingObject = MindMap.getMindObjectOnIndex(i);
+						moveCount = 0;
+						return;
+					}
+					/*var dst = distanceOfTwoPoints(MindMap.getMindObjectOnIndex(i).fX,MindMap.getMindObjectOnIndex(i).fY,MindMap.getMindObjectOnIndex(i).fZ,x,y,0);
+					if(dst<	MindMap.getMindObjectOnIndex(i).fShape.fShapeTypeDependentInfo.fRadius){
+						fMovingObject = MindMap.getMindObjectOnIndex(i);
+						moveCount = 0;
+						return;
+					}*/
 				}
 			}
-			return;*/
 		}
-		else if(CreatingRectangle.contains(new paper.Point(x,y))){
-			var tempShape;
-			var tempShapeTypeDependentInfo = new RectangleShapeTypeDependentInfo(70,70,"#FFFF00",true);
-			
-			var tempContents;
-			var tempContentsTypeDependentInfo = new WebPreviewContentsTypeDependentInfo(500,500, "1280X840",0.7); //TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
-			
-			tempShape = new Shape("RectangleShape",tempShapeTypeDependentInfo);
-			tempContents = new Contents("WebPreviewContents",tempContentsTypeDependentInfo,"http://www.melon.com");
-			
-			this.addMindObject(x,y,z,tempShape,tempContents);
-		}
-		else if(CreatingStar.contains(new paper.Point(x,y))){
-			var tempShape;
-			var tempShapeTypeDependentInfo = new StarShapeTypeDependentInfo(5,200,100,"#0FEF1F");
-			
-			var tempContents;
-			var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
-			
-			tempShape = new Shape("StarShape",tempShapeTypeDependentInfo);
-			tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"This is a Star Shape");
-			
-			this.addMindObject(x,y,z,tempShape,tempContents);
-		}
-		else if(CreatingPolygon.contains(new paper.Point(x,y))){
-			var tempShape;
-			var tempShapeTypeDependentInfo = new PolygonShapeTypeDependentInfo(12,200,"#FF0F0F");
-			
-			var tempContents;
-			var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
-			
-			tempShape = new Shape("PolygonShape",tempShapeTypeDependentInfo);
-			tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"This is a Polygon Shape");
-			
-			this.addMindObject(x,y,z,tempShape,tempContents);
-		}
-		// Test Code Block end
 		else {
-			for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
-				if(fCollisionInterface.isContaining(x,y,z,MindMap.getMindObjectOnIndex(i))){
-					fMovingObject = MindMap.getMindObjectOnIndex(i);
-					moveCount = 0;
-					return;
-				}
-				/*var dst = distanceOfTwoPoints(MindMap.getMindObjectOnIndex(i).fX,MindMap.getMindObjectOnIndex(i).fY,MindMap.getMindObjectOnIndex(i).fZ,x,y,0);
-				if(dst<	MindMap.getMindObjectOnIndex(i).fShape.fShapeTypeDependentInfo.fRadius){
-					fMovingObject = MindMap.getMindObjectOnIndex(i);
-					moveCount = 0;
-					return;
-				}*/
-			}
-		}		
+		}
 	};
 	
 	this.onDoubleMouseDownInterface = function(x,y,z){
-	
-		var MindMap = fJobHandler.getMindMap();
-		var targetMindObjectId = null;
-	
-		for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
-			if(fCollisionInterface.isContaining(x,y,z,MindMap.getMindObjectOnIndex(i))){
-				targetMindObjectId = MindMap.getMindObjectOnIndex(i).fMindObjectId;
+		if(!fObjectAddMode){
+			var MindMap = fJobHandler.getMindMap();
+			var targetMindObjectId = null;
+		
+			for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
+				if(fCollisionInterface.isContaining(x,y,z,MindMap.getMindObjectOnIndex(i))){
+					targetMindObjectId = MindMap.getMindObjectOnIndex(i).fMindObjectId;
+				}
+			}
+			
+			if(targetMindObjectId != null){
+				this.initWithMindMap(targetMindObjectId);
+				
+			}
+			else{
+				return;
 			}
 		}
-		
-		if(targetMindObjectId != null){
-			this.initWithMindMap(targetMindObjectId);
-			
-		}
 		else{
-			return;
 		}
 		
 	};
@@ -416,202 +510,243 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		var MindMap = fJobHandler.getMindMap();
 		var curSelectedObject = null;
 		
-		for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
-			if(fCollisionInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i))){
-				curSelectedObject = MindMap.getMindObjectOnIndex(i);
-				break;
-			}
-			/*var dst = distanceOfTwoPoints(MindMap.getMindObjectOnIndex(i).fX,MindMap.getMindObjectOnIndex(i).fY,MindMap.getMindObjectOnIndex(i).fZ,x,y,0);
-			if(dst<	MindMap.getMindObjectOnIndex(i).fShape.fShapeTypeDependentInfo.fRadius){
-				curSelectedObject = MindMap.getMindObjectOnIndex(i);
-				break;
-			}*/
-		}
+		if(!fObjectAddMode){
 		
-		if(!fIsDragging){
-			if(curSelectedObject != null){	
-				if(fSelectedObject !=null){
-					if(curSelectedObject != fSelectedObject){	
+			for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
+				if(fCollisionInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i))){
+					curSelectedObject = MindMap.getMindObjectOnIndex(i);
+					break;
+				}
+				/*var dst = distanceOfTwoPoints(MindMap.getMindObjectOnIndex(i).fX,MindMap.getMindObjectOnIndex(i).fY,MindMap.getMindObjectOnIndex(i).fZ,x,y,0);
+				if(dst<	MindMap.getMindObjectOnIndex(i).fShape.fShapeTypeDependentInfo.fRadius){
+					curSelectedObject = MindMap.getMindObjectOnIndex(i);
+					break;
+				}*/
+			}
+			
+			if(!fIsDragging){
+				if(curSelectedObject != null){	
+					if(fSelectedObject !=null){
+						if(curSelectedObject != fSelectedObject){	
+						
+							fDrawingInterface.changeOpacityOfCircleShape(0.5,curSelectedObject.fMindObjectId);
+							fDrawingInterface.changeOpacityOfTextContents(0.5,curSelectedObject.fMindObjectId);						
+							
+							fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
+							fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
+							
+							fSelectedObject = curSelectedObject;
+							
+							var applyButton = document.getElementById('ApplyButton');
+							var contentsEditor = document.getElementById('ContentsEditor');
+							
+							var changeValueOfContentsRef = this.changeValueOfContents;
+							applyButton.onclick = function (){
+								changeValueOfContentsRef(fSelectedObject.fMindObjectId, fSelectedObject.fContents.fContentsType, contentsEditor.value);
+							};
+							
+						}
+						else{
+							fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
+							fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
+							resetTMCanvas();
+							//Should implement some effect which is expanding, in order to the user can do anything.
+							this.onDoubleMouseDownInterface(x,y,z);
+							return;
+						}
 					
-						fDrawingInterface.changeOpacityOfCircleShape(0.5,curSelectedObject.fMindObjectId);
-						fDrawingInterface.changeOpacityOfTextContents(0.5,curSelectedObject.fMindObjectId);						
-						
-						fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
-						fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
-						
+						//fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
+						//fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
+
+					}
+					else{
 						fSelectedObject = curSelectedObject;
 						
-						var applyButton = document.getElementById('ApplyButton');
-						var contentsEditor = document.getElementById('ContentsEditor');
+						fDrawingInterface.changeOpacityOfCircleShape(0.5,fSelectedObject.fMindObjectId);
+						fDrawingInterface.changeOpacityOfTextContents(0.5,fSelectedObject.fMindObjectId);		
+					
+						var contentsEditor = document.createElement('input');
+						contentsEditor.setAttribute('id',"ContentsEditor");
+						contentsEditor.setAttribute('type','text');
+						contentsEditor.value = fSelectedObject.fContents.fValue;
+						document.body.appendChild(contentsEditor);
+						
+						var applyButton = document.createElement('button');
+						applyButton.setAttribute('id','ApplyButton');
+						applyButton.innerText = 'Apply';
 						
 						var changeValueOfContentsRef = this.changeValueOfContents;
 						applyButton.onclick = function (){
 							changeValueOfContentsRef(fSelectedObject.fMindObjectId, fSelectedObject.fContents.fContentsType, contentsEditor.value);
 						};
-						
+						document.body.appendChild(applyButton);
 					}
-					else{
+
+
+					
+				}
+				else{
+					if(fSelectedObject !=null){
 						fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
 						fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
-						resetTMCanvas();
-						//Should implement some effect which is expanding, in order to the user can do anything.
-						this.onDoubleMouseDownInterface(x,y,z);
-						return;
+					
+								
+						//this.changeValueOfContents(fSelectedObject.fMindObjectId, fSelectedObject.fContents.fContentsType ,fSelectedObject.fContents.fValue);
+						fSelectedObject = null;	
+						fIsContentsChanged = false;
+						
+						var contentsEditor = document.getElementById('ContentsEditor');
+						contentsEditor.parentNode.removeChild(contentsEditor);				
+						
+						var applyButton = document.getElementById('ApplyButton');
+						applyButton.parentNode.removeChild(applyButton);
 					}
-				
-					//fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
-					//fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
-
 				}
-				else{
-					fSelectedObject = curSelectedObject;
-					
-					fDrawingInterface.changeOpacityOfCircleShape(0.5,fSelectedObject.fMindObjectId);
-					fDrawingInterface.changeOpacityOfTextContents(0.5,fSelectedObject.fMindObjectId);		
-				
-					var contentsEditor = document.createElement('input');
-					contentsEditor.setAttribute('id',"ContentsEditor");
-					contentsEditor.setAttribute('type','text');
-					contentsEditor.value = fSelectedObject.fContents.fValue;
-					document.body.appendChild(contentsEditor);
-					
-					var applyButton = document.createElement('button');
-					applyButton.setAttribute('id','ApplyButton');
-					applyButton.innerText = 'Apply';
-					
-					var changeValueOfContentsRef = this.changeValueOfContents;
-					applyButton.onclick = function (){
-						changeValueOfContentsRef(fSelectedObject.fMindObjectId, fSelectedObject.fContents.fContentsType, contentsEditor.value);
-					};
-					document.body.appendChild(applyButton);
+			
+			}	
+			
+			
+			else{
+				if(fMovingObject != null){
+					// Test Code Block start
+					if(DeletingCircle.contains(new paper.Point(x,y))){
+								
+					//			var tempShape;
+					//			var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,"#FF0000");
+					//			
+					//			var tempContents;
+					//			var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
+					//			
+					//			tempShape = new Shape("CircleShape",tempShapeTypeDependentInfo);
+					//			tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"Ok!!!");
+					//			
+					//			this.addMindObject(x,y,0,tempShape,tempContents);						
+								this.deleteMindObject(fMovingObject.fMindObjectId);
+					//			for(i=0; i< MindMap.lenOfMindObjectsArray(); i++){
+					//				var dst = distanceOfTwoPoints(MindMap.getMindObjectOnIndex(i).fX,MindMap.getMindObjectOnIndex(i).fY,MindMap.getMindObjectOnIndex(i).fZ,x,y,0);
+					//				if(dst<	MindMap.getMindObjectOnIndex(i).fShape.fShapeTypeDependentInfo.fRadius){
+					//					this.fSelectedObject = MindMap.getMindObjectOnIndex(i);
+					//					return;
+					//				}
+					//			}
+							
+					}
+					else{
+						for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
+							if(fCollisionInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i)) && 
+									MindMap.getMindObjectOnIndex(i) != fMovingObject){
+								this.putIntoMindObject(fMovingObject, MindMap.getMindObjectOnIndex(i).fMindObjectId);
+								break;;
+							}
+						}	
+					}
+					// Test Code Block end
+					fIsDragging = false;
+					fMovingObject = null;				
 				}
-
-
+			} 
+		}
+		else {
+			if(fVirtualMindObject != null){
+				fVirtualMindObject = null;		
+				var tempShape = new Shape(fMenuSelectedShape, fMenuInsertedSDI);
+				var tempContents = new Contents(fMenuSelectedContents, fMenuInsertedCDI , fMenuInsertedCV);
 				
+				this.addMindObject(x,y,z,tempShape,tempContents);
 			}
 			else{
-				if(fSelectedObject !=null){
-					fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
-					fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
-				
-							
-					//this.changeValueOfContents(fSelectedObject.fMindObjectId, fSelectedObject.fContents.fContentsType ,fSelectedObject.fContents.fValue);
-					fSelectedObject = null;	
-					fIsContentsChanged = false;
-					
-					var contentsEditor = document.getElementById('ContentsEditor');
-					contentsEditor.parentNode.removeChild(contentsEditor);				
-					
-					var applyButton = document.getElementById('ApplyButton');
-					applyButton.parentNode.removeChild(applyButton);
-				}
 			}
-		
-		}	
-		
-		
-		else{
-			if(fMovingObject != null){
-				// Test Code Block start
-				if(DeletingCircle.contains(new paper.Point(x,y))){
-							
-				//			var tempShape;
-				//			var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,"#FF0000");
-				//			
-				//			var tempContents;
-				//			var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
-				//			
-				//			tempShape = new Shape("CircleShape",tempShapeTypeDependentInfo);
-				//			tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"Ok!!!");
-				//			
-				//			this.addMindObject(x,y,0,tempShape,tempContents);						
-							this.deleteMindObject(fMovingObject.fMindObjectId);
-				//			for(i=0; i< MindMap.lenOfMindObjectsArray(); i++){
-				//				var dst = distanceOfTwoPoints(MindMap.getMindObjectOnIndex(i).fX,MindMap.getMindObjectOnIndex(i).fY,MindMap.getMindObjectOnIndex(i).fZ,x,y,0);
-				//				if(dst<	MindMap.getMindObjectOnIndex(i).fShape.fShapeTypeDependentInfo.fRadius){
-				//					this.fSelectedObject = MindMap.getMindObjectOnIndex(i);
-				//					return;
-				//				}
-				//			}
-						
-				}
-				else{
-					for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
-						if(fCollisionInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i)) && 
-								MindMap.getMindObjectOnIndex(i) != fMovingObject){
-							this.putIntoMindObject(fMovingObject, MindMap.getMindObjectOnIndex(i).fMindObjectId);
-							break;;
-						}
-					}	
-				}
-				// Test Code Block end
-				fIsDragging = false;
-				fMovingObject = null;				
-			}
-		} 
+		}
 		
 	};		
 	
 	
 	this.onMouseDragInterface = function(x,y,z){		
 		
-		
-		var MindMap = fJobHandler.getMindMap();
-		
-		/*if(count < 10){
-			count ++;
-			return;
-		}*/
-		/*if(this.fSelectedObject !=null){
-			this.moveMindObject([this.fSelectedObject.fMindObjectId[0],this.fSelectedObject.fMindObjectId[1]],x,y,z);
-			count = 0;		
-		}*/
-		
-		if(fMovingObject == null)		
-			return;			
-		else {			
-			fIsDragging = true;
-			moveCount++;
-			if(moveCount == moveCountLimit){
-				moveCount = 0;
-				this.moveMindObject(fMovingObject.fMindObjectId,x,y,z);
-			}
+		if(!fObjectAddMode){
+			var MindMap = fJobHandler.getMindMap();
 			
-			var maxRelDistanceBySquare = MindMap.getMaxRelDistance()*MindMap.getMaxRelDistance();
+			/*if(count < 10){
+				count ++;
+				return;
+			}*/
+			/*if(this.fSelectedObject !=null){
+				this.moveMindObject([this.fSelectedObject.fMindObjectId[0],this.fSelectedObject.fMindObjectId[1]],x,y,z);
+				count = 0;		
+			}*/
 			
-			for(var i=0; i<MindMap.lenOfMindObjectsArray(); i++){
-				var currentMindObject = MindMap.getMindObjectOnIndex(i);
-				var Distance = distanceOfTwoPointsBySquare(currentMindObject.fX,currentMindObject.fY,currentMindObject.fZ,fMovingObject.fX,fMovingObject.fY,fMovingObject.fZ);
-				//console.log(Distance);
-				var isConnectedMindObject = false;
-				for(var j=0; j<fMovingObject.lenOfRelatedObjectsArray(); j++){
-					if(compareIdValue(currentMindObject.fMindObjectId, fMovingObject.getRelatedObjectOnIndex(j).fMindObjectId)){
-						isConnectedMindObject = true;
+			if(fMovingObject == null)		
+				return;			
+			else {			
+				fIsDragging = true;
+				moveCount++;
+				if(moveCount == moveCountLimit){
+					moveCount = 0;
+					this.moveMindObject(fMovingObject.fMindObjectId,x,y,z);
+				}
+				
+				var maxRelDistanceBySquare = MindMap.getMaxRelDistance()*MindMap.getMaxRelDistance();
+				
+				for(var i=0; i<MindMap.lenOfMindObjectsArray(); i++){
+					var currentMindObject = MindMap.getMindObjectOnIndex(i);
+					var Distance = distanceOfTwoPointsBySquare(currentMindObject.fX,currentMindObject.fY,currentMindObject.fZ,fMovingObject.fX,fMovingObject.fY,fMovingObject.fZ);
+					//console.log(Distance);
+					var isConnectedMindObject = false;
+					for(var j=0; j<fMovingObject.lenOfRelatedObjectsArray(); j++){
+						if(compareIdValue(currentMindObject.fMindObjectId, fMovingObject.getRelatedObjectOnIndex(j).fMindObjectId)){
+							isConnectedMindObject = true;
+						}
+					}
+					
+					if(Distance !=0 && Distance <= maxRelDistanceBySquare && !isConnectedMindObject){
+						//console.log("connect");
+						this.connectMindObject(fMovingObject.fMindObjectId,
+												MindMap.getMindObjectOnIndex(i).fMindObjectId, "SimplePathEdge", new SimplePathEdgeTypeDependentInfo(10,"#00ff00"));
+					}
+					else if(Distance !=0 && Distance > maxRelDistanceBySquare && isConnectedMindObject){
+						//console.log("disconnect");
+						this.disconnectMindObject(fMovingObject.fMindObjectId,
+								MindMap.getMindObjectOnIndex(i).fMindObjectId, "SimplePathEdge");
 					}
 				}
 				
-				if(Distance !=0 && Distance <= maxRelDistanceBySquare && !isConnectedMindObject){
-					//console.log("connect");
-					this.connectMindObject(fMovingObject.fMindObjectId,
-											MindMap.getMindObjectOnIndex(i).fMindObjectId, "SimplePathEdge", new SimplePathEdgeTypeDependentInfo(10,"#00ff00"));
-				}
-				else if(Distance !=0 && Distance > maxRelDistanceBySquare && isConnectedMindObject){
-					//console.log("disconnect");
-					this.disconnectMindObject(fMovingObject.fMindObjectId,
-							MindMap.getMindObjectOnIndex(i).fMindObjectId, "SimplePathEdge");
-				}
 			}
-			
+		}
+		else{
 		}
 		
 		
 	};
+	
+	this.onMouseMoveInterface = function(x,y,z){
+		if(!fObjectAddMode){
+		}
+		else{
+			if(fVirtualMindObject == null){
+				fVirtualMindObject = {};
+				fDrawingInterface["draw"+fMenuSelectedShape](x,y,z,fMenuInsertedSDI,"virtual");
+				fDrawingInterface["draw"+fMenuSelectedContents](x,y,z,fMenuInsertedCDI,fMenuInsertedCV,"virtual");
+				
+				fDrawingInterface["changeOpacityOf"+fMenuSelectedShape](0.5,"virtual");
+				fDrawingInterface["changeOpacityOf"+fMenuSelectedContents](0.5,"virtual");				
+			}
+			else{
+				fDrawingInterface["move"+fMenuSelectedShape](x,y,z,"virtual");
+				fDrawingInterface["move"+fMenuSelectedContents](x,y,z,"virtual");
+			}
+		}
+	};
+	
+	//Basic Functionality Functions
+	
 	this.connectToServer = function(){		
 		var ret = fSocketHelper.connectToServer();
 		if(ret)
 			fIsConnectedToServer = true;
-		else
+		else{
 			fIsConnectedToServer = false;
+			console.log("Failed to connect to ThinkMine Server");
+		}
 	};
 	this.disconnectFromServer = function(){
 		if(fIsConnectedToServer)
@@ -1164,6 +1299,14 @@ function CircleShapeTypeDependentInfo(radius, color){
 CircleShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 CircleShapeTypeDependentInfo.constructor = CircleShapeTypeDependentInfo; 
 
+function EllipseShapeTypeDependentInfo(width, height, color){
+	this.fWidth = width;
+	this.fHeight = height;
+	this.fColor = color;
+}
+EllipseShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
+EllipseShapeTypeDependentInfo.constructor = EllipseShapeTypeDependentInfo; 
+
 
 function RectangleShapeTypeDependentInfo(width, height, color, isRounded){
 	this.fWidth = width;
@@ -1235,6 +1378,9 @@ function MovieContentsTypeDependentInfo(width, height){
 	this.fHeight = height;	
 }
 
+MovieContentsTypeDependentInfo.prototype = new ContentsTypeDependentInfo();
+MovieContentsTypeDependentInfo.constructor = MovieContentsTypeDependentInfo;
+
 function WebPreviewContentsTypeDependentInfo(width, height, resolution, opacity){
 	this.fWidth = width;
 	this.fHeight = height;
@@ -1253,6 +1399,9 @@ function Encoder(){
 		switch (shapeType){
 		case "CircleShape" :
 			ret = 16777216;
+			break;
+		case "EllipseShape" :
+			ret = 16842752;
 			break;
 		case "RectangleShape" :
 			ret = 33554432;
@@ -1313,6 +1462,9 @@ function Decoder(){
 		switch (shapeType){
 		case 16777216 :
 			ret = "CircleShape";
+			break;
+		case 16842752 :
+			ret = "EllipseShape";
 			break;
 		case 33554432 :
 			ret = "RectangleShape";
@@ -2194,6 +2346,9 @@ function JobHandler(drawingObj){
 		case "CircleShape" :
 			ret = new CircleShapeTypeDependentInfo(parameterArray[0], parameterArray[1]);
 			break;
+		case "EllipseShape" :
+			ret = new EllipseShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
+			break;
 		case "RectangleShape" :
 			ret = new RectangleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 			break;
@@ -2542,7 +2697,11 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 			ret = [typeDependentInfo.fRadius,	//Radius
                    typeDependentInfo.fColor];	//Color
 			break;
-				//Shape
+		case "EllipseShape" :
+			ret = [typeDependentInfo.fWidth,	//Width
+                   typeDependentInfo.fHeight,	//Height
+				   typeDependentInfo.fColor];	//Color 
+			break;
 		case  "RectangleShape" :
 			ret = [typeDependentInfo.fWidth,	//Width
                    typeDependentInfo.fHeight,	//Height
@@ -3060,6 +3219,9 @@ function DrawingObj(drawingInterface){
 			case "CircleShape" :
 				retFunc = fDrawingInterface.changeColorOfCircleShape;
 				break;
+			case "EllipseShape" :
+				retFunc = fDrawingInterface.changeColorOfEllipseShape;
+				break;
 			case "RectangleShape" : 
 				retFunc = fDrawingInterface.changeColorOfRectangleShape;
 				break;
@@ -3376,10 +3538,27 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 	
 	
 	this.drawEllipseShape = function(x, y, z, info, mindObjectId){
+		/*var position = new paper.Point(x,y);
+		var drawingObject =	new paper.Path.Ellipse({
+								center: [x, y],
+								radius: [info.fWidth, info.fHeight],
+								fillColor: info.fColor
+							});	
+		drawingObject.fMindObjectId = mindObjectId;
+		paper.view.draw();
 		
+		fShapeObjects.push(drawingObject);*/
 	};
 	this.eraseEllipseShape = function(mindObjectId){
-		
+		/*for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){					
+				fShapeObjects[i].remove();
+				paper.view.draw();
+				
+				fShapeObjects.splice(i,1);
+				break;
+			}
+		}*/
 	};
 	this.moveEllipseShape = function(x, y, z, mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
@@ -3929,41 +4108,43 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 	
 	//All
 	this.eraseAll = function(){
-		for(var i=0; i<fShapeObjects.length;i++){			
-			fShapeObjects[i].remove();
+		//for(var i=0; i<fShapeObjects.length;i++){
+		while(fShapeObjects.length >0){
+			fShapeObjects[0].remove();
 			paper.view.draw();
 			
-			fShapeObjects.splice(i,1);
-			break;			
+			fShapeObjects.splice(0,1);
+			//break;			
 		}
 		
-		for(var i=0; i<fContentsObjects.length;i++){			
-			if(fContentsObjects[i].fRealVideo != undefined)
-				fContentsObjects[i].fRealVideo.pause();
+		//for(var i=0; i<fContentsObjects.length;i++){
+		while(fContentsObjects.length > 0){
+			if(fContentsObjects[0].fRealVideo != undefined)
+				fContentsObjects[0].fRealVideo.pause();
 			
-			fContentsObjects[i].remove();				
+			fContentsObjects[0].remove();				
 			paper.view.draw();
 			
-			fContentsObjects.splice(i,1);
-			break;				
+			fContentsObjects.splice(0,1);
+			//break;				
 		}
 		
 		
-		for(var i=0;i<fEdgeObjects.length; i++){		
-					
-			fEdgeObjects[i].remove();
+		//for(var i=0;i<fEdgeObjects.length; i++){		
+		while(fEdgeObjects.length > 0){			
+			fEdgeObjects[0].remove();
 			paper.view.draw();
 			
-			fEdgeObjects.splice(i,1);
+			fEdgeObjects.splice(0,1);
 			
-			break;						
+			//break;						
 		}
 		
 	};	
 }
 
-PaerperJS_DrawingInterface.prototype = new DrawingInterface("default");
-PaerperJS_DrawingInterface.constructor = PaerperJS_DrawingInterface;
+PaperJS_DrawingInterface.prototype = new DrawingInterface("default");
+PaperJS_DrawingInterface.constructor = PaperJS_DrawingInterface;
 
 
 function PaperJS_CollisionCheckInterface(){
@@ -4015,6 +4196,13 @@ function PaperJS_CollisionCheckInterface(){
 				radius : shapeTypeDependentInfo.fRadius,
 				strokeColor : 'black'
 			});
+			break;
+		case "EllipseShape" :
+			/*paperObject = new paper.Path.Ellipse({
+							center: [mindObject.fX, mindObject.fY],
+							radius: [shapeTypeDependentInfo.fWidth, shapeTypeDependentInfo.fHeight],
+							fillColor: 'black'
+						});*/
 			break;
 		case "RectangleShape" :
 			var tempRectangle = new paper.Rectangle(new paper.Point(mindObject.fX - shapeTypeDependentInfo.fWidth/2,mindObject.fY - shapeTypeDependentInfo.fHeight/2), new paper.Size(shapeTypeDependentInfo.fWidth, shapeTypeDependentInfo.fHeight));
@@ -4095,6 +4283,11 @@ function initPaperJSMindMap(canvasWidth, canvasHeight, wrappedEventHandler){
 	CreatingPolygon = new paper.Path.RegularPolygon(new paper.Point(100, 200), 3, 70);
 	CreatingPolygon.fillColor = '2F7321';
 	
+	/*CreatingEllipse = new paper.Path.Ellipse({
+							center: [200, 200],
+							radius: [90, 30],
+							fillColor: 'black'
+						});*/
 	
 	paper.view.draw();
 	
@@ -4109,31 +4302,35 @@ function WrappedPaperJSEventHandler() {
 	this.mousedown;
 	this.mouseup;
 	this.mousedrag;
+	this.mousemove;
 	this.keydown;
 	this.compositionstart;
 	this.compositionupdate;
 	this.compositionend;
 	this.setOnMouseDown = function(onMouseDown){
 		this.mousedown = onMouseDown;
-	}
+	};
 	this.setOnMouseUp = function(onMouseUp){
 		this.mouseup = onMouseUp;
-	}
+	};
 	this.setOnMouseDrag = function(onMouseDrag){
 		this.mousedrag = onMouseDrag;
-	}
+	};
+	this.setOnMouseMove = function(onMouseMove){
+		this.mousemove = onMouseMove;
+	};
 	this.setOnKeyDown = function(onKeyDown){
 		this.keydown = onKeydown;
-	}
+	};
 	this.setOnCompositionStart = function(onCompositionStart){
 		this.compositionstart = onCompositionStart;
-	}
+	};
 	this.setOnCompositionUpdate = function(onCompositionUpdate){
 		this.compositionupdate = onCompositionUpdate;
-	}
+	};
 	this.setOnCompositionEnd = function(onCompositionEnd){
 		this.compositionend = onCompositionEnd;
-	}
+	};
 }
 
 

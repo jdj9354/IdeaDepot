@@ -84,7 +84,139 @@
 	
 	<script src="ThinkMineLib.js"></script>
 	<script type="text/javascript">
-		window.onload = function() {
+
+
+		
+	</script>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="res/ico/bootstrap/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="res/ico/bootstrap/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="res/ico/bootstrap/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="res/ico/bootstrap/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="res/ico/bootstrap/favicon.png">
+  </head>
+
+  <body>
+	<input type="file">
+	<div id="group_div_shape" style="margin: 0 auto;">
+		<div id="div_circleshape" width='50' height='50'  style="float:left;">
+			<img src="res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
+		</div>
+		<div id="div_rectangleshape" width='50' height='50'  style="float:left;">
+			<img src="res/RectangleShape.png" id="RectangleShapeImage" width='50' height='50' />
+		</div>
+		<div id="div_starshape" width='50' height='50' style="float:left;">
+			<img src="res/StarShape.png" id="StarShapeImage" width='50' height='50' />
+		</div>
+		<div id="div_polygonshape" width='50' height='50'>
+			<img src="res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
+		</div>
+	</div>
+	
+	
+	<div class="progress">
+	  <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+		<span class="sr-only">40% Complete (success)</span>
+	  </div>
+	</div>
+	<div class="progress">
+  <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+    <span class="sr-only">45% Complete</span>
+  </div>
+</div>
+	
+	
+	<button type="button" class="btn btn-primary" data-toggle="button">Single toggle</button>
+	<div class="btn-group" data-toggle="buttons">
+		<label class="btn btn-primary active">
+			<input type="radio" name="options" id="NotSel" checked> Not select
+		</label>
+		<label class="btn btn-primary">
+			<input type="radio" name="options" id="Shape1"> Circle
+		</label>
+		<label class="btn btn-primary">
+			<input type="radio" name="options" id="Shape2"> Rectangle
+		</label>
+		<label class="btn btn-primary">
+			<input type="radio" name="options" id="Shape3"> Star
+		</label>
+		<label class="btn btn-primary">
+			<input type="radio" name="options" id="Shape4"> Polygon
+		</label>
+	</div>
+	
+	<div class="dropdown" id="dd_shapetype">
+	  <button class="btn btn-default dropdown-toggle" type="button" id="btn_shapetype" data-toggle="dropdown">
+		Select Shape
+		<span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+	  	<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Not select</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Circle</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Rectangle</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Star</a></li>
+		<!--<li role="presentation" class="divider"></li>-->
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Polygon</a></li>
+	  </ul>
+	</div>
+	
+    <div class="container">
+
+      <div class="masthead">
+        <h3 class="muted">Think Mine</h3>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Your Idea Projects</a></li>
+                <li><a href="#">....</a></li>
+                <li><a href="#">....</a></li>
+                <li><a href="#">....</a></li>
+                <li><a href="#">....</a></li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
+
+ 
+	  <canvas id="myCanvas" height = "600" width="1000"></canvas>
+      <hr>
+
+      <div class="footer">
+        <p>&copy; ThinkeMine 2014</p>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!--<script src="js/bootstrap/jquery.js"></script>
+    <script src="js/bootstrap/bootstrap-transition.js"></script>
+    <script src="js/bootstrap/bootstrap-alert.js"></script>
+    <script src="js/bootstrap/bootstrap-modal.js"></script>
+    <script src="js/bootstrap/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap/bootstrap-tab.js"></script>
+    <script src="js/bootstrap/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap/bootstrap-popover.js"></script>
+    <script src="js/bootstrap/bootstrap-button.js"></script>
+    <script src="js/bootstrap/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap/bootstrap-typeahead.js"></script>-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script>
+			var TMCanvas;
+			window.onload = function() {
 			//setUpPaperLib('myCanvas');
 			
 
@@ -101,7 +233,7 @@
 			setUpPaperLib('myCanvas');
 			var drawing_Interface = new PaperJS_DrawingInterface("PaperJS",'myCanvas');			
 			var collisionCheck_Interface = new PaperJS_CollisionCheckInterface();
-			var TMCanvas = new ThinkMineCanvas(drawing_Interface,collisionCheck_Interface);
+			TMCanvas = new ThinkMineCanvas(drawing_Interface,collisionCheck_Interface);
 			
 			
 			var wrappedEventHandler = new WrappedPaperJSEventHandler();
@@ -116,6 +248,9 @@
 													wrappedEventHandler.dragCount++;
 													if(wrappedEventHandler.dragCount>1)
 														TMCanvas.onMouseDragInterface(event.point.x,event.point.y,0);
+												});
+			wrappedEventHandler.setOnMouseMove(function(event){
+													TMCanvas.onMouseMoveInterface(event.point.x,event.point.y,0);
 												});
 			//wrappedEventHandler.setOnKeyDown(TMCanvas.onKeyDownInterface);
 			//wrappedEventHandler.setOnCompositionStart(TMCanvas.onCompositionEventStartInterface);
@@ -183,73 +318,56 @@
 			}, false);
 			
 			
+			
 		}
-
-
+		$(function(){		
+			$("#CircleShapeImage").click(function(){
+				TMCanvas.enableObjectAddMode();
+				TMCanvas.setMenuSelectedShape(0);
+				TMCanvas.setMenuInsertedSDI(new CircleShapeTypeDependentInfo(50,"#FF0000"));
+				TMCanvas.setMenuSelectedContents(0);
+				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+				TMCanvas.setMenuInsertedCV("UI Interaction Test");
+				}); 
+		});
 		
+		$(function(){
+			$("#RectangleShapeImage").click(function(){
+				TMCanvas.enableObjectAddMode();
+				TMCanvas.setMenuSelectedShape(1);
+				TMCanvas.setMenuInsertedSDI(new RectangleShapeTypeDependentInfo(150, 150, "#FF0000", true));
+				TMCanvas.setMenuSelectedContents(0);
+				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+				TMCanvas.setMenuInsertedCV("UI Interaction Test");
+				}); 
+		});
+		
+		$(function(){
+			$("#StarShapeImage").click(function(){
+				TMCanvas.enableObjectAddMode();
+				TMCanvas.setMenuSelectedShape(2);
+				TMCanvas.setMenuInsertedSDI(new StarShapeTypeDependentInfo(5, 150, 75,"#000F00"));
+				TMCanvas.setMenuSelectedContents(0);
+				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+				TMCanvas.setMenuInsertedCV("UI Interaction Test");
+				}); 
+		});
+
+		$(function(){
+			$("#PolygonShapeImage").click(function(){
+				TMCanvas.enableObjectAddMode();
+				TMCanvas.setMenuSelectedShape(3);
+				TMCanvas.setMenuInsertedSDI(new PolygonShapeTypeDependentInfo(14, 150, "#00F0FF"));
+				TMCanvas.setMenuSelectedContents(0);
+				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+				TMCanvas.setMenuInsertedCV("UI Interaction Test");
+				}); 
+		});
+	
+		$('#dd_shapetype').on('hide.bs.dropdown', function (event) {
+		  console.log(event.relatedTarget);
+		});
+
 	</script>
-
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="../assets/js/html5shiv.js"></script>
-    <![endif]-->
-
-    <!-- Fav and touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="res/ico/bootstrap/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="res/ico/bootstrap/apple-touch-icon-114-precomposed.png">
-      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="res/ico/bootstrap/apple-touch-icon-72-precomposed.png">
-                    <link rel="apple-touch-icon-precomposed" href="res/ico/bootstrap/apple-touch-icon-57-precomposed.png">
-                                   <link rel="shortcut icon" href="res/ico/bootstrap/favicon.png">
-  </head>
-
-  <body>
-	<input type="file">
-    <div class="container">
-
-      <div class="masthead">
-        <h3 class="muted">Think Mine</h3>
-        <div class="navbar">
-          <div class="navbar-inner">
-            <div class="container">
-              <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Your Idea Projects</a></li>
-                <li><a href="#">....</a></li>
-                <li><a href="#">....</a></li>
-                <li><a href="#">....</a></li>
-                <li><a href="#">....</a></li>
-              </ul>
-            </div>
-          </div>
-        </div><!-- /.navbar -->
-      </div>
-
- 
-	  <canvas id="myCanvas" height = "600" width="1000"></canvas>
-      <hr>
-
-      <div class="footer">
-        <p>&copy; ThinkeMine 2014</p>
-      </div>
-
-    </div> <!-- /container -->
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/bootstrap/jquery.js"></script>
-    <script src="js/bootstrap/bootstrap-transition.js"></script>
-    <script src="js/bootstrap/bootstrap-alert.js"></script>
-    <script src="js/bootstrap/bootstrap-modal.js"></script>
-    <script src="js/bootstrap/bootstrap-dropdown.js"></script>
-    <script src="js/bootstrap/bootstrap-scrollspy.js"></script>
-    <script src="js/bootstrap/bootstrap-tab.js"></script>
-    <script src="js/bootstrap/bootstrap-tooltip.js"></script>
-    <script src="js/bootstrap/bootstrap-popover.js"></script>
-    <script src="js/bootstrap/bootstrap-button.js"></script>
-    <script src="js/bootstrap/bootstrap-collapse.js"></script>
-    <script src="js/bootstrap/bootstrap-carousel.js"></script>
-    <script src="js/bootstrap/bootstrap-typeahead.js"></script>
-
   </body>
 </html>
