@@ -11,6 +11,7 @@ const CODE_MIND_CHANGE_CONTENTS = "MCC";
 const CODE_MIND_CHANGE_COLOR_OF_SHAPE = 42;
 const CODE_MIND_CHANGE_SHAPE = "MCS";
 const CODE_MIND_CHANGE_PARENT_MINDMAP = "MCPMM";
+const CODE_MIND_RESIZE_SHAPE = 45;
 const CODE_MIND_MAP_REQUEST_MIND_INFO = 65;
 
 const SocketCommuDelimiter = "\\";
@@ -94,6 +95,9 @@ dbCallBackFunction = function(m){
 			io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
 		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS :
+			io.sockets.emit('NewEvent',m.reply.retObject);
+			break;
+		case CODE_MIND_RESIZE_SHAPE :
 			io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
 		default :
@@ -226,8 +230,17 @@ io.sockets.on('connection', function (socket){
 			dbHelperProcess.send(message);
 			//io.sockets.emit('NewEvent',data);
 			break;
-		case CODE_MIND_CHANGE_COLOR_OF_SHAPE:
+		case CODE_MIND_CHANGE_COLOR_OF_SHAPE :
 			io.sockets.emit('NewEvent',data);
+			break;
+		case CODE_MIND_RESIZE_SHAPE :
+			var message = {
+				requestSocketId : socket.id,
+				operationType : 3,
+				collectionName : "shape",
+				info : data
+			};
+			dbHelperProcess.send(message);
 			break;
 		default :
 			break;

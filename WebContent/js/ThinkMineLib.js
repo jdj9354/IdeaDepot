@@ -24,6 +24,7 @@ addJavascript("/paper-full.js");
 addJavascript("/socket.io/socket.io.js");
 addJavascript("/DrawingWorker.js");
 addJavascript("/EventParserWorker.js");
+addJavascript("/AnimationWorker.js");
 addJavascript("/kinetic-v5.0.2.min.js");
 
 
@@ -103,6 +104,75 @@ function linearInterpolation(x1,y1,z1, x2,y2,z2, n){
 	
 }
 
+function clone(obj){
+    var clonedObjectsArray = [];
+    var originalObjectsArray = []; //used to remove the unique ids when finished
+    var next_objid = 0;
+
+    function objectId(obj) {
+        if (obj == null) return null;
+        if (obj.__obj_id == undefined){
+            obj.__obj_id = next_objid++;
+            originalObjectsArray[obj.__obj_id] = obj;
+        }
+        return obj.__obj_id;
+    }
+
+    function cloneRecursive(obj) {
+        if (null == obj || typeof obj == "string" || typeof obj == "number" || typeof obj == "boolean") return obj;
+
+        // Handle Date
+        if (obj instanceof Date) {
+            var copy = new Date();
+            copy.setTime(obj.getTime());
+            return copy;
+        }
+
+        // Handle Array
+        if (obj instanceof Array) {
+            var copy = [];
+            for (var i = 0; i < obj.length; ++i) {
+                copy[i] = cloneRecursive(obj[i]);
+            }
+            return copy;
+        }
+
+        // Handle Object
+        if (obj instanceof Object) {
+            if (clonedObjectsArray[objectId(obj)] != undefined)
+                return clonedObjectsArray[objectId(obj)];
+
+            var copy;
+            if (obj instanceof Function)//Handle Function
+                copy = function(){return obj.apply(this, arguments);};
+            else
+                copy = {};
+
+            clonedObjectsArray[objectId(obj)] = copy;
+
+            for (var attr in obj)
+                if (attr != "__obj_id" && obj.hasOwnProperty(attr))
+                    copy[attr] = cloneRecursive(obj[attr]);                 
+
+            return copy;
+        }       
+
+
+        throw new Error("Unable to copy obj! Its type isn't supported.");
+    }
+    var cloneObj = cloneRecursive(obj);
+
+
+
+    //remove the unique ids
+    for (var i = 0; i < originalObjectsArray.length; i++)
+    {
+        delete originalObjectsArray[i].__obj_id;
+    };
+
+    return cloneObj;
+}
+
 
 //------------------- OperatonCode Section--------------------------------
 
@@ -118,7 +188,8 @@ const CODE_MIND_CHANGE_VALUE_OF_CONTENTS = 40;
 const CODE_MIND_CHANGE_CONTENTS = "MCC";
 const CODE_MIND_CHANGE_COLOR_OF_SHAPE = 42;
 const CODE_MIND_CHANGE_SHAPE = "MCS";
-const CODE_MIND_CHANGE_PARENT_MINDMAP = "MCPMM";
+const CODE_MIND_CHANGE_PARENT_MIND_MAP = "MCPMM";
+const CODE_MIND_RESIZE_SHAPE = 45;
 const CODE_MIND_MAP_REQUEST_MIND_INFO = 65;
 
 /*const SocketCommuDelimiter = "\\";
@@ -134,6 +205,8 @@ const DEFAULT_OPACITY_MOVING_MIND_OBJECT = 0.7;
 const MEDIA_SERVER_ADDR = "192.168.0.2";
 const WEB_PREVIEW_PORT = "52274";
 const moveCountLimit = 5;
+
+//const MIN_SHAPE_TYPE_DEPENDENT_INFO = {CircleShape : new CircleShapeTypeDependentInfo(										};
 
 var CreatingCircle;
 var CreatingImageCircle;
@@ -193,6 +266,9 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 	var fObjectAddMode = false;
 	//fObjectAddMode = true;
 	var fVirtualMindObject = null;
+	var fAddEventStartPointX = -1;
+	var fAddEventStartPointY = -1;
+	var fAddEventStartPointZ = -1;
 	
 	//
 	
@@ -223,8 +299,11 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		var fIsContentsChanged = false;
 		
 									
-		var fObjectAddMode = false;
-		var fVirtualMindObject = null;		
+		fObjectAddMode = false;
+		fVirtualMindObject = null;		
+		fAddEventStartPointX = -1;
+		fAddEventStartPointY = -1;
+		fAddEventStartPointZ = -1;
 		
 		var contentsEditor = document.getElementById('ContentsEditor');
 		if(contentsEditor != null)
@@ -648,11 +727,20 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		}
 		else {
 			if(fVirtualMindObject != null){
-				fVirtualMindObject = null;		
-				var tempShape = new Shape(fMenuSelectedShape, fMenuInsertedSDI);
+	
+				var tempShape = new Shape(fMenuSelectedShape, fVirtualMindObject.fShape.fShapeTypeDependentInfo);
 				var tempContents = new Contents(fMenuSelectedContents, fMenuInsertedCDI , fMenuInsertedCV);
 				
-				this.addMindObject(x,y,z,tempShape,tempContents);
+				this.addMindObject(fVirtualMindObject.fX,fVirtualMindObject.fY,fVirtualMindObject.fZ,tempShape,tempContents);
+				
+				fVirtualMindObject = null;
+				fAddEventStartPointX = -1;
+				fAddEventStartPointY = -1;
+				fAddEventStartPointZ = -1;
+				//delete fMenuInsertedSDI;
+				
+				fDrawingInterface["erase"+fMenuSelectedShape]("virtual");
+				fDrawingInterface["erase"+fMenuSelectedContents]("virtual");
 			}
 			else{
 			}
@@ -713,6 +801,166 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 			}
 		}
 		else{
+			if(fVirtualMindObject == null){
+				fVirtualMindObject = {fX : x,
+										fY : y,
+										fZ : z,
+										fShape:{fShapeTypeDependentInfo:fMenuInsertedSDI}};
+				
+				fAddEventStartPointX = x;
+				fAddEventStartPointY = y;
+				fAddEventStartPointZ = z;
+				
+				switch(fMenuSelectedShape){
+				case "PolygonShape" :
+				case "CircleShape" :
+					fMenuInsertedSDI.fRadius = 1;
+					break;
+				case "RectangleShape" :
+					fMenuInsertedSDI.fWidth = 10;
+					fMenuInsertedSDI.fHeight = 10;
+					break;	
+				case "StarShape" :
+					fMenuInsertedSDI.fFirstRadius = 10;
+					fMenuInsertedSDI.fSecondRadius = 5;
+					break;							
+				}
+				
+								
+				fDrawingInterface["draw"+fMenuSelectedShape](x,y,z,fMenuInsertedSDI,"virtual");
+				fDrawingInterface["draw"+fMenuSelectedContents](x,y,z,fMenuInsertedCDI,fMenuInsertedCV,"virtual");
+				
+				fDrawingInterface["changeOpacityOf"+fMenuSelectedShape](0.5,"virtual");
+				fDrawingInterface["changeOpacityOf"+fMenuSelectedContents](0.5,"virtual");
+			}
+			else{
+
+				
+				var newX;
+				var newY;
+				var newZ;
+				
+				switch(fMenuSelectedShape){
+				case "PolygonShape" :
+				case "CircleShape" :
+				
+					var xDiff = x - fAddEventStartPointX;
+					var yDiff = y - fAddEventStartPointY;
+					var zDiff = z - fAddEventStartPointZ;
+					
+					var distance = distanceOfTwoPoints(x,y,z,fAddEventStartPointX,fAddEventStartPointY,fAddEventStartPointZ);
+					var ratioFactor = zDiff==0?1.414:1.732;
+					var eDistance = distance/ratioFactor;
+					
+					var midX;
+					var midY;
+					var midZ;
+					
+					if(xDiff>=0)
+						midX = fAddEventStartPointX + eDistance;
+					else
+						midX = fAddEventStartPointX - eDistance;
+						
+					if(yDiff>=0)
+						midY = fAddEventStartPointY + eDistance;
+					else
+						midY = fAddEventStartPointY - eDistance;
+					
+					if(zDiff>=0)
+						midZ = fAddEventStartPointZ + eDistance;
+					else
+						midZ = fAddEventStartPointZ - eDistance;
+					
+					newX = (fAddEventStartPointX + midX)/2;
+					newY = (fAddEventStartPointY + midY)/2;
+					newZ = (fAddEventStartPointZ + midZ)/2;
+
+					
+					var newRadius = eDistance/2;
+
+					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fRadius = newRadius;
+					
+					break;
+				case "RectangleShape" :
+					var xDiff = x - fAddEventStartPointX;
+					var yDiff = y - fAddEventStartPointY;
+					var zDiff = z - fAddEventStartPointZ;
+					
+					newX = (x + fAddEventStartPointX)/2;
+					newY = (y + fAddEventStartPointY)/2;
+					newZ = (z + fAddEventStartPointZ)/2;
+					
+					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fWidth = xDiff>0?xDiff:-xDiff;
+					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fHeight = yDiff>0?yDiff:-yDiff;
+					
+						
+					break;
+					
+				case "StarShape" :
+				
+					var xDiff = x - fAddEventStartPointX;
+					var yDiff = y - fAddEventStartPointY;
+					var zDiff = z - fAddEventStartPointZ;
+					
+					var distance = distanceOfTwoPoints(x,y,z,fAddEventStartPointX,fAddEventStartPointY,fAddEventStartPointZ);
+					var ratioFactor = zDiff==0?1.414:1.732;
+					var eDistance = distance/ratioFactor;
+					
+					var midX;
+					var midY;
+					var midZ;
+					
+					if(xDiff>=0)
+						midX = fAddEventStartPointX + eDistance;
+					else
+						midX = fAddEventStartPointX - eDistance;
+						
+					if(yDiff>=0)
+						midY = fAddEventStartPointY + eDistance;
+					else
+						midY = fAddEventStartPointY - eDistance;
+					
+					if(zDiff>=0)
+						midZ = fAddEventStartPointZ + eDistance;
+					else
+						midZ = fAddEventStartPointZ - eDistance;
+					
+					newX = (fAddEventStartPointX + midX)/2;
+					newY = (fAddEventStartPointY + midY)/2;
+					newZ = (fAddEventStartPointZ + midZ)/2;
+
+					
+					var newRadius = eDistance/2;
+					
+					var firstRadius = fVirtualMindObject.fShape.fShapeTypeDependentInfo.fFirstRadius;
+					var secondRadius = fVirtualMindObject.fShape.fShapeTypeDependentInfo.fSecondRadius;
+					
+					var fsRatio = secondRadius / firstRadius;
+
+					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fFirstRadius = firstRadius > secondRadius ? newRadius : newRadius/fsRatio;
+					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fSecondRadius = firstRadius > secondRadius ? newRadius*fsRatio : newRadius;
+					
+					break;					
+					//fMenuInsertedSDI.fRadius = newRadius;					
+				}
+				
+				fVirtualMindObject.fX = newX;
+				fVirtualMindObject.fY = newY;
+				fVirtualMindObject.fZ = newZ;
+				
+				fDrawingInterface["move"+fMenuSelectedShape](newX,newY,newZ,"virtual");
+				fDrawingInterface["move"+fMenuSelectedContents](newX,newY,newZ,"virtual");
+				
+				fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
+										{fMindObjectId : "virtual",
+										fShape : {fShapeType : fMenuSelectedShape,
+													fShapeTypeDependentInfo : fVirtualMindObject.fShape.fShapeTypeDependentInfo
+										}}]);
+				
+				//fDrawingInterface["resize"+fMenuSelectedShape](fVirtualMindObject.fShape.fShapeTypeDependentInfo,"virtual");
+				//fDrawingInterface["move"+fMenuSelectedShape](x,y,z,"virtual");
+				//fDrawingInterface["move"+fMenuSelectedContents](x,y,z,"virtual");
+			}			
 		}
 		
 		
@@ -722,7 +970,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		if(!fObjectAddMode){
 		}
 		else{
-			if(fVirtualMindObject == null){
+			/*if(fVirtualMindObject == null){
 				fVirtualMindObject = {};
 				fDrawingInterface["draw"+fMenuSelectedShape](x,y,z,fMenuInsertedSDI,"virtual");
 				fDrawingInterface["draw"+fMenuSelectedContents](x,y,z,fMenuInsertedCDI,fMenuInsertedCV,"virtual");
@@ -733,7 +981,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 			else{
 				fDrawingInterface["move"+fMenuSelectedShape](x,y,z,"virtual");
 				fDrawingInterface["move"+fMenuSelectedContents](x,y,z,"virtual");
-			}
+			}*/
 		}
 	};
 	
@@ -961,6 +1209,25 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		fSocketHelper.fSocketDataCommuHelperSender.mindObjectChangeColorOfShapeSend(fJobHandler.getMindMap().fMindMapId,
 																						 mindObjectId,
 																						 color);		
+	};
+	
+	this.resizeShape = function(mindObjectId, shape){
+		if(!(shape instanceof Shape)){
+			console.log("ThinkMineCanvas - resizeShape Error : Wrong type of Shape Obj");
+			return;
+		}
+		else {
+			if(shape.fShapeTypeDependentInfo == null || shape.fShapeTypeDependentInfo == undefined || !(shape.fShapeTypeDependentInfo instanceof ShapeTypeDependentInfo)
+					|| shape.fShapeType == null || shape.fShapeType == undefined || typeof(shape.fShapeType) != "string" ){
+				console.log("ThinkMineCanvas - resizeShape Error : Not sufficient Shape Member Variable");
+				return;
+			}
+		}
+		
+		fSocketHelper.fSocketDataCommuHelperSender.mindObjectResizeShapeSend(fJobHandler.getMindMap().fMindMapId,
+																				mindObjectId,
+																				shape);
+		
 	};
 	
 	
@@ -1605,6 +1872,9 @@ function JobHandler(drawingObj){
 			break;
 		case CODE_MIND_CHANGE_SHAPE :
 			break;
+		case CODE_MIND_RESIZE_SHAPE :
+			handleResizeShape(eventCode);
+			break;
 		case CODE_MIND_CHANGE_PARENT_MIND_MAP :
 			break;
 		default :
@@ -1794,8 +2064,47 @@ function JobHandler(drawingObj){
 		
 		
 		tempShapeTypeDependentInfo = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);						
-		tempShapeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);			
+		tempShapeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);
+		
+		//Need to Code Generalization
+		switch(tempShapeType){
+		case "PolygonShape" :
+		case "CircleShape" :
+			var finalRadius = tempShapeTypeDependentInfoForDrawing.fRadius;
+			tempShapeTypeDependentInfoForDrawing.fRadius = 10;
+			
+			var curRadius = tempShapeTypeDependentInfoForDrawing.fRadius;
+			var repeatCount = parseInt((finalRadius - curRadius + 3)/3);
+			break;
+		case "RectangleShape" :
+			var finalWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
+			var finalHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
+			var whRatio = finalHeight/finalWidth;
+			tempShapeTypeDependentInfoForDrawing.fWidth = 10;
+			tempShapeTypeDependentInfoForDrawing.fHeight = 10;
+			var curWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
+			var curHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
+			
+			var repeatCount = parseInt((finalWidth - curWidth + 3)/3);
+		case "StarShape" :
+			var finalFirstRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius;
+			var finalSecondRadius = tempShapeTypeDependentInfoForDrawing.fSecondRadius;
+			var finalOuterRadius = finalFirstRadius > finalSecondRadius? finalFirstRadius : finalSecondRadius;
+			
+			tempShapeTypeDependentInfoForDrawing.fFirstRadius = finalFirstRadius > finalSecondRadius? 10 : 5;
+			tempShapeTypeDependentInfoForDrawing.fSecondRadius = finalFirstRadius > finalSecondRadius? 5 : 10;
+			
+			var curOuterRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius > tempShapeTypeDependentInfoForDrawing.fSecondRadius?
+									tempShapeTypeDependentInfoForDrawing.fFirstRadius : tempShapeTypeDependentInfoForDrawing.fSecondRadius;
+									
+			var fsRatio = finalFirstRadius > finalSecondRadius? (finalSecondRadius / finalFirstRadius) : (finalFirstRadius / finalSecondRadius);
+			var repeatCount = parseInt((finalOuterRadius - curOuterRadius + 3)/3);
+			
+			break;		
+		}
 
+		 
+		//
 		
 		tempShape = new Shape(tempShapeType, tempShapeTypeDependentInfo);
 		tempShapeForDrawing = new Shape(tempShapeTypeForDrawing, tempShapeTypeDependentInfoForDrawing);
@@ -1840,7 +2149,96 @@ function JobHandler(drawingObj){
 		var drawingJob = new Array();
 		drawingJob.push(CODE_MIND_ADD);
 		drawingJob.push(tempMindObjectForDrawing);
-		fDrawingObj.pushNewJob(drawingJob);		
+		fDrawingObj.pushNewJob(drawingJob);
+
+
+		
+		var animWorker = new Worker("AnimationWorker.js");
+		
+		
+		animWorker.onmessage = function (event){
+			var data = event.data;
+			
+			if(data == 0){
+				
+				switch(tempShapeTypeForDrawing){
+				case "PolygonShape" :
+				case "CircleShape" :
+					if(curRadius > finalRadius){
+						tempShapeTypeDependentInfoForDrawing.fRadius = finalRadius;
+						}
+					else
+						tempShapeTypeDependentInfoForDrawing.fRadius = curRadius;
+					curRadius += 3;
+					break;
+				case "RectangleShape" :
+					if(curWidth > finalWidth){
+						tempShapeTypeDependentInfoForDrawing.fWidth = finalWidth;
+						tempShapeTypeDependentInfoForDrawing.fHeight = finalHeight;
+						}
+					else{
+						tempShapeTypeDependentInfoForDrawing.fWidth = curWidth;
+						tempShapeTypeDependentInfoForDrawing.fHeight = curHeight;
+					}
+					curWidth += 3;
+					curHeight += 3*whRatio;
+					break;
+				case "StarShape" :
+					if(curOuterRadius > finalOuterRadius){
+						tempShapeTypeDependentInfoForDrawing.fFirstRadius = finalFirstRadius;
+						tempShapeTypeDependentInfoForDrawing.fSecondRadius = finalSecondRadius;
+						}
+					else{
+						tempShapeTypeDependentInfoForDrawing.fFirstRadius = finalFirstRadius > finalSecondRadius? curOuterRadius : curOuterRadius*fsRatio;
+						tempShapeTypeDependentInfoForDrawing.fSecondRadius = finalSecondRadius > finalFirstRadius? curOuterRadius : curOuterRadius*fsRatio;
+					}
+					curOuterRadius += 3;
+					break;
+				}
+				
+				fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
+					{fMindObjectId : tempMindObject.fMindObjectId,
+					fShape : {fShapeType : tempShapeTypeForDrawing,
+								fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing
+					}}]);
+				
+			}
+			else{
+				animWorker.terminate();
+				animWorker = null;
+			}
+			
+	
+		};
+		
+		
+		animWorker.postMessage({repeatCount : repeatCount,
+								interval : 10});
+		
+		/*for(var i=tempShapeTypeDependentInfoForDrawing.fRadius; i<=curRadius+3; i+=3){
+			tempShapeTypeDependentInfoForDrawing.fRadius = i;
+			fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
+							{fMindObjectId : tempMindObject.fMindObjectId,
+							fShape : {fShapeType : tempShapeTypeForDrawing,
+										fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing
+							}}]);
+			var delay = 1; // 5 second delay
+			var now = new Date();
+			var desiredTime = new Date().setSeconds(now.getSeconds() + delay);
+console.log(now);
+			while (now < desiredTime) {
+				now = new Date(); // update the current time
+				console.log(now);
+			}
+		}
+		tempShapeTypeDependentInfoForDrawing.fRadius = curRadius;
+		fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
+						{fMindObjectId : tempMindObject.fMindObjectId,
+						fShape : {fShapeType : tempShapeTypeForDrawing,
+									fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing
+		}}]);*/
+
+		
 	};
 	
 	var handleMindObjectDelEvent = function(eventCode){
@@ -2300,6 +2698,39 @@ function JobHandler(drawingObj){
 		                        ]);
 		
 	};
+	
+	var handleResizeShape = function(eventCode){
+	
+		var targetIndex = -1;
+		var tempShapeType = fDecoder.decodeShapeType(eventCode.ST);
+		var tempShapeTypeDependentInfo = getObjTypeDependentInfo(tempShapeType,eventCode.STDI);
+		
+		for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
+			if(compareIdValue(fMindMap.getMindObjectOnIndex(i).fMindObjectId,eventCode.MOID)){
+				targetIndex = i;
+			}
+		}
+	
+		if(targetIndex == -1)
+			return;			
+		
+		if(fMindMap.getMindObjectOnIndex(targetIndex).fShape == undefined || fMindMap.getMindObjectOnIndex(targetIndex).fShape == null)
+			return;
+		else
+			fMindMap.getMindObjectOnIndex(targetIndex).changeShape(new Shape(tempShape,tempShapeTypeDependentInfo));
+
+		var tempShapeTypeForDrawing = fDecoder.decodeShapeType(eventCode.ST);
+		var tempShapeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempShapeTypeForDrawing,eventCode.STDI);
+		
+		var tempMindObjectForDrawing = {fShape : {fShapeType : ""+tempShapeTypeForDrawing,
+													fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing},
+										fMindObjectId : fMindMap.getMindObjectOnIndex(targetIndex).fMindObjectId						
+										};
+										
+		fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
+		                        tempMindObjectForDrawing]);
+			
+	};
 
 	var handleLatestJob = function(){
 		if(fJobQ.length == 0 || fMutexLocked == true)
@@ -2679,6 +3110,21 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 		
 		fWSocket.emit('NewEvent',SendInfo);
 	};
+	this.mindObjectResizeShapeSend = function(mindMapId,mindObjectId, shape){
+		if(fJobHandler == null || fWSocket == null){
+			console.log("SocketDataCommuHelperSender : Object is not Initialized");
+			return;
+		}
+		
+		var tempShapeTypeDependentInfoArray = genArrayForCommu(shape.fShapeType, shape.fShapeTypeDependentInfo);
+		
+		fWSocket.emit('NewEvent',{Code : CODE_MIND_RESIZE_SHAPE,
+			MMID : mindMapId,
+			MOID : mindObjectId,
+			ST : fEncoder.encodeShapeType(shape.fShapeType),
+			STDI : tempShapeTypeDependentInfoArray});	
+		
+	};
 
 	this.mindMapRequestMindInfo = function(mindMapId){	
 		if(fJobHandler == null || fWSocket == null){
@@ -2891,6 +3337,9 @@ function DrawingObj(drawingInterface){
 			break;
 		case CODE_MIND_CHANGE_PARENT_MIND_MAP :
 			break;
+		case CODE_MIND_RESIZE_SHAPE :
+			resizeShape(drawingJob[1]);
+			break;
 		default :
 			break;
 		
@@ -2905,7 +3354,7 @@ function DrawingObj(drawingInterface){
 		for(var i=0; i<mindObjectInfoArray.length; i++){
 			var tempShapeType = mindObjectInfoArray[i].fShape.fShapeType;			
 			
-			getDrawingFunctionRef(tempShapeType, "draw")(mindObjectInfoArray[i].fX,									//X
+			fDrawingInterface["draw"+tempShapeType](mindObjectInfoArray[i].fX,											//X
 															mindObjectInfoArray[i].fY,									//Y
 															mindObjectInfoArray[i].fZ,									//Z
 															mindObjectInfoArray[i].fShape.fShapeTypeDependentInfo,		//Info
@@ -2913,7 +3362,7 @@ function DrawingObj(drawingInterface){
 			
 			var tempContentsType =  mindObjectInfoArray[i].fContents.fContentsType;
 			
-			getDrawingFunctionRef(tempContentsType, "draw")(mindObjectInfoArray[i].fX,										//X
+			fDrawingInterface["draw"+tempContentsType](mindObjectInfoArray[i].fX,											//X
 															mindObjectInfoArray[i].fY,										//Y
 															mindObjectInfoArray[i].fZ,										//Z
 															mindObjectInfoArray[i].fContents.fContentsTypeDependentInfo,	//Info
@@ -2926,7 +3375,7 @@ function DrawingObj(drawingInterface){
 			
 			var tempEdgeType = edgeObjects[i].fEdgeType;
 			
-			getDrawingFunctionRef(tempEdgeType, "draw")(edgeObjects[i].fFirstMindObject.fX,						//Frist X
+			fDrawingInterface["draw"+tempEdgeType](edgeObjects[i].fFirstMindObject.fX,							//Frist X
 														edgeObjects[i].fFirstMindObject.fY,						//First Y
 														edgeObjects[i].fFirstMindObject.fZ,						//First Z
 														edgeObjects[i].fSecondMindObject.fX,					//Second X
@@ -2940,11 +3389,11 @@ function DrawingObj(drawingInterface){
 	
 	var drawMindObject = function(mindObject){
 		
-		getDrawingFunctionRef(mindObject.fShape.fShapeType, "draw")(mindObject.fX, mindObject.fY, mindObject.fZ,
+		fDrawingInterface["draw"+mindObject.fShape.fShapeType](mindObject.fX, mindObject.fY, mindObject.fZ,
 														mindObject.fShape.fShapeTypeDependentInfo,
 														mindObject.fMindObjectId);
 		
-		getDrawingFunctionRef(mindObject.fContents.fContentsType, "draw")(mindObject.fX, mindObject.fY, mindObject.fZ,
+		fDrawingInterface["draw"+mindObject.fContents.fContentsType](mindObject.fX, mindObject.fY, mindObject.fZ,
 														mindObject.fContents.fContentsTypeDependentInfo,
 														mindObject.fContents.fValue,
 														mindObject.fMindObjectId);		
@@ -2953,12 +3402,12 @@ function DrawingObj(drawingInterface){
 	
 	var eraseMindObject = function(delMindObjectInfo, delEdgeInfo){
 		
-		getDrawingFunctionRef(delMindObjectInfo.fShape.fShapeType, "erase")(delMindObjectInfo.fMindObjectId);
+		fDrawingInterface["erase"+delMindObjectInfo.fShape.fShapeType](delMindObjectInfo.fMindObjectId);
 
-		getDrawingFunctionRef(delMindObjectInfo.fContents.fContentsType, "erase")(delMindObjectInfo.fMindObjectId);
+		fDrawingInterface["erase"+delMindObjectInfo.fContents.fContentsType](delMindObjectInfo.fMindObjectId);
 		
 		for(var i=0; i<delEdgeInfo.length; i++){
-			getDrawingFunctionRef(delEdgeInfo[i].fEdgeType, "erase")(delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
+			fDrawingInterface["erase"+delEdgeInfo[i].fEdgeType](delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
 																	delEdgeInfo[i].fSecondMindObject.fMindObjectId);
 		}		
 	};
@@ -2969,19 +3418,19 @@ function DrawingObj(drawingInterface){
 		for(var i=0; i<pointArray.length ; i++){			
 		
 			
-			getDrawingFunctionRef(movMindObjectInfo.fShape.fShapeType, "move")(pointArray[i][0],
+			fDrawingInterface["move"+movMindObjectInfo.fShape.fShapeType](pointArray[i][0],
 																				pointArray[i][1],
 																				pointArray[i][2],
 																				movMindObjectInfo.fMindObjectId);
-			getDrawingFunctionRef(movMindObjectInfo.fContents.fContentsType, "move")(pointArray[i][0],
-																						pointArray[i][1],
-																						pointArray[i][2],
+			fDrawingInterface["move"+movMindObjectInfo.fContents.fContentsType](pointArray[i][0],
+																					pointArray[i][1],
+																					pointArray[i][2],
 																					movMindObjectInfo.fMindObjectId);
 			
 			for(var j=0; j<movEdgeInfo.length; j++){
-				getDrawingFunctionRef(movEdgeInfo[j].fEdgeType, "move")(pointArray[i][0],
-																			pointArray[i][1],
-																			pointArray[i][2],
+				fDrawingInterface["move"+movEdgeInfo[j].fEdgeType](pointArray[i][0],
+																		pointArray[i][1],
+																		pointArray[i][2],
 																		movEdgeInfo[j].fFirstMindObject.fMindObjectId, 
 																		movEdgeInfo[j].fSecondMindObject.fMindObjectId,
 																		movMindObjectInfo.fMindObjectId);
@@ -3015,23 +3464,23 @@ function DrawingObj(drawingInterface){
 		//빠져들어가는 효과로 변경 필요
 		if(flagValue == 0){
 			var delMindObjectInfo = delMindObjectInfo_or_addMindObjectInfo;
-			getDrawingFunctionRef(delMindObjectInfo.fShape.fShapeType, "erase")(delMindObjectInfo.fMindObjectId);
+			fDrawingInterface["erase"+delMindObjectInfo.fShape.fShapeType](delMindObjectInfo.fMindObjectId);
 
-			getDrawingFunctionRef(delMindObjectInfo.fContents.fContentsType, "erase")(delMindObjectInfo.fMindObjectId);
+			fDrawingInterface["erase"+delMindObjectInfo.fContents.fContentsType](delMindObjectInfo.fMindObjectId);
 			
 			for(var i=0; i<delEdgeInfo.length; i++){
-				getDrawingFunctionRef(delEdgeInfo[i].fEdgeType, "erase")(delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
+				fDrawingInterface["erase"+delEdgeInfo[i].fEdgeType](delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
 																		delEdgeInfo[i].fSecondMindObject.fMindObjectId);
 			}		
 		}
 		else{
 			var mindObject = delMindObjectInfo_or_addMindObjectInfo;
 			
-			getDrawingFunctionRef(mindObject.fShape.fShapeType, "draw")(mindObject.fX, mindObject.fY, mindObject.fZ,
+			fDrawingInterface["draw"+mindObject.fShape.fShapeType](mindObject.fX, mindObject.fY, mindObject.fZ,
 												mindObject.fShape.fShapeTypeDependentInfo,
 												mindObject.fMindObjectId);
 	
-			getDrawingFunctionRef(mindObject.fContents.fContentsType, "draw")(mindObject.fX, mindObject.fY, mindObject.fZ,
+			fDrawingInterface["draw"+mindObject.fContents.fContentsType](mindObject.fX, mindObject.fY, mindObject.fZ,
 															mindObject.fContents.fContentsTypeDependentInfo,
 															mindObject.fContents.fValue,
 															mindObject.fMindObjectId);	
@@ -3039,7 +3488,7 @@ function DrawingObj(drawingInterface){
 	};
 	
 	var drawEdge = function(newEdgeInfo){
-		getDrawingFunctionRef(newEdgeInfo.fEdgeType, "draw")(newEdgeInfo.fFirstMindObject.fX,
+		fDrawingInterface["draw"+newEdgeInfo.fEdgeType](newEdgeInfo.fFirstMindObject.fX,
 																newEdgeInfo.fFirstMindObject.fY,
 																newEdgeInfo.fFirstMindObject.fZ,
 																newEdgeInfo.fSecondMindObject.fX,
@@ -3051,18 +3500,18 @@ function DrawingObj(drawingInterface){
 	};
 	
 	var eraseEdge = function(delEdgeInfo){
-		getDrawingFunctionRef(delEdgeInfo.fEdgeType, "erase")(delEdgeInfo.fFirstMindObject.fMindObjectId,
+		fDrawingInterface["erase"+delEdgeInfo.fEdgeType](delEdgeInfo.fFirstMindObject.fMindObjectId,
 																delEdgeInfo.fSecondMindObject.fMindObjectId);
 	};
 	
 	var changeColorOfContents = function(mindObjectInfo, colorCode){
-		getDrawingFunctionRef(mindObjectInfo.fContents.fContentsType,"changeColor")(colorCode,
+		fDrawingInterface["changeColorOf"+mindObjectInfo.fContents.fContentsType](colorCode,
 																					mindObjectInfo.fMindObjectId);
 	};
 	
 	var changeValueOfContents = function(mindObjectInfo){
-		getDrawingFunctionRef(mindObjectInfo.fContents.fContentsType,"erase")(mindObjectInfo.fMindObjectId);
-		getDrawingFunctionRef(mindObjectInfo.fContents.fContentsType,"draw")(mindObjectInfo.fX,
+		fDrawingInterface["erase"+mindObjectInfo.fContents.fContentsType](mindObjectInfo.fMindObjectId);
+		fDrawingInterface["draw"+mindObjectInfo.fContents.fContentsType](mindObjectInfo.fX,
 																				mindObjectInfo.fY,
 																				mindObjectInfo.fZ,
 																				mindObjectInfo.fContents.fContentsTypeDependentInfo,
@@ -3072,8 +3521,12 @@ function DrawingObj(drawingInterface){
 	
 	var changeColorOfShape = function(mindObjectInfo, colorCode){
 		
-		getDrawingFunctionRef(mindObjectInfo.fShape.fShapeType,"changeColor")(colorCode,
+		fDrawingInterface["changeColorOf"+mindObjectInfo.fShape.fShapeType](colorCode,
 																				mindObjectInfo.fMindObjectId);
+	};
+	
+	var resizeShape = function(mindObjectInfo){
+		fDrawingInterface["resize"+mindObjectInfo.fShape.fShapeType](mindObjectInfo.fShape.fShapeTypeDependentInfo,mindObjectInfo.fMindObjectId);
 	};
 	
 	var handleLatestJob = function(){
@@ -3090,7 +3543,7 @@ function DrawingObj(drawingInterface){
 		//console.log("Poped Item : ");		
 		//console.log(JSON.stringify(latestJob));
 		ret = handleEventCode(latestJob);
-		console.log("handle!");
+		console.log(latestJob);
 		if(ret == 0){
 			//오류 메세지 출력 및 MindMap 재 초기화
 		}
@@ -3106,7 +3559,7 @@ function DrawingObj(drawingInterface){
 		};
 	};
 	
-	
+	//deprrecated
 	var getDrawingFunctionRef = function(type, operation){
 		var retFunc;
 		switch(operation){
@@ -3292,6 +3745,10 @@ function DrawingInterface(backBoneType){
 	this.moveCircleShape = function(x, y, z, mindObjectId){
 		
 	};
+	
+	this.resizeCircleShape = function(info,mindObjectId){
+	};
+	
 	this.changeColorOfCircleShape = function(colorCode, mindObjectId){
 		
 	};
@@ -3326,6 +3783,9 @@ function DrawingInterface(backBoneType){
 	};
 	this.moveRectangleShape = function(x, y, z, mindObjectId){
 		
+	};
+	this.resizeRectangleShape = function(info,mindObjectId){
+	
 	};	
 	this.changeColorOfRectangleShape = function(colorCode, mindObjectId){
 		
@@ -3345,6 +3805,9 @@ function DrawingInterface(backBoneType){
 	this.moveStarShape = function(x, y, z, mindObjectId){
 		
 	};	
+	this.resizeStarShape = function(info,mindObjectId){
+	
+	};	
 	this.changeColorOfStarShape = function(colorCode, mindObjectId){
 		
 	};
@@ -3363,7 +3826,10 @@ function DrawingInterface(backBoneType){
 	};
 	this.movePolygonShape = function(x, y, z, mindObjectId){
 		
-	};	
+	};
+	this.resizePolygonShape = function(info,mindObjectId){
+	
+	};		
 	this.changeColorOfPolygonShape = function(colorCode, mindObjectId){
 		
 	};
@@ -3485,8 +3951,9 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 		var drawingObject = new paper.Path.Circle(position, info.fRadius);		
 		drawingObject.fillColor = info.fColor;
 		drawingObject.fMindObjectId = mindObjectId;
+		drawingObject.fShape = {fShapeTypeDependentInfo : {fRadius : info.fRadius}};
+						
 		paper.view.draw();
-		
 		fShapeObjects.push(drawingObject);
 	};
 	this.eraseCircleShape = function(mindObjectId){
@@ -3494,7 +3961,6 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){					
 				fShapeObjects[i].remove();
 				paper.view.draw();
-				
 				fShapeObjects.splice(i,1);
 				break;
 			}
@@ -3511,12 +3977,30 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 			}
 				
 		}
+	};
+	this.resizeCircleShape = function(info,mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				var scaleRatio = info.fRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius;
+
+				if(scaleRatio != Infinity && !isNaN(scaleRatio)){
+					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius = info.fRadius;
+					fShapeObjects[i].scale(scaleRatio);
+					
+				
+					paper.view.draw();
+				}
+				break;
+			}
+				
+		}
 	};	
 	this.changeColorOfCircleShape = function(colorCode, mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
 				fShapeObjects[i].fillColor = colorCode;
 				
+								
 				paper.view.draw();
 				break;
 			}
@@ -3610,10 +4094,14 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 		drawingObject.strokeColor = info.fColor;
 		drawingObject.fillColor = info.fColor;
 		drawingObject.fMindObjectId = mindObjectId;
+		drawingObject.fShape = {fShapeTypeDependentInfo : {fWidth : info.fWidth,
+															fHeight : info.fHeight}};
+															
+
 		paper.view.draw();
 		
 		fShapeObjects.push(drawingObject);
-	
+			console.log(fShapeObjects);
 		
 	};
 	this.eraseRectangleShape = function(mindObjectId){
@@ -3638,7 +4126,79 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 			}
 				
 		}
-	};	
+	};
+	this.resizeRectangleShape = function(info,mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				//var scaleRatioVertical = info.fHeight/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fHeight;
+				//var scaleRatioHorizontal = info.fWidth/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fWidth;
+				var heightFactor = (info.fHeight - fShapeObjects[i].fShape.fShapeTypeDependentInfo.fHeight)/2;
+				var widthFactor = (info.fWidth - fShapeObjects[i].fShape.fShapeTypeDependentInfo.fWidth)/2;
+				
+				fShapeObjects[i].fShape.fShapeTypeDependentInfo.fHeight = info.fHeight;
+				fShapeObjects[i].fShape.fShapeTypeDependentInfo.fWidth = info.fWidth;
+				
+				if(info.fIsRounded){
+					fShapeObjects[i].segments[0].point.x -= widthFactor;
+					fShapeObjects[i].segments[0].point.y += heightFactor;
+					
+					fShapeObjects[i].segments[1].point.x -= widthFactor;
+					fShapeObjects[i].segments[1].point.y += heightFactor;
+
+					fShapeObjects[i].segments[2].point.x -= widthFactor;
+					fShapeObjects[i].segments[2].point.y -= heightFactor;
+					
+					fShapeObjects[i].segments[3].point.x -= widthFactor;
+					fShapeObjects[i].segments[3].point.y -= heightFactor;
+					
+					fShapeObjects[i].segments[4].point.x += widthFactor;
+					fShapeObjects[i].segments[4].point.y -= heightFactor;
+					
+					fShapeObjects[i].segments[5].point.x += widthFactor;
+					fShapeObjects[i].segments[5].point.y -= heightFactor;
+
+					fShapeObjects[i].segments[6].point.x += widthFactor;
+					fShapeObjects[i].segments[6].point.y += heightFactor;
+					
+					fShapeObjects[i].segments[7].point.x += widthFactor;
+					fShapeObjects[i].segments[7].point.y += heightFactor;
+				}
+				else{
+					fShapeObjects[i].segments[0].point.x -= widthFactor;
+					fShapeObjects[i].segments[0].point.y += heightFactor;
+					
+					fShapeObjects[i].segments[1].point.x -= widthFactor;
+					fShapeObjects[i].segments[1].point.y -= heightFactor;
+
+					fShapeObjects[i].segments[2].point.x += widthFactor;
+					fShapeObjects[i].segments[2].point.y -= heightFactor;
+					
+					fShapeObjects[i].segments[3].point.x += widthFactor;
+					fShapeObjects[i].segments[3].point.y += heightFactor;
+
+				}
+
+				
+				paper.view.draw();
+				/*if(scaleRatioVertical != Infinity && !isNaN(scaleRatioVertical)
+					&& scaleRatioHorizontal != Infinity && !isNaN(scaleRatioHorizontal)){
+					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fHeight = info.fHeight;
+					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fWidth = info.fWidth;
+					//fShapeObjects[i].scale(scaleRatioHorizontal,scaleRatioVertical);
+					//console.log(fShapeObjects[i]._bounds.getStrokeBounds.__proto__);
+					for(var j=0; j<fShapeObjects[i].segments.length-1; j++){					
+						var drawingObject = new paper.Path.Circle(fShapeObjects[i].segments[j].point,10);		
+						drawingObject.fillColor =  "#ffffff";
+						fShapeObjects[i].segments[j].point.x = fShapeObjects[i].segments[j].point.x+50;
+						}
+				
+					paper.view.draw();
+				}*/
+				break;
+			}
+				
+		}
+	};		
 	this.changeColorOfRectangleShape = function(colorCode, mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
@@ -3672,6 +4232,9 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 
 		drawingObject.fillColor = info.fColor;
 		drawingObject.fMindObjectId = mindObjectId;
+		drawingObject.fShape = {fShapeTypeDependentInfo : {fFirstRadius : info.fFirstRadius,
+															fSecondRadius : info.fSecondRadius,
+															fNrPoints : info.fNrPoints}};
 		paper.view.draw();
 		
 		fShapeObjects.push(drawingObject);
@@ -3696,6 +4259,24 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 				fShapeObjects[i].position = newPoint;
 				
 				paper.view.draw();
+				break;
+			}
+				
+		}
+	};	
+	this.resizeStarShape = function(info,mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				var scaleRatio = info.fFirstRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fFirstRadius;
+
+				if(scaleRatio != Infinity && !isNaN(scaleRatio)){
+					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fFirstRadius = info.fFirstRadius;
+					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fSecondRadius = info.fSecondRadius;
+					fShapeObjects[i].scale(scaleRatio);
+					
+				
+					paper.view.draw();
+				}
 				break;
 			}
 				
@@ -3735,6 +4316,9 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 
 		drawingObject.fillColor = info.fColor;
 		drawingObject.fMindObjectId = mindObjectId;
+		drawingObject.fShape = drawingObject.fShape = {fShapeTypeDependentInfo : {fRadius : info.fRadius,
+																				fNrPoints : info.fNrPoints,
+																				fColor : info.fColor}};
 		paper.view.draw();
 		
 		fShapeObjects.push(drawingObject);
@@ -3759,6 +4343,23 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 				fShapeObjects[i].position = newPoint;
 				
 				paper.view.draw();
+				break;
+			}
+				
+		}
+	};
+	this.resizePolygonShape = function(info,mindObjectId){
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				var scaleRatio = info.fRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius;
+
+				if(scaleRatio != Infinity && !isNaN(scaleRatio)){
+					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius = info.fRadius;
+					fShapeObjects[i].scale(scaleRatio);
+					
+				
+					paper.view.draw();
+				}
 				break;
 			}
 				
@@ -3798,6 +4399,7 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 		contentsObject.fontSize = info.fFontSize;
 		contentsObject.fillColor = info.fColor;
 		contentsObject.fMindObjectId = mindObjectId;
+		contentsObject.position = new paper.Point(x,y);
 		paper.view.draw();
 		
 		fContentsObjects.push(contentsObject);
@@ -4265,6 +4867,13 @@ function initPaperJSMindMap(canvasWidth, canvasHeight, wrappedEventHandler){
 		
 	CreatingCircle = new paper.Path.Circle(new paper.Point(100,70), 50);
 	CreatingCircle.fillColor = 'black';	
+	
+	/*for(var i=0; i<CreatingCircle.segments.length; i++)
+	{
+		var tempObj = new paper.Path.Circle(CreatingCircle.segments[i].point, 10);
+		tempObj.fillColor = '#0FFF00';	
+		//console.log(CreatingCircle.segments[i]);
+	}*/
 	
 	CreatingImageCircle = new paper.Path.Circle(new paper.Point(300,70), 50);
 	CreatingImageCircle.fillColor = 'black';

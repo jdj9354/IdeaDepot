@@ -21,6 +21,7 @@ const CODE_MIND_CHANGE_CONTENTS = "MCC";
 const CODE_MIND_CHANGE_COLOR_OF_SHAPE = 42;
 const CODE_MIND_CHANGE_SHAPE = "MCS";
 const CODE_MIND_CHANGE_PARENT_MINDMAP = "MCPMM";
+const CODE_MIND_RESIZE_SHAPE = 45;
 const CODE_MIND_MAP_REQUEST_MIND_INFO = 65;
 
 
@@ -883,6 +884,35 @@ this.changeMindObjectContentsAndReply = function(info, requestSocketId){
 	
 };
 
+this.resizeMindObjectShapeAndReply = function(info, requestSocketId){
+
+	var message = {};
+	message.Code = CODE_MIND_RESIZE_SHAPE;
+	
+	mindObjectCollection.findOne({"_id" : new ObjectID(info.MOID)}, function(err, result){
+		if(err != null){
+			message.retString = "resizeMindObjectShapeAndReply : Couldn't find MindObject" + info.MOID;				
+			return;
+		}
+		
+		var shapeId = result.shape.oid;
+		shapeCollection.update({"_id" : shapeId}, {"$set" : {"shape_type_dependent_info" : info.STDI}},function(err,result){
+			if(err != null){
+				message.retString = "resizeMindObjectShapeAndReply : failed to resize(change Shape) Shape of MindObject" + info.MOID;				
+				return;
+			}
+			
+			
+			message.retString = "resizeMindObjectShapeAndReply : Succeeded to resize(change Shape) Shape of MindObject" + info.MOID;
+			message.retObject = info;
+			process.send({replyRequestSocketId : requestSocketId,
+							reply : message});
+		
+			return;
+		});		
+	});
+};
+
 
 this.insertMindObject = function(mindObject){	
 	mindObjectCollection.insert(mindObject,function(err, result) {});
@@ -941,9 +971,13 @@ this.nodeJSCallBackFunction = function(m){
 		break;
 	case CODE_MIND_CHANGE_COLOR_OF_SHAPE :
 		break;
+	case CODE_MIND_RESIZE_SHAPE :
+		tmdb.resizeMindObjectShapeAndReply(info,requestSocketId);
+		break;
 	case CODE_MIND_MAP_REQUEST_MIND_INFO :
 		tmdb.composeCommunicationMindMapAndReply(info.MMID,requestSocketId);
 		break;
+
 	}
 	/*switch(operationType){
 	case 0:	

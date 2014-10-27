@@ -83,6 +83,7 @@
     <link href="css/bootstrap/bootstrap-responsive.css" rel="stylesheet">
 	
 	<script src="ThinkMineLib.js"></script>
+	<script src="js/script.js"></script>
 	<script type="text/javascript">
 
 
@@ -186,8 +187,22 @@
         </div><!-- /.navbar -->
       </div>
 
- 
-	  <canvas id="myCanvas" height = "600" width="1000"></canvas>
+
+	
+	<div id="svgAndcanvas" style="margin: 0 auto;">
+		<div id="svg" width='600' height='1000'  style="position:absolute;z-index:110;pointer-events: none;" >
+			<svg id="svgHost" width="2000" height="2000">
+				<path id="toolBoxRectangle" d="M0 0 L150 0 L150 150 L0 150 Z" fill="cyan" />
+
+				Sorry, your browser does not support inline SVG.
+		
+			</svg> 
+		</div>
+		<div id="canvas" width='600' height='1000' style="position:absolute;z-index:100;">
+			<canvas id="myCanvas" height = "600" width="1000"></canvas>		
+		</div>
+	</div>
+
       <hr>
 
       <div class="footer">
@@ -217,6 +232,7 @@
 	<script>
 			var TMCanvas;
 			window.onload = function() {
+			com.local.SVGHandlers.Initialize();
 			//setUpPaperLib('myCanvas');
 			
 
@@ -293,7 +309,7 @@
 			//TMCanvas.initWithMindMap("5419a2a443caa5a02237ae41");
 			
 			//TMCanvas.initWithMindMap("541afd10c856c42401abdc16");
-			TMCanvas.initWithMindMap("");
+			TMCanvas.initWithMindMap("5447c235e95398a80b6b451a");
 			
 			var lastDownTarget, canvas;
 
@@ -324,7 +340,7 @@
 			$("#CircleShapeImage").click(function(){
 				TMCanvas.enableObjectAddMode();
 				TMCanvas.setMenuSelectedShape(0);
-				TMCanvas.setMenuInsertedSDI(new CircleShapeTypeDependentInfo(50,"#FF0000"));
+				TMCanvas.setMenuInsertedSDI(new CircleShapeTypeDependentInfo(10,"#FF0000"));
 				TMCanvas.setMenuSelectedContents(0);
 				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
 				TMCanvas.setMenuInsertedCV("UI Interaction Test");
@@ -335,7 +351,7 @@
 			$("#RectangleShapeImage").click(function(){
 				TMCanvas.enableObjectAddMode();
 				TMCanvas.setMenuSelectedShape(1);
-				TMCanvas.setMenuInsertedSDI(new RectangleShapeTypeDependentInfo(150, 150, "#FF0000", true));
+				TMCanvas.setMenuInsertedSDI(new RectangleShapeTypeDependentInfo(10, 10, "#FF0000", true));
 				TMCanvas.setMenuSelectedContents(0);
 				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
 				TMCanvas.setMenuInsertedCV("UI Interaction Test");
@@ -357,7 +373,7 @@
 			$("#PolygonShapeImage").click(function(){
 				TMCanvas.enableObjectAddMode();
 				TMCanvas.setMenuSelectedShape(3);
-				TMCanvas.setMenuInsertedSDI(new PolygonShapeTypeDependentInfo(14, 150, "#00F0FF"));
+				TMCanvas.setMenuInsertedSDI(new PolygonShapeTypeDependentInfo(14, 10, "#00F0FF"));
 				TMCanvas.setMenuSelectedContents(0);
 				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
 				TMCanvas.setMenuInsertedCV("UI Interaction Test");
