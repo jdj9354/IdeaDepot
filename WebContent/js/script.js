@@ -63,36 +63,65 @@ com.local.SVG.Movable = function() {
 	var mousePrevPos = { x: null, y: null};
 	var mouseDownOnElement;
 	
+	var toolBoxRectangle;
+	var colorPickerImage;
+	var hostSVGParent;
 	
 	var init = function(element, parent) {
 		movableElement = element;
 		parentElement = parent;
+		toolBoxRectangle = document.getElementById("toolBoxRectangle");
+		//specify the region in which dragging should work well
+		hostSVGParent = document.getElementById("svgHost"); 
+		colorPickerImage = document.getElementById("color-picker");
+		var a;
+		
 	};
 		
 	var beginMouseDrag = function(e) {
-		mouseDownOnElement = true;
-		mousePrevPos.x = e.pageX;
-		mousePrevPos.y = e.pageY;
+		if(e.target == toolBoxRectangle){
+			mouseDownOnElement = true;
+			mousePrevPos.x = e.pageX;
+			mousePrevPos.y = e.pageY;
+		}
+		else if(e.target == hostSVGParent){
+			wrappedEventHandler.mousedown({point:{x:e.offsetX,y:e.offsetY}});
+		}
+		//console.log(event.point.x + " " + event.point.y);
 	};
 	
 	var handleMouseMovement = function(e) {
 		if (mouseDownOnElement == true) {
 			var mouseDelta = { x: e.pageX - mousePrevPos.x, y: e.pageY - mousePrevPos.y};
 			com.local.SVG.Lib.MovePathObject(movableElement, mouseDelta.x, mouseDelta.y);
+			colorPickerImage.x.baseVal.value += mouseDelta.x;
+			colorPickerImage.y.baseVal.value += mouseDelta.y;
 			mousePrevPos.x = e.pageX;
 			mousePrevPos.y = e.pageY;
+		
+			
+			
+		}
+		else{
+			if(e.which)
+				wrappedEventHandler.mousedrag({point:{x:e.offsetX,y:e.offsetY}});
+			else
+				wrappedEventHandler.mousemove({point:{x:e.offsetX,y:e.offsetY}});
 		}
 	};
 	
-	var endMouseDrag = function() {
+	var endMouseDrag = function(e) {
 		mouseDownOnElement = false;
+				var canvas = document.getElementById("myCanvas");
+		wrappedEventHandler.mouseup({point:{x:e.offsetX,y:e.offsetY}});
+		//console.log(e.offsetX + " " + e.offsetY);
 	}
 	
 	return {
 		Initialize: function(element, parent) { init(element, parent); },
 		BeginDrag: function(e) { beginMouseDrag(e); },
 		MouseMoved: function(e) { handleMouseMovement(e); },
-		EndDrag: function() { endMouseDrag(); }
+		EndDrag: function(e) { endMouseDrag(e); }
 	}
 	
 }
@@ -112,6 +141,7 @@ com.local.SVGHandlers = function() {
 		movableTriangle.Initialize(toolBoxRectangle, hostSVGParent);
 		
 		toolBoxRectangle.onmousedown = movableTriangle.BeginDrag;
+		hostSVGParent.onmousedown = movableTriangle.BeginDrag;
 		
 		toolBoxRectangle.onmousemove = movableTriangle.MouseMoved;
 		hostSVGParent.onmousemove = movableTriangle.MouseMoved;
@@ -130,3 +160,4 @@ com.local.SVGHandlers = function() {
 }();
 
 //finally, link all this to the HTML window
+window.onload = com.local.SVGHandlers.Initialize;

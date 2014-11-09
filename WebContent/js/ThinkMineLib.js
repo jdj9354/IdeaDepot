@@ -2086,6 +2086,7 @@ function JobHandler(drawingObj){
 			var curHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
 			
 			var repeatCount = parseInt((finalWidth - curWidth + 3)/3);
+			break;
 		case "StarShape" :
 			var finalFirstRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius;
 			var finalSecondRadius = tempShapeTypeDependentInfoForDrawing.fSecondRadius;
@@ -2306,38 +2307,38 @@ console.log(now);
 													eventCode.Z,
 													3);
 				
-//				for(var pointIndex = 0; pointIndex < pointArray.length; pointIndex++){
-//				
-//					fMindMap.getMindObjectOnIndex(i).fX = pointArray[pointIndex][0];
-//					fMindMap.getMindObjectOnIndex(i).fY = pointArray[pointIndex][1];
-//					fMindMap.getMindObjectOnIndex(i).fZ = pointArray[pointIndex][2];					
-//					
-//					tempMindObjectForDrawing = {fMindObjectId : eventCode.MOID,
-//												fX : pointArray[pointIndex][0],
-//												fY : pointArray[pointIndex][1],
-//												fZ : pointArray[pointIndex][2],
-//												fShape : {fShapeType : tempShapeType},
-//												fContents : {fContentsType : tempContentsType}												
-//												};
-//					
-//	
-//					for(var j=0; j<fMindMap.getMindObjectOnIndex(i).lenOfConnectedEdgesArray(); j++){
-//						
-//						
-//						
-//						var tempEdgeForDrawing = {fEdgeType : "" + fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fEdgeType , 
-//												  fFirstMindObject : {fMindObjectId : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fFirstMindObject.fMindObjectId} ,
-//						                          fSecondMindObject : {fMindObjectId : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fSecondMindObject.fMindObjectId}
-//						
-//												};
-//						
-//						tempEdgeArrayForDrawing.push(tempEdgeForDrawing);
-//					}
-//					
-//					fDrawingObj.pushNewJob([CODE_MIND_MOVE,
-//					                        tempMindObjectForDrawing,
-//					                        tempEdgeArrayForDrawing]);
-//				}
+/*				for(var pointIndex = 0; pointIndex < pointArray.length; pointIndex++){
+				
+					fMindMap.getMindObjectOnIndex(i).fX = pointArray[pointIndex][0];
+					fMindMap.getMindObjectOnIndex(i).fY = pointArray[pointIndex][1];
+					fMindMap.getMindObjectOnIndex(i).fZ = pointArray[pointIndex][2];					
+					
+					tempMindObjectForDrawing = {fMindObjectId : eventCode.MOID,
+												fX : pointArray[pointIndex][0],
+												fY : pointArray[pointIndex][1],
+												fZ : pointArray[pointIndex][2],
+												fShape : {fShapeType : tempShapeType},
+												fContents : {fContentsType : tempContentsType}												
+												};
+					
+	
+					for(var j=0; j<fMindMap.getMindObjectOnIndex(i).lenOfConnectedEdgesArray(); j++){
+						
+						
+						
+						var tempEdgeForDrawing = {fEdgeType : "" + fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fEdgeType , 
+												  fFirstMindObject : {fMindObjectId : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fFirstMindObject.fMindObjectId} ,
+						                          fSecondMindObject : {fMindObjectId : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fSecondMindObject.fMindObjectId}
+						
+												};
+						
+						tempEdgeArrayForDrawing.push(tempEdgeForDrawing);
+					}
+					
+					fDrawingObj.pushNewJob([CODE_MIND_MOVE,
+					                        tempMindObjectForDrawing,
+					                        tempEdgeArrayForDrawing]);
+				}*/
 				
 				fMindMap.getMindObjectOnIndex(i).fX = eventCode.X;
 				fMindMap.getMindObjectOnIndex(i).fY = eventCode.Y;

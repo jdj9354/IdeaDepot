@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0037)http://johndyer.name/lab/colorpicker/ -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>Color Picker</title>
+		<style type="text/css">
+		body, td {
+			font-family: tahoma;
+			font-size: 10pt;
+		}
+		</style>
+	
+		<script type="text/javascript" async="" src="./Color Picker_files/ga.js"></script><script type="text/javascript" src="./Color Picker_files/prototype.js"></script>
+		<script type="text/javascript" src="./Color Picker_files/colormethods.js"></script>
+		<script type="text/javascript" src="./Color Picker_files/colorvaluepicker.js"></script>
+		<script type="text/javascript" src="./Color Picker_files/slider.js"></script>
+		<script type="text/javascript" src="./Color Picker_files/colorpicker.js"></script>
+	
+	</head>
+	<body>
+	
+		<h1>Photoshop-like JavaScript Color Picker</h1>
+		
+		<p>This color picker mimics Photoshop color picker by layering transparent images.</p>
+	
+		<table>
+			<tbody><tr>
+				<td valign="top">
+					<div id="cp1_ColorMap" style="width: 256px; height: 256px; padding: 0px; margin: 0px; border: 1px solid rgb(0, 0, 0);"><img src="./Color Picker_files/map-saturation.png" width="256" height="256" style="margin: 0px; display: block;"><img src="./Color Picker_files/map-saturation-overlay.png" width="256" height="256" style="clear: both; margin: -256px 0px 0px; display: block; opacity: 0;"></div>
+				</td>
+				<td valign="top">
+					<div id="cp1_ColorBar" style="width: 20px; height: 256px; padding: 0px; margin: 0px 10px; border: 1px solid rgb(0, 0, 0);"><img src="./Color Picker_files/blank.gif" width="20" height="256" style="margin: 0px; display: block;"><img src="./Color Picker_files/blank.gif" width="20" height="256" style="margin: -256px 0px 0px; display: block;"><img src="./Color Picker_files/blank.gif" width="20" height="256" style="margin: -256px 0px 0px; display: block; background-color: rgb(0, 3, 201);"><img src="./Color Picker_files/bar-saturation.png" width="20" height="256" style="margin: -256px 0px 0px; display: block;"></div>
+				</td>
+	
+				<td valign="top">
+	
+					<table>
+						<tbody><tr>
+							<td colspan="3">
+								<div id="cp1_Preview" style="width: 60px; height: 60px; padding: 0px; margin: 0px; border: 1px solid rgb(0, 0, 0); background-color: rgb(0, 3, 201);">
+									<br>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="radio" id="cp1_HueRadio" name="cp1_Mode" value="h">
+							</td>
+							<td>
+								<label for="cp1_HueRadio">H:</label>
+							</td>
+							<td>
+								<input type="text" id="cp1_Hue" value="0" style="width: 40px;"> °
+							</td>
+						</tr>
+	
+						<tr>
+							<td>
+								<input type="radio" id="cp1_SaturationRadio" name="cp1_Mode" value="s">
+							</td>
+							<td>
+								<label for="cp1_SaturationRadio">S:</label>
+							</td>
+							<td>
+								<input type="text" id="cp1_Saturation" value="100" style="width: 40px;"> %
+							</td>
+						</tr>
+	
+						<tr>
+							<td>
+								<input type="radio" id="cp1_BrightnessRadio" name="cp1_Mode" value="v">
+							</td>
+							<td>
+								<label for="cp1_BrightnessRadio">B:</label>
+							</td>
+							<td>
+								<input type="text" id="cp1_Brightness" value="100" style="width: 40px;"> %
+							</td>
+						</tr>
+	
+						<tr>
+							<td colspan="3" height="5">
+	
+							</td>
+						</tr>
+	
+						<tr>
+							<td>
+								<input type="radio" id="cp1_RedRadio" name="cp1_Mode" value="r">
+							</td>
+							<td>
+								<label for="cp1_RedRadio">R:</label>
+							</td>
+							<td>
+								<input type="text" id="cp1_Red" value="255" style="width: 40px;">
+							</td>
+						</tr>
+	
+						<tr>
+							<td>
+								<input type="radio" id="cp1_GreenRadio" name="cp1_Mode" value="g">
+							</td>
+							<td>
+								<label for="cp1_GreenRadio">G:</label>
+							</td>
+							<td>
+								<input type="text" id="cp1_Green" value="0" style="width: 40px;">
+							</td>
+						</tr>
+	
+						<tr>
+							<td>
+								<input type="radio" id="cp1_BlueRadio" name="cp1_Mode" value="b">
+							</td>
+							<td>
+								<label for="cp1_BlueRadio">B:</label>
+							</td>
+							<td>
+								<input type="text" id="cp1_Blue" value="0" style="width: 40px;">
+							</td>
+						</tr>
+	
+	
+						<tr>
+							<td>
+								#:
+							</td>
+							<td colspan="2">
+								<input type="text" id="cp1_Hex" value="FF0000" style="width: 60px;">
+							</td>
+						</tr>
+	
+					</tbody></table>
+				</td>
+			</tr>
+		</tbody></table>
+		
+	
+	<div style="display:none;">
+		<img src="./Color Picker_files/rangearrows.gif">
+		<img src="./Color Picker_files/mappoint.gif">
+		
+		<img src="./Color Picker_files/bar-saturation.png">
+		<img src="./Color Picker_files/bar-brightness.png">
+		
+		<img src="./Color Picker_files/bar-blue-tl.png">
+		<img src="./Color Picker_files/bar-blue-tr.png">
+		<img src="./Color Picker_files/bar-blue-bl.png">
+		<img src="./Color Picker_files/bar-blue-br.png">
+		<img src="./Color Picker_files/bar-red-tl.png">
+		<img src="./Color Picker_files/bar-red-tr.png">
+		<img src="./Color Picker_files/bar-red-bl.png">
+		<img src="./Color Picker_files/bar-red-br.png">	
+		<img src="./Color Picker_files/bar-green-tl.png">
+		<img src="./Color Picker_files/bar-green-tr.png">
+		<img src="./Color Picker_files/bar-green-bl.png">
+		<img src="./Color Picker_files/bar-green-br.png">
+		
+		<img src="./Color Picker_files/map-red-max.png">
+		<img src="./Color Picker_files/map-red-min.png">
+		<img src="./Color Picker_files/map-green-max.png">
+		<img src="./Color Picker_files/map-green-min.png">
+		<img src="./Color Picker_files/map-blue-max.png">
+		<img src="./Color Picker_files/map-blue-min.png">
+		
+		<img src="./Color Picker_files/map-saturation.png">
+		<img src="./Color Picker_files/map-saturation-overlay.png">
+		<img src="./Color Picker_files/map-brightness.png">
+		<img src="./Color Picker_files/map-hue.png">
+		
+		
+		
+	</div>
+	
+	<script type="text/javascript">
+	
+	Event.observe(window,'load',function() {
+		cp1 = new Refresh.Web.ColorPicker('cp1', {startHex: 'ffcc00', startMode:'s'});
+	});
+	
+	
+	</script>
+	
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3734687-9']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+	
+	<img border="0" src="./Color Picker_files/mappoint.gif" style="position: absolute; top: 151px; left: 176px;">
+	<img border="0" src="./Color Picker_files/rangearrows.gif" style="position: absolute; top: 98px; left: 274px;"></body></html>

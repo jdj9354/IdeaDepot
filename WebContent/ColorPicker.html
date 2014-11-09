@@ -2,7 +2,10 @@
 <html>
   <head>
     <style>
-
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
     </style>
   </head>
   <body>
@@ -25,7 +28,7 @@
         context.beginPath();
         context.fillStyle = color;
         context.fillRect(squareX, squareY, colorSquareSize, colorSquareSize);
-      //  context.strokeRect(squareX, squareY, colorSquareSize, colorSquareSize);
+        context.strokeRect(squareX, squareY, colorSquareSize, colorSquareSize);
       }
       function init(imageObj) {
         var padding = 10;
@@ -60,6 +63,7 @@
             var green = data[((imageObj.width * y) + x) * 4 + 1];
             var blue = data[((imageObj.width * y) + x) * 4 + 2];
             var color = 'rgb(' + red + ',' + green + ',' + blue + ')';
+			console.log(red + " " + x + " " + y + " " + imageObj.width);
             drawColorSquare(canvas, color, imageObj);
           }
         }, false);
@@ -72,7 +76,6 @@
         init(this);
       };
       imageObj.src = 'color-picker.png';
-	  imageObj.crossOrigin = 'anonymous';
 
     </script>
   </body>
