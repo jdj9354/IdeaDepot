@@ -102,7 +102,6 @@
   </head>
 
   <body>
-	<div>HI</div>
 	<input type="file">
 	<div id="group_div_shape" style="margin: 0 auto;">
 		<div id="div_circleshape" width='50' height='50'  style="float:left;">
