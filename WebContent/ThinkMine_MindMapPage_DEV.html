@@ -243,11 +243,7 @@
 			//com.local.SVGHandlers.Initialize();
 			//setUpPaperLib('myCanvas');
 			
-			ThinkMine.Lib.ExternalUI.ColorPickerCanvas.attach("color_picker_canvas");
-			
-			ThinkMine.Lib.ExternalUI.ColorPickerRedInput.attach("color_picker_red_input");
-			ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.attach("color_picker_green_input");
-			ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input");
+
 	//	var ms;
 //Today = new Date();
 //Prev = new Date('1970-01-01');
@@ -294,6 +290,17 @@
 		//	wrappedEventHandler.setOnCompositionUpdate(TMCanvas.onCompositionEventUpdateInterface);
 			//wrappedEventHandler.setOnCompositionEnd(TMCanvas.onCompositionEventEndInterface);
 			
+			ThinkMine.Lib.ExternalUI.ColorPickerCanvas.attach("color_picker_canvas",TMCanvas);
+			
+			ThinkMine.Lib.ExternalUI.ColorPickerRedInput.attach("color_picker_red_input",TMCanvas);
+			ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.attach("color_picker_green_input",TMCanvas);
+			ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input",TMCanvas);
+			
+			ThinkMine.Lib.ExternalUI.CircleImageButton.attach("CircleShapeImage",TMCanvas);
+			ThinkMine.Lib.ExternalUI.RectangleImageButton.attach("RectangleShapeImage",TMCanvas);
+			ThinkMine.Lib.ExternalUI.StarImageButton.attach("StarShapeImage",TMCanvas);
+			ThinkMine.Lib.ExternalUI.PolygonImageButton.attach("PolygonShapeImage",TMCanvas);
+			
 			initPaperJSMindMap(1000,600,wrappedEventHandler);
 
 			
@@ -329,7 +336,7 @@
 			TMCanvas.connectToServer();
 			//TMCanvas.initWithMindMap("5419a2a443caa5a02237ae41");
 			
-			TMCanvas.initWithMindMap("54564d73b95be7c01543e96d");
+			TMCanvas.initWithMindMap("5460d78fedec29b016b5ee4e");
 			//TMCanvas.initWithMindMap("5447c235e95398a80b6b451a");
 			
 			var lastDownTarget, canvas;
@@ -357,7 +364,7 @@
 			
 			
 		}
-		$(function(){		
+		/*$(function(){		
 			$("#CircleShapeImage").click(function(){
 				TMCanvas.enableObjectAddMode();
 				TMCanvas.setMenuSelectedShape(0);
@@ -365,7 +372,6 @@
 								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getRedValue().toString(16) +
 								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getGreenValue().toString(16) +
 								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getBlueValue().toString(16) ;
-				console.log(shapeColor);
 				TMCanvas.setMenuInsertedSDI(new CircleShapeTypeDependentInfo(10,shapeColor));
 				TMCanvas.setMenuSelectedContents(0);
 				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
@@ -416,7 +422,7 @@
 				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
 				TMCanvas.setMenuInsertedCV("UI Interaction Test");
 				}); 
-		});
+		});*/
 	
 		$('#dd_shapetype').on('hide.bs.dropdown', function (event) {
 		  console.log(event.relatedTarget);

@@ -9,15 +9,17 @@ if(!ThinkMine.Lib.ExternalUI)
 	
 ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 	var fCanvasName = null;
-	var mousedown = null;
-	var mousemove = null;
-	var mouseup = null;
+	var fTmCanvas = null;
 	
-	var red = 0;
-	var green = 0;
-	var blue = 0;
+	var fMousedown = null;
+	var fMousemove = null;
+	var fMouseup = null;
 	
-	this.attach = function(canvasName) {
+	var fRed = 0;
+	var fGreen = 0;
+	var fBlue = 0;
+	
+	this.attach = function(canvasName,tmCanvas) {
 		if(fCanvasName != null){
 			console.log("ColorPickerCanvas was already attached");
 			return;
@@ -30,6 +32,8 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 		
 		
 		fCanvasName = canvasName;
+		fTmCanvas = tmCanvas;
+		
 		var padding = 10;
 		var canvas = document.getElementById(fCanvasName);
 		if(canvas == null || canvas == undefined){
@@ -45,21 +49,21 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 			context.strokeStyle = '#444';
 			context.lineWidth = 2;
 			
-			mousedown = function(evt) {
+			fMousedown = function(evt) {
 				mouseDown = true;
 				
-				mousemove(evt);
+				fMousemove(evt);
 			};
 
-			canvas.addEventListener('mousedown', mousedown, false);
+			canvas.addEventListener('mousedown', fMousedown, false);
 			
-			mouseup = function() {
+			fMouseup = function() {
 				mouseDown = false;
 			};
 			
-			canvas.addEventListener('mouseup', mouseup, false);
+			canvas.addEventListener('mouseup', fMouseup, false);
 			
-			mousemove = function(evt) {
+			fMousemove = function(evt) {
 				var mousePos = getMousePos(canvas, evt);
 				var color = undefined;
 
@@ -71,14 +75,15 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 					var data = imageData.data;
 					var x = Math.floor(mousePos.x - padding);
 					var y = Math.floor(mousePos.y - padding);
-					red = data[((imageObj.width * y) + x) * 4];
-					green = data[((imageObj.width * y) + x) * 4 + 1];
-					blue = data[((imageObj.width * y) + x) * 4 + 2];
-					var color = 'rgb(' + red + ',' + green + ',' + blue + ')';
+					fRed = data[((imageObj.width * y) + x) * 4];
+					fGreen = data[((imageObj.width * y) + x) * 4 + 1];
+					fBlue = data[((imageObj.width * y) + x) * 4 + 2];
+					var color = 'rgb(' + fRed + ',' + fGreen + ',' + fBlue + ')';
 					
-					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.setRedValue(red);
-					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.setGreenValue(green);
-					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(blue);
+					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.setRedValue(fRed);
+					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.setGreenValue(fGreen);
+					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(fBlue);
+					fTmCanvas.setShapeColor("#"+fRed.toString(16)+fGreen.toString(16)+fBlue.toString(16));
 					//console.log(red + " " + x + " " + y + " " + imageObj.width + " " + evt.clientX + " " + evt.clientY);
 					context.clearRect(0,0,canvas.width,canvas.height);
 					
@@ -89,11 +94,11 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 					context.arc(x + padding, y + padding, 5, 0, 2 * Math.PI, false);
 					context.lineWidth = 3;
 					context.strokeStyle = '#000000';
-					context.stroke();					
+					context.stroke();
 				}
 			};
 			
-			canvas.addEventListener('mousemove', mousemove, false);
+			canvas.addEventListener('mousemove', fMousemove, false);
 
 			context.drawImage(imageObj, padding, padding);
 			drawColorSquare(canvas, 'white', imageObj);
@@ -106,13 +111,13 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 		
 	};
 	this.getRedValue = function(){
-		return red;
+		return fRed;
 	};
 	this.getGreenValue = function(){
-		return green;
+		return fGreen;
 	};
 	this.getBlueValue = function(){
-		return blue;
+		return fBlue;
 	};
 	function getMousePos(canvas, evt) {
 		var rect = canvas.getBoundingClientRect();
@@ -136,34 +141,34 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 }
 ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 	var fInputTextName = null;
-	var inputElement = null;
+	var fInputElement = null;
 	this.attach = function(inputTextName) {
 		if(fInputTextName != null){
-			inputElement.onkeypress = null;
-			inputElement.onkeyup = null;
+			fInputElement.onkeypress = null;
+			fInputElement.onkeyup = null;
 		}
 		
 		fInputTextName = inputTextName;
 		
-		inputElement = document.getElementById(fInputTextName);
+		fInputElement = document.getElementById(fInputTextName);
 		
-		if(inputElement == null || inputElement == undefined){
-			console.log("There is no such inputElement element " + fInputTextName);
+		if(fInputElement == null || fInputElement == undefined){
+			console.log("There is no such fInputElement element " + fInputTextName);
 			return;
 		}
-		inputElement.onkeypress = validateNumber;
-		inputElement.onkeyup = preventLargerThan255;
+		fInputElement.onkeypress = validateNumber;
+		fInputElement.onkeyup = preventLargerThan255;
 		
 	};
 	this.setRedValue = function(value){
-		if(inputElement == null || inputElement == undefined)
+		if(fInputElement == null || fInputElement == undefined)
 			return;
 		if(isNaN(value))
 			return;
 		else{
 			if(value <0 || value >255)
 				return;
-			inputElement.value = value;
+			fInputElement.value = value;
 		}
 	};
 	function validateNumber(evt){
@@ -182,34 +187,34 @@ ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 
 ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 	var fInputTextName = null;
-	var inputElement = null;
+	var fInputElement = null;
 	this.attach = function(inputTextName) {
 		if(fInputTextName != null){
-			inputElement.onkeypress = null;
-			inputElement.onkeyup = null;
+			fInputElement.onkeypress = null;
+			fInputElement.onkeyup = null;
 		}
 		
 		fInputTextName = inputTextName;
 		
-		inputElement = document.getElementById(fInputTextName);
+		fInputElement = document.getElementById(fInputTextName);
 		
-		if(inputElement == null || inputElement == undefined){
-			console.log("There is no such inputElement element " + fInputTextName);
+		if(fInputElement == null || fInputElement == undefined){
+			console.log("There is no such fInputElement element " + fInputTextName);
 			return;
 		}
-		inputElement.onkeypress = validateNumber;
-		inputElement.onkeyup = preventLargerThan255;
+		fInputElement.onkeypress = validateNumber;
+		fInputElement.onkeyup = preventLargerThan255;
 		
 	};
 	this.setGreenValue = function(value){
-		if(inputElement == null || inputElement == undefined)
+		if(fInputElement == null || fInputElement == undefined)
 			return;
 		if(isNaN(value))
 			return;
 		else{
 			if(value <0 || value >255)
 				return;
-			inputElement.value = value;
+			fInputElement.value = value;
 		}
 	};
 	function validateNumber(evt){
@@ -228,34 +233,34 @@ ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 
 ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 	var fInputTextName = null;
-	var inputElement = null;
+	var fInputElement = null;
 	this.attach = function(inputTextName) {
 		if(fInputTextName != null){
-			inputElement.onkeypress = null;
-			inputElement.onkeyup = null;
+			fInputElement.onkeypress = null;
+			fInputElement.onkeyup = null;
 		}
 		
 		fInputTextName = inputTextName;
 		
-		inputElement = document.getElementById(fInputTextName);
+		fInputElement = document.getElementById(fInputTextName);
 		
-		if(inputElement == null || inputElement == undefined){
-			console.log("There is no such inputElement element " + fInputTextName);
+		if(fInputElement == null || fInputElement == undefined){
+			console.log("There is no such fInputElement element " + fInputTextName);
 			return;
 		}
-		inputElement.onkeypress = validateNumber;
-		inputElement.onkeyup = preventLargerThan255;
+		fInputElement.onkeypress = validateNumber;
+		fInputElement.onkeyup = preventLargerThan255;
 		
 	};
 	this.setBlueValue = function(value){
-		if(inputElement == null || inputElement == undefined)
+		if(fInputElement == null || fInputElement == undefined)
 			return;
 		if(isNaN(value))
 			return;
 		else{
 			if(value <0 || value >255)
 				return;
-			inputElement.value = value;
+			fInputElement.value = value;
 		}
 	};
 	function validateNumber(evt){
@@ -270,4 +275,196 @@ ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 		if(parseInt(element.value) > 255)
 			element.value = 255;
 	}	
+}
+
+
+ThinkMine.Lib.ExternalUI.CircleImageButton = new function(undefined){
+	var fImageButtonName = null;
+	var fImageButtonElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(imageButtonName, tmCanvas) {
+		if(fImageButtonName != null){
+			fImageButtonElement.onclick = null;
+		}
+		
+		fImageButtonName = imageButtonName;		
+		fImageButtonElement = document.getElementById(fImageButtonName);
+		fTmCanvas = tmCanvas;
+		
+		if(fImageButtonElement == null || fImageButtonElement == undefined){
+			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			return;
+		}
+		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
+		
+	};
+	
+	
+	this.sendInfoToTmCanvas = function(){				
+		
+		if(fTmCanvas.isAddModeEnabled()){
+			if (fTmCanvas.getMenuSelectedShape() == "CircleShape"){
+				fTmCanvas.disableObjectAddMode();
+			}
+			else{
+				fTmCanvas.setMenuSelectedShape(0);
+			}
+
+		}
+		else {
+			fTmCanvas.enableObjectAddMode();
+			fTmCanvas.setMenuSelectedShape(0);
+		}
+			
+		//Currently Test Code
+		fTmCanvas.setMenuSelectedContents(0);
+		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
+		//Currently Test Code
+		
+	};
+}
+
+ThinkMine.Lib.ExternalUI.RectangleImageButton = new function(undefined){
+	var fImageButtonName = null;
+	var fImageButtonElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(imageButtonName, tmCanvas) {
+		if(fImageButtonName != null){
+			fImageButtonElement.onclick = null;
+		}
+		
+		fImageButtonName = imageButtonName;		
+		fImageButtonElement = document.getElementById(fImageButtonName);
+		fTmCanvas = tmCanvas;
+		
+		if(fImageButtonElement == null || fImageButtonElement == undefined){
+			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			return;
+		}
+		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
+		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		
+		if(fTmCanvas.isAddModeEnabled()){
+			if (fTmCanvas.getMenuSelectedShape() == "RectangleShape"){
+				fTmCanvas.disableObjectAddMode();
+			}
+			else{
+				fTmCanvas.setMenuSelectedShape(1);
+			}
+
+		}
+		else {
+			fTmCanvas.enableObjectAddMode();
+			fTmCanvas.setMenuSelectedShape(1);
+		}
+			
+		//Currently Test Code
+		fTmCanvas.setMenuSelectedContents(0);
+		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
+		//Currently Test Code
+		
+	};
+}
+
+
+ThinkMine.Lib.ExternalUI.StarImageButton = new function(undefined){
+	var fImageButtonName = null;
+	var fImageButtonElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(imageButtonName, tmCanvas) {
+		if(fImageButtonName != null){
+			fImageButtonElement.onclick = null;
+		}
+		
+		fImageButtonName = imageButtonName;		
+		fImageButtonElement = document.getElementById(fImageButtonName);
+		fTmCanvas = tmCanvas;
+		
+		if(fImageButtonElement == null || fImageButtonElement == undefined){
+			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			return;
+		}
+		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
+		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		
+		if(fTmCanvas.isAddModeEnabled()){
+			if (fTmCanvas.getMenuSelectedShape() == "StarShape"){
+				fTmCanvas.disableObjectAddMode();
+			}
+			else{
+				fTmCanvas.setMenuSelectedShape(2);
+			}
+
+		}
+		else {
+			fTmCanvas.enableObjectAddMode();
+			fTmCanvas.setMenuSelectedShape(2);
+		}
+			
+		//Currently Test Code
+		fTmCanvas.setMenuSelectedContents(0);
+		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
+		//Currently Test Code
+		
+	};
+}
+
+
+ThinkMine.Lib.ExternalUI.PolygonImageButton = new function(undefined){
+	var fImageButtonName = null;
+	var fImageButtonElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(imageButtonName, tmCanvas) {
+		if(fImageButtonName != null){
+			fImageButtonElement.onclick = null;
+		}
+		
+		fImageButtonName = imageButtonName;		
+		fImageButtonElement = document.getElementById(fImageButtonName);
+		fTmCanvas = tmCanvas;
+		
+		if(fImageButtonElement == null || fImageButtonElement == undefined){
+			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			return;
+		}
+		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
+		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		
+		if(fTmCanvas.isAddModeEnabled()){
+			if (fTmCanvas.getMenuSelectedShape() == "PolygonShape"){
+				fTmCanvas.disableObjectAddMode();
+			}
+			else{
+				fTmCanvas.setMenuSelectedShape(3);
+			}
+
+		}
+		else {
+			fTmCanvas.enableObjectAddMode();
+			fTmCanvas.setMenuSelectedShape(3);
+		}
+			
+		//Currently Test Code
+		fTmCanvas.setMenuSelectedContents(0);
+		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
+		//Currently Test Code
+		
+	};
 }

@@ -174,6 +174,18 @@ function clone(obj){
 }
 
 
+function isThere(url) {
+	var req= new AJ(); // XMLHttpRequest object
+	try {
+		req.open("HEAD", url, false);
+		req.send(null);		
+		return req.status== 200 ? true : false;
+	}
+	catch (er) {
+		return false;
+	}
+}
+
 //------------------- OperatonCode Section--------------------------------
 
 const CODE_MIND_ADD = 32;
@@ -264,6 +276,9 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 	//var fMenuInsertedCV = "Test";
 	
 	var fObjectAddMode = false;
+	
+	var fShapeColor = "#FFFFFF";
+	
 	//fObjectAddMode = true;
 	var fVirtualMindObject = null;
 	var fAddEventStartPointX = -1;
@@ -325,8 +340,20 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		fObjectAddMode = false;
 	};
 	
+	this.isAddModeEnabled = function(){
+		return fObjectAddMode;
+	};
+	
+	this.setShapeColor = function(color){
+		fShapeColor = color;
+	};
+	
+	this.getShapeColor = function(){
+		return fShapeColor;
+	};
+	
 	this.setMenuSelectedShape = function(shapeIndex){
-		this.enableObjectAddMode();
+		//this.enableObjectAddMode();
 		if(fVirtualMindObject != null){
 			fDrawingInterface["erase"+fMenuSelectedShape]("virtual");
 			fDrawingInterface["erase"+fMenuSelectedContents]("virtual");
@@ -334,6 +361,9 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		}
 			
 		fMenuSelectedShape = fMenuAvailableShape[shapeIndex];		
+	};
+	this.getMenuSelectedShape = function(){
+		return fMenuSelectedShape;
 	};
 	
 	this.setMenuInsertedSDI = function(shapeDependentInfo){
@@ -802,6 +832,23 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		}
 		else{
 			if(fVirtualMindObject == null){
+			
+				switch(fMenuSelectedShape){
+
+				case "CircleShape" :
+					fMenuInsertedSDI = new CircleShapeTypeDependentInfo(10,this.getShapeColor());
+					break;
+				case "RectangleShape" :
+					fMenuInsertedSDI = new RectangleShapeTypeDependentInfo(10, 10, this.getShapeColor(), true);
+					break;	
+				case "StarShape" :
+					fMenuInsertedSDI = new StarShapeTypeDependentInfo(5, 10, 5,this.getShapeColor());
+					break;hh
+				case "PolygonShape" :
+					fMenuInsertedSDI = new PolygonShapeTypeDependentInfo(3, 1,this.getShapeColor());
+					break;							
+				}
+				
 				fVirtualMindObject = {fX : x,
 										fY : y,
 										fZ : z,
@@ -811,20 +858,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 				fAddEventStartPointY = y;
 				fAddEventStartPointZ = z;
 				
-				switch(fMenuSelectedShape){
-				case "PolygonShape" :
-				case "CircleShape" :
-					fMenuInsertedSDI.fRadius = 1;
-					break;
-				case "RectangleShape" :
-					fMenuInsertedSDI.fWidth = 10;
-					fMenuInsertedSDI.fHeight = 10;
-					break;	
-				case "StarShape" :
-					fMenuInsertedSDI.fFirstRadius = 10;
-					fMenuInsertedSDI.fSecondRadius = 5;
-					break;							
-				}
+
 				
 								
 				fDrawingInterface["draw"+fMenuSelectedShape](x,y,z,fMenuInsertedSDI,"virtual");
@@ -3363,6 +3397,7 @@ function DrawingObj(drawingInterface){
 			
 			var tempContentsType =  mindObjectInfoArray[i].fContents.fContentsType;
 			
+			
 			fDrawingInterface["draw"+tempContentsType](mindObjectInfoArray[i].fX,											//X
 															mindObjectInfoArray[i].fY,										//Y
 															mindObjectInfoArray[i].fZ,										//Z
@@ -4609,6 +4644,7 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 	
 	
 	this.drawWebPreviewContents = function(x, y, z, info, value, mindObjectId){	
+
 		var webPreviewSrcUrl = "http://"+MEDIA_SERVER_ADDR+":"+WEB_PREVIEW_PORT+"?url="+value+"&resolution="+info.fResolution+"&userId="+currentUserId;		
 		var contentsObject = new paper.Raster(webPreviewSrcUrl);
 		contentsObject.position = new paper.Point(x,y);
@@ -4620,7 +4656,6 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 		paper.view.draw();
 		
 		fContentsObjects.push(contentsObject);
-		contentsObject;
 	};
 	this.eraseWebPreviewContents = function(mindObjectId){
 		for(var i=0; i<fContentsObjects.length;i++){
