@@ -84,7 +84,14 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.setGreenValue(fGreen);
 					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(fBlue);
 					fTmCanvas.setShapeColor("#"+fRed.toString(16)+fGreen.toString(16)+fBlue.toString(16));
-					//console.log(red + " " + x + " " + y + " " + imageObj.width + " " + evt.clientX + " " + evt.clientY);
+					
+					var fRedString  = fRed.toString(16);
+					var fGreenString  = fGreen.toString(16);
+					var fBlueString  = fBlue.toString(16);
+					
+					console.log("#"+(fRedString.length == 1? "0"+fRedString : fRedString)
+									+(fGreenString.length == 1? "0"+fGreenString : fGreenString)
+									+(fBlueString.length == 1? "0"+fBlueString : fBlueString));
 					context.clearRect(0,0,canvas.width,canvas.height);
 					
 					context.drawImage(imageObj, padding, padding);

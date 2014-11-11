@@ -234,14 +234,13 @@ var currentUserId = "jdj9354";
 
 //------------------- ThinkMineCanvas Section------------------------------
 
-function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterface){ //MindMap객체를 가지고 이객체를 DrawingObj에개 그리도록 Data ByPass
+function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 이객체를 DrawingObj에개 그리도록 Data ByPass
 	
 	var moveCount = 0;	
 	
 	//var fMindMapId;
-	var fDrawingInterface = userDefinedDrawingInterface;
-	var fCollisionInterface = userDefinedCollisionInterface;
-	var fDrawingObj = new DrawingObj(fDrawingInterface);
+	var fDrawingCCInterface = userDefinedDrawingCCInterface;
+	var fDrawingObj = new DrawingObj(fDrawingCCInterface);
 	var fJobHandler = new JobHandler(fDrawingObj);
 	var fSocketHelper = new SocketHelper(fJobHandler);
 	//this.fSocketHelper = new SocketHelper(fJobHandler); //Test 코드 임시로 Public으로 설정
@@ -355,8 +354,8 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 	this.setMenuSelectedShape = function(shapeIndex){
 		//this.enableObjectAddMode();
 		if(fVirtualMindObject != null){
-			fDrawingInterface["erase"+fMenuSelectedShape]("virtual");
-			fDrawingInterface["erase"+fMenuSelectedContents]("virtual");
+			fDrawingCCInterface["erase"+fMenuSelectedShape]("virtual");
+			fDrawingCCInterface["erase"+fMenuSelectedContents]("virtual");
 			fVirtualMindObject = null;
 		}
 			
@@ -572,7 +571,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 			// Test Code Block end
 			else {
 				for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
-					if(fCollisionInterface.isContaining(x,y,z,MindMap.getMindObjectOnIndex(i))){
+					if(fDrawingCCInterface.isContaining(x,y,z,MindMap.getMindObjectOnIndex(i))){
 						fMovingObject = MindMap.getMindObjectOnIndex(i);
 						moveCount = 0;
 						return;
@@ -596,7 +595,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 			var targetMindObjectId = null;
 		
 			for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
-				if(fCollisionInterface.isContaining(x,y,z,MindMap.getMindObjectOnIndex(i))){
+				if(fDrawingCCInterface.isContaining(x,y,z,MindMap.getMindObjectOnIndex(i))){
 					targetMindObjectId = MindMap.getMindObjectOnIndex(i).fMindObjectId;
 				}
 			}
@@ -622,7 +621,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 		if(!fObjectAddMode){
 		
 			for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
-				if(fCollisionInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i))){
+				if(fDrawingCCInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i))){
 					curSelectedObject = MindMap.getMindObjectOnIndex(i);
 					break;
 				}
@@ -638,11 +637,11 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 					if(fSelectedObject !=null){
 						if(curSelectedObject != fSelectedObject){	
 						
-							fDrawingInterface.changeOpacityOfCircleShape(0.5,curSelectedObject.fMindObjectId);
-							fDrawingInterface.changeOpacityOfTextContents(0.5,curSelectedObject.fMindObjectId);						
+							fDrawingCCInterface.changeOpacityOfCircleShape(0.5,curSelectedObject.fMindObjectId);
+							fDrawingCCInterface.changeOpacityOfTextContents(0.5,curSelectedObject.fMindObjectId);						
 							
-							fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
-							fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
+							fDrawingCCInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
+							fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
 							
 							fSelectedObject = curSelectedObject;
 							
@@ -656,8 +655,8 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 							
 						}
 						else{
-							fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
-							fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
+							fDrawingCCInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
+							fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
 							resetTMCanvas();
 							//Should implement some effect which is expanding, in order to the user can do anything.
 							this.onDoubleMouseDownInterface(x,y,z);
@@ -671,8 +670,8 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 					else{
 						fSelectedObject = curSelectedObject;
 						
-						fDrawingInterface.changeOpacityOfCircleShape(0.5,fSelectedObject.fMindObjectId);
-						fDrawingInterface.changeOpacityOfTextContents(0.5,fSelectedObject.fMindObjectId);		
+						fDrawingCCInterface.changeOpacityOfCircleShape(0.5,fSelectedObject.fMindObjectId);
+						fDrawingCCInterface.changeOpacityOfTextContents(0.5,fSelectedObject.fMindObjectId);		
 					
 						var contentsEditor = document.createElement('input');
 						contentsEditor.setAttribute('id',"ContentsEditor");
@@ -696,8 +695,8 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 				}
 				else{
 					if(fSelectedObject !=null){
-						fDrawingInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
-						fDrawingInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
+						fDrawingCCInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
+						fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
 					
 								
 						//this.changeValueOfContents(fSelectedObject.fMindObjectId, fSelectedObject.fContents.fContentsType ,fSelectedObject.fContents.fValue);
@@ -742,7 +741,7 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 					}
 					else{
 						for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
-							if(fCollisionInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i)) && 
+							if(fDrawingCCInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i)) && 
 									MindMap.getMindObjectOnIndex(i) != fMovingObject){
 								this.putIntoMindObject(fMovingObject, MindMap.getMindObjectOnIndex(i).fMindObjectId);
 								break;;
@@ -769,8 +768,8 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 				fAddEventStartPointZ = -1;
 				//delete fMenuInsertedSDI;
 				
-				fDrawingInterface["erase"+fMenuSelectedShape]("virtual");
-				fDrawingInterface["erase"+fMenuSelectedContents]("virtual");
+				fDrawingCCInterface["erase"+fMenuSelectedShape]("virtual");
+				fDrawingCCInterface["erase"+fMenuSelectedContents]("virtual");
 			}
 			else{
 			}
@@ -861,11 +860,11 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 
 				
 								
-				fDrawingInterface["draw"+fMenuSelectedShape](x,y,z,fMenuInsertedSDI,"virtual");
-				fDrawingInterface["draw"+fMenuSelectedContents](x,y,z,fMenuInsertedCDI,fMenuInsertedCV,"virtual");
+				fDrawingCCInterface["draw"+fMenuSelectedShape](x,y,z,fMenuInsertedSDI,"virtual");
+				fDrawingCCInterface["draw"+fMenuSelectedContents](x,y,z,fMenuInsertedCDI,fMenuInsertedCV,"virtual");
 				
-				fDrawingInterface["changeOpacityOf"+fMenuSelectedShape](0.5,"virtual");
-				fDrawingInterface["changeOpacityOf"+fMenuSelectedContents](0.5,"virtual");
+				fDrawingCCInterface["changeOpacityOf"+fMenuSelectedShape](0.5,"virtual");
+				fDrawingCCInterface["changeOpacityOf"+fMenuSelectedContents](0.5,"virtual");
 			}
 			else{
 
@@ -982,8 +981,8 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 				fVirtualMindObject.fY = newY;
 				fVirtualMindObject.fZ = newZ;
 				
-				fDrawingInterface["move"+fMenuSelectedShape](newX,newY,newZ,"virtual");
-				fDrawingInterface["move"+fMenuSelectedContents](newX,newY,newZ,"virtual");
+				fDrawingCCInterface["move"+fMenuSelectedShape](newX,newY,newZ,"virtual");
+				fDrawingCCInterface["move"+fMenuSelectedContents](newX,newY,newZ,"virtual");
 				
 				fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
 										{fMindObjectId : "virtual",
@@ -1265,8 +1264,8 @@ function ThinkMineCanvas(userDefinedDrawingInterface, userDefinedCollisionInterf
 	};
 	
 	
-	this.changeDrawingInterface = function (newDrawingInterface){
-		fDrawingInterface = newDrawingInterface;
+	this.changeDrawingCCInterface = function (newDrawingCCInterface){
+		fDrawingCCInterface = newDrawingCCInterface;
 	};
 	
 };
@@ -3288,10 +3287,10 @@ function SocketDataCommuHelperRecv (jobHandler,wSocket) {
 
 //------------------- DrawingObj Section--------------------------------------
 
-function DrawingObj(drawingInterface){
+function DrawingObj(drawingCCInterface){
 	
 	
-	var fDrawingInterface = drawingInterface;
+	var fDrawingCCInterface = drawingCCInterface;
 	var fDrawingJobQ = null;
 	var fWorker = null;
 	var fIsStarted = false;
@@ -3306,7 +3305,7 @@ function DrawingObj(drawingInterface){
 			fWorker = null;		
 		}
 		
-		fDrawingInterface.eraseAll();
+		fDrawingCCInterface.eraseAll();
 		
 		fDrawingJobQ = null;
 		fDrawingJobQ = new Array();
@@ -3389,7 +3388,7 @@ function DrawingObj(drawingInterface){
 		for(var i=0; i<mindObjectInfoArray.length; i++){
 			var tempShapeType = mindObjectInfoArray[i].fShape.fShapeType;			
 			
-			fDrawingInterface["draw"+tempShapeType](mindObjectInfoArray[i].fX,											//X
+			fDrawingCCInterface["draw"+tempShapeType](mindObjectInfoArray[i].fX,											//X
 															mindObjectInfoArray[i].fY,									//Y
 															mindObjectInfoArray[i].fZ,									//Z
 															mindObjectInfoArray[i].fShape.fShapeTypeDependentInfo,		//Info
@@ -3398,7 +3397,7 @@ function DrawingObj(drawingInterface){
 			var tempContentsType =  mindObjectInfoArray[i].fContents.fContentsType;
 			
 			
-			fDrawingInterface["draw"+tempContentsType](mindObjectInfoArray[i].fX,											//X
+			fDrawingCCInterface["draw"+tempContentsType](mindObjectInfoArray[i].fX,											//X
 															mindObjectInfoArray[i].fY,										//Y
 															mindObjectInfoArray[i].fZ,										//Z
 															mindObjectInfoArray[i].fContents.fContentsTypeDependentInfo,	//Info
@@ -3411,7 +3410,7 @@ function DrawingObj(drawingInterface){
 			
 			var tempEdgeType = edgeObjects[i].fEdgeType;
 			
-			fDrawingInterface["draw"+tempEdgeType](edgeObjects[i].fFirstMindObject.fX,							//Frist X
+			fDrawingCCInterface["draw"+tempEdgeType](edgeObjects[i].fFirstMindObject.fX,							//Frist X
 														edgeObjects[i].fFirstMindObject.fY,						//First Y
 														edgeObjects[i].fFirstMindObject.fZ,						//First Z
 														edgeObjects[i].fSecondMindObject.fX,					//Second X
@@ -3425,11 +3424,11 @@ function DrawingObj(drawingInterface){
 	
 	var drawMindObject = function(mindObject){
 		
-		fDrawingInterface["draw"+mindObject.fShape.fShapeType](mindObject.fX, mindObject.fY, mindObject.fZ,
+		fDrawingCCInterface["draw"+mindObject.fShape.fShapeType](mindObject.fX, mindObject.fY, mindObject.fZ,
 														mindObject.fShape.fShapeTypeDependentInfo,
 														mindObject.fMindObjectId);
 		
-		fDrawingInterface["draw"+mindObject.fContents.fContentsType](mindObject.fX, mindObject.fY, mindObject.fZ,
+		fDrawingCCInterface["draw"+mindObject.fContents.fContentsType](mindObject.fX, mindObject.fY, mindObject.fZ,
 														mindObject.fContents.fContentsTypeDependentInfo,
 														mindObject.fContents.fValue,
 														mindObject.fMindObjectId);		
@@ -3438,12 +3437,12 @@ function DrawingObj(drawingInterface){
 	
 	var eraseMindObject = function(delMindObjectInfo, delEdgeInfo){
 		
-		fDrawingInterface["erase"+delMindObjectInfo.fShape.fShapeType](delMindObjectInfo.fMindObjectId);
+		fDrawingCCInterface["erase"+delMindObjectInfo.fShape.fShapeType](delMindObjectInfo.fMindObjectId);
 
-		fDrawingInterface["erase"+delMindObjectInfo.fContents.fContentsType](delMindObjectInfo.fMindObjectId);
+		fDrawingCCInterface["erase"+delMindObjectInfo.fContents.fContentsType](delMindObjectInfo.fMindObjectId);
 		
 		for(var i=0; i<delEdgeInfo.length; i++){
-			fDrawingInterface["erase"+delEdgeInfo[i].fEdgeType](delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
+			fDrawingCCInterface["erase"+delEdgeInfo[i].fEdgeType](delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
 																	delEdgeInfo[i].fSecondMindObject.fMindObjectId);
 		}		
 	};
@@ -3454,17 +3453,17 @@ function DrawingObj(drawingInterface){
 		for(var i=0; i<pointArray.length ; i++){			
 		
 			
-			fDrawingInterface["move"+movMindObjectInfo.fShape.fShapeType](pointArray[i][0],
+			fDrawingCCInterface["move"+movMindObjectInfo.fShape.fShapeType](pointArray[i][0],
 																				pointArray[i][1],
 																				pointArray[i][2],
 																				movMindObjectInfo.fMindObjectId);
-			fDrawingInterface["move"+movMindObjectInfo.fContents.fContentsType](pointArray[i][0],
+			fDrawingCCInterface["move"+movMindObjectInfo.fContents.fContentsType](pointArray[i][0],
 																					pointArray[i][1],
 																					pointArray[i][2],
 																					movMindObjectInfo.fMindObjectId);
 			
 			for(var j=0; j<movEdgeInfo.length; j++){
-				fDrawingInterface["move"+movEdgeInfo[j].fEdgeType](pointArray[i][0],
+				fDrawingCCInterface["move"+movEdgeInfo[j].fEdgeType](pointArray[i][0],
 																		pointArray[i][1],
 																		pointArray[i][2],
 																		movEdgeInfo[j].fFirstMindObject.fMindObjectId, 
@@ -3500,23 +3499,23 @@ function DrawingObj(drawingInterface){
 		//빠져들어가는 효과로 변경 필요
 		if(flagValue == 0){
 			var delMindObjectInfo = delMindObjectInfo_or_addMindObjectInfo;
-			fDrawingInterface["erase"+delMindObjectInfo.fShape.fShapeType](delMindObjectInfo.fMindObjectId);
+			fDrawingCCInterface["erase"+delMindObjectInfo.fShape.fShapeType](delMindObjectInfo.fMindObjectId);
 
-			fDrawingInterface["erase"+delMindObjectInfo.fContents.fContentsType](delMindObjectInfo.fMindObjectId);
+			fDrawingCCInterface["erase"+delMindObjectInfo.fContents.fContentsType](delMindObjectInfo.fMindObjectId);
 			
 			for(var i=0; i<delEdgeInfo.length; i++){
-				fDrawingInterface["erase"+delEdgeInfo[i].fEdgeType](delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
+				fDrawingCCInterface["erase"+delEdgeInfo[i].fEdgeType](delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
 																		delEdgeInfo[i].fSecondMindObject.fMindObjectId);
 			}		
 		}
 		else{
 			var mindObject = delMindObjectInfo_or_addMindObjectInfo;
 			
-			fDrawingInterface["draw"+mindObject.fShape.fShapeType](mindObject.fX, mindObject.fY, mindObject.fZ,
+			fDrawingCCInterface["draw"+mindObject.fShape.fShapeType](mindObject.fX, mindObject.fY, mindObject.fZ,
 												mindObject.fShape.fShapeTypeDependentInfo,
 												mindObject.fMindObjectId);
 	
-			fDrawingInterface["draw"+mindObject.fContents.fContentsType](mindObject.fX, mindObject.fY, mindObject.fZ,
+			fDrawingCCInterface["draw"+mindObject.fContents.fContentsType](mindObject.fX, mindObject.fY, mindObject.fZ,
 															mindObject.fContents.fContentsTypeDependentInfo,
 															mindObject.fContents.fValue,
 															mindObject.fMindObjectId);	
@@ -3524,7 +3523,7 @@ function DrawingObj(drawingInterface){
 	};
 	
 	var drawEdge = function(newEdgeInfo){
-		fDrawingInterface["draw"+newEdgeInfo.fEdgeType](newEdgeInfo.fFirstMindObject.fX,
+		fDrawingCCInterface["draw"+newEdgeInfo.fEdgeType](newEdgeInfo.fFirstMindObject.fX,
 																newEdgeInfo.fFirstMindObject.fY,
 																newEdgeInfo.fFirstMindObject.fZ,
 																newEdgeInfo.fSecondMindObject.fX,
@@ -3536,18 +3535,18 @@ function DrawingObj(drawingInterface){
 	};
 	
 	var eraseEdge = function(delEdgeInfo){
-		fDrawingInterface["erase"+delEdgeInfo.fEdgeType](delEdgeInfo.fFirstMindObject.fMindObjectId,
+		fDrawingCCInterface["erase"+delEdgeInfo.fEdgeType](delEdgeInfo.fFirstMindObject.fMindObjectId,
 																delEdgeInfo.fSecondMindObject.fMindObjectId);
 	};
 	
 	var changeColorOfContents = function(mindObjectInfo, colorCode){
-		fDrawingInterface["changeColorOf"+mindObjectInfo.fContents.fContentsType](colorCode,
+		fDrawingCCInterface["changeColorOf"+mindObjectInfo.fContents.fContentsType](colorCode,
 																					mindObjectInfo.fMindObjectId);
 	};
 	
 	var changeValueOfContents = function(mindObjectInfo){
-		fDrawingInterface["erase"+mindObjectInfo.fContents.fContentsType](mindObjectInfo.fMindObjectId);
-		fDrawingInterface["draw"+mindObjectInfo.fContents.fContentsType](mindObjectInfo.fX,
+		fDrawingCCInterface["erase"+mindObjectInfo.fContents.fContentsType](mindObjectInfo.fMindObjectId);
+		fDrawingCCInterface["draw"+mindObjectInfo.fContents.fContentsType](mindObjectInfo.fX,
 																				mindObjectInfo.fY,
 																				mindObjectInfo.fZ,
 																				mindObjectInfo.fContents.fContentsTypeDependentInfo,
@@ -3557,12 +3556,12 @@ function DrawingObj(drawingInterface){
 	
 	var changeColorOfShape = function(mindObjectInfo, colorCode){
 		
-		fDrawingInterface["changeColorOf"+mindObjectInfo.fShape.fShapeType](colorCode,
+		fDrawingCCInterface["changeColorOf"+mindObjectInfo.fShape.fShapeType](colorCode,
 																				mindObjectInfo.fMindObjectId);
 	};
 	
 	var resizeShape = function(mindObjectInfo){
-		fDrawingInterface["resize"+mindObjectInfo.fShape.fShapeType](mindObjectInfo.fShape.fShapeTypeDependentInfo,mindObjectInfo.fMindObjectId);
+		fDrawingCCInterface["resize"+mindObjectInfo.fShape.fShapeType](mindObjectInfo.fShape.fShapeTypeDependentInfo,mindObjectInfo.fMindObjectId);
 	};
 	
 	var handleLatestJob = function(){
@@ -3602,156 +3601,156 @@ function DrawingObj(drawingInterface){
 		case "draw" :
 			switch(type){
 			case "CircleShape" :
-				retFunc = fDrawingInterface.drawCircleShape;
+				retFunc = fDrawingCCInterface.drawCircleShape;
 				break;
 			case "EllipseShape" :
-				retFunc = fDrawingInterface.drawEllipseShape;
+				retFunc = fDrawingCCInterface.drawEllipseShape;
 				break;
 			case "RectangleShape" :
-				retFunc = fDrawingInterface.drawRectangleShape;
+				retFunc = fDrawingCCInterface.drawRectangleShape;
 				break;
 			case "StarShape" :
-				retFunc = fDrawingInterface.drawStarShape;
+				retFunc = fDrawingCCInterface.drawStarShape;
 				break;
 			case "PolygonShape" :
-				retFunc = fDrawingInterface.drawPolygonShape;
+				retFunc = fDrawingCCInterface.drawPolygonShape;
 				break;
 			case "TextContents" :
-				retFunc = fDrawingInterface.drawTextContents;
+				retFunc = fDrawingCCInterface.drawTextContents;
 				break;
 			case "ImageContents" :
-				retFunc = fDrawingInterface.drawImageContents;
+				retFunc = fDrawingCCInterface.drawImageContents;
 				break;
 			case "MovieContents" :
-				retFunc = fDrawingInterface.drawMovieContents;
+				retFunc = fDrawingCCInterface.drawMovieContents;
 				break;
 			case "WebPreviewContents" :
-				retFunc = fDrawingInterface.drawWebPreviewContents;
+				retFunc = fDrawingCCInterface.drawWebPreviewContents;
 				break;
 			case "SimplePathEdge" :
-				retFunc = fDrawingInterface.drawSimplePathEdge;
+				retFunc = fDrawingCCInterface.drawSimplePathEdge;
 				break;
 			}
 			break;
 		case "erase" :
 			switch(type){
 			case "CircleShape" :
-				retFunc = fDrawingInterface.eraseCircleShape;
+				retFunc = fDrawingCCInterface.eraseCircleShape;
 				break;
 			case "EllipseShape" :
-				retFunc = fDrawingInterface.eraseEllipseShape;
+				retFunc = fDrawingCCInterface.eraseEllipseShape;
 				break;
 			case "RectangleShape" :
-				retFunc = fDrawingInterface.eraseRectangleShape;
+				retFunc = fDrawingCCInterface.eraseRectangleShape;
 				break;
 			case "StarShape" :
-				retFunc = fDrawingInterface.eraseStarShape;
+				retFunc = fDrawingCCInterface.eraseStarShape;
 				break;
 			case "PolygonShape" :
-				retFunc = fDrawingInterface.erasePolygonShape;
+				retFunc = fDrawingCCInterface.erasePolygonShape;
 				break;
 			case "TextContents" :
-				retFunc = fDrawingInterface.eraseTextContents;
+				retFunc = fDrawingCCInterface.eraseTextContents;
 				break;
 			case "ImageContents" :
-				retFunc = fDrawingInterface.eraseImageContents;
+				retFunc = fDrawingCCInterface.eraseImageContents;
 				break;
 			case "MovieContents" :
-				retFunc = fDrawingInterface.eraseMovieContents;
+				retFunc = fDrawingCCInterface.eraseMovieContents;
 				break;
 			case "WebPreviewContents" :
-				retFunc = fDrawingInterface.eraseWebPreviewContents;
+				retFunc = fDrawingCCInterface.eraseWebPreviewContents;
 				break;
 			case "SimplePathEdge" :
-				retFunc = fDrawingInterface.eraseSimplePathEdge;
+				retFunc = fDrawingCCInterface.eraseSimplePathEdge;
 				break;
 			case "All" :
-				retFunc = fDrawingInterface.eraseAll;
+				retFunc = fDrawingCCInterface.eraseAll;
 			}
 			break;
 		case "move" :
 			switch(type){
 			case "CircleShape" :
-				retFunc = fDrawingInterface.moveCircleShape;
+				retFunc = fDrawingCCInterface.moveCircleShape;
 				break;
 			case "EllipseShape" :
-				retFunc = fDrawingInterface.moveEllipseShape;
+				retFunc = fDrawingCCInterface.moveEllipseShape;
 				break;
 			case "RectangleShape" :
-				retFunc = fDrawingInterface.moveRectangleShape;
+				retFunc = fDrawingCCInterface.moveRectangleShape;
 				break;
 			case "StarShape" :
-				retFunc = fDrawingInterface.moveStarShape;
+				retFunc = fDrawingCCInterface.moveStarShape;
 				break;
 			case "PolygonShape" :
-				retFunc = fDrawingInterface.movePolygonShape;
+				retFunc = fDrawingCCInterface.movePolygonShape;
 				break;
 			case "TextContents" :
-				retFunc = fDrawingInterface.moveTextContents;
+				retFunc = fDrawingCCInterface.moveTextContents;
 				break;
 			case "ImageContents" :
-				retFunc = fDrawingInterface.moveImageContents;
+				retFunc = fDrawingCCInterface.moveImageContents;
 				break;
 			case "MovieContents" :
-				retFunc = fDrawingInterface.moveMovieContents;
+				retFunc = fDrawingCCInterface.moveMovieContents;
 				break;
 			case "WebPreviewContents" :
-				retFunc = fDrawingInterface.moveWebPreviewContents;
+				retFunc = fDrawingCCInterface.moveWebPreviewContents;
 				break;
 			case "SimplePathEdge" :
-				retFunc = fDrawingInterface.moveSimplePathEdge;
+				retFunc = fDrawingCCInterface.moveSimplePathEdge;
 				break;
 			}
 			break;
 		case "changeColor" :
 			switch(type){
 			case "CircleShape" :
-				retFunc = fDrawingInterface.changeColorOfCircleShape;
+				retFunc = fDrawingCCInterface.changeColorOfCircleShape;
 				break;
 			case "EllipseShape" :
-				retFunc = fDrawingInterface.changeColorOfEllipseShape;
+				retFunc = fDrawingCCInterface.changeColorOfEllipseShape;
 				break;
 			case "RectangleShape" : 
-				retFunc = fDrawingInterface.changeColorOfRectangleShape;
+				retFunc = fDrawingCCInterface.changeColorOfRectangleShape;
 				break;
 			case "StarShape" :
-				retFunc = fDrawingInterface.changeColorOfStarShape;
+				retFunc = fDrawingCCInterface.changeColorOfStarShape;
 				break;
 			case "PolygonShape" :
-				retFunc = fDrawingInterface.changeColorOfPolygonShape;
+				retFunc = fDrawingCCInterface.changeColorOfPolygonShape;
 				break;
 			case "TextContents" :
-				retFunc = fDrawingInterface.changeColorOfTextContents;
+				retFunc = fDrawingCCInterface.changeColorOfTextContents;
 			}
 			break;
 		case "changeOpacity" :
 			switch(type){
 			case "CircleShape" :
-				retFunc = fDrawingInterface.changeOpacityOfCircleShape;
+				retFunc = fDrawingCCInterface.changeOpacityOfCircleShape;
 				break;
 			case "EllipseShape" :
-				retFunc = fDrawingInterface.changeOpacityOfEllipseShape;
+				retFunc = fDrawingCCInterface.changeOpacityOfEllipseShape;
 				break;
 			case "RectangleShape" :
-				retFunc = fDrawingInterface.changeOpacityOfRectangleShape;
+				retFunc = fDrawingCCInterface.changeOpacityOfRectangleShape;
 				break;
 			case "StarShape" :
-				retFunc = fDrawingInterface.changeOpacityOfStarShape;
+				retFunc = fDrawingCCInterface.changeOpacityOfStarShape;
 				break;
 			case "PolygonShape" :
-				retFunc = fDrawingInterface.changeOpacityOfPolygonShape;
+				retFunc = fDrawingCCInterface.changeOpacityOfPolygonShape;
 				break;
 			case "TextContents" :
-				retFunc = fDrawingInterface.changeOpacityOfTextContents;
+				retFunc = fDrawingCCInterface.changeOpacityOfTextContents;
 				break;
 			case "ImageContents" :
-				retFunc = fDrawingInterface.changeOpacityOfImageContents;
+				retFunc = fDrawingCCInterface.changeOpacityOfImageContents;
 				break;
 			case "MovieContents" :
-				retFunc = fDrawingInterface.changeOpacityOfMovieContents;
+				retFunc = fDrawingCCInterface.changeOpacityOfMovieContents;
 				break;
 			case "WebPreviewContents" :
-				retFunc = fDrawingInterface.changeOpacityOfWebPreviewContents;
+				retFunc = fDrawingCCInterface.changeOpacityOfWebPreviewContents;
 				break;
 			}
 			break;
@@ -3761,9 +3760,9 @@ function DrawingObj(drawingInterface){
 	};
 }
 
-//------------------- DrawingInterface Section--------------------------------------
+//------------------- DrawingCCInterface Section--------------------------------------
 
-function DrawingInterface(backBoneType){
+function DrawingCCInterface(backBoneType){
 	this.fBackBoneType = backBoneType;
 	
 	//To Maintain Shape,Contents,Edge Objects...
@@ -3948,13 +3947,8 @@ function DrawingInterface(backBoneType){
 	this.eraseAll = function(){
 		
 	};
-}
-
-
-
-//------------------- CollisionCheckInterface Section--------------------------------------
-
-function CollisionCheckInterface(){
+	
+	
 	this.isColliding = function(firstMindObject, secondMindObject){		
 	};
 	this.isContaining = function(x, y, z, mindObject){		
@@ -3962,14 +3956,19 @@ function CollisionCheckInterface(){
 }
 
 
+
+//------------------- CollisionCheckInterface Section--------------------------------------
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////PaperJS////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
 
 
-//------------------- DrawingInterface Section--------------------------------------
+//------------------- DrawingCCInterface Section--------------------------------------
 //매개변수 명 변경 필요 (가독성 있게)
-function PaperJS_DrawingInterface(backBoneType, canvasName){
+function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	this.fBackBoneType = backBoneType;
 	var fCanvasName = canvasName;	
 
@@ -4778,110 +4777,41 @@ function PaperJS_DrawingInterface(backBoneType, canvasName){
 			//break;						
 		}
 		
-	};	
-}
-
-PaperJS_DrawingInterface.prototype = new DrawingInterface("default");
-PaperJS_DrawingInterface.constructor = PaperJS_DrawingInterface;
-
-
-function PaperJS_CollisionCheckInterface(){
-	this.isColliding = function(firstMindObject, secondMindObject){
-		var firstShape = firstMindObject.fShape.fShapeType;
-		var firstShapeDependentInfo = firstMindObject.fShape.fShapeTypeDependentInfo;
-		var firstObject;
-		
-		var secondShape = secondMindObject.fShape.fShapeType;
-		var secondShapeDependentInfo = secondMindObject.fShape.fShapeTypeDependentInfo;
-		var secondObject;
-		
-		switch (firstShape){
-		case "CircleShape" :
-			firstObject = new paper.Path.Circle({
-				center : [firstMindObject.fX,firstMindObject.fY],
-				radius : firstShapeDependentInfo.fRadius,
-				strokeColor : 'black'
-			});
-			break;
-		default :
-			break;		
-		}
-		
-		switch (secondShape){
-		case "CircleShape" :
-			secondObject = new paper.Path.Circle({
-				center : [secondMindObject.fX,secondMindObject.fY],
-				radius : secondShapeDependentInfo.fRadius,
-				strokeColor : 'black'
-			});
-			break;
-		default :
-			break;		
-		}
-		//not yer implemented..		
-		
+	};
+	this.isColliding = function(firstMindObject, secondMindObject) {
+		//Need to be implemented..
 	};
 	this.isContaining = function(x, y, z, mindObject){
-		
-		var shapeType = mindObject.fShape.fShapeType;
-		var shapeTypeDependentInfo = mindObject.fShape.fShapeTypeDependentInfo;
-		var paperObject;		
-		
-		switch (shapeType){
-		case "CircleShape" :
-			paperObject = new paper.Path.Circle({
-				center : [mindObject.fX, mindObject.fY],
-				radius : shapeTypeDependentInfo.fRadius,
-				strokeColor : 'black'
-			});
-			break;
-		case "EllipseShape" :
-			/*paperObject = new paper.Path.Ellipse({
-							center: [mindObject.fX, mindObject.fY],
-							radius: [shapeTypeDependentInfo.fWidth, shapeTypeDependentInfo.fHeight],
-							fillColor: 'black'
-						});*/
-			break;
-		case "RectangleShape" :
-			var tempRectangle = new paper.Rectangle(new paper.Point(mindObject.fX - shapeTypeDependentInfo.fWidth/2,mindObject.fY - shapeTypeDependentInfo.fHeight/2), new paper.Size(shapeTypeDependentInfo.fWidth, shapeTypeDependentInfo.fHeight));
-			var tempCornerSize = new paper.Size(10,10);			
-			paperObject = new paper.Path.Rectangle(tempRectangle, tempCornerSize);
-			break;
-		case "StarShape" : 				
-			paperObject = new paper.Path.Star({
-				center : [mindObject.fX, mindObject.fY],
-				points : shapeTypeDependentInfo.fNrPoints,
-				radius1 : shapeTypeDependentInfo.fFirstRadius,
-				radius2 : shapeTypeDependentInfo.fSecondRadius,				
-				strokeColor : 'black'
-			});			
-			break;
-		case "PolygonShape" : 				
-			paperObject = new paper.Path.RegularPolygon({
-				center : [mindObject.fX, mindObject.fY],
-				sides : shapeTypeDependentInfo.fNrSides,
-				radius : shapeTypeDependentInfo.fRadius,				
-				strokeColor : 'black'
-			});			
-			break;
-		default :
-			break;		
-		}
+	
+		var shapeRet = false;
+		var contentsRet = false;
 		
 		var point = new paper.Point(x,y);
 		
-		var ret = paperObject.contains(point);
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObject.fMindObjectId)){					
+				shapeRet = fShapeObjects[i].contains(point);
+				break;
+			}
+		}
 		
-		paperObject.remove();
-		paperObject = null;
+		for(var i=0; i<fContentsObjects.length;i++){
+			if(compareIdValue(fContentsObjects[i].fMindObjectId,mindObject.fMindObjectId)){					
+				contentsRet = fContentsObjects[i].contains(point);
+				break;
+			}
+		}
 		point = null;	
 		
-		return ret;
+		return (shapeRet || contentsRet);
 	};
 }
 
-PaperJS_CollisionCheckInterface.prototype = new PaperJS_CollisionCheckInterface();
-PaperJS_CollisionCheckInterface.constructor = PaperJS_CollisionCheckInterface;
+PaperJS_DrawingCCInterface.prototype = new DrawingCCInterface("default");
+PaperJS_DrawingCCInterface.constructor = PaperJS_DrawingCCInterface;
+
+
+
 
 //------------------- Utility Section--------------------------------------
 

@@ -255,9 +255,9 @@
 			
 	
 			setUpPaperLib('myCanvas');
-			var drawing_Interface = new PaperJS_DrawingInterface("PaperJS",'myCanvas');			
-			var collisionCheck_Interface = new PaperJS_CollisionCheckInterface();
-			TMCanvas = new ThinkMineCanvas(drawing_Interface,collisionCheck_Interface);
+			var drawingCC_Interface = new PaperJS_DrawingCCInterface("PaperJS",'myCanvas');			
+
+			TMCanvas = new ThinkMineCanvas(drawingCC_Interface);
 			
 			
 			wrappedEventHandler = new WrappedPaperJSEventHandler();
