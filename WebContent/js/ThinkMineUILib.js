@@ -83,15 +83,17 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.setRedValue(fRed);
 					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.setGreenValue(fGreen);
 					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(fBlue);
-					fTmCanvas.setShapeColor("#"+fRed.toString(16)+fGreen.toString(16)+fBlue.toString(16));
 					
 					var fRedString  = fRed.toString(16);
 					var fGreenString  = fGreen.toString(16);
-					var fBlueString  = fBlue.toString(16);
+					var fBlueString  = fBlue.toString(16);					
 					
-					console.log("#"+(fRedString.length == 1? "0"+fRedString : fRedString)
-									+(fGreenString.length == 1? "0"+fGreenString : fGreenString)
-									+(fBlueString.length == 1? "0"+fBlueString : fBlueString));
+					fTmCanvas.setShapeColor("#"+(fRedString.length == 1? "0"+fRedString : fRedString)
+										+(fGreenString.length == 1? "0"+fGreenString : fGreenString)
+										+(fBlueString.length == 1? "0"+fBlueString : fBlueString));				
+					
+					
+					//console.log(color);
 					context.clearRect(0,0,canvas.width,canvas.height);
 					
 					context.drawImage(imageObj, padding, padding);
@@ -110,7 +112,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 			context.drawImage(imageObj, padding, padding);
 			drawColorSquare(canvas, 'white', imageObj);
 		};		
-		imageObj.src = 'color-picker.png'			
+		imageObj.src = '/res/color-picker.png'			
 
 
 		

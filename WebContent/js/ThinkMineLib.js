@@ -210,6 +210,7 @@ const Nested_SocketCommuDelimiter_2 = "/";
 const Nested_SocketCommuDelimiter_3 = ".";*/
 
 
+
 const DEFAULT_TYPE_EDGE = "SimplePathEdge";
 const DEFAULT_OPACITY_SELECTED_MIND_OBJECT = 0.7;
 const DEFAULT_OPACITY_MOVING_MIND_OBJECT = 0.7;
@@ -217,6 +218,25 @@ const DEFAULT_OPACITY_MOVING_MIND_OBJECT = 0.7;
 const MEDIA_SERVER_ADDR = "192.168.0.2";
 const WEB_PREVIEW_PORT = "52274";
 const moveCountLimit = 5;
+
+const ShapeTypeEnum = {
+	Circle : "CircleShape",
+	Ellipse : "EllipseShape",
+	Rectangle : "RectangleShape",
+	Star : "StarShape",
+	Polyon : "PolygonShape",	
+};
+
+const ContentsTypeEnum = {
+	Text : "TextContents",
+	Image : "ImageContents",
+	Movie : "MovieContents",
+	WebPreview : "WebPreviewContents"	
+};
+
+const EdgeTypeEnum = {
+	SimplePath : "SimplePathEdge"
+};
 
 //const MIN_SHAPE_TYPE_DEPENDENT_INFO = {CircleShape : new CircleShapeTypeDependentInfo(										};
 
@@ -253,19 +273,19 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	//Outter Menu Selection related variables
 	
 
-	var fMenuAvailableShape = ["CircleShape",
-								"RectangleShape",
-								"StarShape",
-								"PolygonShape"];
+	var fMenuAvailableShape = [ShapeTypeEnum.Circle,
+								ShapeTypeEnum.Rectangle,
+								ShapeTypeEnum.Star,
+								ShapeTypeEnum.Polygon];
 								
 	var fMenuSelectedShape = fMenuAvailableShape[0];								
 	var fMenuInsertedSDI = null;
 	//var fMenuInsertedSDI = new CircleShapeTypeDependentInfo(50,"#FF0000");
 	
-	var fMenuAvailableContents = ["TextContents",
-									"ImageContents",
-									"MovieContents",
-									"WebPreviewContents"];
+	var fMenuAvailableContents = [ContentsTypeEnum.Text,
+									ContentsTypeEnum.Image,
+									ContentsTypeEnum.Movie,
+									ContentsTypeEnum.WebPreview];
 									
 	var fMenuSelectedContents = fMenuAvailableContents[0];									
 	var fMenuInsertedCDI = null;
@@ -481,8 +501,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				var tempContents;
 				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
 				
-				tempShape = new Shape("CircleShape",tempShapeTypeDependentInfo);
-				tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"Ok!!!");
+				tempShape = new Shape(ShapeTypeEnum.Circle,tempShapeTypeDependentInfo);
+				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"Ok!!!");
 				
 				this.addMindObject(x,y,z,tempShape,tempContents);
 				
@@ -510,9 +530,9 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				//var tempContentsTypeDependentInfo = new ImageContentsTypeDependentInfo(400,400);
 				var tempContentsTypeDependentInfo = new MovieContentsTypeDependentInfo(400,400);
 				
-				tempShape = new Shape("CircleShape",tempShapeTypeDependentInfo);
+				tempShape = new Shape(ShapeTypeEnum.Circle,tempShapeTypeDependentInfo);
 				//tempContents = new Contents("ImageContents",tempContentsTypeDependentInfo,"http://cfile27.uf.tistory.com/image/0151AC3F51D28D6F2CF37B");
-				tempContents = new Contents("MovieContents",tempContentsTypeDependentInfo,"Mr.chu.mp4");
+				tempContents = new Contents(ContentsTypeEnum.Movie,tempContentsTypeDependentInfo,"Mr.chu.mp4");
 				
 				
 				this.addMindObject(x,y,z,tempShape,tempContents);
@@ -539,8 +559,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				var tempContents;
 				var tempContentsTypeDependentInfo = new WebPreviewContentsTypeDependentInfo(500,500, "1280X840",0.7); //TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
 				
-				tempShape = new Shape("RectangleShape",tempShapeTypeDependentInfo);
-				tempContents = new Contents("WebPreviewContents",tempContentsTypeDependentInfo,"http://www.melon.com");
+				tempShape = new Shape(ShapeTypeEnum.Rectangle,tempShapeTypeDependentInfo);
+				tempContents = new Contents(ContentsTypeEnum.WebPreview ,tempContentsTypeDependentInfo,"http://www.melon.com");
 				
 				this.addMindObject(x,y,z,tempShape,tempContents);
 			}
@@ -551,8 +571,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				var tempContents;
 				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
 				
-				tempShape = new Shape("StarShape",tempShapeTypeDependentInfo);
-				tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"This is a Star Shape");
+				tempShape = new Shape(ShapeTypeEnum.Star,tempShapeTypeDependentInfo);
+				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"This is a Star Shape");
 				
 				this.addMindObject(x,y,z,tempShape,tempContents);
 			}
@@ -563,8 +583,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				var tempContents;
 				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
 				
-				tempShape = new Shape("PolygonShape",tempShapeTypeDependentInfo);
-				tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"This is a Polygon Shape");
+				tempShape = new Shape(ShapeTypeEnum.Polyon,tempShapeTypeDependentInfo);
+				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"This is a Polygon Shape");
 				
 				this.addMindObject(x,y,z,tempShape,tempContents);
 			}
@@ -818,12 +838,12 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					if(Distance !=0 && Distance <= maxRelDistanceBySquare && !isConnectedMindObject){
 						//console.log("connect");
 						this.connectMindObject(fMovingObject.fMindObjectId,
-												MindMap.getMindObjectOnIndex(i).fMindObjectId, "SimplePathEdge", new SimplePathEdgeTypeDependentInfo(10,"#00ff00"));
+												MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath, new SimplePathEdgeTypeDependentInfo(10,"#00ff00"));
 					}
 					else if(Distance !=0 && Distance > maxRelDistanceBySquare && isConnectedMindObject){
 						//console.log("disconnect");
 						this.disconnectMindObject(fMovingObject.fMindObjectId,
-								MindMap.getMindObjectOnIndex(i).fMindObjectId, "SimplePathEdge");
+								MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath);
 					}
 				}
 				
@@ -834,16 +854,16 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			
 				switch(fMenuSelectedShape){
 
-				case "CircleShape" :
+				case ShapeTypeEnum.Circle :
 					fMenuInsertedSDI = new CircleShapeTypeDependentInfo(10,this.getShapeColor());
 					break;
-				case "RectangleShape" :
+				case ShapeTypeEnum.Rectangle :
 					fMenuInsertedSDI = new RectangleShapeTypeDependentInfo(10, 10, this.getShapeColor(), true);
 					break;	
-				case "StarShape" :
+				case ShapeTypeEnum.Star :
 					fMenuInsertedSDI = new StarShapeTypeDependentInfo(5, 10, 5,this.getShapeColor());
 					break;hh
-				case "PolygonShape" :
+				case ShapeTypeEnum.Polygon :
 					fMenuInsertedSDI = new PolygonShapeTypeDependentInfo(3, 1,this.getShapeColor());
 					break;							
 				}
@@ -874,8 +894,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				var newZ;
 				
 				switch(fMenuSelectedShape){
-				case "PolygonShape" :
-				case "CircleShape" :
+				case ShapeTypeEnum.Polygon :
+				case ShapeTypeEnum.Circle :
 				
 					var xDiff = x - fAddEventStartPointX;
 					var yDiff = y - fAddEventStartPointY;
@@ -914,7 +934,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fRadius = newRadius;
 					
 					break;
-				case "RectangleShape" :
+				case ShapeTypeEnum.Rectangle :
 					var xDiff = x - fAddEventStartPointX;
 					var yDiff = y - fAddEventStartPointY;
 					var zDiff = z - fAddEventStartPointZ;
@@ -929,7 +949,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 						
 					break;
 					
-				case "StarShape" :
+				case ShapeTypeEnum.Star :
 				
 					var xDiff = x - fAddEventStartPointX;
 					var yDiff = y - fAddEventStartPointY;
@@ -1697,19 +1717,19 @@ function Encoder(){
 	this.encodeShapeType = function(shapeType){
 		var ret;
 		switch (shapeType){
-		case "CircleShape" :
+		case ShapeTypeEnum.Circle :
 			ret = 16777216;
 			break;
-		case "EllipseShape" :
+		case ShapeTypeEnum.Ellipse :
 			ret = 16842752;
 			break;
-		case "RectangleShape" :
+		case ShapeTypeEnum.Rectangle :
 			ret = 33554432;
 			break;
-		case "StarShape" : 
+		case ShapeTypeEnum.Star : 
 			ret = 50331648;
 			break;
-		case "PolygonShape" : 
+		case ShapeTypeEnum.Polygon : 
 			ret = 67108864;
 			break;
 		default :
@@ -1721,19 +1741,19 @@ function Encoder(){
 	this.encodeContentsType = function(contentsType){
 		var ret;
 		switch(contentsType){
-		case "TextContents" :
+		case ContentsTypeEnum.Text :
 			ret = 16777216;
 			break;
-		case "ImageContents" :
+		case ContentsTypeEnum.Image :
 			ret = 33554432;
 			break;
 		case "SoundContents" :
 			ret = 50331648;
 			break;
-		case "MovieContents" :
+		case ContentsTypeEnum.Movie :
 			ret = 67108864;
 			break;
-		case "WebPreviewContents" :
+		case ContentsTypeEnum.WebPreview :
 			ret = 83886080;
 			break;
 		default :
@@ -1745,7 +1765,7 @@ function Encoder(){
 	this.encodeEdgeType = function(edgeType){
 		var ret;
 		switch (edgeType){
-		case "SimplePathEdge" :
+		case EdgeTypeEnum.SimplePath :
 			ret = 16777216;
 			break;
 		default :
@@ -1761,19 +1781,19 @@ function Decoder(){
 		var ret;
 		switch (shapeType){
 		case 16777216 :
-			ret = "CircleShape";
+			ret = ShapeTypeEnum.Circle;
 			break;
 		case 16842752 :
-			ret = "EllipseShape";
+			ret = ShapeTypeEnum.Ellipse;
 			break;
 		case 33554432 :
-			ret = "RectangleShape";
+			ret = ShapeTypeEnum.Rectangle;
 			break;
 		case 50331648 :
-			ret = "StarShape";
+			ret = ShapeTypeEnum.Star;
 			break;
 		case 67108864:
-			ret = "PolygonShape";
+			ret = ShapeTypeEnum.Polygon;
 			break;
 		default :
 			ret = null;
@@ -1785,19 +1805,19 @@ function Decoder(){
 		var ret;
 		switch(contentsType){
 		case 16777216 :
-			ret = "TextContents";
+			ret = ContentsTypeEnum.Text;
 			break;
 		case 33554432 :
-			ret = "ImageContents";
+			ret = ContentsTypeEnum.Image;
 			break;
 		case 50331648 :
 			ret = "SoundContents";
 			break;
 		case 67108864 :
-			ret = "MovieContents";
+			ret = ContentsTypeEnum.Movie;
 			break;
 		case 83886080 :
-			ret = "WebPreviewContents";
+			ret = ContentsTypeEnum.WebPreview;
 			break;
 		default :
 			ret = null;
@@ -1809,7 +1829,7 @@ function Decoder(){
 		var ret;
 		switch (edgeType){
 		case 16777216 :
-			ret = "SimplePathEdge";
+			ret = EdgeTypeEnum.SimplePath;
 			break;
 		default :
 			ret = null;
@@ -2099,47 +2119,7 @@ function JobHandler(drawingObj){
 		tempShapeTypeDependentInfo = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);						
 		tempShapeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);
 		
-		//Need to Code Generalization
-		switch(tempShapeType){
-		case "PolygonShape" :
-		case "CircleShape" :
-			var finalRadius = tempShapeTypeDependentInfoForDrawing.fRadius;
-			tempShapeTypeDependentInfoForDrawing.fRadius = 10;
 			
-			var curRadius = tempShapeTypeDependentInfoForDrawing.fRadius;
-			var repeatCount = parseInt((finalRadius - curRadius + 3)/3);
-			break;
-		case "RectangleShape" :
-			var finalWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
-			var finalHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
-			var whRatio = finalHeight/finalWidth;
-			tempShapeTypeDependentInfoForDrawing.fWidth = 10;
-			tempShapeTypeDependentInfoForDrawing.fHeight = 10;
-			var curWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
-			var curHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
-			
-			var repeatCount = parseInt((finalWidth - curWidth + 3)/3);
-			break;
-		case "StarShape" :
-			var finalFirstRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius;
-			var finalSecondRadius = tempShapeTypeDependentInfoForDrawing.fSecondRadius;
-			var finalOuterRadius = finalFirstRadius > finalSecondRadius? finalFirstRadius : finalSecondRadius;
-			
-			tempShapeTypeDependentInfoForDrawing.fFirstRadius = finalFirstRadius > finalSecondRadius? 10 : 5;
-			tempShapeTypeDependentInfoForDrawing.fSecondRadius = finalFirstRadius > finalSecondRadius? 5 : 10;
-			
-			var curOuterRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius > tempShapeTypeDependentInfoForDrawing.fSecondRadius?
-									tempShapeTypeDependentInfoForDrawing.fFirstRadius : tempShapeTypeDependentInfoForDrawing.fSecondRadius;
-									
-			var fsRatio = finalFirstRadius > finalSecondRadius? (finalSecondRadius / finalFirstRadius) : (finalFirstRadius / finalSecondRadius);
-			var repeatCount = parseInt((finalOuterRadius - curOuterRadius + 3)/3);
-			
-			break;		
-		}
-
-		 
-		//
-		
 		tempShape = new Shape(tempShapeType, tempShapeTypeDependentInfo);
 		tempShapeForDrawing = new Shape(tempShapeTypeForDrawing, tempShapeTypeDependentInfoForDrawing);
 					
@@ -2172,6 +2152,41 @@ function JobHandler(drawingObj){
 												eventCode.Z											//z
 												);
 		fMindMap.pushNewMindObject(tempMindObject);
+
+
+		var finalStatusInfo;
+		var progressStatusInfo;
+		var interval;
+		var objData;
+		
+		switch(tempShapeTypeForDrawing){
+		case ShapeTypeEnum.Circle :
+			finalStatusInfo = {};
+			finalStatusInfo.fRadius = tempShapeTypeDependentInfoForDrawing.fRadius;
+			
+			progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
+			progressStatusInfo.fRadius = 9;
+
+			interval = 1;
+
+		var objData = {definedFuncSetName : "DefinableAnimInfoFunc_Circle" 
+						,progressStatusInfo : progressStatusInfo
+						,finalStatusInfo : finalStatusInfo
+						,interval : interval};			
+			
+
+			
+			break;
+		case ShapeTypeEnum.Ellipse :
+			break;
+		case ShapeTypeEnum.Rectangle :
+			break;
+		case ShapeTypeEnum.Star :
+			break;
+		case ShapeTypeEnum.Polygon : 
+			break;
+		}		
+		
 		
 		var tempMindObjectForDrawing = {fX : tempMindObject.fX,
 										fY : tempMindObject.fY,
@@ -2192,43 +2207,51 @@ function JobHandler(drawingObj){
 		
 		animWorker.onmessage = function (event){
 			var data = event.data;
+			tempShapeTypeDependentInfoForDrawing = event.data.info;
 			
-			if(data == 0){
+			
+			if(data.flag == 0){
 				
-				switch(tempShapeTypeForDrawing){
+				/*switch(tempShapeTypeForDrawing){
 				case "PolygonShape" :
 				case "CircleShape" :
-					if(curRadius > finalRadius){
+					if(curRadius > finalRadius*1.2){
 						tempShapeTypeDependentInfoForDrawing.fRadius = finalRadius;
-						}
+						orientation = -1;
+					}
 					else
 						tempShapeTypeDependentInfoForDrawing.fRadius = curRadius;
-					curRadius += 3;
+					curRadius += 3*orientation;
 					break;
 				case "RectangleShape" :
-					if(curWidth > finalWidth){
+					if(curWidth > finalWidth*1.2){
 						tempShapeTypeDependentInfoForDrawing.fWidth = finalWidth;
 						tempShapeTypeDependentInfoForDrawing.fHeight = finalHeight;
-						}
+						orientation = -1;
+					}
 					else{
 						tempShapeTypeDependentInfoForDrawing.fWidth = curWidth;
 						tempShapeTypeDependentInfoForDrawing.fHeight = curHeight;
 					}
-					curWidth += 3;
-					curHeight += 3*whRatio;
+					curWidth += 3*orientation;
+					curHeight += 3*whRatio*orientation;
+
 					break;
 				case "StarShape" :
-					if(curOuterRadius > finalOuterRadius){
+					if(curOuterRadius > finalOuterRadius*1.2){
 						tempShapeTypeDependentInfoForDrawing.fFirstRadius = finalFirstRadius;
 						tempShapeTypeDependentInfoForDrawing.fSecondRadius = finalSecondRadius;
-						}
+						orientation = -1;
+					}
 					else{
 						tempShapeTypeDependentInfoForDrawing.fFirstRadius = finalFirstRadius > finalSecondRadius? curOuterRadius : curOuterRadius*fsRatio;
 						tempShapeTypeDependentInfoForDrawing.fSecondRadius = finalSecondRadius > finalFirstRadius? curOuterRadius : curOuterRadius*fsRatio;
+						
 					}
-					curOuterRadius += 3;
+					curOuterRadius += 3*orientation;
 					break;
-				}
+				}*/
+				console.log(tempShapeTypeDependentInfoForDrawing);
 				
 				fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
 					{fMindObjectId : tempMindObject.fMindObjectId,
@@ -2243,11 +2266,10 @@ function JobHandler(drawingObj){
 			}
 			
 	
-		};
-		
-		
-		animWorker.postMessage({repeatCount : repeatCount,
-								interval : 10});
+		};	
+
+
+		animWorker.postMessage(objData);
 		
 		/*for(var i=tempShapeTypeDependentInfoForDrawing.fRadius; i<=curRadius+3; i+=3){
 			tempShapeTypeDependentInfoForDrawing.fRadius = i;
@@ -2808,36 +2830,36 @@ console.log(now);
 		var ret;
 		switch (type){
 		//Shape
-		case "CircleShape" :
+		case ShapeTypeEnum.Circle :
 			ret = new CircleShapeTypeDependentInfo(parameterArray[0], parameterArray[1]);
 			break;
-		case "EllipseShape" :
+		case ShapeTypeEnum.Ellipse :
 			ret = new EllipseShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
 			break;
-		case "RectangleShape" :
+		case ShapeTypeEnum.Rectangle :
 			ret = new RectangleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 			break;
-		case "StarShape" :
+		case ShapeTypeEnum.Star :
 			ret = new StarShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 			break;
-		case "PolygonShape" :
+		case ShapeTypeEnum.Polygon :
 			ret = new PolygonShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
 			break;
 		//Contents
-		case "TextContents" :
+		case ContentsTypeEnum.Text :
 			ret = new TextContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 			break;
-		case "ImageContents" :
+		case ContentsTypeEnum.Image :
 			ret = new ImageContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
 			break;
-		case "MovieContents" :
+		case ContentsTypeEnum.Movie :
 			ret = new MovieContentsTypeDependentInfo(parameterArray[0], parameterArray[1]);
 			break;
-		case "WebPreviewContents" :
+		case ContentsTypeEnum.WebPreview :
 			ret = new WebPreviewContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 			break;
 		//Edge
-		case "SimplePathEdge" :
+		case ContentsTypeEnum.SimplePath :
 			ret = new SimplePathEdgeTypeDependentInfo(parameterArray[0], parameterArray[1]);
 			break;
 		}
@@ -3173,55 +3195,55 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 		var ret;
 		switch(type){
 		//Shape
-		case  "CircleShape" :
+		case  ShapeTypeEnum.Circle :
 			ret = [typeDependentInfo.fRadius,	//Radius
                    typeDependentInfo.fColor];	//Color
 			break;
-		case "EllipseShape" :
+		case ShapeTypeEnum.Ellipse :
 			ret = [typeDependentInfo.fWidth,	//Width
                    typeDependentInfo.fHeight,	//Height
 				   typeDependentInfo.fColor];	//Color 
 			break;
-		case  "RectangleShape" :
+		case  ShapeTypeEnum.Rectangle :
 			ret = [typeDependentInfo.fWidth,	//Width
                    typeDependentInfo.fHeight,	//Height
 				   typeDependentInfo.fColor,	//Color
 				   typeDependentInfo.fIsRounded];	//IsRounded
 			break;
-		case  "StarShape" :
+		case  ShapeTypeEnum.Star :
 			ret = [typeDependentInfo.fNrPoints,	//Nr of Points
                    typeDependentInfo.fFirstRadius,	//First Radius
 				   typeDependentInfo.fSecondRadius,	//Second Radius
 				   typeDependentInfo.fColor];	//Color
 			break;
-		case  "PolygonShape" :
+		case  ShapeTypeEnum.Polygon :
 			ret = [typeDependentInfo.fNrSides,	//Nr of Sides
                    typeDependentInfo.fRadius,	//Radius
 				   typeDependentInfo.fColor];	//Color
 			break;
 		//Contents
-		case "TextContents" :
+		case ContentsTypeEnum.Text :
 			ret = [typeDependentInfo.fColor,			//Color
                    typeDependentInfo.fFontFamily,		//FontFamily
                    typeDependentInfo.fFontWeight,		//FontWeight
                    typeDependentInfo.fFontSize];		//FontSize
 			break;
-		case "ImageContents" :
+		case ContentsTypeEnum.Image :
 			ret = [typeDependentInfo.fWidth,			//Width
                    typeDependentInfo.fHeight,			//Height
                    typeDependentInfo.fOpacity];			//Opacity                   
 			break;
-		case "MovieContents" :
+		case ContentsTypeEnum.Movie :
 			ret = [typeDependentInfo.fWidth,			//Width
                    typeDependentInfo.fHeight];			//Height                                      
 			break;
-		case "WebPreviewContents" :
+		case ContentsTypeEnum.WebPreview :
 			ret = [typeDependentInfo.fWidth,			//Width
                    typeDependentInfo.fHeight,			//Height
 				   typeDependentInfo.fResolution,		//Resolution
                    typeDependentInfo.fOpacity];			//Opacity  
 			break;
-		case "SimplePathEdge" :
+		case EdgeTypeEnum.SimplePath :
 			ret = [typeDependentInfo.fWidth, typeDependentInfo.fColor];
 			break;
 		default :

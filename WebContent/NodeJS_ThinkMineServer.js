@@ -25,13 +25,11 @@ const THINK_MINE_MAIN_PAGE_NAME = "ThinkMine_MainPage_DEV.html";
 const THINK_MINE_MIND_MAP_PAGE_NAME = "ThinkMine_MindMapPage_DEV.html";
 
 
-var http = require('http');
 
+var http = require('http');
 var fs = require('fs');
 var socketio = require('socket.io');
-
 var childProcessModule = require('child_process');
-
 var dbHelperProcess = childProcessModule.fork(__dirname + '/'+DB_HELPER_JS_NAME);
 
 
@@ -88,7 +86,7 @@ dbCallBackFunction = function(m){
 			io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
 		case CODE_MIND_MOVE :
-			io.sockets.emit('NewEvent',m.reply.retObject);
+			//io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
 		case CODE_MIND_PUT_INTO :
 			console.log(m.reply.retObject);
@@ -98,7 +96,7 @@ dbCallBackFunction = function(m){
 			io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
 		case CODE_MIND_RESIZE_SHAPE :
-			io.sockets.emit('NewEvent',m.reply.retObject);
+			//io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
 		default :
 			break;
@@ -109,6 +107,8 @@ dbCallBackFunction = function(m){
 	//console.log(m);
 	return;
 };
+
+
 
 dbHelperProcess.on('message',dbCallBackFunction);
 
@@ -168,6 +168,8 @@ io.sockets.on('connection', function (socket){
 			io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_MOVE :
+		
+			io.sockets.emit('NewEvent',data);
 			
 			var message = {
 				requestSocketId : socket.id,
@@ -234,6 +236,8 @@ io.sockets.on('connection', function (socket){
 			io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_RESIZE_SHAPE :
+		
+			io.sockets.emit('NewEvent',data);
 			var message = {
 				requestSocketId : socket.id,
 				operationType : 3,
@@ -247,6 +251,60 @@ io.sockets.on('connection', function (socket){
 		}
 	});
 });
+
+
+
+
+/*var HashMapQueue = function(){
+	var HashMap = hashMapModule.HashMap;
+	var mainHashMap = new HashMap();
+	var maxHashSize = 10000;
+	var maxQueueSize = 1000;
+	var totalCount = 0;
+	
+	this.pushItem = function(key,item){
+		if(!mainHashMap.has(key)){
+			if(mainHashMap.count() > maxHashSize){
+				console.log("There are too many key,value on the mainHashMap");
+				return false;
+			}
+			else{
+				mainHashMap.set(key,[item]);
+				return true;
+			}
+		}
+		var QueueArray = mainHashMap.get(key);
+		if(QueueArray.length > maxQueueSize){
+			console.log("There are too many items on the Sub Queue of the mainHashMap");
+			return false;
+		}
+		else{
+			QueueArray.push(item);
+			totalCount ++;
+		}
+	};
+	this.popItem = function(key){
+		var QueueArray = mainHashMap.get(key);
+		if(QueueArray == undefined || QueueArray == null){
+			console.log("There are no such item with key("+key+")");
+			return null;
+		}
+		if(QueueArray.length == 0){
+			console.log("There are no such item with key("+key+")");
+			return null;			
+		}
+		var retItem = QueueArray[0];
+		QueueArray.splice(0,1);
+		totalCount --;
+		return retItem;
+	};
+	this.getTotalCount = function(){
+		return totalCount;
+	};
+}
+
+var test = new HashMapQueue();*/
+
 
 
 /*

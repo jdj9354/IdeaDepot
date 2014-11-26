@@ -1,4 +1,4 @@
-var tmdb = new function(undefined) {
+ var tmdb = new function(undefined) {
 	
 const THINK_MINE_DB_NAME = "tmdb";
 const MIND_MAP_COLLECTION_NAME = "mindmap";
@@ -78,7 +78,7 @@ this.sequentialFind = function(conditionArray,collection){
 		}
 	};
 	
-	return
+	return; 
 	
 };
 
