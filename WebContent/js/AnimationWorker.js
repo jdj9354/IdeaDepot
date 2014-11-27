@@ -156,26 +156,90 @@ function DefinableAnimInfoFunc (){
 	this.updateStatusInfo = null;
 };
 
-const DefinableAnimInfoFunc_Circle = {
+const DefinableAnimInfoFunc_CircleShapeCreation = {
 	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
-		return 130;
+		return 70;
 	},
 	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
 		progressStatusInfo.fRadius = 9;
 		progressStatusInfo.direction = 1;
-		progressStatusInfo.delta = (finalStatusInfo.fRadius - 9)/100;
+		progressStatusInfo.delta = (finalStatusInfo.fRadius - 9)/50;
 		progressStatusInfo.count = 0;
 		//finalStatusInfo.fRadius = 0;
 	},
 	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
-		if(progressStatusInfo.count>=115)
+		if(progressStatusInfo.count>=60)
 			progressStatusInfo.direction = -1;
 			
 		progressStatusInfo.fRadius += progressStatusInfo.delta * progressStatusInfo.direction;
 		progressStatusInfo.count++;
-
 	}
 };
+
+const DefinableAnimInfoFunc_CircleShapeExpantion = {
+	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
+		return 70;
+	},
+	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		progressStatusInfo.delta = (finalStatusInfo.fRadius - progressStatusInfo.fRadius)/70;
+		progressStatusInfo.count = 0;
+		//finalStatusInfo.fRadius = 0;
+	},
+	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
+			
+		progressStatusInfo.fRadius += progressStatusInfo.delta;
+		progressStatusInfo.count++;
+	}
+};
+
+const DefinableAnimInfoFunc_RectangleShapeCreation = {
+	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
+		return 70;
+	},
+	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		progressStatusInfo.fWidth = 10;
+		progressStatusInfo.fHeight = 10;
+		progressStatusInfo.direction = 1;
+		progressStatusInfo.delta = (finalStatusInfo.fWidth - 10)/50;
+		progressStatusInfo.whRatio = finalStatusInfo.fHeight/finalStatusInfo.fWidth;
+		progressStatusInfo.count = 0;
+		//finalStatusInfo.fRadius = 0;
+	},
+	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		if(progressStatusInfo.count>=60)
+			progressStatusInfo.direction = -1;
+			
+		progressStatusInfo.fWidth += progressStatusInfo.delta * progressStatusInfo.direction;
+		progressStatusInfo.fHeight += progressStatusInfo.delta * progressStatusInfo.direction * progressStatusInfo.whRatio;
+		
+		progressStatusInfo.count++;
+	}
+};
+
+const DefinableAnimInfoFunc_StarShapeCreation = {
+	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
+		return 70;
+	},
+	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		progressStatusInfo.fFirstRadius = finalStatusInfo.fFirstRadius > finalStatusInfo.fSecondRadius? 10 : 5;
+		progressStatusInfo.fSecondRadius = finalStatusInfo.fFirstRadius < finalStatusInfo.fSecondRadius? 10 : 5;
+		progressStatusInfo.direction = 1;
+		var deltaFactor = finalStatusInfo.fFirstRadius > finalStatusInfo.fSecondRadius? finalStatusInfo.fFirstRadius : finalStatusInfo.fSecondRadius;
+		progressStatusInfo.delta = (deltaFactor - 10)/50;
+		progressStatusInfo.count = 0;
+		//finalStatusInfo.fRadius = 0;
+	},
+	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		if(progressStatusInfo.count>=60)
+			progressStatusInfo.direction = -1;
+			
+		progressStatusInfo.fFirstRadius += progressStatusInfo.delta * progressStatusInfo.direction;
+		progressStatusInfo.fSecondRadius += progressStatusInfo.delta * progressStatusInfo.direction;
+		
+		progressStatusInfo.count++;
+	}
+};
+
 
 
 
@@ -188,7 +252,10 @@ var functionContainer = {
 	}
 };
 
-functionContainer.set("DefinableAnimInfoFunc_Circle",DefinableAnimInfoFunc_Circle);
+functionContainer.set("DefinableAnimInfoFunc_CircleShapeCreation",DefinableAnimInfoFunc_CircleShapeCreation);
+functionContainer.set("DefinableAnimInfoFunc_CircleShapeExpantion",DefinableAnimInfoFunc_CircleShapeExpantion);
+functionContainer.set("DefinableAnimInfoFunc_RectangleShapeCreation",DefinableAnimInfoFunc_RectangleShapeCreation);
+functionContainer.set("DefinableAnimInfoFunc_StarShapeCreation",DefinableAnimInfoFunc_StarShapeCreation);
 
 function EllipseShapeMOCAnimationInfoGenerator(shapeType, shapeTypeDendentInfo){
 	var fShapeType = shapeType;

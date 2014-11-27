@@ -224,7 +224,7 @@ const ShapeTypeEnum = {
 	Ellipse : "EllipseShape",
 	Rectangle : "RectangleShape",
 	Star : "StarShape",
-	Polyon : "PolygonShape",	
+	Polygon : "PolygonShape",	
 };
 
 const ContentsTypeEnum = {
@@ -675,11 +675,116 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 							
 						}
 						else{
+		
 							fDrawingCCInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
 							fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
 							resetTMCanvas();
-							//Should implement some effect which is expanding, in order to the user can do anything.
-							this.onDoubleMouseDownInterface(x,y,z);
+							
+							//Expanding effect
+							var finalStatusInfo;
+							var progressStatusInfo;
+							var interval;
+							var objData;
+							
+							var limitX = MindMap.getLimitX();
+							var limitY = MindMap.getLimitY();
+							var limitZ = MindMap.getLimitZ();
+							
+							var maxLimit = limitX > limitY ? limitX : limitY;
+							maxLimit = maxLimit > limitZ ? maxLimit : limitZ;
+							
+							var tempShapeTypeDependentInfoForDrawing = fSelectedObject.fShape.fShapeTypeDependentInfo;
+							
+							switch(fSelectedObject.fShape.fShapeType){
+							case ShapeTypeEnum.Polygon :
+							case ShapeTypeEnum.Circle :
+								finalStatusInfo = {};
+
+								
+								finalStatusInfo.fRadius = maxLimit;
+								
+								progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
+
+								interval = 1;
+
+								objData = {definedFuncSetName : "DefinableAnimInfoFunc_CircleShapeExpantion" 
+												,progressStatusInfo : progressStatusInfo
+												,finalStatusInfo : finalStatusInfo
+												,interval : interval};			
+								
+
+								
+								break;
+							case ShapeTypeEnum.Ellipse :
+								break;
+							case ShapeTypeEnum.Rectangle :
+								/*finalStatusInfo = {};
+								finalStatusInfo.fWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
+								finalStatusInfo.fHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
+								
+								progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
+								progressStatusInfo.fWidth = 10;
+								progressStatusInfo.fHeight = 10;
+
+								interval = 1;
+
+								objData = {definedFuncSetName : "DefinableAnimInfoFunc_RectangleShapeCreation" 
+												,progressStatusInfo : progressStatusInfo
+												,finalStatusInfo : finalStatusInfo
+												,interval : interval};	*/
+								break;
+							case ShapeTypeEnum.Star :
+								/*finalStatusInfo = {};
+								finalStatusInfo.fFirstRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius;
+								finalStatusInfo.fSecondRadius = tempShapeTypeDependentInfoForDrawing.fSecondRadius;
+								
+								progressStatusInfo = tempShapeTypeDependentInfoForDrawing;			
+								progressStatusInfo.fFirstRadius = finalStatusInfo.fFirstRadius > finalStatusInfo.fSecondRadius? 10 : 5;
+								progressStatusInfo.fSecondRadius = finalStatusInfo.fFirstRadius < finalStatusInfo.fSecondRadius? 10 : 5;
+
+								interval = 1;
+
+								objData = {definedFuncSetName : "DefinableAnimInfoFunc_StarShapeCreation" 
+												,progressStatusInfo : progressStatusInfo
+												,finalStatusInfo : finalStatusInfo
+												,interval : interval};	*/
+								break;
+							}
+							
+							var animWorker = new Worker('AnimationWorker.js');
+							var hasFinished = false;
+							var current_Obj = this;
+							
+							animWorker.onmessage = function (event){
+								var data = event.data;
+								tempShapeTypeDependentInfoForDrawing = event.data.info;
+								
+								
+								if(data.flag == 0){
+									
+									fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
+										{fMindObjectId : fSelectedObject.fMindObjectId,
+										fShape : {fShapeType : fSelectedObject.fShape.fShapeType,
+													fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing
+										}}]);
+									
+								}
+								else{
+									animWorker.terminate();
+									hasFinished = true;
+									animWorker = null;
+									
+									current_Obj.onDoubleMouseDownInterface(x,y,z);
+								}
+								
+						
+							};	
+
+
+							animWorker.postMessage(objData);
+							
+							
+							
 							return;
 						}
 					
@@ -2160,6 +2265,7 @@ function JobHandler(drawingObj){
 		var objData;
 		
 		switch(tempShapeTypeForDrawing){
+		case ShapeTypeEnum.Polygon :
 		case ShapeTypeEnum.Circle :
 			finalStatusInfo = {};
 			finalStatusInfo.fRadius = tempShapeTypeDependentInfoForDrawing.fRadius;
@@ -2169,10 +2275,10 @@ function JobHandler(drawingObj){
 
 			interval = 1;
 
-		var objData = {definedFuncSetName : "DefinableAnimInfoFunc_Circle" 
-						,progressStatusInfo : progressStatusInfo
-						,finalStatusInfo : finalStatusInfo
-						,interval : interval};			
+			objData = {definedFuncSetName : "DefinableAnimInfoFunc_CircleShapeCreation" 
+							,progressStatusInfo : progressStatusInfo
+							,finalStatusInfo : finalStatusInfo
+							,interval : interval};			
 			
 
 			
@@ -2180,10 +2286,36 @@ function JobHandler(drawingObj){
 		case ShapeTypeEnum.Ellipse :
 			break;
 		case ShapeTypeEnum.Rectangle :
+			finalStatusInfo = {};
+			finalStatusInfo.fWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
+			finalStatusInfo.fHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
+			
+			progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
+			progressStatusInfo.fWidth = 10;
+			progressStatusInfo.fHeight = 10;
+
+			interval = 1;
+
+			objData = {definedFuncSetName : "DefinableAnimInfoFunc_RectangleShapeCreation" 
+							,progressStatusInfo : progressStatusInfo
+							,finalStatusInfo : finalStatusInfo
+							,interval : interval};	
 			break;
 		case ShapeTypeEnum.Star :
-			break;
-		case ShapeTypeEnum.Polygon : 
+			finalStatusInfo = {};
+			finalStatusInfo.fFirstRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius;
+			finalStatusInfo.fSecondRadius = tempShapeTypeDependentInfoForDrawing.fSecondRadius;
+			
+			progressStatusInfo = tempShapeTypeDependentInfoForDrawing;			
+			progressStatusInfo.fFirstRadius = finalStatusInfo.fFirstRadius > finalStatusInfo.fSecondRadius? 10 : 5;
+			progressStatusInfo.fSecondRadius = finalStatusInfo.fFirstRadius < finalStatusInfo.fSecondRadius? 10 : 5;
+
+			interval = 1;
+
+			objData = {definedFuncSetName : "DefinableAnimInfoFunc_StarShapeCreation" 
+							,progressStatusInfo : progressStatusInfo
+							,finalStatusInfo : finalStatusInfo
+							,interval : interval};	
 			break;
 		}		
 		
@@ -2211,47 +2343,6 @@ function JobHandler(drawingObj){
 			
 			
 			if(data.flag == 0){
-				
-				/*switch(tempShapeTypeForDrawing){
-				case "PolygonShape" :
-				case "CircleShape" :
-					if(curRadius > finalRadius*1.2){
-						tempShapeTypeDependentInfoForDrawing.fRadius = finalRadius;
-						orientation = -1;
-					}
-					else
-						tempShapeTypeDependentInfoForDrawing.fRadius = curRadius;
-					curRadius += 3*orientation;
-					break;
-				case "RectangleShape" :
-					if(curWidth > finalWidth*1.2){
-						tempShapeTypeDependentInfoForDrawing.fWidth = finalWidth;
-						tempShapeTypeDependentInfoForDrawing.fHeight = finalHeight;
-						orientation = -1;
-					}
-					else{
-						tempShapeTypeDependentInfoForDrawing.fWidth = curWidth;
-						tempShapeTypeDependentInfoForDrawing.fHeight = curHeight;
-					}
-					curWidth += 3*orientation;
-					curHeight += 3*whRatio*orientation;
-
-					break;
-				case "StarShape" :
-					if(curOuterRadius > finalOuterRadius*1.2){
-						tempShapeTypeDependentInfoForDrawing.fFirstRadius = finalFirstRadius;
-						tempShapeTypeDependentInfoForDrawing.fSecondRadius = finalSecondRadius;
-						orientation = -1;
-					}
-					else{
-						tempShapeTypeDependentInfoForDrawing.fFirstRadius = finalFirstRadius > finalSecondRadius? curOuterRadius : curOuterRadius*fsRatio;
-						tempShapeTypeDependentInfoForDrawing.fSecondRadius = finalSecondRadius > finalFirstRadius? curOuterRadius : curOuterRadius*fsRatio;
-						
-					}
-					curOuterRadius += 3*orientation;
-					break;
-				}*/
-				console.log(tempShapeTypeDependentInfoForDrawing);
 				
 				fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
 					{fMindObjectId : tempMindObject.fMindObjectId,
@@ -2859,7 +2950,7 @@ console.log(now);
 			ret = new WebPreviewContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 			break;
 		//Edge
-		case ContentsTypeEnum.SimplePath :
+		case EdgeTypeEnum.SimplePath :
 			ret = new SimplePathEdgeTypeDependentInfo(parameterArray[0], parameterArray[1]);
 			break;
 		}
