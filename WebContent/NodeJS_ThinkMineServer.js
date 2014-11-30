@@ -100,6 +100,7 @@ dbCallBackFunction = function(m){
 			break;
 		case CODE_MIND_DEL :
 			io.sockets.in(m.reply.retObject.MMID).emit('NewEvent',m.reply.retObject);
+			break;
 		case CODE_MIND_MOVE :
 			//io.sockets.emit('NewEvent',m.reply.retObject);
 			break;

@@ -242,6 +242,8 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 				communicationMindMap.CMOS[childCount].push(childMindObjectInfo.y);
 				communicationMindMap.CMOS[childCount].push(childMindObjectInfo.z);
 				
+
+				
 				shapeCollection.findOne({"_id": childMindObjectInfo.shape.oid}, function(err,shapeResult){
 					if(err != null){
 						
@@ -294,14 +296,20 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 									}
 								}
 								
-								edgeCollection.findOne({"$or" : [{first_mind_object_id : childMindObjectInfo.related_mind_objects[relCount].oid , second_mind_object_id : childMindObjectInfo._id},
-								                                 {first_mind_object_id : childMindObjectInfo._id , second_mind_object_id : childMindObjectInfo.related_mind_objects[relCount].oid}]},innerLoopFunction);	
+								var edgeId = childMindObjectInfo._id > childMindObjectInfo.related_mind_objects[relCount].oid ? 
+									childMindObjectInfo._id+childMindObjectInfo.related_mind_objects[relCount].oid : 
+									childMindObjectInfo.related_mind_objects[relCount].oid+childMindObjectInfo._id;
+								
+								edgeCollection.findOne({"_id" : edgeId},innerLoopFunction);	
 							}
 							else{
-								relCount ++;									
+								relCount ++;	
+
+								var edgeId = childMindObjectInfo._id > childMindObjectInfo.related_mind_objects[relCount].oid ? 
+									childMindObjectInfo._id+childMindObjectInfo.related_mind_objects[relCount].oid : 
+									childMindObjectInfo.related_mind_objects[relCount].oid+childMindObjectInfo._id;								
 								
-								edgeCollection.findOne({"$or" : [{first_mind_object_id : childMindObjectInfo.related_mind_objects[relCount].oid , second_mind_object_id : childMindObjectInfo._id},
-																	{first_mind_object_id : childMindObjectInfo._id , second_mind_object_id : childMindObjectInfo.related_mind_objects[relCount].oid}]},innerLoopFunction);									
+								edgeCollection.findOne({"_id" : edgeId},innerLoopFunction);				
 							}							
 						}
 						if(childMindObjectInfo.related_mind_objects.length > 0)
@@ -697,7 +705,6 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 this.removeMindObjectAndReply = function(info,requestSocketId){
 
 	//Need to add removing Edge Info, And it should returns some object.
-	//Also need to fix bug "Cannot read property 'parent_mind_map' of null"
 	var message = {};
 
 	mindObjectCollection.findOne({"_id" : new ObjectID(info.MOID)}, function(err, result){
@@ -718,9 +725,9 @@ this.removeMindObjectAndReply = function(info,requestSocketId){
 				
 		tmdb.removeMindMap(childMindMapId+'',requestSocketId,false);
 		
-		mindObjectCollection.remove({"_id" : new ObjectID(info.MOID)},function(err,result){
+		mindObjectCollection.remove({"_id" : info.MOID},function(err,result){
 			
-		
+			console.log(parentMindMapId);
 			mindMapCollection.update({"_id" : parentMindMapId},{"$pull" : {"mind_objects" : {"$ref" : "mindobject" , "$id" : new ObjectID(info.MOID)}}}, function(err, result){
 				if(err != null){
 					console.log("err");
@@ -729,8 +736,9 @@ this.removeMindObjectAndReply = function(info,requestSocketId){
 				if(result == null || result == undefined){
 					console.log("result is not normal");
 				}
+				console.log("aaaa");
 				
-				contentsCollection.remove({"_id" : contentsId}, function(err,result){
+				contentsCollection.remove({"_id" :  contentsId}, function(err,result){
 					if(err != null){
 						
 					}
@@ -748,7 +756,6 @@ this.removeMindObjectAndReply = function(info,requestSocketId){
 							
 						}
 					});					
-
 					
 					for(var i=0; i<relatedMindObjects.length; i++){
 						mindObjectCollection.update({"_id" : relatedMindObjects[i].oid},{"$pull" : {"$ref" : "mindobject","$id" : new ObjectID(info.MOID)}},function (err,result){
@@ -757,15 +764,18 @@ this.removeMindObjectAndReply = function(info,requestSocketId){
 							}
 							
 							if(result == null || result == undefined){
-								
+								 
 							}
-							message.retObject = info;
-				
-							message.retString = "Succeeded to remove object("+info.MOID+")";
-							process.send({replyRequestSocketId : requestSocketId,
-											reply : message});		
 						});
-					}					
+					}
+
+					message.retObject = info;
+		
+					message.retString = "Succeeded to remove object("+info.MOID+")";
+					process.send({replyRequestSocketId : requestSocketId,
+									reply : message});			
+						
+					
 				});
 				
 			});
@@ -776,7 +786,10 @@ this.removeMindObjectAndReply = function(info,requestSocketId){
 };
 
 this.connectMindObjectAndReply = function(info,requestSocketId) {
-	var newEdge = {"_id" : new ObjectID(),
+	
+	var newEdgeId = info.MOID > info.TMOID ? info.MOID+info.TMOID : info.TMOID+info.MOID;
+	console.log(newEdgeId);
+	var newEdge = {"_id" : newEdgeId,
 					"first_mind_object_id" : new ObjectID(info.MOID),
 					"second_mind_object_id" : new ObjectID(info.TMOID),
 					"edge_type" : info.ET,
@@ -785,8 +798,15 @@ this.connectMindObjectAndReply = function(info,requestSocketId) {
 	};	
 	var message = {};
 	edgeCollection.insert(newEdge,function(err, result){
-		if(err != null){			
-		}		
+		if(err != null){
+			console.log("Error while connect two objects");
+			return;
+		}
+		if(result == null || result == undefined){
+			//console.log("result is null while connect to objects");
+			//return;
+		}
+		
 		mindObjectCollection.update({"_id" : new ObjectID(info.MOID)},{"$push" : {"related_mind_objects" : {"$ref" : "mindobject","$id" : new ObjectID(info.TMOID)}}},function(err,result2){
 			if(err !=null){				
 			}
@@ -808,8 +828,9 @@ this.connectMindObjectAndReply = function(info,requestSocketId) {
 
 this.disconnectMindObjectAndReply = function(info, requestSocketId){
 	var message = {};
-	edgeCollection.remove({"$or" : [{"first_mind_object_id" : new ObjectID(info.MOID),"second_mind_object_id" : new ObjectID(info.TMOID)},
-	                                {"first_mind_object_id" : new ObjectID(info.TMOID),"second_mind_object_id" : new ObjectID(info.MOID)}]}
+	var edgeId = info.MOID > info.TMOID ? info.MOID+info.TMOID : info.TMOID+info.MOID;
+	
+	edgeCollection.remove({"_id" : edgeId}
 		,function(err, result){
 			if(err !=null){
 				

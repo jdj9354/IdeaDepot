@@ -21,53 +21,6 @@ self.addEventListener('message', function(e){
 	
 	AIG.init();
 	AIG.runAnim();
-
-	/*var data = e.data;
-	
-	var tempShapeType = e.data.fShape.fShapeType;
-	var tempShapeTypeDependentInfoForDrawing = e.data.fShape.fShapeTypeDependentInfo;
-	var repeatCount = 10;
-	var increaseFactor = 0;
-	var increaseLimit = 0;
-	switch(tempShapeType){
-	case "PolygonShape" :
-	case "CircleShape" :
-		var finalRadius = tempShapeTypeDependentInfoForDrawing.fRadius;
-		tempShapeTypeDependentInfoForDrawing.fRadius = 0;			
-		var curRadius = tempShapeTypeDependentInfoForDrawing.fRadius;
-		increaseFactor = (finalRadius - curRadius)/repeatCount;
-		increateLimit
-		//repeatCount = parseInt(((finalRadius - curRadius)*1.3 + 3)/3);
-		break;
-	case "RectangleShape" :
-		var finalWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
-		var finalHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
-		var whRatio = finalHeight/finalWidth;
-		tempShapeTypeDependentInfoForDrawing.fWidth = 10;
-		tempShapeTypeDependentInfoForDrawing.fHeight = 10;
-		var curWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
-		var curHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
-		
-		repeatCount = parseInt(((finalWidth - curWidth)*1.3 + 3)/3);
-		break;
-	case "StarShape" :
-		var finalFirstRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius;
-		var finalSecondRadius = tempShapeTypeDependentInfoForDrawing.fSecondRadius;
-		var finalOuterRadius = finalFirstRadius > finalSecondRadius? finalFirstRadius : finalSecondRadius;
-		
-		tempShapeTypeDependentInfoForDrawing.fFirstRadius = finalFirstRadius > finalSecondRadius? 10 : 5;
-		tempShapeTypeDependentInfoForDrawing.fSecondRadius = finalFirstRadius > finalSecondRadius? 5 : 10;
-		
-		var curOuterRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius > tempShapeTypeDependentInfoForDrawing.fSecondRadius?
-								tempShapeTypeDependentInfoForDrawing.fFirstRadius : tempShapeTypeDependentInfoForDrawing.fSecondRadius;
-								
-		var fsRatio = finalFirstRadius > finalSecondRadius? (finalSecondRadius / finalFirstRadius) : (finalFirstRadius / finalSecondRadius);
-		repeatCount = parseInt(((finalOuterRadius - curOuterRadius)*1.3 + 3)/3);
-		
-		break;		
-	}
-
-	runAnimation(data.repeatCount, data.interval);*/
 },false);
 
 

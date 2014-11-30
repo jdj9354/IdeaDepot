@@ -3330,7 +3330,7 @@ function SocketDataCommuHelperRecv (jobHandler,wSocket) {
 			case ShapeTypeEnum.Ellipse :
 				break;
 			case ShapeTypeEnum.Rectangle :			
-				var whRatio = finalHeight/finalWidth;
+				var whRatio = selectedObject.fShape.fShapeTypeDependentInfo.fHeight/selectedObject.fShape.fShapeTypeDependentInfo.fWidth;
 				
 				finalStatusInfo = {};
 				if(whRatio >= 1){
