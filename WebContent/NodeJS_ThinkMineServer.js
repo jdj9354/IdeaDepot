@@ -79,21 +79,45 @@ dbCallBackFunction = function(m){
 	else{
 		switch(m.reply.retObject.Code){
 		case CODE_MIND_MAP_REQUEST_MIND_INFO :
-			console.log("ccccc");
+			var roomsObject = io.sockets.sockets[m.replyRequestSocketId].manager.roomClients[m.replyRequestSocketId];
+			var roomArr = io.sockets.sockets[m.replyRequestSocketId].manager.rooms;
+			if(m.reply.retObject.MMID != null){
+				
+				
+				for(var attr in roomsObject){
+					io.sockets.sockets[m.replyRequestSocketId].leave(attr.substr(1,attr.length-1));
+				}
+				io.sockets.sockets[m.replyRequestSocketId].join(""+m.reply.retObject.MMID);	
+			}
+			
 			io.sockets.sockets[m.replyRequestSocketId].emit('NewEvent',m.reply.retObject);
+			console.log(roomArr);
+			//console.log(io.sockets.sockets[m.replyRequestSocketId]);
 			break;
-		case CODE_MIND_ADD :			
-			io.sockets.emit('NewEvent',m.reply.retObject);
+		case CODE_MIND_ADD :	
+			io.sockets.in(m.reply.retObject.MMID).emit('NewEvent',m.reply.retObject);
+			//io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
+		case CODE_MIND_DEL :
+			io.sockets.in(m.reply.retObject.MMID).emit('NewEvent',m.reply.retObject);
 		case CODE_MIND_MOVE :
 			//io.sockets.emit('NewEvent',m.reply.retObject);
 			break;
 		case CODE_MIND_PUT_INTO :
-			console.log(m.reply.retObject);
-			io.sockets.emit('NewEvent',m.reply.retObject);
+			//console.log(m.reply.retObject);
+			//io.sockets.emit('NewEvent',m.reply.retObject);
+			io.sockets.in(m.reply.retObject.MMID).emit('NewEvent',m.reply.retObject);
+			io.sockets.in(m.reply.retObject.DMMID).emit('NewEvent',m.reply.retObject);
+			break;
+		case CODE_MIND_CONNECT_TO :
+			io.sockets.in(m.reply.retObject.MMID).emit('NewEvent',m.reply.retObject);
+			break;
+		case CODE_MIND_DISCONNECT_FROM :
+			io.sockets.in(m.reply.retObject.MMID).emit('NewEvent',m.reply.retObject);
 			break;
 		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS :
-			io.sockets.emit('NewEvent',m.reply.retObject);
+			//io.sockets.emit('NewEvent',m.reply.retObject);
+			io.sockets.in(m.reply.retObject.MMID).emit('NewEvent',m.reply.retObject);
 			break;
 		case CODE_MIND_RESIZE_SHAPE :
 			//io.sockets.emit('NewEvent',m.reply.retObject);
@@ -165,11 +189,12 @@ io.sockets.on('connection', function (socket){
 			
 			dbHelperProcess.send(message);
 			
-			io.sockets.emit('NewEvent',data);
+			//io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_MOVE :
 		
-			io.sockets.emit('NewEvent',data);
+			io.sockets.in(data.MMID).emit('NewEvent',data);
+			//io.sockets.emit('NewEvent',data);
 			
 			var message = {
 				requestSocketId : socket.id,
@@ -182,7 +207,6 @@ io.sockets.on('connection', function (socket){
 			
 			break;
 		case CODE_MIND_PUT_INTO :
-			console.log("aaaa");
 			var message = {
 				requestSocketId : socket.id,
 				operationType : 3,
@@ -194,6 +218,8 @@ io.sockets.on('connection', function (socket){
 			break;
 		
 		case CODE_MIND_CONNECT_TO :
+		
+			//io.sockets.in(m.reply.retObject.MMID).emit('NewEvent',data);
 			
 			var message = {
 				requestSocketId : socket.id,
@@ -204,9 +230,12 @@ io.sockets.on('connection', function (socket){
 			
 			dbHelperProcess.send(message);
 			
-			io.sockets.emit('NewEvent',data);
+			//io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_DISCONNECT_FROM :
+		
+			//io.sockets.in(m.reply.retObject.MMID).emit('NewEvent',data);
+			
 			var message = {
 				requestSocketId : socket.id,
 				operationType : 2,
@@ -216,10 +245,10 @@ io.sockets.on('connection', function (socket){
 			
 			dbHelperProcess.send(message);
 			
-			io.sockets.emit('NewEvent',data);
+			//io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_CHANGE_COLOR_OF_CONTENTS :
-			io.sockets.emit('NewEvent',data);
+			//io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS : 
 			var message = {
@@ -233,11 +262,11 @@ io.sockets.on('connection', function (socket){
 			//io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_CHANGE_COLOR_OF_SHAPE :
-			io.sockets.emit('NewEvent',data);
+			//io.sockets.emit('NewEvent',data);
 			break;
 		case CODE_MIND_RESIZE_SHAPE :
-		
-			io.sockets.emit('NewEvent',data);
+			io.sockets.in(data.MMID).emit('NewEvent',data);
+			//io.sockets.emit('NewEvent',data);
 			var message = {
 				requestSocketId : socket.id,
 				operationType : 3,

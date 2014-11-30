@@ -680,110 +680,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 							fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
 							resetTMCanvas();
 							
-							//Expanding effect
-							var finalStatusInfo;
-							var progressStatusInfo;
-							var interval;
-							var objData;
 							
-							var limitX = MindMap.getLimitX();
-							var limitY = MindMap.getLimitY();
-							var limitZ = MindMap.getLimitZ();
-							
-							var maxLimit = limitX > limitY ? limitX : limitY;
-							maxLimit = maxLimit > limitZ ? maxLimit : limitZ;
-							
-							var tempShapeTypeDependentInfoForDrawing = fSelectedObject.fShape.fShapeTypeDependentInfo;
-							
-							switch(fSelectedObject.fShape.fShapeType){
-							case ShapeTypeEnum.Polygon :
-							case ShapeTypeEnum.Circle :
-								finalStatusInfo = {};
-
-								
-								finalStatusInfo.fRadius = maxLimit;
-								
-								progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
-
-								interval = 1;
-
-								objData = {definedFuncSetName : "DefinableAnimInfoFunc_CircleShapeExpantion" 
-												,progressStatusInfo : progressStatusInfo
-												,finalStatusInfo : finalStatusInfo
-												,interval : interval};			
-								
-
-								
-								break;
-							case ShapeTypeEnum.Ellipse :
-								break;
-							case ShapeTypeEnum.Rectangle :
-								/*finalStatusInfo = {};
-								finalStatusInfo.fWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
-								finalStatusInfo.fHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
-								
-								progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
-								progressStatusInfo.fWidth = 10;
-								progressStatusInfo.fHeight = 10;
-
-								interval = 1;
-
-								objData = {definedFuncSetName : "DefinableAnimInfoFunc_RectangleShapeCreation" 
-												,progressStatusInfo : progressStatusInfo
-												,finalStatusInfo : finalStatusInfo
-												,interval : interval};	*/
-								break;
-							case ShapeTypeEnum.Star :
-								/*finalStatusInfo = {};
-								finalStatusInfo.fFirstRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius;
-								finalStatusInfo.fSecondRadius = tempShapeTypeDependentInfoForDrawing.fSecondRadius;
-								
-								progressStatusInfo = tempShapeTypeDependentInfoForDrawing;			
-								progressStatusInfo.fFirstRadius = finalStatusInfo.fFirstRadius > finalStatusInfo.fSecondRadius? 10 : 5;
-								progressStatusInfo.fSecondRadius = finalStatusInfo.fFirstRadius < finalStatusInfo.fSecondRadius? 10 : 5;
-
-								interval = 1;
-
-								objData = {definedFuncSetName : "DefinableAnimInfoFunc_StarShapeCreation" 
-												,progressStatusInfo : progressStatusInfo
-												,finalStatusInfo : finalStatusInfo
-												,interval : interval};	*/
-								break;
-							}
-							
-							var animWorker = new Worker('AnimationWorker.js');
-							var hasFinished = false;
-							var current_Obj = this;
-							
-							animWorker.onmessage = function (event){
-								var data = event.data;
-								tempShapeTypeDependentInfoForDrawing = event.data.info;
-								
-								
-								if(data.flag == 0){
-									
-									fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
-										{fMindObjectId : fSelectedObject.fMindObjectId,
-										fShape : {fShapeType : fSelectedObject.fShape.fShapeType,
-													fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing
-										}}]);
-									
-								}
-								else{
-									animWorker.terminate();
-									hasFinished = true;
-									animWorker = null;
-									
-									current_Obj.onDoubleMouseDownInterface(x,y,z);
-								}
-								
-						
-							};	
-
-
-							animWorker.postMessage(objData);
-							
-							
+							this.onDoubleMouseDownInterface(x,y,z);
 							
 							return;
 						}
@@ -1959,6 +1857,10 @@ function JobHandler(drawingObj){
 	this.getMindMap = function(){
 		return fMindMap;
 	}
+	
+	this.getDrawingObj = function(){
+		return fDrawingObj;
+	};
 	
 	this.resetJobHandler = function(){
 
@@ -3368,8 +3270,137 @@ function SocketDataCommuHelperRecv (jobHandler,wSocket) {
 			;
 		}
 		else{
-			fJobHandler.resetJobHandler();
-			fJobHandler.pushNewJob(loadingInfo);
+
+			//Expanding effect
+			var finalStatusInfo;
+			var progressStatusInfo;
+			var interval;
+			var objData;
+			
+			var mindMap = fJobHandler.getMindMap();
+			
+			//In case of Initial State
+			if(mindMap == null){
+				fJobHandler.resetJobHandler();
+				fJobHandler.pushNewJob(loadingInfo);
+				
+				return;
+			}
+			
+			var limitX = mindMap.getLimitX();
+			var limitY = mindMap.getLimitY();
+			var limitZ = mindMap.getLimitZ();
+			
+			var maxLimit = limitX > limitY ? limitX : limitY;
+			maxLimit = maxLimit > limitZ ? maxLimit : limitZ;
+			
+			
+			var selectedObject;
+			for(var i=0; i<mindMap.lenOfMindObjectsArray(); i++){
+				if(mindMap.getMindObjectOnIndex(i).fMindObjectId == loadingInfo.MMID)
+					selectedObject = mindMap.getMindObjectOnIndex(i);
+			}
+			
+			if(selectedObject == null || selectedObject == undefined)
+				return;
+			
+			var tempShapeTypeDependentInfoForDrawing = selectedObject.fShape.fShapeTypeDependentInfo;
+			
+			
+			switch(selectedObject.fShape.fShapeType){
+			case ShapeTypeEnum.Polygon :
+			case ShapeTypeEnum.Circle :
+				finalStatusInfo = {};
+
+				
+				finalStatusInfo.fRadius = maxLimit;
+				
+				progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
+
+				interval = 1;
+
+				objData = {definedFuncSetName : "DefinableAnimInfoFunc_CircleShapeExpantion" 
+								,progressStatusInfo : progressStatusInfo
+								,finalStatusInfo : finalStatusInfo
+								,interval : interval};			
+				
+
+				
+				break;
+			case ShapeTypeEnum.Ellipse :
+				break;
+			case ShapeTypeEnum.Rectangle :
+				/*finalStatusInfo = {};
+				finalStatusInfo.fWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
+				finalStatusInfo.fHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
+				
+				progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
+				progressStatusInfo.fWidth = 10;
+				progressStatusInfo.fHeight = 10;
+
+				interval = 1;
+
+				objData = {definedFuncSetName : "DefinableAnimInfoFunc_RectangleShapeCreation" 
+								,progressStatusInfo : progressStatusInfo
+								,finalStatusInfo : finalStatusInfo
+								,interval : interval};	*/
+				break;
+			case ShapeTypeEnum.Star :
+				/*finalStatusInfo = {};
+				finalStatusInfo.fFirstRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius;
+				finalStatusInfo.fSecondRadius = tempShapeTypeDependentInfoForDrawing.fSecondRadius;
+				
+				progressStatusInfo = tempShapeTypeDependentInfoForDrawing;			
+				progressStatusInfo.fFirstRadius = finalStatusInfo.fFirstRadius > finalStatusInfo.fSecondRadius? 10 : 5;
+				progressStatusInfo.fSecondRadius = finalStatusInfo.fFirstRadius < finalStatusInfo.fSecondRadius? 10 : 5;
+
+				interval = 1;
+
+				objData = {definedFuncSetName : "DefinableAnimInfoFunc_StarShapeCreation" 
+								,progressStatusInfo : progressStatusInfo
+								,finalStatusInfo : finalStatusInfo
+								,interval : interval};	*/
+				break;
+			}
+			
+			var animWorker = new Worker('AnimationWorker.js');
+			var hasFinished = false;
+			var current_Obj = this;
+			
+			animWorker.onmessage = function (event){
+				var data = event.data;
+				tempShapeTypeDependentInfoForDrawing = event.data.info;
+				
+				
+				if(data.flag == 0){
+					
+					fJobHandler.getDrawingObj().pushNewJob([CODE_MIND_RESIZE_SHAPE,
+						{fMindObjectId : selectedObject.fMindObjectId,
+						fShape : {fShapeType : selectedObject.fShape.fShapeType,
+									fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing
+						}}]);				
+					
+				}
+				else{
+					animWorker.terminate();
+					hasFinished = true;
+					animWorker = null;
+					
+					
+					setTimeout(function(){
+									fJobHandler.resetJobHandler();
+									fJobHandler.pushNewJob(loadingInfo);}, 300);
+					
+					
+				}
+				
+		
+			};	
+
+
+			animWorker.postMessage(objData);		
+
+
 		}
 	};
 	this.onGetLatestEventRecv = function(newJob){
@@ -3705,171 +3736,6 @@ function DrawingObj(drawingCCInterface){
 		fWorker.onmessage = function (event){
 			callBackInterface();			
 		};
-	};
-	
-	//deprrecated
-	var getDrawingFunctionRef = function(type, operation){
-		var retFunc;
-		switch(operation){
-		case "draw" :
-			switch(type){
-			case "CircleShape" :
-				retFunc = fDrawingCCInterface.drawCircleShape;
-				break;
-			case "EllipseShape" :
-				retFunc = fDrawingCCInterface.drawEllipseShape;
-				break;
-			case "RectangleShape" :
-				retFunc = fDrawingCCInterface.drawRectangleShape;
-				break;
-			case "StarShape" :
-				retFunc = fDrawingCCInterface.drawStarShape;
-				break;
-			case "PolygonShape" :
-				retFunc = fDrawingCCInterface.drawPolygonShape;
-				break;
-			case "TextContents" :
-				retFunc = fDrawingCCInterface.drawTextContents;
-				break;
-			case "ImageContents" :
-				retFunc = fDrawingCCInterface.drawImageContents;
-				break;
-			case "MovieContents" :
-				retFunc = fDrawingCCInterface.drawMovieContents;
-				break;
-			case "WebPreviewContents" :
-				retFunc = fDrawingCCInterface.drawWebPreviewContents;
-				break;
-			case "SimplePathEdge" :
-				retFunc = fDrawingCCInterface.drawSimplePathEdge;
-				break;
-			}
-			break;
-		case "erase" :
-			switch(type){
-			case "CircleShape" :
-				retFunc = fDrawingCCInterface.eraseCircleShape;
-				break;
-			case "EllipseShape" :
-				retFunc = fDrawingCCInterface.eraseEllipseShape;
-				break;
-			case "RectangleShape" :
-				retFunc = fDrawingCCInterface.eraseRectangleShape;
-				break;
-			case "StarShape" :
-				retFunc = fDrawingCCInterface.eraseStarShape;
-				break;
-			case "PolygonShape" :
-				retFunc = fDrawingCCInterface.erasePolygonShape;
-				break;
-			case "TextContents" :
-				retFunc = fDrawingCCInterface.eraseTextContents;
-				break;
-			case "ImageContents" :
-				retFunc = fDrawingCCInterface.eraseImageContents;
-				break;
-			case "MovieContents" :
-				retFunc = fDrawingCCInterface.eraseMovieContents;
-				break;
-			case "WebPreviewContents" :
-				retFunc = fDrawingCCInterface.eraseWebPreviewContents;
-				break;
-			case "SimplePathEdge" :
-				retFunc = fDrawingCCInterface.eraseSimplePathEdge;
-				break;
-			case "All" :
-				retFunc = fDrawingCCInterface.eraseAll;
-			}
-			break;
-		case "move" :
-			switch(type){
-			case "CircleShape" :
-				retFunc = fDrawingCCInterface.moveCircleShape;
-				break;
-			case "EllipseShape" :
-				retFunc = fDrawingCCInterface.moveEllipseShape;
-				break;
-			case "RectangleShape" :
-				retFunc = fDrawingCCInterface.moveRectangleShape;
-				break;
-			case "StarShape" :
-				retFunc = fDrawingCCInterface.moveStarShape;
-				break;
-			case "PolygonShape" :
-				retFunc = fDrawingCCInterface.movePolygonShape;
-				break;
-			case "TextContents" :
-				retFunc = fDrawingCCInterface.moveTextContents;
-				break;
-			case "ImageContents" :
-				retFunc = fDrawingCCInterface.moveImageContents;
-				break;
-			case "MovieContents" :
-				retFunc = fDrawingCCInterface.moveMovieContents;
-				break;
-			case "WebPreviewContents" :
-				retFunc = fDrawingCCInterface.moveWebPreviewContents;
-				break;
-			case "SimplePathEdge" :
-				retFunc = fDrawingCCInterface.moveSimplePathEdge;
-				break;
-			}
-			break;
-		case "changeColor" :
-			switch(type){
-			case "CircleShape" :
-				retFunc = fDrawingCCInterface.changeColorOfCircleShape;
-				break;
-			case "EllipseShape" :
-				retFunc = fDrawingCCInterface.changeColorOfEllipseShape;
-				break;
-			case "RectangleShape" : 
-				retFunc = fDrawingCCInterface.changeColorOfRectangleShape;
-				break;
-			case "StarShape" :
-				retFunc = fDrawingCCInterface.changeColorOfStarShape;
-				break;
-			case "PolygonShape" :
-				retFunc = fDrawingCCInterface.changeColorOfPolygonShape;
-				break;
-			case "TextContents" :
-				retFunc = fDrawingCCInterface.changeColorOfTextContents;
-			}
-			break;
-		case "changeOpacity" :
-			switch(type){
-			case "CircleShape" :
-				retFunc = fDrawingCCInterface.changeOpacityOfCircleShape;
-				break;
-			case "EllipseShape" :
-				retFunc = fDrawingCCInterface.changeOpacityOfEllipseShape;
-				break;
-			case "RectangleShape" :
-				retFunc = fDrawingCCInterface.changeOpacityOfRectangleShape;
-				break;
-			case "StarShape" :
-				retFunc = fDrawingCCInterface.changeOpacityOfStarShape;
-				break;
-			case "PolygonShape" :
-				retFunc = fDrawingCCInterface.changeOpacityOfPolygonShape;
-				break;
-			case "TextContents" :
-				retFunc = fDrawingCCInterface.changeOpacityOfTextContents;
-				break;
-			case "ImageContents" :
-				retFunc = fDrawingCCInterface.changeOpacityOfImageContents;
-				break;
-			case "MovieContents" :
-				retFunc = fDrawingCCInterface.changeOpacityOfMovieContents;
-				break;
-			case "WebPreviewContents" :
-				retFunc = fDrawingCCInterface.changeOpacityOfWebPreviewContents;
-				break;
-			}
-			break;
-		}
-		
-		return retFunc;
 	};
 }
 

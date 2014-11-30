@@ -234,8 +234,6 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 			if(childCount >= 0){
 				
 				communicationMindMap.CMOS.push(new Array());
-				// console.log(childCount);
-				// console.log(communicationMindMap.Var5[childCount]);
 				communicationMindMap.CMOS[childCount].push(childMindObjectInfo._id+'');					
 				
 				communicationMindMap.CMOS[childCount].push(childMindObjectInfo.child_mind_map.oid+'');					
@@ -265,20 +263,6 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 							if (err != null){									
 								
 							}
-							// console.log(childMindObjectInfo);
-							
-							
-							
-							/*
-							 * if(currentRelIndex ==
-							 * childMindObjectInfo.related_mind_objects.length){
-							 * if(childCount ==
-							 * resultItem.mind_objects.length){
-							 * console.log(communicationMindMap);
-							 * dbObj.close(); return; } else{ childCount++;
-							 * mindObjectCollection.findOne({id:[resultItem.mind_objects[childCount].oid[0],resultItem.mind_objects[childCount].oid[1]]},loopFunction);
-							 * return; } }
-							 */
 							
 
 							if(relCount >= 0){								
@@ -298,9 +282,7 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 								
 								if(relCount == childMindObjectInfo.related_mind_objects.length){
 									childCount++;
-									if(childCount == resultItem.mind_objects.length){
-										//console.log("efef");
-										//console.log(communicationMindMap.CMOS[2][13]);											
+									if(childCount == resultItem.mind_objects.length){										
 										process.send({replyRequestSocketId : requestSocketId,
 														reply : {retObject : communicationMindMap}});
 										return;
@@ -327,8 +309,6 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 						else{
 							childCount++;
 							if(childCount == resultItem.mind_objects.length){
-								// console.log(communicationMindMap);
-								console.log("afafaf");
 								console.log(communicationMindMap.CMOS[0][12]);									
 								process.send({replyRequestSocketId : requestSocketId,
 											reply : {retObject : communicationMindMap}});
@@ -355,10 +335,8 @@ this.composeCommunicationMindMapAndReply = function(mindMapId,requestSocketId){
 		else{				
 			process.send({replyRequestSocketId : requestSocketId,
 							reply : {retObject : communicationMindMap}});
-			console.log("cccccc");
 		}
 	});
-	// console.log("aaaa");
 		
 	
 	return ;
@@ -467,10 +445,6 @@ this.createMindObjectAndReply = function(info,requestSocketId){
 			});
 		});
 	});
-	
-	console.log(newShape);
-	console.log(newContents);
-	console.log(newMindObject);
 };
 
 
@@ -535,9 +509,7 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 			process.send({replyRequestSocketId : requestSocketId,
 						reply : message});
 		}
-				console.log("ccc");
 		console.log(result);
-				console.log("ccc");
 		if(result != null){
 			putIntoHelperFunction(message,info);
 		}
@@ -608,7 +580,6 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 			newY = parseInt(limitY * info.Y);
 			newZ = parseInt(limitZ * info.Z);
 			
-			console.log("a");
 			mindObjectCollection.findOne({"_id" : newIdMindObject}, function(err, result){
 				if(err !=null){
 					message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
@@ -624,7 +595,6 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 								reply : message});
 					return;
 				}
-				console.log("aa");
 				
 				relatedMindObjects = result.related_mind_objects;
 				
@@ -638,15 +608,6 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 						return;
 					}
 					
-					console.log("aaa");
-							
-					/*if(result == null || result == undefined){
-						message.retString = "Failed to put MindObject("+info.MOID+") into MindMap("+info.DMMID+")";
-						message.retObject = info;
-						process.send({replyRequestSocketId : requestSocketId,
-									reply : message});
-						return;
-					}*/
 					
 					mindMapCollection.update({"_id" : newIdDstMindMap},{"$push" : {"mind_objects" : new DBRef("mindobject", newIdMindObject)}},function(err,result){
 						if(err != null){
@@ -699,9 +660,9 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 									}
 									mutex = true;
 									queryCount++;
-									console.log(queryCount + " / " + relatedMindObjects.length);
+									//console.log(queryCount + " / " + relatedMindObjects.length);
 									mutex = false;
-									console.log(queryCount);
+									//console.log(queryCount);
 									if(queryCount == relatedMindObjects.length){										
 										message.retObject = {Code : CODE_MIND_PUT_INTO,
 															 MMID : info.MMID,
@@ -736,6 +697,8 @@ this.putIntoMindObjectAndReply = function(info,requestSocketId) {
 this.removeMindObjectAndReply = function(info,requestSocketId){
 
 	//Need to add removing Edge Info, And it should returns some object.
+	//Also need to fix bug "Cannot read property 'parent_mind_map' of null"
+	var message = {};
 
 	mindObjectCollection.findOne({"_id" : new ObjectID(info.MOID)}, function(err, result){
 		if(err != null){
@@ -796,6 +759,11 @@ this.removeMindObjectAndReply = function(info,requestSocketId){
 							if(result == null || result == undefined){
 								
 							}
+							message.retObject = info;
+				
+							message.retString = "Succeeded to remove object("+info.MOID+")";
+							process.send({replyRequestSocketId : requestSocketId,
+											reply : message});		
 						});
 					}					
 				});
@@ -815,16 +783,22 @@ this.connectMindObjectAndReply = function(info,requestSocketId) {
 					"edge_type_dependent_info" : info.ETDI
 			
 	};	
+	var message = {};
 	edgeCollection.insert(newEdge,function(err, result){
 		if(err != null){			
 		}		
 		mindObjectCollection.update({"_id" : new ObjectID(info.MOID)},{"$push" : {"related_mind_objects" : {"$ref" : "mindobject","$id" : new ObjectID(info.TMOID)}}},function(err,result2){
 			if(err !=null){				
 			}
-			
 			mindObjectCollection.update({"_id" : new ObjectID(info.TMOID)},{"$push" : {"related_mind_objects" : {"$ref" : "mindobject","$id" : new ObjectID(info.MOID)}}},function(err,result3){
 				if(err !=null){					
 				}				
+
+				message.retObject = info;
+				
+				message.retString = "Succeeded to connect two objects("+info.MOID+ " > " + info.TMOID+")";
+				process.send({replyRequestSocketId : requestSocketId,
+								reply : message});				
 			});			
 		});
 	});
@@ -833,6 +807,7 @@ this.connectMindObjectAndReply = function(info,requestSocketId) {
 };
 
 this.disconnectMindObjectAndReply = function(info, requestSocketId){
+	var message = {};
 	edgeCollection.remove({"$or" : [{"first_mind_object_id" : new ObjectID(info.MOID),"second_mind_object_id" : new ObjectID(info.TMOID)},
 	                                {"first_mind_object_id" : new ObjectID(info.TMOID),"second_mind_object_id" : new ObjectID(info.MOID)}]}
 		,function(err, result){
@@ -849,6 +824,11 @@ this.disconnectMindObjectAndReply = function(info, requestSocketId){
 					if(err != null){
 						
 					}
+					message.retObject = info;
+				
+					message.retString = "Succeeded to dis-connect two objects("+info.MOID+ " ," + info.TMOID+")";
+					process.send({replyRequestSocketId : requestSocketId,
+									reply : message});		
 				});
 			});
 			
