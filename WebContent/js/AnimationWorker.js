@@ -176,7 +176,7 @@ const DefinableAnimInfoFunc_CircleShapeCreation = {
 	}
 };
 
-const DefinableAnimInfoFunc_CircleShapeExpantion = {
+const DefinableAnimInfoFunc_CircleShapeExpansion = {
 	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
 		return 70;
 	},
@@ -216,6 +216,25 @@ const DefinableAnimInfoFunc_RectangleShapeCreation = {
 	}
 };
 
+const DefinableAnimInfoFunc_RectangleShapeExpansion = {
+	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
+		return 70;
+	},
+	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		progressStatusInfo.delta = (finalStatusInfo.fWidth - progressStatusInfo.fWidth)/70;
+		progressStatusInfo.whRatio = finalStatusInfo.fHeight/finalStatusInfo.fWidth;
+		progressStatusInfo.count = 0;
+		//finalStatusInfo.fRadius = 0;
+	},
+	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
+			
+		progressStatusInfo.fWidth += progressStatusInfo.delta;
+		progressStatusInfo.fHeight += progressStatusInfo.delta * progressStatusInfo.whRatio;
+		
+		progressStatusInfo.count++;
+	}
+};
+
 const DefinableAnimInfoFunc_StarShapeCreation = {
 	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
 		return 70;
@@ -241,6 +260,25 @@ const DefinableAnimInfoFunc_StarShapeCreation = {
 };
 
 
+const DefinableAnimInfoFunc_StarShapeExpansion = {
+	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
+		return 70;
+	},
+	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		progressStatusInfo.delta = (finalStatusInfo.fFirstRadius - progressStatusInfo.fFirstRadius)/70;
+		progressStatusInfo.count = 0;
+		//finalStatusInfo.fRadius = 0;
+	},
+	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
+			
+		progressStatusInfo.fFirstRadius += progressStatusInfo.delta;
+		progressStatusInfo.fFirstSecond += progressStatusInfo.delta;
+		
+		progressStatusInfo.count++;
+	}
+};
+
+
 
 
 var functionContainer = {
@@ -253,9 +291,11 @@ var functionContainer = {
 };
 
 functionContainer.set("DefinableAnimInfoFunc_CircleShapeCreation",DefinableAnimInfoFunc_CircleShapeCreation);
-functionContainer.set("DefinableAnimInfoFunc_CircleShapeExpantion",DefinableAnimInfoFunc_CircleShapeExpantion);
+functionContainer.set("DefinableAnimInfoFunc_CircleShapeExpansion",DefinableAnimInfoFunc_CircleShapeExpansion);
 functionContainer.set("DefinableAnimInfoFunc_RectangleShapeCreation",DefinableAnimInfoFunc_RectangleShapeCreation);
+functionContainer.set("DefinableAnimInfoFunc_RectangleShapeExpansion",DefinableAnimInfoFunc_RectangleShapeExpansion);
 functionContainer.set("DefinableAnimInfoFunc_StarShapeCreation",DefinableAnimInfoFunc_StarShapeCreation);
+functionContainer.set("DefinableAnimInfoFunc_StarShapeExpansion",DefinableAnimInfoFunc_StarShapeExpansion);
 
 function EllipseShapeMOCAnimationInfoGenerator(shapeType, shapeTypeDendentInfo){
 	var fShapeType = shapeType;

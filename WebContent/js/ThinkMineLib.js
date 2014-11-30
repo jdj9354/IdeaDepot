@@ -3319,7 +3319,7 @@ function SocketDataCommuHelperRecv (jobHandler,wSocket) {
 
 				interval = 1;
 
-				objData = {definedFuncSetName : "DefinableAnimInfoFunc_CircleShapeExpantion" 
+				objData = {definedFuncSetName : "DefinableAnimInfoFunc_CircleShapeExpansion" 
 								,progressStatusInfo : progressStatusInfo
 								,finalStatusInfo : finalStatusInfo
 								,interval : interval};			
@@ -3329,37 +3329,41 @@ function SocketDataCommuHelperRecv (jobHandler,wSocket) {
 				break;
 			case ShapeTypeEnum.Ellipse :
 				break;
-			case ShapeTypeEnum.Rectangle :
-				/*finalStatusInfo = {};
-				finalStatusInfo.fWidth = tempShapeTypeDependentInfoForDrawing.fWidth;
-				finalStatusInfo.fHeight = tempShapeTypeDependentInfoForDrawing.fHeight;
+			case ShapeTypeEnum.Rectangle :			
+				var whRatio = finalHeight/finalWidth;
+				
+				finalStatusInfo = {};
+				if(whRatio >= 1){
+					finalStatusInfo.fWidth = maxLimit / whRatio;
+					finalStatusInfo.fHeight = maxLimit;
+				}
+				else{
+					finalStatusInfo.fWidth = maxLimit;
+					finalStatusInfo.fHeight = maxLimit * whRatio;					
+				}				
 				
 				progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
-				progressStatusInfo.fWidth = 10;
-				progressStatusInfo.fHeight = 10;
 
 				interval = 1;
 
-				objData = {definedFuncSetName : "DefinableAnimInfoFunc_RectangleShapeCreation" 
+				objData = {definedFuncSetName : "DefinableAnimInfoFunc_RectangleShapeExpansion" 
 								,progressStatusInfo : progressStatusInfo
 								,finalStatusInfo : finalStatusInfo
-								,interval : interval};	*/
+								,interval : interval};	
 				break;
 			case ShapeTypeEnum.Star :
-				/*finalStatusInfo = {};
-				finalStatusInfo.fFirstRadius = tempShapeTypeDependentInfoForDrawing.fFirstRadius;
-				finalStatusInfo.fSecondRadius = tempShapeTypeDependentInfoForDrawing.fSecondRadius;
+				finalStatusInfo = {};
+				finalStatusInfo.fFirstRadius = finalStatusInfo.fFirstRadius > finalStatusInfo.fSecondRadius? maxLimit : maxLimit - 5;
+				finalStatusInfo.fSecondRadius = finalStatusInfo.fFirstRadius > finalStatusInfo.fSecondRadius? maxLimit - 5 : maxLimit;
 				
 				progressStatusInfo = tempShapeTypeDependentInfoForDrawing;			
-				progressStatusInfo.fFirstRadius = finalStatusInfo.fFirstRadius > finalStatusInfo.fSecondRadius? 10 : 5;
-				progressStatusInfo.fSecondRadius = finalStatusInfo.fFirstRadius < finalStatusInfo.fSecondRadius? 10 : 5;
 
 				interval = 1;
 
-				objData = {definedFuncSetName : "DefinableAnimInfoFunc_StarShapeCreation" 
+				objData = {definedFuncSetName : "DefinableAnimInfoFunc_StarShapeExpansion" 
 								,progressStatusInfo : progressStatusInfo
 								,finalStatusInfo : finalStatusInfo
-								,interval : interval};	*/
+								,interval : interval};	
 				break;
 			}
 			
