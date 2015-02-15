@@ -55,7 +55,7 @@ exports.Create = function(data){
 			var newShape = new Shape(decoder.decodeShapeType(data.ST), newShapeTypeDependentInfo);
 			
 			var newContentsTypeDependentInfo = TMO.getObjTypeDependentInfo(decoder.decodeContentsType(data.CT), data.CTDI);
-			var newContents = new Contents(decoder.decodeContentsType(data.CT), newContentsTypeDependentInfo);
+			var newContents = new Contents(decoder.decodeContentsType(data.CT), newContentsTypeDependentInfo, data.CV);
 			
 			var newMindObject = new TMO.MindObject(data.MOID, data.MOID, data.MMID, newShape, newContents, data.X, data.Y, data.Z);
 			
@@ -140,18 +140,76 @@ exports.Create = function(data){
 };
 exports.Read = function(data){
 	console.log("Read");
+	var ret = {};
 	var OpCode =  data.Code;
 	switch (OpCode){
 	case Constants.CODE_MIND_MAP_REQUEST_MIND_INFO :
 		var mindMap = MindMapObjects_HM.get(data.MMID);
 		if(mindMap == null){
 			//TCP Socket Commu and get Info
-		}			
+		}
+		else{
+			
+			var childMindObjCommuArray = [];
+			
+			for(var i=0; i<mindMap.lenOfMindObjectsArray(); i++){
+				var curMindObj = mindMap.getMindObjectOnIndex(i);
+				
+				childMindObjCommuArray.push([]);
+				childMindObjCommuArray[i].push(curMindObj.fMindObjectId);					
+				
+				childMindObjCommuArray[i].push(curMindObj.fChildMindMapId);
+				
+				childMindObjCommuArray[i].push(curMindObj.fX);
+				childMindObjCommuArray[i].push(curMindObj.fY);
+				childMindObjCommuArray[i].push(curMindObj.fZ);
+				
+				childMindObjCommuArray[i].push(encoder.encodeShapeType(curMindObj.fShape.fShapeType));
+				childMindObjCommuArray[i].push(TMO.genArrayForCommu(curMindObj.fShape.fShapeType,curMindObj.fShape.fShapeTypeDependentInfo));
+				
+				childMindObjCommuArray[i].push(encoder.encodeContentsType(curMindObj.fContents.fContentsType));
+				childMindObjCommuArray[i].push(TMO.genArrayForCommu(curMindObj.fContents.fContentsType,curMindObj.fContents.fContentsTypeDependentInfo));
+				childMindObjCommuArray[i].push(curMindObj.fContents.fValue);
+				
+				childMindObjCommuArray[i].push([]);
+				
+				for(var j=0; j<curMindObj.lenOfRelatedObjectsArray(); j++){
+					var curRelMindObj = curMindObj.getRelatedObjectOnIndex(j);
+					var curRelEdge = curMindObj.getConnectedEdgeOnIndex(j);
+					
+					childMindObjCommuArray[i][childMindObjCommuArray[i].length-1].push(curRelMindObj.fMindObjectId);
+					
+					childMindObjCommuArray[i][childMindObjCommuArray[i].length-1].push(encoder.encodeEdgeType(curRelEdge.fEdgeType));
+					childMindObjCommuArray[i][childMindObjCommuArray[i].length-1].push(TMO.genArrayForCommu(curRelEdge.fEdgeType,curRelEdge.fEdgeTypeDependentInfo));					
+				}
+
+
+
+
+			}
+			
+			
+			
+			
+			
+
+			
+			ret.Code = Constants.CODE_MIND_MAP_REQUEST_NEW_MIND_MAP;
+			ret.MMID = data.MMID+'';			
+			ret.TT = mindMap.fTitle;
+			ret.PMOID = mindMap.fParentMindObjectId;			
+			ret.CMOS = childMindObjCommuArray;
+			ret.MAXRD = mindMap.getMaxRelDistance();
+			ret.MAXOC = mindMap.getMaxMindObjectCount();
+			ret.LX = mindMap.getLimitX();;
+			ret.LY = mindMap.getLimitY();;
+			ret.LZ = mindMap.getLimitZ();;			
+		}
 		break;
 	}
 	// change to event emmit
 	return {suc : 1,
-			ret : mindMap,
+			ret : ret,
 			mes : "Success"
 			};
 	
@@ -165,7 +223,7 @@ exports.Update = function(data){
 		var mindMap = MindMapObjects_HM.get(data.MMID);
 		var targetMindObj = null;
 		for(var i=0; i< mindMap.lenOfMindObjectsArray(); i++){
-			if(data.MOID == mindMap.getMindObjectOnIndex(i)){
+			if(data.MOID == mindMap.getMindObjectOnIndex(i).fMindObjectId){
 				targetMindObj = mindMap.getMindObjectOnIndex(i);
 				break;
 			}
@@ -173,6 +231,7 @@ exports.Update = function(data){
 		
 		if(targetMindObj != null){
 			targetMindObj.moveMindObject(data.X, data.Y, data.Z);
+			console.log("move");
 		}
 			
 		ret = data;
@@ -199,10 +258,10 @@ exports.Delete = function(data){
 		var toMindObj = null;
 		
 		for(var i=0; i< mindMap.lenOfMindObjectsArray(); i++){
-			if(data.MOID == mindMap.getMindObjectOnIndex(i)){
+			if(data.MOID == mindMap.getMindObjectOnIndex(i).fMindObjectId){
 				fromMindObj = mindMap.getMindObjectOnIndex(i);
 			}
-			if(data.TMOID == mindMap.getMindObjectOnIndex(i)){
+			if(data.TMOID == mindMap.getMindObjectOnIndex(i).fMindObjectId){
 				toMindObj = mindMap.getMindObjectOnIndex(i);
 			}
 			if(fromMindObj != null && toMindObj != null)
@@ -221,7 +280,7 @@ exports.Delete = function(data){
 		var targetMindObj = null;
 		var targetMindObjIndex = -1;
 		for(var i=0; i< mindMap.lenOfMindObjectsArray(); i++){
-			if(data.MOID == mindMap.getMindObjectOnIndex(i)){
+			if(data.MOID == mindMap.getMindObjectOnIndex(i).fMindObjectId){
 				targetMindObj = mindMap.getMindObjectOnIndex(i);
 				targetMindObjIndex = i;
 				break;

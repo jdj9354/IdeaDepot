@@ -326,9 +326,9 @@ function MindObject (mindObjectId, childMindMapId, parentMindMapId, shape, conte
 	};
 	this.moveMindObject = function(x, y, z){		
 		
-		fX = x;
-		fY = y;
-		fZ = z;
+		this.fX = x;
+		this.fY = y;
+		this.fZ = z;
 
 		
 	};	
@@ -607,29 +607,94 @@ var getObjTypeDependentInfo = function(type, parameterArray){
 	return ret;
 }
 
+var genArrayForCommu = function(type, typeDependentInfo){
+	var ret;
+	switch(type){
+	//Shape
+	case  ShapeTypeEnum.Circle :
+		ret = [typeDependentInfo.fRadius,	//Radius
+			   typeDependentInfo.fColor];	//Color
+		break;
+	case ShapeTypeEnum.Ellipse :
+		ret = [typeDependentInfo.fWidth,	//Width
+			   typeDependentInfo.fHeight,	//Height
+			   typeDependentInfo.fColor];	//Color 
+		break;
+	case  ShapeTypeEnum.Rectangle :
+		ret = [typeDependentInfo.fWidth,	//Width
+			   typeDependentInfo.fHeight,	//Height
+			   typeDependentInfo.fColor,	//Color
+			   typeDependentInfo.fIsRounded];	//IsRounded
+		break;
+	case  ShapeTypeEnum.Star :
+		ret = [typeDependentInfo.fNrPoints,	//Nr of Points
+			   typeDependentInfo.fFirstRadius,	//First Radius
+			   typeDependentInfo.fSecondRadius,	//Second Radius
+			   typeDependentInfo.fColor];	//Color
+		break;
+	case  ShapeTypeEnum.Polygon :
+		ret = [typeDependentInfo.fNrSides,	//Nr of Sides
+			   typeDependentInfo.fRadius,	//Radius
+			   typeDependentInfo.fColor];	//Color
+		break;
+	//Contents
+	case ContentsTypeEnum.Text :
+		ret = [typeDependentInfo.fColor,			//Color
+			   typeDependentInfo.fFontFamily,		//FontFamily
+			   typeDependentInfo.fFontWeight,		//FontWeight
+			   typeDependentInfo.fFontSize];		//FontSize
+		break;
+	case ContentsTypeEnum.Image :
+		ret = [typeDependentInfo.fWidth,			//Width
+			   typeDependentInfo.fHeight,			//Height
+			   typeDependentInfo.fOpacity];			//Opacity                   
+		break;
+	case ContentsTypeEnum.Movie :
+		ret = [typeDependentInfo.fWidth,			//Width
+			   typeDependentInfo.fHeight];			//Height                                      
+		break;
+	case ContentsTypeEnum.WebPreview :
+		ret = [typeDependentInfo.fWidth,			//Width
+			   typeDependentInfo.fHeight,			//Height
+			   typeDependentInfo.fResolution,		//Resolution
+			   typeDependentInfo.fOpacity];			//Opacity  
+		break;
+	case EdgeTypeEnum.SimplePath :
+		ret = [typeDependentInfo.fWidth, typeDependentInfo.fColor];
+		break;
+	default :
+		ret = null;
+		break;
+	}
+	return ret;
+};
 
-if(module != null && module != undefined){
-	module.exports.ContentsTypeEnum= ContentsTypeEnum;
-	module.exports.EdgeTypeEnum= EdgeTypeEnum;
-	module.exports.Encoder = Encoder;
-	module.exports.Decoder = Decoder;
-	module.exports.MindMap= MindMap;
-	module.exports.MindObject= MindObject;
-	module.exports.Edge= Edge;
-	module.exports.EdgeTypeDependentInfo= EdgeTypeDependentInfo;
-	module.exports.SimplePathEdgeTypeDependentInfo= SimplePathEdgeTypeDependentInfo;
-	module.exports.Shape= Shape;
-	module.exports.ShapeTypeDependentInfo= ShapeTypeDependentInfo;
-	module.exports.CircleShapeTypeDependentInfo= CircleShapeTypeDependentInfo;
-	module.exports.EllipseShapeTypeDependentInfo= EllipseShapeTypeDependentInfo;
-	module.exports.RectangleShapeTypeDependentInfo= RectangleShapeTypeDependentInfo;
-	module.exports.StarShapeTypeDependentInfo= StarShapeTypeDependentInfo;
-	module.exports.PolygonShapeTypeDependentInfo= PolygonShapeTypeDependentInfo;
-	module.exports.Contents= Contents;
-	module.exports.ContentsTypeDependentInfo= ContentsTypeDependentInfo;
-	module.exports.TextContentsTypeDependentInfo= TextContentsTypeDependentInfo;
-	module.exports.ImageContentsTypeDependentInfo= ImageContentsTypeDependentInfo;
-	module.exports.MovieContentsTypeDependentInfo= MovieContentsTypeDependentInfo;
-	module.exports.WebPreviewContentsTypeDependentInfo= WebPreviewContentsTypeDependentInfo;
-	module.exports.getObjTypeDependentInfo= getObjTypeDependentInfo;
+
+if(typeof module != "undefined"){
+	if(module != null){
+		module.exports.ContentsTypeEnum= ContentsTypeEnum;
+		module.exports.EdgeTypeEnum= EdgeTypeEnum;
+		module.exports.Encoder = Encoder;
+		module.exports.Decoder = Decoder;
+		module.exports.MindMap= MindMap;
+		module.exports.MindObject= MindObject;
+		module.exports.Edge= Edge;
+		module.exports.EdgeTypeDependentInfo= EdgeTypeDependentInfo;
+		module.exports.SimplePathEdgeTypeDependentInfo= SimplePathEdgeTypeDependentInfo;
+		module.exports.Shape= Shape;
+		module.exports.ShapeTypeDependentInfo= ShapeTypeDependentInfo;
+		module.exports.CircleShapeTypeDependentInfo= CircleShapeTypeDependentInfo;
+		module.exports.EllipseShapeTypeDependentInfo= EllipseShapeTypeDependentInfo;
+		module.exports.RectangleShapeTypeDependentInfo= RectangleShapeTypeDependentInfo;
+		module.exports.StarShapeTypeDependentInfo= StarShapeTypeDependentInfo;
+		module.exports.PolygonShapeTypeDependentInfo= PolygonShapeTypeDependentInfo;
+		module.exports.Contents= Contents;
+		module.exports.ContentsTypeDependentInfo= ContentsTypeDependentInfo;
+		module.exports.TextContentsTypeDependentInfo= TextContentsTypeDependentInfo;
+		module.exports.ImageContentsTypeDependentInfo= ImageContentsTypeDependentInfo;
+		module.exports.MovieContentsTypeDependentInfo= MovieContentsTypeDependentInfo;
+		module.exports.WebPreviewContentsTypeDependentInfo= WebPreviewContentsTypeDependentInfo;
+		module.exports.getObjTypeDependentInfo= getObjTypeDependentInfo;
+		module.exports.genArrayForCommu= genArrayForCommu;
+	}
 }

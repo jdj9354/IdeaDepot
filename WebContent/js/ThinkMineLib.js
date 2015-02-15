@@ -1566,9 +1566,9 @@ function MindObject (mindObjectId, childMindMapId, parentMindMapId, shape, conte
 	};
 	this.moveMindObject = function(x, y, z){		
 		
-		fX = x;
-		fY = y;
-		fZ = z;
+		this.fX = x;
+		this.fY = y;
+		this.fZ = z;
 
 		
 	};	
@@ -2996,7 +2996,7 @@ function SocketHelper(jobHandler,userAuth, mode) {
 	};
 	
 	this.establishRoomConnectionWithNewMM = function(){
-		var mindMapId = UUID.genV4().hexString;
+		var mindMapId = "test";//UUID.genV4().hexString;
 		console.log(mindMapId);
 		fRoom.joinRoom(mindMapId);
 	};

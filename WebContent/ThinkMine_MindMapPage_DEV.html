@@ -133,6 +133,8 @@
 	
 	
 	<button type="button" class="btn btn-primary" data-toggle="button">Single toggle</button>
+	<button type="button" id="newM" >New MindMap (id : "test")</button>
+	<button type="button" id="joinM">Join Mindmap(id : "test")</button>
 	<div class="btn-group" data-toggle="buttons">
 		<label class="btn btn-primary active">
 			<input type="radio" name="options" id="NotSel" checked> Not select
@@ -337,7 +339,7 @@
 			//TMCanvas.initWithMindMap("5419a2a443caa5a02237ae41");
 			var ua = new UserAuth("JDJ9354");
 			ua.getAuthentication("JDJ9354","test");
-			TMCanvas.initWithNewMindMap(ua);
+			//TMCanvas.initWithNewMindMap(ua);
 			//TMCanvas.initWithMindMap("5447c235e95398a80b6b451a");
 			
 			var lastDownTarget, canvas;
@@ -361,6 +363,17 @@
 					//TMCanvas.onPaste(event);			        
 				}			    
 			}, false);
+			
+			
+			$('#newM').click(function() {
+				console.log("new mind map");
+				TMCanvas.initWithNewMindMap(ua);
+			});
+			
+			$('#joinM').click(function() {
+				console.log("join mind map");
+				TMCanvas.initWithMindMap("test",ua);
+			});
 			
 			
 			
