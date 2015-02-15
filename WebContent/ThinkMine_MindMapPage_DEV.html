@@ -333,10 +333,11 @@
 			//firstLayer.onMouseUp = onBGMU;
 
 
-			TMCanvas.connectToServer();
+			//TMCanvas.connectToServer();
 			//TMCanvas.initWithMindMap("5419a2a443caa5a02237ae41");
-			
-			TMCanvas.initWithMindMap("547b23413d77f6ec0e42fd53");
+			var ua = new UserAuth("JDJ9354");
+			ua.getAuthentication("JDJ9354","test");
+			TMCanvas.initWithNewMindMap(ua);
 			//TMCanvas.initWithMindMap("5447c235e95398a80b6b451a");
 			
 			var lastDownTarget, canvas;

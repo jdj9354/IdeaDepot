@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="Room.js"></script>
+
+</head>
+<body>
+
+<p>This example demonstrates how to assign an "oninput" event to an input element.</p>
+
+<p>Write something in the text field to trigger a function.</p>
+
+Enter name: <input type="text" value="#000000" onkeypress="myFunction()"  id="aa" pattern="#[a-f0-9]{6}">
+<input type="number" name="quantity" min="1" max="5">
+<input type="text" id="bb"  ></input>
+<script>
+document.getElementById("bb").onkeypress= test2;/*function(event){
+	return test2(event);
+}*/
+document.getElementById("bb").onkeyup = test;
+function test(){
+	var bb = document.getElementById("bb");
+	if(parseInt(bb.value) > 255)
+		bb.value = 255;
+}
+function test2(evt){
+    var charCode = (evt.which) ? evt.which : evt.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+function myFunction() {
+	var a = document.getElementById("aa");
+	a;
+	var b = event.keyCode;
+	var c = "aaa";
+	c = c.substring(0,c.length-1);;
+	c;
+	if(!((b>=65 && b<=70) || (b>=48 && b<=57) || (b==16 && a.value.lastIndexOf("#")==0)))
+		
+			
+		a.value = a.value.substring(0,(a.value.length)-1);
+	b;
+  //  alert("The value of the input field was changed.");
+}
+</script>
+
+
+	<script>
+	
+		window.onload = function(){
+			function addJavascript(jsname) {
+				var th = document.getElementsByTagName('head')[0];
+				var s = document.createElement('script');
+				s.setAttribute('type','text/javascript');
+				s.setAttribute('src',jsname);
+				th.appendChild(s);
+			}
+
+		//	addJavascript("Room.js");
+
+			var room = new Room("127.0.0.1",52274,"jangduckj");
+			room.roomJoinedCallBack = function(){
+			//	room.leaveRoom();
+				room.publicToCR("adsfaewf",0);
+			};
+			room.joinRoom("FromTcpRoom");
+			 console.log("aaa"); 			
+			 
+			
+			/*var room2 = new Room();
+			room2.roomJoinedCallBack = function(){
+				//room.leaveRoom();
+			};room2.joinRoom("abcdefg2225552");
+
+			setTimeout(function(){ 			 console.log("aaa"); 			var room3 = new Room();
+			room3.roomJoinedCallBack = function(){
+				//room.leaveRoom();
+			};room3.joinRoom("abcdefg2225552");
+			
+			
+			setTimeout(function(){ 			 console.log("aaa"); 			var room4 = new Room();
+			room4.roomJoinedCallBack = function(){
+				//room.leaveRoom();
+			};room4.joinRoom("abcdefg22252323552");
+			
+			
+						setTimeout(function(){			 console.log("aaa"); 			var room5 = new Room();
+			room5.roomJoinedCallBack = function(){
+				//room.leaveRoom();
+			};room5.joinRoom("abcdefg2225552aaaaa"); }, 1000);
+			setTimeout(function(){ }, 0);
+			
+			}, 1000);
+			
+			}, 1000);*/
+			
+
+			
+
+			
+			
+
+			
+			
+
+			
+			
+			
+			
+		};
+		
+
+	</script>
+
+</body>
+</html>

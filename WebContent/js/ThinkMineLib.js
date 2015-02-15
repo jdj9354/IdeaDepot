@@ -26,7 +26,9 @@ addJavascript("/DrawingWorker.js");
 addJavascript("/EventParserWorker.js");
 addJavascript("/AnimationWorker.js");
 addJavascript("/kinetic-v5.0.2.min.js");
-
+addJavascript("/uuid_js/uuid.js");
+addJavascript("/room.js");
+addJavascript("/ThinkMineConstants.js");
 
 function compareIdValue(firstIdValue,secondIdValue){
 	if(firstIdValue == secondIdValue)
@@ -188,26 +190,7 @@ function isThere(url) {
 
 //------------------- OperatonCode Section--------------------------------
 
-const CODE_MIND_ADD = 32;
-const CODE_MIND_DEL = 33;
-const CODE_MIND_MOVE = 34;
-const CODE_MIND_PUT_INTO = 35;
-const CODE_MIND_PULL_OUT = "MPO";
-const CODE_MIND_CONNECT_TO = 37;
-const CODE_MIND_DISCONNECT_FROM = 38;
-const CODE_MIND_CHANGE_COLOR_OF_CONTENTS = 39;
-const CODE_MIND_CHANGE_VALUE_OF_CONTENTS = 40;
-const CODE_MIND_CHANGE_CONTENTS = "MCC";
-const CODE_MIND_CHANGE_COLOR_OF_SHAPE = 42;
-const CODE_MIND_CHANGE_SHAPE = "MCS";
-const CODE_MIND_CHANGE_PARENT_MIND_MAP = "MCPMM";
-const CODE_MIND_RESIZE_SHAPE = 45;
-const CODE_MIND_MAP_REQUEST_MIND_INFO = 65;
 
-/*const SocketCommuDelimiter = "\\";
-const Nested_SocketCommuDelimiter_1 = ",";
-const Nested_SocketCommuDelimiter_2 = "/";
-const Nested_SocketCommuDelimiter_3 = ".";*/
 
 
 
@@ -217,6 +200,9 @@ const DEFAULT_OPACITY_MOVING_MIND_OBJECT = 0.7;
 
 const MEDIA_SERVER_ADDR = "192.168.0.2";
 const WEB_PREVIEW_PORT = "52274";
+
+
+
 const moveCountLimit = 5;
 
 const ShapeTypeEnum = {
@@ -238,6 +224,11 @@ const EdgeTypeEnum = {
 	SimplePath : "SimplePathEdge"
 };
 
+const TM_SOCKET_MODE = {
+	NORMAL_MIND_MAP_CONN : 0,
+	NEW_MIND_MAP_CONN : 1
+};
+
 //const MIN_SHAPE_TYPE_DEPENDENT_INFO = {CircleShape : new CircleShapeTypeDependentInfo(										};
 
 var CreatingCircle;
@@ -252,6 +243,28 @@ var DeletingCircle;
 //We need to get this value from user by closing ThinkMineLibrary Global Scope, and implementing Constructor
 var currentUserId = "jdj9354"; 
 
+
+//------------------- User Auhtentication Section------------------------
+
+
+function UserAuth(userId){
+	var fUserId = userId;
+	var fIsAuthenticated = false;
+	
+	this.getAuthentication = function(userId,passWord){
+		fIsAuthenticated = true; //test Code
+	};
+	
+	this.getUserId = function(){
+		return fUserId;
+	};
+	
+	this.isAuthenticated = function(){
+		return fIsAuthenticated;
+	};
+}
+
+
 //------------------- ThinkMineCanvas Section------------------------------
 
 function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 이객체를 DrawingObj에개 그리도록 Data ByPass
@@ -262,8 +275,9 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	var fDrawingCCInterface = userDefinedDrawingCCInterface;
 	var fDrawingObj = new DrawingObj(fDrawingCCInterface);
 	var fJobHandler = new JobHandler(fDrawingObj);
-	var fSocketHelper = new SocketHelper(fJobHandler);
+	var fSocketHelper = null;// = new SocketHelper(fJobHandler);
 	//this.fSocketHelper = new SocketHelper(fJobHandler); //Test 코드 임시로 Public으로 설정
+	
 	
 	var fSelectedShapeType = "CircleShape";
 	var fSelectedShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,"#FF0000");
@@ -308,7 +322,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	
 	
-	var fIsConnectedToServer = false;
+	//var fIsConnectedToServer = false;
 	var fSelectedObject = null;
 	var fSelectedObjectOriginalOpacitiy = 1;
 	var fMovingObject = null;
@@ -349,6 +363,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		
 	};
 	
+
 	//Menu Interaction Functions
 	
 	this.enableObjectAddMode = function(){
@@ -1043,8 +1058,21 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	//Basic Functionality Functions
 	
-	this.connectToServer = function(){		
-		var ret = fSocketHelper.connectToServer();
+	/*this.connectToServer = function(userAuth){
+		var ret = false;
+		if(userAuth == null || userAuth == undefined){
+			;
+		}
+		else{
+			if(userAuth.isAddModeEnabled()){
+				;
+			}
+			else{
+				fSocketHelper = new SocketHelper(fJobHandler,userAuth);
+				ret = fSocketHelper.connectToServer();
+			}
+		}		
+
 		if(ret)
 			fIsConnectedToServer = true;
 		else{
@@ -1055,19 +1083,81 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	this.disconnectFromServer = function(){
 		if(fIsConnectedToServer)
 			fSocketHelper.disconnectFromServer();
-	};
-	this.initWithMindMap = function(mindMapId){
-		
-		if(!fIsConnectedToServer){
-			console.log("Connect To Server First");
+	};*/
+	this.initWithMindMap = function(mindMapId,userAuth){
+
+		if(userAuth == null || userAuth == undefined){
+			console.log("You should get userAuth");
 			return;
 		}
+		else{
+			if(!userAuth.isAuthenticated()){
+				console.log("You should get userAuth");
+				return;
+			}
+			else{
+				fSocketHelper = new SocketHelper(fJobHandler,userAuth, TM_SOCKET_MODE.NORMAL_MIND_MAP_CONN);
+				fSocketHelper.establishRoomConnection(mindMapId);
+			}
+		}		
+
+		/*if(ret)
+			fIsConnectedToServer = true;
+		else{
+			fIsConnectedToServer = false;
+			console.log("Failed to connect to ThinkMine Server");
+		}*/	
+	
 		
+	
 		//fMindMapId = mindMapId;
 		fMovingObject = null;
 		fSelectedObject = null;
 		
-		fSocketHelper.fSocketDataCommuHelperSender.mindMapRequestMindInfo(mindMapId);
+		//fSocketHelper.fSocketDataCommuHelperSender.mindMapRequestMindInfo(mindMapId);
+	};
+	
+	
+	this.initWithNewMindMap = function(userAuth){
+		
+		
+		if(userAuth == null || userAuth == undefined){
+			console.log("You should get userAuth");
+			return;
+		}
+		else{
+			if(!userAuth.isAuthenticated()){
+				console.log("You should get userAuth");
+				return;
+			}
+			else{
+				fSocketHelper = new SocketHelper(fJobHandler,userAuth,TM_SOCKET_MODE.NEW_MIND_MAP_CONN);
+				fSocketHelper.establishRoomConnectionWithNewMM();
+			}
+		}		
+
+		/*if(ret)
+			fIsConnectedToServer = true;
+		else{
+			fIsConnectedToServer = false;
+			console.log("Failed to connect to ThinkMine Server");
+		}*/	
+	
+		
+	
+		//fMindMapId = mindMapId;
+		fMovingObject = null;
+		fSelectedObject = null;
+		
+		//fSocketHelper.fSocketDataCommuHelperSender.mindMapRequestMindInfo(mindMapId);
+	};
+	
+	this.destroyCurrentMindMap = function(){
+		if(fSocketHelper != null){
+			fSocketHelper.destroyRoomConnection();
+			fSocketHelper = null;
+		}
+			
 	};
 	
 	this.addMindObject = function(x, y, z, shape, contents){
@@ -1102,6 +1192,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		}
 		
 		fSocketHelper.fSocketDataCommuHelperSender.mindObjectCreateSend(fJobHandler.getMindMap().fMindMapId,
+																			UUID.genV4().hexString,
 																			x,
 																			y,
 																			z,
@@ -1895,7 +1986,7 @@ function JobHandler(drawingObj){
 	var handleEventCode = function(eventCode){		
 		//var EventCodeArray = EventCode.split(SocketCommuDelimiter);		
 		switch (eventCode.Code) {
-		
+		case CODE_MIND_MAP_REQUEST_NEW_MIND_MAP : 
 		case CODE_MIND_MAP_REQUEST_MIND_INFO :  //private 함수화 필요
 			handleMindMapRequestEvent(eventCode);			
 			break;
@@ -2102,7 +2193,7 @@ function JobHandler(drawingObj){
 		fMindMap = mindMapTemp;
 		
 		var drawingJob = new Array();
-		drawingJob.push(CODE_MIND_MAP_REQUEST_MIND_INFO);
+		drawingJob.push(eventCode.Code);
 		drawingJob.push(mindObjectsArrayForDrawing);
 		drawingJob.push(edgesArrayForDrawing);
 		fDrawingObj.pushNewJob(drawingJob);
@@ -2800,7 +2891,7 @@ console.log(now);
 			}			
 		}
 		else{
-			if(latestJob.Code == CODE_MIND_MAP_REQUEST_MIND_INFO)
+			if(latestJob.Code == CODE_MIND_MAP_REQUEST_MIND_INFO || latestJob.Code == CODE_MIND_MAP_REQUEST_NEW_MIND_MAP)
 				ret = handleEventCode(latestJob);
 		}
 		if(ret == 0){
@@ -2862,13 +2953,63 @@ console.log(now);
 
 //------------------- SocketCommunication Section--------------------------------------
 
-function SocketHelper(jobHandler) {
+function SocketHelper(jobHandler,userAuth, mode) {
 	
 	var fJobHandler = jobHandler;
-	var fWSocket = null;
-	this.fSocketDataCommuHelperSender;
-	this.fSocketDataCommuHelperRecv;
-	this.connectToServer = function(){
+	//var fWSocket = null;
+	
+	var fUserAuth = userAuth;
+	
+	var fRoom = new Room(THINK_MINE_RDWRAPPER_PARENT_SERVER_ADDR,
+						THINK_MINE_RDWRAPPER_PARENT_SOCKET_IO_SERVER_PORT,
+						fUserAuth.getUserId());
+	
+	this.fSocketDataCommuHelperSender = new SocketDataCommuHelperSender(fJobHandler, fRoom);
+	this.fSocketDataCommuHelperRecv = new SocketDataCommuHelperRecv(fJobHandler, fRoom);
+	
+	var callBackInterface = this.fSocketDataCommuHelperRecv;
+	var self = this;
+	
+	if(mode == TM_SOCKET_MODE.NORMAL_MIND_MAP_CONN){
+		fRoom.roomJoinedCallBack = function(data){
+			self.fSocketDataCommuHelperSender.mindMapRequestMindInfo(data.roomName);
+		};
+	}
+	else if(mode == TM_SOCKET_MODE.NEW_MIND_MAP_CONN){
+		fRoom.roomJoinedCallBack = function(data){
+			self.fSocketDataCommuHelperSender.mindMapRequestNewMindMap(data.roomName);
+		};
+	}
+	
+	fRoom.messageCallBack = function(message){
+
+		if(message.m.Code == CODE_MIND_MAP_REQUEST_MIND_INFO || message.m.Code == CODE_MIND_MAP_REQUEST_NEW_MIND_MAP){
+			callBackInterface.onLoadMindMapRecv(message.m);
+		}
+		else{
+			callBackInterface.onGetLatestEventRecv(message.m);
+		}
+	};
+	
+	this.establishRoomConnection = function(mindMapId){
+		fRoom.joinRoom(mindMapId);
+	};
+	
+	this.establishRoomConnectionWithNewMM = function(){
+		var mindMapId = UUID.genV4().hexString;
+		console.log(mindMapId);
+		fRoom.joinRoom(mindMapId);
+	};
+	
+	this.destroyRoomConnection = function(){
+		fRoom.leaveRoom();
+		fWSocket = null;
+		this.fSocketDataCommuHelperSender.setWSocket(null);
+		this.fSocketDataCommuHelperRecv.setWSocket(null);
+	};
+
+	/*this.connectToServer = function(){
+		
 		fWSocket = io.connect();
 		
 		if(fWSocket == null){
@@ -2885,7 +3026,7 @@ function SocketHelper(jobHandler) {
 		fWSocket.on('NewEvent',function(e){
 			//var InfoString = e.toString();
 			//var OpCodeString =  InfoString.substring(0,InfoString.indexOf(SocketCommuDelimiter));			
-			if(e.Code == CODE_MIND_MAP_REQUEST_MIND_INFO){
+			if(e.Code == CODE_MIND_MAP_REQUEST_MIND_INFO || e.Code == CODE_MIND_MAP_REQUEST_NEW_MIND_MAP){
 				callBackInterface.onLoadMindMapRecv(e);
 			}
 			else{
@@ -2894,35 +3035,38 @@ function SocketHelper(jobHandler) {
 	
 					
 		});
-
+		
+		
+		
+		
 		
 		console.log("Succeeded to connect to Server");
 		return true;
-	};
-	this.disconnectFromServer = function(){
+	};*/
+	/*this.disconnectFromServer = function(){
 		fWSocket.disconnect();
 		fWSocket = null;
 		this.fSocketDataCommuHelperSender.setWSocket(null);
 		this.fSocketDataCommuHelperRecv.setWSocket(null);
-	};
+	};*/
 
 }
 
-function SocketDataCommuHelperSender (jobHandler,wSocket) {
+function SocketDataCommuHelperSender (jobHandler,room) {
 	var fJobHandler  = jobHandler;	
-	var fWSocket = wSocket;
+	var fRoom = room;
 	var fEncoder = new Encoder();
 	var fDecoder = new Decoder();
 	
-	this.setWSocket = function (wSocket){
-		fWSocket = wSocket;
+	this.setFRoom = function (room){
+		fRoom = room;
 	};
-	this.getWSocket = function (){
-		return fWSocket;
+	this.getFRoom = function (){
+		return fRoom;
 	};
 	
-	this.mindObjectCreateSend = function(mindMapId, x, y, z, shape, contents){
-		if(fJobHandler == null || fWSocket == null){
+	this.mindObjectCreateSend = function(mindMapId, mindObjectId, x, y, z, shape, contents){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelper_Sender : Object is not Initialized");
 			return;
 		}
@@ -2959,10 +3103,23 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 		}
 		
 		
+		fRoom.publicToCR({Code : CODE_MIND_ADD,
+							MMID : mindMapId,
+							MOID : mindObjectId,									
+							X : x,
+							Y : y,
+							Z : z,
+							ST : fEncoder.encodeShapeType(tempShapeType),
+							STDI : tempShapeTypeDependentInfoArray,
+							CT : fEncoder.encodeContentsType(tempContentsType),
+							CTDI : tempContentsTypeDependentInfoArray,
+							CV : tempContentsValue},OPERATION_TYPE.CREATE);
 		
 		
-		fWSocket.emit('NewEvent',{Code : CODE_MIND_ADD,
-									MMID : mindMapId,									
+		
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_ADD,
+									MMID : mindMapId,
+									MOID : mindObjectId,									
 									X : x,
 									Y : y,
 									Z : z,
@@ -2970,35 +3127,46 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 									STDI : tempShapeTypeDependentInfoArray,
 									CT : fEncoder.encodeContentsType(tempContentsType),
 									CTDI : tempContentsTypeDependentInfoArray,
-									CV : tempContentsValue});		
+									CV : tempContentsValue});*/		
 		
 	};
 	this.mindObjectRemoveSend = function(mindMapId,mindObjectId){		
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
 		
-		fWSocket.emit('NewEvent',{Code : CODE_MIND_DEL,
+		fRoom.publicToCR({Code : CODE_MIND_DEL,
+							MMID : mindMapId,
+							MOID : mindObjectId},OPERATION_TYPE.DELETE);
+		
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_DEL,
 										MMID : mindMapId,
-										MOID : mindObjectId});
+										MOID : mindObjectId});*/
 	};
 	this.mindObjectMoveSend = function(mindMapId, mindObjectId, x, y, z){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
 		
-		fWSocket.emit('NewEvent',{Code : CODE_MIND_MOVE,
+		fRoom.publicToCR({Code : CODE_MIND_MOVE,
+							MMID : mindMapId,
+							MOID : mindObjectId,
+							X : x,
+							Y : y,
+							Z : z},OPERATION_TYPE.UPDATE);
+		
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_MOVE,
 									MMID : mindMapId,
 									MOID : mindObjectId,
 									X : x,
 									Y : y,
-									Z : z});		
+									Z : z});	*/	
 		
 	};
 	this.mindObjectPutIntoSend = function(mindMapId, mindObject, destinationMindMapId, x, y, z){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
@@ -3048,21 +3216,21 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 						CTDI : tempContentsTypeDependentInfoArray,
 						CV : tempContentsValue};	
 		
-		
-		fWSocket.emit('NewEvent',SendInfo);
+		fRoom.publicToCR(SendInfo,OPERATION_TYPE.UPDATE);
+		//fWSocket.emit('NewEvent',SendInfo);
 	};
 	this.mindObjectPullOutSend = function(mindMapId, mindObjectId, parentMindMapId, x, y, z){	
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
 		var SendInfo = "";
 		
-		
-		fWSocket.emit('NewEvent',SendInfo);
+		fRoom.publicToCR(SendInfo,OPERATION_TYPE.UPDATE);
+		//fWSocket.emit('NewEvent',SendInfo);
 	};
 	this.mindObjectConnectToSend = function(mindMapId, mindObjectId, targetMindObjectId, edgeType, edgeTypeDependentInfo){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
@@ -3078,110 +3246,179 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 			return;
 		}		
 
+		fRoom.publicToCR({Code : CODE_MIND_CONNECT_TO,
+							MMID : mindMapId,
+							MOID : mindObjectId,
+							TMOID : targetMindObjectId,
+							ET : fEncoder.encodeEdgeType(tempEdgeType),
+							ETDI : tempEdgeTypeDependentInfoArray},OPERATION_TYPE.CREATE);
 		
-		fWSocket.emit('NewEvent',{Code : CODE_MIND_CONNECT_TO,
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_CONNECT_TO,
 									MMID : mindMapId,
 									MOID : mindObjectId,
 									TMOID : targetMindObjectId,
 									ET : fEncoder.encodeEdgeType(tempEdgeType),
-									ETDI : tempEdgeTypeDependentInfoArray});	
+									ETDI : tempEdgeTypeDependentInfoArray});*/	
 		
 		
 	};
 	this.mindObjectDisconnectFromSend = function(mindMapId, mindObjectId, targetMindObjectId, edgeType){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}		
 		
-		fWSocket.emit('NewEvent',{Code : CODE_MIND_DISCONNECT_FROM,
+		fRoom.publicToCR({Code : CODE_MIND_DISCONNECT_FROM,
+							MMID : mindMapId,
+							MOID : mindObjectId,
+							TMOID : targetMindObjectId,
+							ET : fEncoder.encodeEdgeType(edgeType)},OPERATION_TYPE.DELETE);
+		
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_DISCONNECT_FROM,
 									MMID : mindMapId,
 									MOID : mindObjectId,
 									TMOID : targetMindObjectId,
-									ET : fEncoder.encodeEdgeType(edgeType)});	
+									ET : fEncoder.encodeEdgeType(edgeType)});	*/
 	};
 	this.mindObjectChangeColorOfContentsSend = function(mindMapId, mindObjectId, colorCode){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
-		fWSocket.emit('NewEvent',{Code : CODE_MIND_CHANGE_COLOR_OF_CONTENTS,
+		
+		fRoom.publicToCR({Code : CODE_MIND_CHANGE_COLOR_OF_CONTENTS,
+							MMID : mindMapId,
+							MOID : mindObjectId,
+							CC : colorCode},OPERATION_TYPE.UPDATE);
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_CHANGE_COLOR_OF_CONTENTS,
 			MMID : mindMapId,
 			MOID : mindObjectId,
-			CC : colorCode});	
+			CC : colorCode});	*/
 	};
 	this.mindObjectChangeValueOfContentsSend = function(mindMapId, mindObjectId, contentsType, contentsValue){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
-		fWSocket.emit('NewEvent',{Code : CODE_MIND_CHANGE_VALUE_OF_CONTENTS,
+		
+		fRoom.publicToCR({Code : CODE_MIND_CHANGE_VALUE_OF_CONTENTS,
+							MMID : mindMapId,
+							MOID : mindObjectId,
+							CT : fEncoder.encodeContentsType(contentsType),
+							CV : contentsValue},OPERATION_TYPE.UPDATE);
+			
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_CHANGE_VALUE_OF_CONTENTS,
 			MMID : mindMapId,
 			MOID : mindObjectId,
 			CT : fEncoder.encodeContentsType(contentsType),
-			CV : contentsValue});	
+			CV : contentsValue});*/	
 	};
 	this.mindObjectChangeContentsSend = function(mindMapId, mindObjectId, contentsType, contents){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
 
 	};
 	this.mindObjectChangeColorOfShapeSend = function(mindMapId, mindObjectId, colorCode){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
 		
-		fWSocket.emit('NewEvent',{Code : CODE_MIND_CHANGE_COLOR_OF_SHAPE,
+		fRoom.publicToCR({Code : CODE_MIND_CHANGE_COLOR_OF_SHAPE,
+							MMID : mindMapId,
+							MOID : mindObjectId,
+							CC : colorCode},OPERATION_TYPE.UPDATE);
+		
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_CHANGE_COLOR_OF_SHAPE,
 			MMID : mindMapId,
 			MOID : mindObjectId,
-			CC : colorCode});	
+			CC : colorCode});	*/
 	};	
 	this.mindObjectChangeShape = function(mindMapId, mindObjectId, shapeType){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
 		var SendInfo = "";
 		
-		
-		fWSocket.emit('NewEvent',SendInfo);
+		fRoom.publicToCR(SendInfo,OPERATION_TYPE.UPDATE);
+		//fWSocket.emit('NewEvent',SendInfo);
 	};
 	this.mindObjectChangeParentMindMapSend = function(mindMapId, mindObjectId, targetMindMapId){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
 		var SendInfo = "";
 		
-		
-		fWSocket.emit('NewEvent',SendInfo);
+		fRoom.publicToCR(SendInfo,OPERATION_TYPE.UPDATE);
+		//fWSocket.emit('NewEvent',SendInfo);
 	};
 	this.mindObjectResizeShapeSend = function(mindMapId,mindObjectId, shape){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
 		
 		var tempShapeTypeDependentInfoArray = genArrayForCommu(shape.fShapeType, shape.fShapeTypeDependentInfo);
+
+		fRoom.publicToCR({Code : CODE_MIND_RESIZE_SHAPE,
+							MMID : mindMapId,
+							MOID : mindObjectId,
+							ST : fEncoder.encodeShapeType(shape.fShapeType),
+							STDI : tempShapeTypeDependentInfoArray},OPERATION_TYPE.UPDATE);			
 		
-		fWSocket.emit('NewEvent',{Code : CODE_MIND_RESIZE_SHAPE,
+		
+/*		fWSocket.emit('NewEvent',{Code : CODE_MIND_RESIZE_SHAPE,
 			MMID : mindMapId,
 			MOID : mindObjectId,
 			ST : fEncoder.encodeShapeType(shape.fShapeType),
-			STDI : tempShapeTypeDependentInfoArray});	
+			STDI : tempShapeTypeDependentInfoArray});	*/
 		
 	};
 
 	this.mindMapRequestMindInfo = function(mindMapId){	
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
-		fWSocket.emit('NewEvent',{Code : CODE_MIND_MAP_REQUEST_MIND_INFO,
+		
+		fRoom.privateToSelf({Code : CODE_MIND_MAP_REQUEST_MIND_INFO,
+							MMID : mindMapId},OPERATION_TYPE.READ);
+		
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_MAP_REQUEST_MIND_INFO,
+										MMID : mindMapId});*/
+	};
+	
+	
+	/*this.newMindMapRequestMindInfo = function(mindMapId){	
+		if(fJobHandler == null || fRoom == null){
+			console.log("SocketDataCommuHelperSender : Object is not Initialized");
+			return;
+		}
+		
+		fRoom.privateToSelf({Code : CODE_MIND_MAP_REQUEST_NEW_MIND_MAP,
+							MMID : mindMapId},OPERATION_TYPE.CREATE);
+		
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_MAP_REQUEST_MIND_INFO,
 										MMID : mindMapId});
+	};*/
+	
+	
+	this.mindMapRequestNewMindMap = function(mindMapId){	
+		if(fJobHandler == null || fRoom == null){
+			console.log("SocketDataCommuHelperSender : Object is not Initialized");
+			return;
+		}
+		
+		
+		fRoom.privateToSelf({Code : CODE_MIND_MAP_REQUEST_NEW_MIND_MAP,
+								MMID : mindMapId},OPERATION_TYPE.CREATE);
+										
+		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_MAP_REQUEST_NEW_MIND_MAP,
+										MMID : UUID.genV4()});*/
 	};
 	
 	var genArrayForCommu = function(type, typeDependentInfo){
@@ -3250,19 +3487,19 @@ function SocketDataCommuHelperSender (jobHandler,wSocket) {
 
 
 
-function SocketDataCommuHelperRecv (jobHandler,wSocket) {
+function SocketDataCommuHelperRecv (jobHandler,room) {
 	var fJobHandler = jobHandler;
-	var fWSocket = wSocket;
+	var fRoom = room;
 	
-	this.setWSocket = function(wSocket){
-		fWSocket = wSocket;
+	this.setFRoom = function(room){
+		fRoom = room;
 	};
-	this.getWSocket = function (){
-		return fWSocket;
+	this.getFRoom = function (){
+		return fRoom;
 	};
 	
 	this.onLoadMindMapRecv = function(loadingInfo){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
@@ -3408,7 +3645,7 @@ function SocketDataCommuHelperRecv (jobHandler,wSocket) {
 		}
 	};
 	this.onGetLatestEventRecv = function(newJob){
-		if(fJobHandler == null || fWSocket == null){
+		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
 		}
@@ -3480,6 +3717,7 @@ function DrawingObj(drawingCCInterface){
 	
 	var handleEventCode = function(drawingJob){		
 		switch (drawingJob[0]) {
+		case CODE_MIND_MAP_REQUEST_NEW_MIND_MAP :
 		case CODE_MIND_MAP_REQUEST_MIND_INFO :
 			drawMindMap(drawingJob[1],drawingJob[2]);			
 			break;
