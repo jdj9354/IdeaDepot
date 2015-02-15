@@ -156,6 +156,7 @@ exports.Update = function(data){
 		for(var i=0; i< mindMap.lenOfMindObjectsArray(); i++){
 			if(data.MOID == mindMap.getMindObjectOnIndex(i)){
 				targetMindObj = mindMap.getMindObjectOnIndex(i);
+				break;
 			}
 		}
 		
@@ -176,7 +177,40 @@ exports.Update = function(data){
 };
 exports.Delete = function(data){
 
+	var OpCode =  data.Code;
+	var resultMes = {};
+
+	switch (OpCode){
+	case Constants.CODE_MIND_DISCONNECT_FROM :
+		var mindMap = MindMapObjects_HM.get(data.MMID);
+		var fromMindObj = null;
+		var toMindObj = null;
+		
+		for(var i=0; i< mindMap.lenOfMindObjectsArray(); i++){
+			if(data.MOID == mindMap.getMindObjectOnIndex(i)){
+				fromMindObj = mindMap.getMindObjectOnIndex(i);
+			}
+			if(data.TMOID == mindMap.getMindObjectOnIndex(i)){
+				toMindObj = mindMap.getMindObjectOnIndex(i);
+			}
+			if(fromMindObj != null && toMindObj != null)
+				break;
+		}
+		
+		if(fromMindObj != null && toMindObj != null){
+			fromMindObj.disconnectFrom(toMindObj);
+		}
+			
+		resultMes = data;
+		
+		break;
+	}
+
 	DBOPerationQueue.push(data);
+	
+	return {suc : 1,
+			mes : resultMes
+			};
 };
 exports.StoreBack = function(data){
 
