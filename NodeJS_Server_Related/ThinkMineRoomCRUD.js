@@ -37,7 +37,7 @@ var decoder = new TMO.Decoder();
 
 exports.Create = function(data){
 		var OpCode =  data.Code;
-		var resultMes = {};
+		var ret = {};
 
 		switch (OpCode){
 		case Constants.CODE_MIND_ADD :
@@ -46,6 +46,7 @@ exports.Create = function(data){
 
 			if(mindMap == null){
 				return {suc : 0,
+						ret : null,
 						mes : "There is no such mindMap" + data.MMID
 						};
 			}
@@ -61,7 +62,7 @@ exports.Create = function(data){
 			mindMap.pushNewMindObject(newMindObject);
 			
 			data.CMMID = null;
-			resultMes = data;
+			ret = data;
 			
 			
 			break;
@@ -70,6 +71,7 @@ exports.Create = function(data){
 			
 			if(mindMap == null){
 				return {suc : 0,
+						ret : null,
 						mes : "There is no such mindMap" + data.MMID
 						};
 			}
@@ -90,6 +92,7 @@ exports.Create = function(data){
 			if(mindObj == null || targetMindObj == null){
 
 				return {suc : 0,
+						ret : null,
 						mes : "There is no such mindObj " + data.MOID + " / " + data.TMOID
 						};
 			}
@@ -97,34 +100,41 @@ exports.Create = function(data){
 			var newEdgeTypeDependentInfo = TMO.getObjTypeDependentInfo(decoder.decodeEdgeType(data.ET), data.ETDI);			
 
 			mindObj.connectTo(targetMindObj, decoder.decodeEdgeType(data.ET), newEdgeTypeDependentInfo);
-			resultMes = data;
+			ret = data;
 			
 			break;
 		case Constants.CODE_MIND_MAP_REQUEST_NEW_MIND_MAP :
-			var newMindMap = new TMO.MindMap(data.MMID,'');
-			MindMapObjects_HM.set(data.MMID,newMindMap);
+			if(!MindMapObjects_HM.has(data.MMID)){
+				var newMindMap = new TMO.MindMap(data.MMID,'');
+				MindMapObjects_HM.set(data.MMID,newMindMap);
 
-			resultMes.Code = Constants.CODE_MIND_MAP_REQUEST_NEW_MIND_MAP;
-			resultMes.MMID = data.MMID+'';			
-			resultMes.TT = "No Title";
-			resultMes.PMOID = '';			
-			resultMes.CMOS = new Array();
-			resultMes.MAXRD = 300;
-			resultMes.MAXOC = 100;
-			resultMes.LX = 1000;
-			resultMes.LY = 600;
-			resultMes.LZ = 1000;			
+				ret.Code = Constants.CODE_MIND_MAP_REQUEST_NEW_MIND_MAP;
+				ret.MMID = data.MMID+'';			
+				ret.TT = "No Title";
+				ret.PMOID = '';			
+				ret.CMOS = new Array();
+				ret.MAXRD = 300;
+				ret.MAXOC = 100;
+				ret.LX = 1000;
+				ret.LY = 600;
+				ret.LZ = 1000;			
 			
-			console.log(resultMes);
-			console.log('herehere');
-			
-			break;
+				
+				break;
+			}
+			else{
+				return {suc : 0,
+						ret : null,
+						mes : "Duplicated MindMapId : " + data.MMID
+						};
+			}
 		}
 		
 		DBOPerationQueue.push(data);
 		
 		return {suc : 1,
-				mes : resultMes
+				ret : ret,
+				mes : "Success"
 				};
 
 };
@@ -141,13 +151,14 @@ exports.Read = function(data){
 	}
 	// change to event emmit
 	return {suc : 1,
-			mes : mindMap
+			ret : mindMap,
+			mes : "Success"
 			};
 	
 };
 exports.Update = function(data){
 	var OpCode =  data.Code;
-	var resultMes = {};
+	var ret = {};
 
 	switch (OpCode){
 	case Constants.CODE_MIND_MOVE :
@@ -164,7 +175,7 @@ exports.Update = function(data){
 			targetMindObj.moveMindObject(data.X, data.Y, data.Z);
 		}
 			
-		resultMes = data;
+		ret = data;
 		
 		break;
 	}
@@ -172,13 +183,14 @@ exports.Update = function(data){
 	DBOPerationQueue.push(data);
 	
 	return {suc : 1,
-			mes : resultMes
+			ret : ret,
+			mes : "Success"
 			};
 };
 exports.Delete = function(data){
 
 	var OpCode =  data.Code;
-	var resultMes = {};
+	var ret = {};
 
 	switch (OpCode){
 	case Constants.CODE_MIND_DISCONNECT_FROM :
@@ -201,7 +213,27 @@ exports.Delete = function(data){
 			fromMindObj.disconnectFrom(toMindObj);
 		}
 			
-		resultMes = data;
+		ret = data;
+		
+		break;
+	case Constants.CODE_MIND_DEL :
+		var mindMap = MindMapObjects_HM.get(data.MMID);
+		var targetMindObj = null;
+		var targetMindObjIndex = -1;
+		for(var i=0; i< mindMap.lenOfMindObjectsArray(); i++){
+			if(data.MOID == mindMap.getMindObjectOnIndex(i)){
+				targetMindObj = mindMap.getMindObjectOnIndex(i);
+				targetMindObjIndex = i;
+				break;
+			}
+		}
+		
+		if(targetMindObj != null){
+			mindMap.removeMindObjectOnIndex(targetMindObjIndex);
+			targetMindObj.removeMindObject();
+		}
+			
+		ret = data;
 		
 		break;
 	}
@@ -209,7 +241,8 @@ exports.Delete = function(data){
 	DBOPerationQueue.push(data);
 	
 	return {suc : 1,
-			mes : resultMes
+			ret : ret,	
+			mes : "Success"
 			};
 };
 exports.StoreBack = function(data){
