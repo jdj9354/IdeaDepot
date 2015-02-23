@@ -10,7 +10,7 @@ public class RoomRealtedFunctions {
 	
 	private static final String SPACE_DELIMITER = " ";
 	
-	public static void messageCallbackImplementation(String Message){
+	public static void clientMessageCallbackImplementation(String Message){
 		MessageItems receivedMessage = new MessageItems(Message){
 
 			@Override
