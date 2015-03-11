@@ -24,4 +24,10 @@ public class Constants {
 	public static final int CODE_MIND_RESIZE_SHAPE = 45;
 	public static final int CODE_MIND_MAP_REQUEST_MIND_INFO = 65;
 	public static final int CODE_MIND_MAP_REQUEST_NEW_MIND_MAP = 66;
+	
+	
+	public static final String HBASE_MASTER_ADDR = "127.0.0.1";
+	public static final String[] HBASE_ZK_QUORUM_ADDRS = {"127.0.0.1"};
+	public static final String HBASE_ZK_CLIENT_PORT = "2181";
+
 }
