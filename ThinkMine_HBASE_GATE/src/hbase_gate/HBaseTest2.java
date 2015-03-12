@@ -1,25 +1,16 @@
 package hbase_gate;
 
 import org.apache.hadoop.conf.Configuration;
-
 import org.apache.hadoop.hbase.HBaseConfiguration;
-
 import org.apache.hadoop.hbase.HColumnDescriptor;
-
 import org.apache.hadoop.hbase.HTableDescriptor;
-
+import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
-
 import org.apache.hadoop.hbase.client.HTable;
-
 import org.apache.hadoop.hbase.client.Put;
-
 import org.apache.hadoop.hbase.client.Result;
-
 import org.apache.hadoop.hbase.client.ResultScanner;
-
 import org.apache.hadoop.hbase.client.Scan;
-
 import org.apache.hadoop.hbase.util.Bytes;
 
 
@@ -66,6 +57,7 @@ public class HBaseTest2 {
 				HTableDescriptor tableDs = new HTableDescriptor("key1");
 
 				tableDs.addFamily(new HColumnDescriptor("cf"));
+				
 
 				hBaseAdmin.createTable(tableDs);
 
@@ -80,7 +72,7 @@ public class HBaseTest2 {
 			Put p = new Put(Bytes.toBytes("row1"));
 
 			p.add(Bytes.toBytes("cf"), Bytes.toBytes("a"), Bytes.toBytes("value1"));
-
+		//	p.add(Bytes.toBytes("dcftest"), Bytes.toBytes("da"), Bytes.toBytes("dvalue1"));
 			hTable.put(p);
 
 			
@@ -96,14 +88,21 @@ public class HBaseTest2 {
 			p = new Put(Bytes.toBytes("row3"));
 
 			p.add(Bytes.toBytes("cf"), Bytes.toBytes("c"), Bytes.toBytes("value3"));
+			p.add(Bytes.toBytes("cf"), Bytes.toBytes("c"), Bytes.toBytes("value4"));
 
 			hTable.put(p);
 
 		
 
 			Scan s = new Scan();
-
-			ResultScanner scanner = hTable.getScanner(s);
+			
+			Get get = new Get(Bytes.toBytes("row3"));
+			Result result = hTable.get(get);
+			
+			byte[] val = result.getValue(Bytes.toBytes("cf"), Bytes.toBytes("d"));
+			System.out.println("Value: " + Bytes.toString(val));
+			
+			ResultScanner scanner = hTable.getScanner(Bytes.toBytes("cf"),Bytes.toBytes("d"));
 
 			
 
