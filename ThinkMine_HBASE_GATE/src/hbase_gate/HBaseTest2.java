@@ -1,5 +1,7 @@
 package hbase_gate;
 
+import java.util.Map;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
@@ -29,7 +31,6 @@ public class HBaseTest2 {
     config.set("hbase.zookeeper.quorum", "127.0.0.1");
     config.set("hbase.zookeeper.property.clientPort","2181");
 
-				
 
 		try {
 
@@ -88,7 +89,7 @@ public class HBaseTest2 {
 			p = new Put(Bytes.toBytes("row3"));
 
 			p.add(Bytes.toBytes("cf"), Bytes.toBytes("c"), Bytes.toBytes("value3"));
-			p.add(Bytes.toBytes("cf"), Bytes.toBytes("c"), Bytes.toBytes("value4"));
+			p.add(Bytes.toBytes("cf"), Bytes.toBytes("d"), Bytes.toBytes("value4"));
 
 			hTable.put(p);
 
@@ -99,8 +100,18 @@ public class HBaseTest2 {
 			Get get = new Get(Bytes.toBytes("row3"));
 			Result result = hTable.get(get);
 			
-			byte[] val = result.getValue(Bytes.toBytes("cf"), Bytes.toBytes("d"));
-			System.out.println("Value: " + Bytes.toString(val));
+			Map<byte[],byte[]> family = result.getFamilyMap(Bytes.toBytes("cf"));
+		
+			
+			for(Map.Entry<byte[],byte[]> entry : family.entrySet()) {
+				   byte [] qualifier = entry.getKey();
+				   byte [] value = entry.getValue();
+				   System.out.println("qualifier: " + Bytes.toString(qualifier));
+				   System.out.println("Value: " + Bytes.toString(value));
+				}
+			
+			byte[] val = result.getValue(Bytes.toBytes("cf"), Bytes.toBytes("c"));
+			//System.out.println("Value: " + Bytes.toString(val));
 			
 			ResultScanner scanner = hTable.getScanner(Bytes.toBytes("cf"),Bytes.toBytes("d"));
 
