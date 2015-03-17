@@ -14,6 +14,9 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 
 
@@ -24,7 +27,17 @@ public class HBaseTest2 {
 
 
 	public static void main(String[] args) {
-
+		/*String Test = "[1,\"computer\"]";
+		JSONParser parser = new JSONParser();
+		JSONArray test = null;
+		try {
+			test = (JSONArray)parser.parse(Test);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for(int i=0; i<test.size();i++)
+			System.out.println(test.get(i));*/
 		Configuration config = HBaseConfiguration.create();
 
 		config.set("hbase.master", "127.0.0.1"); 
