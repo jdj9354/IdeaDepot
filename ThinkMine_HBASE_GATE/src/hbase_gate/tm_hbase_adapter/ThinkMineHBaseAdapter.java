@@ -15,6 +15,7 @@ import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.MasterNotRunningException;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.ZooKeeperConnectionException;
+import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTable;
@@ -146,7 +147,8 @@ public class ThinkMineHBaseAdapter {
 		mContentsHTable = new HTable(mHBaseConfig, TBL_CONTENTS);
 	}
 
-	public void insertNewMindMapInfo(JSONObject aMindMapInfo) throws RetriesExhaustedWithDetailsException, InterruptedIOException {
+	public void insertNewMindMapInfo(JSONObject aMindMapInfo) throws RetriesExhaustedWithDetailsException, InterruptedIOException
+																	, CRUDOperationFailException{
 		String mindMapId = (String) aMindMapInfo.get("MMID");
 		String title = "No Title";
 		String parentMindObjectId = "";
@@ -186,7 +188,8 @@ public class ThinkMineHBaseAdapter {
 
 	}
 	
-	public void insertNewMindObjectInfo(JSONObject aMindObjectInfo) throws RetriesExhaustedWithDetailsException, InterruptedIOException {
+	public void insertNewMindObjectInfo(JSONObject aMindObjectInfo) throws RetriesExhaustedWithDetailsException, InterruptedIOException 
+																		, CRUDOperationFailException{
 		String mindObjectId = (String) aMindObjectInfo.get("MOID");
 		String childMindMapId = mindObjectId;
 		String parentMindMapId = (String) aMindObjectInfo.get("MMID");
@@ -238,7 +241,66 @@ public class ThinkMineHBaseAdapter {
 
 	}
 	
-	public void mindObjectCoordUpdate(JSONObject moveInfo) throws RetriesExhaustedWithDetailsException, InterruptedIOException{
+	public void removeMindObjectInfo(JSONObject removeInfo) throws IOException, CRUDOperationFailException{
+		
+		
+		String removeMindObjectId = (String)removeInfo.get("MOID");
+		byte[] removeMindObjectIdByte = Bytes.toBytes(removeMindObjectId);
+		
+		Get get = new Get( Bytes.toBytes(removeMindObjectId));
+		Result result = mMindObjectHTable.get(get);
+		
+		if(result == null)
+			throw new CRUDOperationFailException();
+		
+		byte[] parentMindMapIdByte = result.getValue(CF_MIND_OBJECT_BYTE[2], CF_MIND_OBJECT_BYTE[2]);
+		
+		
+		get = new Get(parentMindMapIdByte);
+		Result mindMapResult = mMindMapHTable.get(get);
+		
+		if(mindMapResult == null)
+			throw new CRUDOperationFailException();
+		
+		
+		Delete delete = new Delete(parentMindMapIdByte);
+		delete.deleteColumn(CF_MIND_MAP_BYTE[3], removeMindObjectIdByte);
+		mMindMapHTable.delete(delete);
+		
+		delete = new Delete(removeMindObjectIdByte);		
+		mContentsHTable.delete(delete);
+		
+		mShapeHTable.delete(delete);
+		
+		
+		Map<byte[], byte[]> relMindObjectsFamiliy = result.getFamilyMap(CF_MIND_OBJECT_BYTE[8]);
+
+		for (Map.Entry<byte[], byte[]> entry : relMindObjectsFamiliy.entrySet()) {
+			byte[] relMOIdByte = entry.getValue();
+			String relMOId = Bytes.toString(relMOIdByte);
+			
+			
+			StringBuilder sb = new StringBuilder();
+			
+			String edgeId = removeMindObjectId.compareTo(relMOId) > 0 ? 
+					(sb.append(removeMindObjectId).append(relMOId)).toString() : 
+					(sb.append(relMOId).append(removeMindObjectId)).toString();
+					
+			delete = new Delete(Bytes.toBytes(edgeId));
+			mEdgeHTable.delete(delete);
+			
+			delete = new Delete(relMOIdByte);
+			delete.deleteColumn(CF_MIND_OBJECT_BYTE[8], removeMindObjectIdByte);
+			mMindObjectHTable.delete(delete);		
+
+		}
+		
+		delete = new Delete(removeMindObjectIdByte);
+		mMindObjectHTable.delete(delete);
+	}
+	
+	public void mindObjectCoordUpdate(JSONObject moveInfo) throws RetriesExhaustedWithDetailsException, InterruptedIOException
+																, CRUDOperationFailException{
 		String mindMapId = (String)moveInfo.get("MMID");
 		String mindObjectId = (String)moveInfo.get("MOID");
 		
@@ -255,8 +317,51 @@ public class ThinkMineHBaseAdapter {
 		
 		mMindObjectHTable.put(p);
 	}
+	
+	public void connectMindObjectEach(JSONObject connectInfo) throws IOException, CRUDOperationFailException{
+		//String mindMapId = (String)connectInfo.get("MMID");
+		//byte[] mindMapIdByte = Bytes.toBytes(mindMapId);
+		
+		String originMindObjectId = (String)connectInfo.get("MOID");
+		byte[] originMindObjectIdByte = Bytes.toBytes(originMindObjectId);
+		
+		String targetMindObjectId = (String)connectInfo.get("TMOID");
+		byte[] targetMindObjectIdByte = Bytes.toBytes(targetMindObjectId);
+		
+		
+		StringBuilder sb = new StringBuilder();
+		
+		String edgeId = originMindObjectId.compareTo(targetMindObjectId) > 0 ? 
+				(sb.append(originMindObjectId).append(targetMindObjectId)).toString() : 
+				(sb.append(targetMindObjectId).append(originMindObjectId)).toString();
+		byte[] edgeIdByte = edgeId.getBytes();
+				
+		int edgeType = (int)connectInfo.get("ET");
+		String edgeTypeDependentInfo = ((JSONArray)connectInfo.get("ETDI")).toString();
+		
+		Put put = new Put(edgeIdByte);
+		put.add(CF_EDGE_BYTE[0], CF_EDGE_BYTE[0], originMindObjectIdByte);
+		put.add(CF_EDGE_BYTE[1], CF_EDGE_BYTE[1], targetMindObjectIdByte);
+		put.add(CF_EDGE_BYTE[2], CF_EDGE_BYTE[2], Bytes.toBytes(edgeType));
+		put.add(CF_EDGE_BYTE[3], CF_EDGE_BYTE[3], Bytes.toBytes(edgeTypeDependentInfo));
+		mEdgeHTable.put(put);
+		
+		//put = new Put(mindMapIdByte);
+		//put.add(CF_MIND_MAP_BYTE[])
+		
+		put = new Put(originMindObjectIdByte);
+		put.add(CF_MIND_OBJECT_BYTE[8],targetMindObjectIdByte,targetMindObjectIdByte);
+		put.add(CF_MIND_OBJECT_BYTE[9],edgeIdByte,edgeIdByte);
+		mMindMapHTable.put(put);
+		
+		put = new Put(targetMindObjectIdByte);
+		put.add(CF_MIND_OBJECT_BYTE[8],originMindObjectIdByte,originMindObjectIdByte);
+		put.add(CF_MIND_OBJECT_BYTE[9],edgeIdByte,edgeIdByte);
+		mMindMapHTable.put(put);
+	}
 
-	public JSONObject fetchMindMapInfo(String aMindMapId) throws IOException, ParseException {
+	public JSONObject fetchMindMapInfo(String aMindMapId) throws IOException, ParseException
+																, CRUDOperationFailException{
 		JSONObject retObj = null;
 		JSONParser parser = new JSONParser();
 
@@ -346,8 +451,7 @@ public class ThinkMineHBaseAdapter {
 			tempQuali = Bytes.toBytes(CF_MIND_OBJECT[8]);
 			Map<byte[], byte[]> relMindObjectsFamiliy = childMindObjectInfo.getFamilyMap(tempQuali);
 
-			for (Map.Entry<byte[], byte[]> innerEntry : relMindObjectsFamiliy
-					.entrySet()) {
+			for (Map.Entry<byte[], byte[]> innerEntry : relMindObjectsFamiliy.entrySet()) {
 				String relMOId = Bytes.toString(innerEntry.getValue());
 				curMORelInfo.add(relMOId);
 
