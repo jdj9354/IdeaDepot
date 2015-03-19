@@ -358,6 +358,78 @@ public class ThinkMineHBaseAdapter {
 		put.add(CF_MIND_OBJECT_BYTE[8],originMindObjectIdByte,originMindObjectIdByte);
 		put.add(CF_MIND_OBJECT_BYTE[9],edgeIdByte,edgeIdByte);
 		mMindMapHTable.put(put);
+		
+		return;
+	}
+	
+	
+	public void disconnectMindObjectEach(JSONObject disconnectInfo) throws IOException {
+		String originMindObjectId = (String)disconnectInfo.get("MOID");
+		byte[] originMindObjectIdByte = Bytes.toBytes(originMindObjectId);
+		
+		String targetMindObjectId = (String)disconnectInfo.get("TMOID");
+		byte[] targetMindObjectIdByte = Bytes.toBytes(targetMindObjectId);
+		
+		
+		StringBuilder sb = new StringBuilder();
+		
+		String edgeId = originMindObjectId.compareTo(targetMindObjectId) > 0 ? 
+				(sb.append(originMindObjectId).append(targetMindObjectId)).toString() : 
+				(sb.append(targetMindObjectId).append(originMindObjectId)).toString();
+		byte[] edgeIdByte = edgeId.getBytes();
+		
+		Delete delete = new Delete(edgeIdByte);
+		mEdgeHTable.delete(delete);
+		
+		delete = new Delete(originMindObjectIdByte);
+		delete.deleteColumn(CF_MIND_OBJECT_BYTE[8], targetMindObjectIdByte);
+		delete.deleteColumn(CF_MIND_OBJECT_BYTE[9], edgeIdByte);
+		mMindObjectHTable.delete(delete);
+		
+		delete = new Delete(targetMindObjectIdByte);
+		delete.deleteColumn(CF_MIND_OBJECT_BYTE[8], originMindObjectIdByte);
+		delete.deleteColumn(CF_MIND_OBJECT_BYTE[9], edgeIdByte);
+		mMindObjectHTable.delete(delete);
+		
+		
+		return;
+		
+	}
+	
+	
+	public void changeMindObjectContentsValue(JSONObject changeInfo) throws IOException {
+		
+		String mindObjectId = (String)changeInfo.get("MOID");
+		byte[] mindObjectIdByte = Bytes.toBytes(mindObjectId);
+		
+		
+		String newValue = (String)changeInfo.get("CV");
+		byte[] newValueByte = Bytes.toBytes(newValue);
+		
+		Put put = new Put(mindObjectIdByte);
+		put.add(CF_CONTENTS_BYTE[2], CF_CONTENTS_BYTE[2], newValueByte);
+		mContentsHTable.put(put);		
+		
+		return;
+		
+	}
+	
+	
+	public void resizeMindObjectContentsValue(JSONObject changeInfo) throws IOException {
+		
+		String mindObjectId = (String)changeInfo.get("MOID");
+		byte[] mindObjectIdByte = Bytes.toBytes(mindObjectId);
+		
+		
+		String newSTDI = ((JSONArray)changeInfo.get("STDI")).toJSONString();
+		byte[] newSTDIByte = Bytes.toBytes(newSTDI);
+		
+		Put put = new Put(mindObjectIdByte);
+		put.add(CF_SHAPE_BYTE[1], CF_SHAPE_BYTE[1], newSTDIByte);
+		mShapeHTable.put(put);		
+		
+		return;
+		
 	}
 
 	public JSONObject fetchMindMapInfo(String aMindMapId) throws IOException, ParseException
