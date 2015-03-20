@@ -1,11 +1,16 @@
 package hbase_gate;
 
+import hbase_gate.tm_hbase_adapter.CRUDOperationFailException;
+import hbase_gate.tm_hbase_adapter.ThinkMineHBaseAdapter;
+import hbase_gate.tm_hbase_adapter.ThinkMineHbaseConfigContainer;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,14 +25,18 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.hadoop.hbase.client.RetriesExhaustedWithDetailsException;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.parser.ParseException;
 
 
 
 public class DataReceiver {
 	protected static DataReceiver obj = null;
 	private ExecutorService mEs;
+	private ThinkMineHBaseAdapter mTMHBA;
+	private ThinkMineHbaseConfigContainer mTMHBCC;
 	
 	
 	private DataReceiver (){
@@ -46,6 +55,9 @@ public class DataReceiver {
 			System.out.println("Failed to initiate data incoming server socket");
 			System.exit(1);
 		}
+		mTMHBCC = new ThinkMineHbaseConfigContainer();
+		
+		mTMHBA = ThinkMineHBaseAdapter.getInstance(mTMHBCC);
 	}
 	
 	
@@ -177,31 +189,66 @@ public class DataReceiver {
 					sb = sb.append(readChar);			
 				}
 				JSONObject jObj = (JSONObject) JSONValue.parse(sb.toString());
-				int opCode = Integer.parseInt((String)jObj.get("Code"));
+				int opCode = ((Number)jObj.get("Code")).intValue();
+				
+				
+				
+				JSONObject retJObj = null;
 				
 	
-				
-				switch(opCode){
-				case Constants.CODE_MIND_ADD :
-					break;
-				case Constants.CODE_MIND_DEL :
-					break;
-				case Constants.CODE_MIND_MOVE :
-					break;
-				case Constants.CODE_MIND_PUT_INTO :
-					break;
-				case Constants.CODE_MIND_CONNECT_TO :
-					break;
-				case Constants.CODE_MIND_DISCONNECT_FROM :
-					break;
-				case Constants.CODE_MIND_CHANGE_COLOR_OF_CONTENTS :
-					break;
-				case Constants.CODE_MIND_CHANGE_COLOR_OF_SHAPE :
-					break;
-				case Constants.CODE_MIND_RESIZE_SHAPE :
-					break;
-				case Constants.CODE_MIND_MAP_REQUEST_MIND_INFO :
-					break;
+				try {
+					switch(opCode){
+					case Constants.CODE_MIND_ADD :						
+						mTMHBA.insertNewMindObjectInfo(jObj);	
+						break;
+					case Constants.CODE_MIND_DEL :						
+						mTMHBA.removeMindObjectInfo(jObj);
+						break;
+					case Constants.CODE_MIND_MOVE :
+						mTMHBA.mindObjectCoordUpdate(jObj);
+						break;
+					case Constants.CODE_MIND_PUT_INTO :
+						break;
+					case Constants.CODE_MIND_CONNECT_TO :
+						mTMHBA.connectMindObjectEach(jObj);
+						break;
+					case Constants.CODE_MIND_DISCONNECT_FROM :
+						mTMHBA.disconnectMindObjectEach(jObj);
+						break;
+					case Constants.CODE_MIND_CHANGE_COLOR_OF_CONTENTS :					
+						break;
+					case Constants.CODE_MIND_CHANGE_VALUE_OF_CONTENTS :
+						mTMHBA.changeMindObjectContentsValue(jObj);
+						break;
+					case Constants.CODE_MIND_CHANGE_COLOR_OF_SHAPE :
+						break;
+					case Constants.CODE_MIND_RESIZE_SHAPE :
+						mTMHBA.resizeMindObjectContentsValue(jObj);
+						break;
+					case Constants.CODE_MIND_MAP_REQUEST_MIND_INFO :
+						String mindMapId = (String)jObj.get("MMID");						
+						retJObj = mTMHBA.fetchMindMapInfo(mindMapId);
+						sb = new StringBuilder();
+						sb.append("mmrres ");
+						sb.append(retJObj.toJSONString());
+						idos.write(sb.toString().getBytes("UTF-8"));
+						break;
+					}
+				} catch (RetriesExhaustedWithDetailsException e) {					
+					// should implement sending message to the gate client 
+					e.printStackTrace();
+				} catch (InterruptedIOException e) {					
+					// should implement sending message to the gate client
+					e.printStackTrace();
+				} catch (CRUDOperationFailException e) {					
+					// should implement sending message to the gate client
+					e.printStackTrace();				
+				} catch (IOException e) {					
+					// should implement sending message to the gate client
+					e.printStackTrace();				
+				} catch (ParseException e) {
+					// should implement sending message to the gate client
+					e.printStackTrace();
 				}
 				
 			}

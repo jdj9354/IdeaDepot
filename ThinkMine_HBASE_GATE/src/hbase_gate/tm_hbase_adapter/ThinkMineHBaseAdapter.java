@@ -95,7 +95,7 @@ public class ThinkMineHBaseAdapter {
 	private static final byte[][] CF_CONTENTS_BYTE = {  Bytes.toBytes(CF_CONTENTS[0]), Bytes.toBytes(CF_CONTENTS[1]), Bytes.toBytes(CF_CONTENTS[2]) };
 	
 	
-	public ThinkMineHBaseAdapter getInstance(ThinkMineHbaseConfigContainer aConfigContainer) {
+	public static ThinkMineHBaseAdapter getInstance(ThinkMineHbaseConfigContainer aConfigContainer) {
 
 		if (obj == null) {
 			obj = new ThinkMineHBaseAdapter(aConfigContainer);

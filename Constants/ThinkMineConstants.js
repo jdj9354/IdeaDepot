@@ -1,3 +1,4 @@
+//Client Constants
 const CODE_MIND_ADD = 32;
 const CODE_MIND_DEL = 33;
 const CODE_MIND_MOVE = 34;
@@ -27,6 +28,9 @@ const THINK_MINE_MIND_MAP_PAGE_NAME = "ThinkMine_MindMapPage_DEV.html";
 
 const THINK_MINE_RDWRAPPER_PARENT_SERVER_ADDR = "127.0.0.1";
 const THINK_MINE_RDWRAPPER_PARENT_SOCKET_IO_SERVER_PORT = 52274;
+
+
+//Server Constants
 if(typeof module != "undefined"){
 	if(module != null){
 		module.exports.CODE_MIND_ADD = CODE_MIND_ADD;
@@ -58,5 +62,9 @@ if(typeof module != "undefined"){
 
 		module.exports.THINK_MINE_RDWRAPPER_PARENT_SERVER_ADDR = THINK_MINE_RDWRAPPER_PARENT_SERVER_ADDR;
 		module.exports.THINK_MINE_RDWRAPPER_PARENT_SOCKET_IO_SERVER_PORT = THINK_MINE_RDWRAPPER_PARENT_SOCKET_IO_SERVER_PORT;
+		
+		module.exports.THINK_MINE_HBASE_GATE_SERVER_ADDR = "127.0.0.1";
+		module.exports.THINK_MINE_HBASE_GATE_SERVER_PORT = 5000;		
+		module.exports.THINK_MINE_HBASE_GATE_SYNC_INTERVAL = 50;
 	}
 }

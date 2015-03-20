@@ -35,6 +35,25 @@ var DBOPerationQueue = [];
 var encoder = new TMO.Encoder();
 var decoder = new TMO.Decoder();
 
+var net = require('net');
+var DbGateConnector = null;
+
+var StoreBack = function() {
+	var job = DBOPerationQueue.shift();
+	var message = JSON.stringify(job);	
+	DbGateConnector.write(message);
+};
+
+
+DbGateConnector = net.connect(Constants.THINK_MINE_HBASE_GATE_SERVER_ADDR, 
+									Constants.THINK_MINE_HBASE_GATE_SERVER_PORT,
+	function(){
+		console.log("HBASE Gate Connected");		
+		console.log("StRT HBASE Syncrhonization");
+		
+		setTimeout(StoreBack, Constants.THINK_MINE_HBASE_GATE_SYNC_INTERVAL);
+	});
+
 exports.Create = function(data){
 		var OpCode =  data.Code;
 		var ret = {};
@@ -304,9 +323,7 @@ exports.Delete = function(data){
 			mes : "Success"
 			};
 };
-exports.StoreBack = function(data){
 
-};
 
 
 
