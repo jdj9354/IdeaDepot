@@ -128,7 +128,7 @@ public class DataReceiver {
 			
 			re.printStackTrace();			
 
-			rejectedRunnable.sendConnectionFaileMessage();
+			rejectedRunnable.sendConnectionFailedMessage();
 			rejectedRunnable.closeSocketAndAllStreams();
 			
 		}
@@ -259,7 +259,7 @@ public class DataReceiver {
 			;
 		}
 		
-		public void sendConnectionFaileMessage(){
+		public void sendConnectionFailedMessage(){
 			;
 		}
 		public void closeSocketAndAllStreams(){

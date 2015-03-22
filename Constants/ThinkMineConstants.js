@@ -66,5 +66,6 @@ if(typeof module != "undefined"){
 		module.exports.THINK_MINE_HBASE_GATE_SERVER_ADDR = "127.0.0.1";
 		module.exports.THINK_MINE_HBASE_GATE_SERVER_PORT = 5000;		
 		module.exports.THINK_MINE_HBASE_GATE_SYNC_INTERVAL = 50;
+		module.exports.THINK_MINE_HBASE_GATE_READ_EVENT_MAX_REGI = 10; //0 to Unlimit
 	}
 }

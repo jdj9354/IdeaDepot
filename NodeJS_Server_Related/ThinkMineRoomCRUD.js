@@ -1,3 +1,4 @@
+const spaceDelimiter = " ";
 
 var TMO = require('./ThinkMineObjects');
 //var ConstantsModule = 
@@ -38,6 +39,11 @@ var decoder = new TMO.Decoder();
 var net = require('net');
 var DbGateConnector = null;
 
+var eventModule =  require('events').EventEmitter;
+var emitter = new eventModule();
+emitter.setMaxListeners(Constants.THINK_MINE_HBASE_GATE_READ_EVENT_MAX_REGI);
+
+
 var StoreBack = function() {
 	var job = DBOPerationQueue.shift();
 	var message = JSON.stringify(job);	
@@ -49,10 +55,38 @@ DbGateConnector = net.connect(Constants.THINK_MINE_HBASE_GATE_SERVER_ADDR,
 									Constants.THINK_MINE_HBASE_GATE_SERVER_PORT,
 	function(){
 		console.log("HBASE Gate Connected");		
-		console.log("StRT HBASE Syncrhonization");
+		console.log("Start HBASE Syncrhonization");
 		
 		setTimeout(StoreBack, Constants.THINK_MINE_HBASE_GATE_SYNC_INTERVAL);
 	});
+
+var tcpStreamData = "";	
+//DbGateConnector.wait = true;
+//DbGateConnector.result = null;
+
+DbGateConnector.on('data', function(data){
+	if(data[data.length-1] == nullCharValue){
+			tcpStreamData += data;
+			tcpStreamData.slice(data.length-1,data.length-1);
+			
+			var infoArray = tcpStreamData.split(spaceDelimiter); 
+			var flagValue = infoArray[0];
+			
+			switch (flagValue){
+			case "mmrres" :
+		//		DbGateConnector.wait = false;
+		//		DbGateConnector.result = 
+				break;
+			default :
+				break;
+			}
+			
+			
+	}
+	else{
+		tcpStreamData += data;
+	}	
+}
 
 exports.Create = function(data){
 		var OpCode =  data.Code;
@@ -166,6 +200,7 @@ exports.Read = function(data){
 		var mindMap = MindMapObjects_HM.get(data.MMID);
 		if(mindMap == null){
 			//TCP Socket Commu and get Info
+			
 		}
 		else{
 			
