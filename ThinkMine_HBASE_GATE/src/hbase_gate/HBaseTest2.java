@@ -27,6 +27,7 @@ public class HBaseTest2 {
 
 
 	public static void main(String[] args) {
+		DataReceiver dr = DataReceiver.getInstance();
 		/*String Test = "[1,\"computer\"]";
 		JSONParser parser = new JSONParser();
 		JSONArray test = null;
@@ -38,7 +39,7 @@ public class HBaseTest2 {
 		}
 		for(int i=0; i<test.size();i++)
 			System.out.println(test.get(i));*/
-		Configuration config = HBaseConfiguration.create();
+		/*Configuration config = HBaseConfiguration.create();
 
 		config.set("hbase.master", "127.0.0.1"); 
 		config.set("hbase.zookeeper.quorum", "127.0.0.1");
@@ -154,7 +155,7 @@ public class HBaseTest2 {
 
 			e.printStackTrace();
 
-		}
+		}*/
 
 	}
 

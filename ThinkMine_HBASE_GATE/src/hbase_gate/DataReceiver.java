@@ -61,7 +61,7 @@ public class DataReceiver {
 	}
 	
 	
-	public DataReceiver getInstance(DataCommCallBack aCrudDelegate){
+	public static DataReceiver getInstance(){
 		if(obj == null)
 			obj = new DataReceiver();
 		return obj;
@@ -231,6 +231,7 @@ public class DataReceiver {
 						sb = new StringBuilder();
 						sb.append("mmrres ");
 						sb.append(retJObj.toJSONString());
+						sb.append(Constants.NULL_CHARACTER_DELIMITER);
 						idos.write(sb.toString().getBytes("UTF-8"));
 						break;
 					}

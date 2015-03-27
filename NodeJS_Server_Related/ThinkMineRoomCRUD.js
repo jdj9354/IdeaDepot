@@ -1,3 +1,5 @@
+//TO-DO : Need to implement seprated DB Operation Queue for each Mind Map
+
 const spaceDelimiter = " ";
 
 var TMO = require('./ThinkMineObjects');
@@ -39,26 +41,27 @@ var decoder = new TMO.Decoder();
 var net = require('net');
 var DbGateConnector = null;
 
-var eventModule =  require('events').EventEmitter;
-var emitter = new eventModule();
-emitter.setMaxListeners(Constants.THINK_MINE_HBASE_GATE_READ_EVENT_MAX_REGI);
+var emitter = exports.emitter;
 
 
 var StoreBack = function() {
-	var job = DBOPerationQueue.shift();
-	var message = JSON.stringify(job);	
-	DbGateConnector.write(message);
+	if(DBOPerationQueue.length != 0){
+		var job = DBOPerationQueue.shift();
+		var message = JSON.stringify(job);	
+		DbGateConnector.write(message);
+	}
 };
 
 
-DbGateConnector = net.connect(Constants.THINK_MINE_HBASE_GATE_SERVER_ADDR, 
-									Constants.THINK_MINE_HBASE_GATE_SERVER_PORT,
+DbGateConnector = net.connect(Constants.THINK_MINE_HBASE_GATE_SERVER_PORT,
+								Constants.THINK_MINE_HBASE_GATE_SERVER_ADDR,
 	function(){
 		console.log("HBASE Gate Connected");		
 		console.log("Start HBASE Syncrhonization");
 		
 		setTimeout(StoreBack, Constants.THINK_MINE_HBASE_GATE_SYNC_INTERVAL);
 	});
+
 
 var tcpStreamData = "";	
 //DbGateConnector.wait = true;
@@ -74,8 +77,9 @@ DbGateConnector.on('data', function(data){
 			
 			switch (flagValue){
 			case "mmrres" :
-		//		DbGateConnector.wait = false;
-		//		DbGateConnector.result = 
+				var mindMapObj = JSON.parse(infoArray[1]);				
+				MindMapObjects_HM.set(mindMapObj.MMID,mindMapObj);
+				emitter.emit(mindMapObj.MMID);				
 				break;
 			default :
 				break;
@@ -86,7 +90,7 @@ DbGateConnector.on('data', function(data){
 	else{
 		tcpStreamData += data;
 	}	
-}
+});
 
 exports.Create = function(data){
 		var OpCode =  data.Code;
@@ -199,8 +203,18 @@ exports.Read = function(data){
 	case Constants.CODE_MIND_MAP_REQUEST_MIND_INFO :
 		var mindMap = MindMapObjects_HM.get(data.MMID);
 		if(mindMap == null){
-			//TCP Socket Commu and get Info
-			
+			DbGateConnector.write(JSON.stringify(data));
+			return {suc : 2,
+					ret : ret,
+					mes : data.MMID
+					};
+		}
+		//in case of duplicated request for the MindMap on the HBASE
+		else if(emitter.listeners(data.MMID).length != 0){
+			return {suc : 2,
+					ret : ret,
+					mes : data.MMID
+					};
 		}
 		else{
 			
@@ -360,6 +374,13 @@ exports.Delete = function(data){
 };
 
 
+exports.onRoomRemoved = function(roomId){
+	while(DBOperationQueue.length != 0){
+		StoreBack();
+	}
+	MindMapObjects_HM.remove(roomId);
+	
+};
 
 
 
