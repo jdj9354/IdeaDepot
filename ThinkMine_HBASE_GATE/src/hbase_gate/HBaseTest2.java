@@ -28,6 +28,7 @@ public class HBaseTest2 {
 
 	public static void main(String[] args) {
 		DataReceiver dr = DataReceiver.getInstance();
+		
 		/*String Test = "[1,\"computer\"]";
 		JSONParser parser = new JSONParser();
 		JSONArray test = null;

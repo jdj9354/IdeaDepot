@@ -19,6 +19,13 @@ const EdgeTypeEnum = {
 };
 
 
+function compareIdValue(firstIdValue,secondIdValue){
+	if(firstIdValue == secondIdValue)
+		return true;
+	else
+		return false;
+}
+
 function Encoder(){
 	this.encodeShapeType = function(shapeType){
 		var ret;

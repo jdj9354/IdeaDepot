@@ -1,6 +1,8 @@
 //TO-DO : Need to implement seprated DB Operation Queue for each Mind Map
 
 const spaceDelimiter = " ";
+const nullCharDelimiter = "\0";
+const nullCharValue = 0;
 
 var TMO = require('./ThinkMineObjects');
 //var ConstantsModule = 
@@ -33,7 +35,7 @@ var WebPreviewContentsTypeDependentInfo = TMO.WebPreviewContentsTypeDependentInf
 
 var HashMap = require('hashmap').HashMap;
 var MindMapObjects_HM = new HashMap();
-var DBOPerationQueue = [];
+var DBOperationQueue = new Array();;//[];
 
 var encoder = new TMO.Encoder();
 var decoder = new TMO.Decoder();
@@ -41,13 +43,15 @@ var decoder = new TMO.Decoder();
 var net = require('net');
 var DbGateConnector = null;
 
-var emitter = exports.emitter;
+var emitter = null;
+var externalModule = exports;
 
-
-var StoreBack = function() {
-	if(DBOPerationQueue.length != 0){
-		var job = DBOPerationQueue.shift();
-		var message = JSON.stringify(job);	
+var StoreBack = function() {	
+	if(DBOperationQueue.length != 0){
+		console.log(DBOperationQueue)
+		var job = DBOperationQueue.shift();
+		var message = JSON.stringify(job);
+		message += nullCharDelimiter;
 		DbGateConnector.write(message);
 	}
 };
@@ -59,7 +63,8 @@ DbGateConnector = net.connect(Constants.THINK_MINE_HBASE_GATE_SERVER_PORT,
 		console.log("HBASE Gate Connected");		
 		console.log("Start HBASE Syncrhonization");
 		
-		setTimeout(StoreBack, Constants.THINK_MINE_HBASE_GATE_SYNC_INTERVAL);
+		//emitter = externalModule.emitter;		
+		setInterval(StoreBack, Constants.THINK_MINE_HBASE_GATE_SYNC_INTERVAL);
 	});
 
 
@@ -70,16 +75,93 @@ var tcpStreamData = "";
 DbGateConnector.on('data', function(data){
 	if(data[data.length-1] == nullCharValue){
 			tcpStreamData += data;
-			tcpStreamData.slice(data.length-1,data.length-1);
+			//tcpStreamData = tcpStreamData.slice(data.length-1,data.length-1);
 			
-			var infoArray = tcpStreamData.split(spaceDelimiter); 
-			var flagValue = infoArray[0];
+			//var infoArray = tcpStreamData.split(spaceDelimiter,1); 
+			var spaceIdx = tcpStreamData.indexOf(spaceDelimiter);
+			var flagValue = tcpStreamData.substring(0,spaceIdx);
+			var dataValue = tcpStreamData.substring(spaceIdx+1,tcpStreamData.length-1);
+			tcpStreamData = "";						
 			
 			switch (flagValue){
-			case "mmrres" :
-				var mindMapObj = JSON.parse(infoArray[1]);				
-				MindMapObjects_HM.set(mindMapObj.MMID,mindMapObj);
-				emitter.emit(mindMapObj.MMID);				
+			case "mmrres" :				
+				var mindMapObj = JSON.parse(dataValue);			
+				
+				var resultMindMap = new TMO.MindMap(mindMapObj.MMID,mindMapObj.PMOID);				
+				resultMindMap.setMaxRelDistance(mindMapObj.MAXRD);
+				resultMindMap.setLimitX(mindMapObj.LX);
+				resultMindMap.setLimitY(mindMapObj.LY);
+				resultMindMap.setLimitZ(mindMapObj.LZ);
+				resultMindMap.setMaxMindObjectCount(mindMapObj.MAXOC);				
+
+				var relatedMindObjectsInfoArray = [];
+				
+				for(var i=0; i<mindMapObj.CMOS.length;i++){				
+					
+					var tempMindObjectId = mindMapObj.CMOS[i][0];
+					var tempChildMindMapId = mindMapObj.CMOS[i][1];					
+					
+					var x = mindMapObj.CMOS[i][2];							
+					var y = mindMapObj.CMOS[i][3];				
+					var z = mindMapObj.CMOS[i][4];				
+					
+					var tempShapeType = decoder.decodeShapeType(mindMapObj.CMOS[i][5]);				
+					var tempShapeTypeDependentInfo;					
+									
+					tempShapeTypeDependentInfo = TMO.getObjTypeDependentInfo(tempShapeType, mindMapObj.CMOS[i][6]);														
+					
+					var tempShape = new TMO.Shape(tempShapeType, tempShapeTypeDependentInfo);								
+					
+					var tempContentsType = decoder.decodeContentsType(mindMapObj.CMOS[i][7]);				
+					var tempContentsTypeDependentInfo;
+					
+					tempContentsTypeDependentInfo = TMO.getObjTypeDependentInfo(tempContentsType, mindMapObj.CMOS[i][8]);				
+					
+					var tempContentsValue = mindMapObj.CMOS[i][9];
+					var tempContents = new TMO.Contents(tempContentsType, tempContentsTypeDependentInfo, tempContentsValue);	
+					
+					var tempRelatedMindObjects = mindMapObj.CMOS[i][10];								
+					var tempMindObject = new TMO.MindObject(tempMindObjectId, tempChildMindMapId, mindMapObj.MMID, tempShape, tempContents , x, y, z);
+					
+					resultMindMap.pushNewMindObject(tempMindObject);
+					relatedMindObjectsInfoArray.push(tempRelatedMindObjects);				
+				}
+				
+				
+				for(var i=0; i<relatedMindObjectsInfoArray.length; i++){
+					var relatedMindObjectsInfo = relatedMindObjectsInfoArray[i];
+					for(var j=0; j<relatedMindObjectsInfo.length; j+=3){
+						var isExsist = false;					
+						for(var k=0; k<resultMindMap.getMindObjectOnIndex(i).lenOfRelatedObjectsArray(); k++){						
+							if(TMO.compareIdValue(relatedMindObjectsInfo[j],
+									resultMindMap.getMindObjectOnIndex(i).getRelatedObjectOnIndex(k).fMindObjectId)){
+								isExsist = true;							
+								break;
+							}
+						}
+						if(!isExsist){						
+							var connectingObj = null;
+							
+							for(var k=0; k<resultMindMap.lenOfMindObjectsArray(); k++){
+								if(TMO.compareIdValue(relatedMindObjectsInfo[j],
+										resultMindMap.getMindObjectOnIndex(k).fMindObjectId)){
+									connectingObj = resultMindMap.getMindObjectOnIndex(k);
+									break;
+								}
+							}
+							if(connectingObj != resultMindMap.getMindObjectOnIndex(i) && connectingObj != null){
+								var tempEdgeType = decoder.decodeEdgeType(relatedMindObjectsInfo[j+1]);							
+								var tempEdgeTypeDependentInfo;							
+								
+								tempEdgeTypeDependentInfo = getObjTypeDependentInfo(tempEdgeType, relatedMindObjectsInfo[j+2]);						
+								
+								resultMindMap.getMindObjectOnIndex(i).connectTo(connectingObj, tempEdgeType, tempEdgeTypeDependentInfo);							
+							}
+						}				
+					}
+				}				
+				MindMapObjects_HM.set(mindMapObj.MMID,resultMindMap);					
+				exports.emitter.emit(mindMapObj.MMID,mindMapObj);				
 				break;
 			default :
 				break;
@@ -187,7 +269,7 @@ exports.Create = function(data){
 			}
 		}
 		
-		DBOPerationQueue.push(data);
+		DBOperationQueue.push(data);
 		
 		return {suc : 1,
 				ret : ret,
@@ -203,21 +285,20 @@ exports.Read = function(data){
 	case Constants.CODE_MIND_MAP_REQUEST_MIND_INFO :
 		var mindMap = MindMapObjects_HM.get(data.MMID);
 		if(mindMap == null){
-			DbGateConnector.write(JSON.stringify(data));
+			//in case of duplicated request for the MindMap on the HBASE
+			if(exports.emitter.listeners(data.MMID).length != 0){
+				return {suc : 2,
+						ret : ret,
+						mes : data.MMID
+						};
+			}
+			DbGateConnector.write(JSON.stringify(data) + nullCharDelimiter);
 			return {suc : 2,
 					ret : ret,
 					mes : data.MMID
-					};
+					};		
 		}
-		//in case of duplicated request for the MindMap on the HBASE
-		else if(emitter.listeners(data.MMID).length != 0){
-			return {suc : 2,
-					ret : ret,
-					mes : data.MMID
-					};
-		}
-		else{
-			
+		else{			
 			var childMindObjCommuArray = [];
 			
 			for(var i=0; i<mindMap.lenOfMindObjectsArray(); i++){
@@ -250,28 +331,18 @@ exports.Read = function(data){
 					childMindObjCommuArray[i][childMindObjCommuArray[i].length-1].push(encoder.encodeEdgeType(curRelEdge.fEdgeType));
 					childMindObjCommuArray[i][childMindObjCommuArray[i].length-1].push(TMO.genArrayForCommu(curRelEdge.fEdgeType,curRelEdge.fEdgeTypeDependentInfo));					
 				}
-
-
-
-
 			}
 			
-			
-			
-			
-			
-
-			
-			ret.Code = Constants.CODE_MIND_MAP_REQUEST_NEW_MIND_MAP;
+			ret.Code = Constants.CODE_MIND_MAP_REQUEST_MIND_INFO;
 			ret.MMID = data.MMID+'';			
 			ret.TT = mindMap.fTitle;
 			ret.PMOID = mindMap.fParentMindObjectId;			
 			ret.CMOS = childMindObjCommuArray;
 			ret.MAXRD = mindMap.getMaxRelDistance();
 			ret.MAXOC = mindMap.getMaxMindObjectCount();
-			ret.LX = mindMap.getLimitX();;
-			ret.LY = mindMap.getLimitY();;
-			ret.LZ = mindMap.getLimitZ();;			
+			ret.LX = mindMap.getLimitX();
+			ret.LY = mindMap.getLimitY();
+			ret.LZ = mindMap.getLimitZ();			
 		}
 		break;
 	}
@@ -307,7 +378,7 @@ exports.Update = function(data){
 		break;
 	}
 
-	DBOPerationQueue.push(data);
+	DBOperationQueue.push(data);
 	
 	return {suc : 1,
 			ret : ret,
@@ -365,7 +436,7 @@ exports.Delete = function(data){
 		break;
 	}
 
-	DBOPerationQueue.push(data);
+	DBOperationQueue.push(data);
 	
 	return {suc : 1,
 			ret : ret,	
@@ -375,9 +446,13 @@ exports.Delete = function(data){
 
 
 exports.onRoomRemoved = function(roomId){
+
+	
 	while(DBOperationQueue.length != 0){
 		StoreBack();
 	}
+
+	
 	MindMapObjects_HM.remove(roomId);
 	
 };

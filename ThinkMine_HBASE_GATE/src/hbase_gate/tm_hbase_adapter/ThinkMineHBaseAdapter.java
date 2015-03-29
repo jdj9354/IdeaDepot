@@ -224,8 +224,8 @@ public class ThinkMineHBaseAdapter {
 		String shapeTypeDependentInfo = ((JSONArray) aMindObjectInfo.get("STDI")).toJSONString();
 		
 		p = new Put(Bytes.toBytes(mindObjectId));
-		p.add(CF_EDGE_BYTE[0], CF_EDGE_BYTE[0], Bytes.toBytes(shapeType));
-		p.add(CF_EDGE_BYTE[1], CF_EDGE_BYTE[1], Bytes.toBytes(shapeTypeDependentInfo));
+		p.add(CF_SHAPE_BYTE[0], CF_SHAPE_BYTE[0], Bytes.toBytes(shapeType));
+		p.add(CF_SHAPE_BYTE[1], CF_SHAPE_BYTE[1], Bytes.toBytes(shapeTypeDependentInfo));
 		mShapeHTable.put(p);
 		
 		int contentsType = ((Number) aMindObjectInfo.get("CT")).intValue();
@@ -237,6 +237,11 @@ public class ThinkMineHBaseAdapter {
 		p.add(CF_CONTENTS_BYTE[1], CF_CONTENTS_BYTE[1], Bytes.toBytes(contentsTypeDependentInfo));
 		p.add(CF_CONTENTS_BYTE[2], CF_CONTENTS_BYTE[2], Bytes.toBytes(contentesValue));
 		mContentsHTable.put(p);
+		
+		p = new Put(Bytes.toBytes(parentMindMapId));
+		p.add(CF_MIND_MAP_BYTE[3], Bytes.toBytes(mindObjectId), Bytes.toBytes(mindObjectId));
+
+		mMindMapHTable.put(p);
 		
 
 	}
@@ -569,6 +574,7 @@ public class ThinkMineHBaseAdapter {
 		tempQuali = Bytes.toBytes(CF_MIND_MAP[8]);
 		float retLZ = Bytes.toFloat(result.getValue(tempQuali, tempQuali));
 
+		retObj = new JSONObject();
 		retObj.put("Code", Constants.CODE_MIND_MAP_REQUEST_MIND_INFO);
 		retObj.put("MMID", retMMID);
 		retObj.put("TT", retTT);

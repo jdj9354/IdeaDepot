@@ -1,5 +1,6 @@
 package hbase_gate;
 
+
 import hbase_gate.tm_hbase_adapter.CRUDOperationFailException;
 import hbase_gate.tm_hbase_adapter.ThinkMineHBaseAdapter;
 import hbase_gate.tm_hbase_adapter.ThinkMineHbaseConfigContainer;
@@ -58,6 +59,12 @@ public class DataReceiver {
 		mTMHBCC = new ThinkMineHbaseConfigContainer();
 		
 		mTMHBA = ThinkMineHBaseAdapter.getInstance(mTMHBCC);
+		try {
+			mTMHBA.initTMTables();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -179,14 +186,20 @@ public class DataReceiver {
 						//System.out.println(rdis.readUTF());
 						//readByte = rdis.readByte();
 					} catch (EOFException e){
-						break;
+						System.out.println("Error occured....");
+						
+						e.printStackTrace();
+						return;
 					} catch (IOException e) {
 						System.out.println("Error occured....");
 						
 						e.printStackTrace();
 						return;
-					}				
-					sb = sb.append(readChar);			
+					}
+					if(Constants.NULL_CHARACTER_DELIMITER.equals(String.valueOf(readChar)))
+						break;
+					sb = sb.append(readChar);		
+					
 				}
 				JSONObject jObj = (JSONObject) JSONValue.parse(sb.toString());
 				int opCode = ((Number)jObj.get("Code")).intValue();
@@ -233,6 +246,9 @@ public class DataReceiver {
 						sb.append(retJObj.toJSONString());
 						sb.append(Constants.NULL_CHARACTER_DELIMITER);
 						idos.write(sb.toString().getBytes("UTF-8"));
+						break;
+					case Constants.CODE_MIND_MAP_REQUEST_NEW_MIND_MAP :
+						mTMHBA.insertNewMindMapInfo(jObj);
 						break;
 					}
 				} catch (RetriesExhaustedWithDetailsException e) {					
