@@ -153,7 +153,7 @@ DbGateConnector.on('data', function(data){
 								var tempEdgeType = decoder.decodeEdgeType(relatedMindObjectsInfo[j+1]);							
 								var tempEdgeTypeDependentInfo;							
 								
-								tempEdgeTypeDependentInfo = getObjTypeDependentInfo(tempEdgeType, relatedMindObjectsInfo[j+2]);						
+								tempEdgeTypeDependentInfo = TMO.getObjTypeDependentInfo(tempEdgeType, relatedMindObjectsInfo[j+2]);						
 								
 								resultMindMap.getMindObjectOnIndex(i).connectTo(connectingObj, tempEdgeType, tempEdgeTypeDependentInfo);							
 							}

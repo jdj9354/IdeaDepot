@@ -148,8 +148,19 @@ public class ThinkMineHBaseAdapter {
 	}
 
 	public void insertNewMindMapInfo(JSONObject aMindMapInfo) throws RetriesExhaustedWithDetailsException, InterruptedIOException
-																	, CRUDOperationFailException{
+																	, CRUDOperationFailException{		
+		
 		String mindMapId = (String) aMindMapInfo.get("MMID");
+		
+		Get get = new Get(Bytes.toBytes(mindMapId));		
+		try {
+			if(mMindMapHTable.exists(get))
+				throw new CRUDOperationFailException();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		String title = "No Title";
 		String parentMindObjectId = "";
 		JSONArray mindObjects = new JSONArray();
@@ -269,7 +280,7 @@ public class ThinkMineHBaseAdapter {
 		
 		
 		Delete delete = new Delete(parentMindMapIdByte);
-		delete.deleteColumn(CF_MIND_MAP_BYTE[3], removeMindObjectIdByte);
+		delete.deleteColumns(CF_MIND_MAP_BYTE[3], removeMindObjectIdByte);
 		mMindMapHTable.delete(delete);
 		
 		delete = new Delete(removeMindObjectIdByte);		
@@ -290,12 +301,14 @@ public class ThinkMineHBaseAdapter {
 			String edgeId = removeMindObjectId.compareTo(relMOId) > 0 ? 
 					(sb.append(removeMindObjectId).append(relMOId)).toString() : 
 					(sb.append(relMOId).append(removeMindObjectId)).toString();
+			byte[] edgeIdByte = Bytes.toBytes(edgeId);
 					
-			delete = new Delete(Bytes.toBytes(edgeId));
+			delete = new Delete(edgeIdByte);
 			mEdgeHTable.delete(delete);
 			
 			delete = new Delete(relMOIdByte);
-			delete.deleteColumn(CF_MIND_OBJECT_BYTE[8], removeMindObjectIdByte);
+			delete.deleteColumns(CF_MIND_OBJECT_BYTE[8], removeMindObjectIdByte);
+			delete.deleteColumns(CF_MIND_OBJECT_BYTE[9], edgeIdByte);
 			mMindObjectHTable.delete(delete);		
 
 		}
@@ -309,9 +322,9 @@ public class ThinkMineHBaseAdapter {
 		String mindMapId = (String)moveInfo.get("MMID");
 		String mindObjectId = (String)moveInfo.get("MOID");
 		
-		int newX = ((Number) moveInfo.get("X")).intValue();
-		int newY = ((Number) moveInfo.get("Y")).intValue();
-		int newZ = ((Number) moveInfo.get("Z")).intValue();
+		float newX = ((Number) moveInfo.get("X")).floatValue();
+		float newY = ((Number) moveInfo.get("Y")).floatValue();
+		float newZ = ((Number) moveInfo.get("Z")).floatValue();
 		
 		
 		Put p = new Put(Bytes.toBytes(mindObjectId));		
@@ -341,7 +354,7 @@ public class ThinkMineHBaseAdapter {
 				(sb.append(targetMindObjectId).append(originMindObjectId)).toString();
 		byte[] edgeIdByte = edgeId.getBytes();
 				
-		int edgeType = (int)connectInfo.get("ET");
+		int edgeType = ((Number)connectInfo.get("ET")).intValue();
 		String edgeTypeDependentInfo = ((JSONArray)connectInfo.get("ETDI")).toString();
 		
 		Put put = new Put(edgeIdByte);
@@ -357,12 +370,12 @@ public class ThinkMineHBaseAdapter {
 		put = new Put(originMindObjectIdByte);
 		put.add(CF_MIND_OBJECT_BYTE[8],targetMindObjectIdByte,targetMindObjectIdByte);
 		put.add(CF_MIND_OBJECT_BYTE[9],edgeIdByte,edgeIdByte);
-		mMindMapHTable.put(put);
+		mMindObjectHTable.put(put);
 		
 		put = new Put(targetMindObjectIdByte);
 		put.add(CF_MIND_OBJECT_BYTE[8],originMindObjectIdByte,originMindObjectIdByte);
 		put.add(CF_MIND_OBJECT_BYTE[9],edgeIdByte,edgeIdByte);
-		mMindMapHTable.put(put);
+		mMindObjectHTable.put(put);
 		
 		return;
 	}
@@ -387,13 +400,13 @@ public class ThinkMineHBaseAdapter {
 		mEdgeHTable.delete(delete);
 		
 		delete = new Delete(originMindObjectIdByte);
-		delete.deleteColumn(CF_MIND_OBJECT_BYTE[8], targetMindObjectIdByte);
-		delete.deleteColumn(CF_MIND_OBJECT_BYTE[9], edgeIdByte);
+		delete.deleteColumns(CF_MIND_OBJECT_BYTE[8], targetMindObjectIdByte);
+		delete.deleteColumns(CF_MIND_OBJECT_BYTE[9], edgeIdByte);
 		mMindObjectHTable.delete(delete);
 		
 		delete = new Delete(targetMindObjectIdByte);
-		delete.deleteColumn(CF_MIND_OBJECT_BYTE[8], originMindObjectIdByte);
-		delete.deleteColumn(CF_MIND_OBJECT_BYTE[9], edgeIdByte);
+		delete.deleteColumns(CF_MIND_OBJECT_BYTE[8], originMindObjectIdByte);
+		delete.deleteColumns(CF_MIND_OBJECT_BYTE[9], edgeIdByte);
 		mMindObjectHTable.delete(delete);
 		
 		
@@ -539,7 +552,7 @@ public class ThinkMineHBaseAdapter {
 								(sb.append(relMOId).append(curObjId)).toString();
 
 				Get EDGEGet = new Get(Bytes.toBytes(edgeId));
-				Result edgeInfo = mContentsHTable.get(EDGEGet);
+				Result edgeInfo = mEdgeHTable.get(EDGEGet);
 
 				// EdgeType
 				tempQuali = Bytes.toBytes(CF_EDGE[2]);
