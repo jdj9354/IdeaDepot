@@ -866,7 +866,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					if(Distance !=0 && Distance <= maxRelDistanceBySquare && !isConnectedMindObject){
 						//console.log("connect");
 						this.connectMindObject(fMovingObject.fMindObjectId,
-												MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath, new SimplePathEdgeTypeDependentInfo(10,"#00ff00"));
+												MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath, new SimplePathEdgeTypeDependentInfo(8,this.getShapeColor()));
 					}
 					else if(Distance !=0 && Distance > maxRelDistanceBySquare && isConnectedMindObject){
 						//console.log("disconnect");
@@ -4936,6 +4936,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		var drawingObject = new paper.Path.Line(new paper.Point(startX,startY),
 				new paper.Point(endX,endY));
 		drawingObject.strokeColor = info.fColor;
+		drawingObject.strokeWidth = info.fWidth;
 		//drawingObject.sendToBack();
 		drawingObject.moveAbove(paper.project.activeLayer.firstChild);
 		//drawingObject.
