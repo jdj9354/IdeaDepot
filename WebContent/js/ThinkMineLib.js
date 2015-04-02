@@ -673,10 +673,14 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 						if(curSelectedObject != fSelectedObject){	
 						
 							fDrawingCCInterface.changeOpacityOfCircleShape(0.5,curSelectedObject.fMindObjectId);
-							fDrawingCCInterface.changeOpacityOfTextContents(0.5,curSelectedObject.fMindObjectId);						
+							fDrawingCCInterface.changeOpacityOfTextContents(0.5,curSelectedObject.fMindObjectId);	
+
+							fDrawingCCInterface.drawCirclesOnShapeVertex(curSelectedObject.fMindObjectId,5,"#000000");
 							
 							fDrawingCCInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
 							fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
+							
+							fDrawingCCInterface.eraseCirclesOnShapeVertex(fSelectedObject.fMindObjectId);
 							
 							fSelectedObject = curSelectedObject;
 							
@@ -693,6 +697,9 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		
 							fDrawingCCInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
 							fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
+							
+							fDrawingCCInterface.eraseCirclesOnShapeVertex(fSelectedObject.fMindObjectId);
+							
 							resetTMCanvas();
 							
 							
@@ -710,6 +717,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 						
 						fDrawingCCInterface.changeOpacityOfCircleShape(0.5,fSelectedObject.fMindObjectId);
 						fDrawingCCInterface.changeOpacityOfTextContents(0.5,fSelectedObject.fMindObjectId);		
+						
+						fDrawingCCInterface.drawCirclesOnShapeVertex(fSelectedObject.fMindObjectId,5,"#000000");
 					
 						var contentsEditor = document.createElement('input');
 						contentsEditor.setAttribute('id',"ContentsEditor");
@@ -735,7 +744,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					if(fSelectedObject !=null){
 						fDrawingCCInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
 						fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
-					
+						
+						fDrawingCCInterface.eraseCirclesOnShapeVertex(fSelectedObject.fMindObjectId);
 								
 						//this.changeValueOfContents(fSelectedObject.fMindObjectId, fSelectedObject.fContents.fContentsType ,fSelectedObject.fContents.fValue);
 						fSelectedObject = null;	
@@ -837,7 +847,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				moveCount++;
 				if(moveCount == moveCountLimit){
 					moveCount = 0;
-					this.moveMindObject(fMovingObject.fMindObjectId,x,y,z);
+					this.moveMindObject(fMovingObject.fMindObjectId,x,y,z);					
 				}
 				
 				var maxRelDistanceBySquare = MindMap.getMaxRelDistance()*MindMap.getMaxRelDistance();
@@ -3837,7 +3847,8 @@ function DrawingObj(drawingCCInterface){
 
 		
 		for(var i=0; i<pointArray.length ; i++){			
-		
+			
+			fDrawingCCInterface.moveCirclesOnShapeVertex(movMindObjectInfo.fMindObjectId,pointArray[i][0],pointArray[i][1],pointArray[i][2]);
 			
 			fDrawingCCInterface["move"+movMindObjectInfo.fShape.fShapeType](pointArray[i][0],
 																				pointArray[i][1],
@@ -3855,8 +3866,10 @@ function DrawingObj(drawingCCInterface){
 																		movEdgeInfo[j].fFirstMindObject.fMindObjectId, 
 																		movEdgeInfo[j].fSecondMindObject.fMindObjectId,
 																		movMindObjectInfo.fMindObjectId);
-			}
+			}			
 		}
+		
+									
 		
 //		getDrawingFunctionRef(movMindObjectInfo.fShape.fShapeType, "move")(movMindObjectInfo.fX,
 //				movMindObjectInfo.fY,
@@ -4169,6 +4182,17 @@ function DrawingCCInterface(backBoneType){
 		
 	};
 	
+	this.drawCirclesOnShapeVertex = function(mindObjectId, circleRadius, circleColor){
+		
+	};
+	
+	this.moveCirclesOnShapeVertex = function(mindObjectId, central_x, central_y, central_z){
+		
+	};
+	
+	this.eraseCirclesOnShapeVertex = function(mindObjectId){
+		
+	};
 	
 	this.isColliding = function(firstMindObject, secondMindObject){		
 	};
@@ -4999,6 +5023,74 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		}
 		
 	};
+	
+	
+	this.drawCirclesOnShapeVertex = function(mindObjectId, circleRadius, circleColor){
+		var targetShape = null;
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				targetShape = fShapeObjects[i];
+				break;
+			}				
+		}
+		
+		if(targetShape == null)
+			return;
+		
+		for(var i=0; i<targetShape.segments.length; i++){					
+			var drawingObject = new paper.Path.Circle(targetShape.segments[i].point,circleRadius);		
+			drawingObject.fillColor =  circleColor;
+			
+			targetShape.segments[i].drawingObject = drawingObject;			
+		}
+		paper.view.draw();
+	};
+	
+	this.moveCirclesOnShapeVertex = function(mindObjectId, central_x, central_y, central_z){
+		var targetShape = null;
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				targetShape = fShapeObjects[i];
+				break;
+			}				
+		}
+		
+		if(targetShape == null || targetShape.segments[i].drawingObject == undefined)
+			return;
+		
+		
+		for(var i=0; i<targetShape.segments.length; i++){
+			var x_diff = targetShape.position.x - central_x;
+			var y_diff = targetShape.position.y - central_y;
+			
+			var newX = targetShape.segments[i].drawingObject.position.x - x_diff;
+			var newY = targetShape.segments[i].drawingObject.position.y - y_diff;			
+			
+			var newPoint = new paper.Point(newX,newY);	
+			targetShape.segments[i].drawingObject.position = newPoint;
+		}
+		paper.view.draw();		
+	};
+	
+	this.eraseCirclesOnShapeVertex = function(mindObjectId){
+		var targetShape = null;
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				targetShape = fShapeObjects[i];
+				break;
+			}				
+		}
+		
+		if(targetShape == null)
+			return;
+		
+		for(var i=0; i<targetShape.segments.length; i++){								
+			targetShape.segments[i].drawingObject.remove();
+			delete targetShape.segments[i].drawingObject;
+		}
+		paper.view.draw();		
+	};
+	
 	this.isColliding = function(firstMindObject, secondMindObject) {
 		//Need to be implemented..
 	};

@@ -9,6 +9,65 @@
 
     <!-- Le styles -->
     <link href="css/bootstrap/bootstrap.css" rel="stylesheet">
+	
+	
+	
+		<style>
+	.modalDialog {
+		position: fixed;
+		font-family: Arial, Helvetica, sans-serif;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: rgba(0,0,0,0.8);
+		z-index: 99999;
+		opacity:0.5;
+		-webkit-transition: opacity 400ms ease-in;
+		-moz-transition: opacity 400ms ease-in;
+		transition: opacity 400ms ease-in;
+		pointer-events: none;
+	}
+
+	.modalDialog:target {
+		opacity:0.1;
+		pointer-events: auto;
+	}
+
+	.modalDialog > canvas {
+		width: 400px;
+		position: relative;
+		margin: 10% auto;
+		padding: 5px 20px 13px 20px;
+		border-radius: 10px;
+		background: #fff;
+		background: -moz-linear-gradient(#fff, #999);
+		background: -webkit-linear-gradient(#fff, #999);
+		background: -o-linear-gradient(#fff, #999);
+	}
+
+	.close {
+		background: #606061;
+		color: #FFFFFF;
+		line-height: 25px;
+		position: absolute;
+		right: -12px;
+		text-align: center;
+		top: -10px;
+		width: 24px;
+		text-decoration: none;
+		font-weight: bold;
+		-webkit-border-radius: 12px;
+		-moz-border-radius: 12px;
+		border-radius: 12px;
+		-moz-box-shadow: 1px 1px 3px #000;
+		-webkit-box-shadow: 1px 1px 3px #000;
+		box-shadow: 1px 1px 3px #000;
+	}
+
+	.close:hover { background: #00d9ff; }
+	</style>
+	
     <style type="text/css">
       body {
         padding-top: 20px;
@@ -102,7 +161,51 @@
   </head>
 
   <body>
-	<div>HI</div>
+	
+	
+	
+	
+	<button id="show">Show Dialog</button>
+  
+	<div id="myModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Confirmation</h4>
+				</div>
+				<div class="modal-body">
+					<p>Do you want to save changes you made to document before closing?</p>
+					<p class="text-warning"><small>If you don't save, your changes will be lost.</small></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+				
+				<canvas id="color_picker_canvas" width="578" height="276"></canvas><br>
+								<input type="text" id="color_picker_red_input"></input><br>
+								<input type="text" id="color_picker_green_input"></input><br>
+								<input type="text" id="color_picker_blue_input"></input>
+				
+				
+			</div>
+		</div>
+	</div>
+	
+		<script>
+	(function() {
+		var dialog = document.getElementById('window');
+		document.getElementById('show').onclick = function() {
+			$("#myModal").modal('show');
+		};
+		document.getElementById('exit').onclick = function() {
+			dialog.close();
+		};
+	})();
+	</script>	
+	
+	
 	<input type="file">
 	<div id="group_div_shape" style="margin: 0 auto;">
 		<div id="div_circleshape" width='50' height='50'  style="float:left;">
@@ -190,12 +293,7 @@
 	  
 <table><tr>
     <!--each post is here--><td><canvas id="myCanvas" height = "600" width="1000"></canvas>		</td><!--To here-->
-	 <!--each post is here--><td><canvas id="color_picker_canvas" width="578" height="276"></canvas><br>
-								<input type="text" id="color_picker_red_input"></input><br>
-								<input type="text" id="color_picker_green_input"></input><br>
-								<input type="text" id="color_picker_blue_input"></input>
-								 
-							</td><!--To here-->
+
 </tr></table>
 
 		<div id="group_div_canvas_property" style="margin: 0 auto;" width = "2000" height="800">
