@@ -338,7 +338,7 @@ function MindObject (mindObjectId, childMindMapId, parentMindMapId, shape, conte
 		this.fZ = z;
 
 		
-	};	
+	};
 	this.connectTo = function(connectingMindObject, edgeType, edgeTypeDependentInfo){
 		if(fRelatedObjects.indexOf(connectingMindObject) != -1)
 			return;

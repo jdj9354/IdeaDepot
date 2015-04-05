@@ -370,11 +370,28 @@ exports.Update = function(data){
 		
 		if(targetMindObj != null){
 			targetMindObj.moveMindObject(data.X, data.Y, data.Z);
-			console.log("move");
 		}
 			
 		ret = data;
 		
+		break;
+	case Constants.CODE_MIND_RESIZE_SHAPE :
+		var mindMap = MindMapObjects_HM.get(data.MMID);
+		var targetMindObj = null;
+		for(var i=0; i< mindMap.lenOfMindObjectsArray(); i++){
+			if(data.MOID == mindMap.getMindObjectOnIndex(i).fMindObjectId){
+				targetMindObj = mindMap.getMindObjectOnIndex(i);
+				break;
+			}
+		}
+		
+		if(targetMindObj != null){
+			var changeShapeType = decoder.decodeShapeType(data.ST);
+			var changeShapeTypeDependentInfo = decoder.decodeShapeType(data.STDI);
+			targetMindObj.changeShape(new Shape(changeShapeType,changeShapeTypeDependentInfo));
+		}
+			
+		ret = data;
 		break;
 	}
 

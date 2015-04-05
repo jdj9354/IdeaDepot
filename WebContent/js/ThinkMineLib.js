@@ -841,8 +841,69 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			}*/
 			
 			if(fMovingObject == null)		
-				return;			
-			else {			
+				return;						
+			else {
+				if(fSelectedObject != null){
+					if(fDrawingCCInterface.isCirclesOnShapeContaining(fSelectedObject.fMindObjectId, x,y,z)){
+						var shapeType = fSelectedObject.fShape.fShapeType;
+						var diff_fromCenter_x = fSelectedObject.fX - x;
+						var diff_fromCenter_y = fSelectedObject.fY - y;
+						var diff_fromCenter_z = fSelectedObject.fZ - z;
+						
+						var newSTDI = null;
+						var newShape = null;
+										
+						switch(shapeType){
+							case ShapeTypeEnum.Circle :
+								var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
+																	, x, y, z);
+								var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;															
+								newSTDI = new CircleShapeTypeDependentInfo(newRadius,prevColor);						
+								break;
+							case ShapeTypeEnum.Ellipse :
+								break;
+							case ShapeTypeEnum.Rectangle :
+								var newWidth = Math.abs(fSelectedObject.fX - x)*2;
+								var newHeight = Math.abs(fSelectedObject.fY - y)*2;
+								
+								var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;
+								var prevIsRounded = fSelectedObject.fShape.fShapeTypeDependentInfo.fIsRounded;
+								
+								newSTDI = new RectangleShapeTypeDependentInfo(newWidth,newHeight,prevColor,prevIsRounded);						
+								break;
+							case ShapeTypeEnum.Star :
+								var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
+																	, x, y, z);
+									
+								var isFirstCircleVertex = true;
+								if(Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius)
+										> Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius))
+									isInnerVertex = false;
+								
+								var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;
+								var prevNrPoints = fSelectedObject.fShape.fShapeTypeDependentInfo.fNrPoints;
+								
+								if(isFirstCircleVertex)
+									newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, newRadius, fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius, prevColor);
+								else
+									newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius, newRadius , prevColor);
+								break;
+							case ShapeTypeEnum.PolygonShape :
+								var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
+																	, x, y, z);
+								var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;	
+								var prevNrPoints = fSelectedObject.fShape.fShapeTypeDependentInfo.fNrPoints;	
+								
+								newSTDI = new PolygonShapeTypeDependentInfo(prevNrPoints,newRadius,prevColor);
+								break;						
+						}
+						if(newSTDI == null)
+							return;
+						newShape = new Shape(shapeType,newSTDI);
+						this.resizeShape(fSelectedObject.fMindObjectId,newShape);
+						return;
+					}
+				}	
 				fIsDragging = true;
 				moveCount++;
 				if(moveCount == moveCountLimit){
@@ -1581,7 +1642,7 @@ function MindObject (mindObjectId, childMindMapId, parentMindMapId, shape, conte
 		this.fZ = z;
 
 		
-	};	
+	};
 	this.connectTo = function(connectingMindObject, edgeType, edgeTypeDependentInfo){
 		if(fRelatedObjects.indexOf(connectingMindObject) != -1)
 			return;
@@ -2867,7 +2928,7 @@ console.log(now);
 		if(fMindMap.getMindObjectOnIndex(targetIndex).fShape == undefined || fMindMap.getMindObjectOnIndex(targetIndex).fShape == null)
 			return;
 		else
-			fMindMap.getMindObjectOnIndex(targetIndex).changeShape(new Shape(tempShape,tempShapeTypeDependentInfo));
+			fMindMap.getMindObjectOnIndex(targetIndex).changeShape(new Shape(tempShapeType,tempShapeTypeDependentInfo));
 
 		var tempShapeTypeForDrawing = fDecoder.decodeShapeType(eventCode.ST);
 		var tempShapeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempShapeTypeForDrawing,eventCode.STDI);
@@ -3848,7 +3909,7 @@ function DrawingObj(drawingCCInterface){
 		
 		for(var i=0; i<pointArray.length ; i++){			
 			
-			fDrawingCCInterface.moveCirclesOnShapeVertex(movMindObjectInfo.fMindObjectId,pointArray[i][0],pointArray[i][1],pointArray[i][2]);
+			
 			
 			fDrawingCCInterface["move"+movMindObjectInfo.fShape.fShapeType](pointArray[i][0],
 																				pointArray[i][1],
@@ -3858,6 +3919,8 @@ function DrawingObj(drawingCCInterface){
 																					pointArray[i][1],
 																					pointArray[i][2],
 																					movMindObjectInfo.fMindObjectId);
+																					
+			fDrawingCCInterface.syncCirclesOnShapeVertex(movMindObjectInfo.fMindObjectId);
 			
 			for(var j=0; j<movEdgeInfo.length; j++){
 				fDrawingCCInterface["move"+movEdgeInfo[j].fEdgeType](pointArray[i][0],
@@ -3959,8 +4022,9 @@ function DrawingObj(drawingCCInterface){
 																				mindObjectInfo.fMindObjectId);
 	};
 	
-	var resizeShape = function(mindObjectInfo){
+	var resizeShape = function(mindObjectInfo){	
 		fDrawingCCInterface["resize"+mindObjectInfo.fShape.fShapeType](mindObjectInfo.fShape.fShapeTypeDependentInfo,mindObjectInfo.fMindObjectId);
+		fDrawingCCInterface.syncCirclesOnShapeVertex(mindObjectInfo.fMindObjectId);
 	};
 	
 	var handleLatestJob = function(){
@@ -4190,6 +4254,9 @@ function DrawingCCInterface(backBoneType){
 		
 	};
 	
+	this.isCirclesOnShapeContaining = function(mindObjectId, x, y, z){
+	};
+	
 	this.eraseCirclesOnShapeVertex = function(mindObjectId){
 		
 	};
@@ -4197,6 +4264,8 @@ function DrawingCCInterface(backBoneType){
 	this.isColliding = function(firstMindObject, secondMindObject){		
 	};
 	this.isContaining = function(x, y, z, mindObject){		
+	};
+	this.isVertextContaining = function(x, y, z, mindObject){
 	};
 }
 
@@ -4222,6 +4291,8 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	var fShapeObjects = new Array();
 	var fContentsObjects = new Array();
 	var fEdgeObjects = new Array();
+	
+	var verticesOnShape = null;
 	
 	
 	
@@ -5044,6 +5115,9 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 			
 			targetShape.segments[i].drawingObject = drawingObject;			
 		}
+		
+		verticesOnShape = targetShape.segments;
+		
 		paper.view.draw();
 	};
 	
@@ -5072,6 +5146,31 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		}
 		paper.view.draw();		
 	};
+	this.syncCirclesOnShapeVertex = function(mindObjectId){
+		
+		if(verticesOnShape == null)
+			return;
+		
+		for(var i=0; i<verticesOnShape.length; i++){								
+			verticesOnShape[i].drawingObject.position = verticesOnShape[i].point;
+		}
+		paper.view.draw();
+	}
+	
+	this.isCirclesOnShapeContaining = function(mindObjectId, x, y, z){
+		var isContaining = false;
+		
+		if(verticesOnShape == null)
+			return false;
+		
+		for(var i=0; i<verticesOnShape.length; i++){								
+			if(verticesOnShape[i].drawingObject.contains(new paper.Point(x,y)))
+				isContaining = true;
+		}
+		return isContaining;
+		
+	};
+	
 	
 	this.eraseCirclesOnShapeVertex = function(mindObjectId){
 		var targetShape = null;
@@ -5089,6 +5188,8 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 			targetShape.segments[i].drawingObject.remove();
 			delete targetShape.segments[i].drawingObject;
 		}
+		verticesOnShape = null;
+		
 		paper.view.draw();		
 	};
 	
