@@ -332,6 +332,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	var fIsCompositionEventStarted = false;
 	var fIsContentsChanged = false;
 	
+	var fIsNowResizingVirtually = false;
+	
 	//this.fMindMap = null;
 	
 	//Utility Functions
@@ -605,6 +607,14 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			}
 			// Test Code Block end
 			else {
+
+				if(fSelectedObject != null){
+					if(fDrawingCCInterface.isCirclesOnShapeContaining(fSelectedObject.fMindObjectId, x,y,z)){
+						fIsNowResizingVirtually = true;
+						return;
+					}
+				}
+			
 				for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
 					if(fDrawingCCInterface.isContaining(x,y,z,MindMap.getMindObjectOnIndex(i))){
 						fMovingObject = MindMap.getMindObjectOnIndex(i);
@@ -654,6 +664,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		var curSelectedObject = null;
 		
 		if(!fObjectAddMode){
+			if(fIsNowResizingVirtually){
+				fIsNowResizingVirtually = false;
+				return;
+			}
 		
 			for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
 				if(fDrawingCCInterface.isContaining(x,y,0,MindMap.getMindObjectOnIndex(i))){
@@ -840,70 +854,73 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				count = 0;		
 			}*/
 			
-			if(fMovingObject == null)		
-				return;						
-			else {
-				if(fSelectedObject != null){
-					if(fDrawingCCInterface.isCirclesOnShapeContaining(fSelectedObject.fMindObjectId, x,y,z)){
-						var shapeType = fSelectedObject.fShape.fShapeType;
-						var diff_fromCenter_x = fSelectedObject.fX - x;
-						var diff_fromCenter_y = fSelectedObject.fY - y;
-						var diff_fromCenter_z = fSelectedObject.fZ - z;
-						
-						var newSTDI = null;
-						var newShape = null;
-										
-						switch(shapeType){
-							case ShapeTypeEnum.Circle :
-								var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
-																	, x, y, z);
-								var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;															
-								newSTDI = new CircleShapeTypeDependentInfo(newRadius,prevColor);						
-								break;
-							case ShapeTypeEnum.Ellipse :
-								break;
-							case ShapeTypeEnum.Rectangle :
-								var newWidth = Math.abs(fSelectedObject.fX - x)*2;
-								var newHeight = Math.abs(fSelectedObject.fY - y)*2;
-								
-								var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;
-								var prevIsRounded = fSelectedObject.fShape.fShapeTypeDependentInfo.fIsRounded;
-								
-								newSTDI = new RectangleShapeTypeDependentInfo(newWidth,newHeight,prevColor,prevIsRounded);						
-								break;
-							case ShapeTypeEnum.Star :
-								var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
-																	, x, y, z);
+			if(fMovingObject == null){
+				if(fIsNowResizingVirtually){					
+					var shapeType = fSelectedObject.fShape.fShapeType;
+					var diff_fromCenter_x = fSelectedObject.fX - x;
+					var diff_fromCenter_y = fSelectedObject.fY - y;
+					var diff_fromCenter_z = fSelectedObject.fZ - z;
+					
+					var newSTDI = null;
+					var newShape = null;
 									
-								var isFirstCircleVertex = true;
-								if(Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius)
-										> Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius))
-									isInnerVertex = false;
+					switch(shapeType){
+						case ShapeTypeEnum.Circle :
+							var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
+																, x, y, z);
+							var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;															
+							newSTDI = new CircleShapeTypeDependentInfo(newRadius,prevColor);						
+							break;
+						case ShapeTypeEnum.Ellipse :
+							break;
+						case ShapeTypeEnum.Rectangle :
+							var newWidth = Math.abs(fSelectedObject.fX - x)*2;
+							var newHeight = Math.abs(fSelectedObject.fY - y)*2;
+							
+							var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;
+							var prevIsRounded = fSelectedObject.fShape.fShapeTypeDependentInfo.fIsRounded;
+							
+							newSTDI = new RectangleShapeTypeDependentInfo(newWidth,newHeight,prevColor,prevIsRounded);						
+							break;
+						case ShapeTypeEnum.Star :
+							var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
+																, x, y, z);
 								
-								var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;
-								var prevNrPoints = fSelectedObject.fShape.fShapeTypeDependentInfo.fNrPoints;
-								
-								if(isFirstCircleVertex)
-									newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, newRadius, fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius, prevColor);
-								else
-									newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius, newRadius , prevColor);
-								break;
-							case ShapeTypeEnum.PolygonShape :
-								var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
-																	, x, y, z);
-								var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;	
-								var prevNrPoints = fSelectedObject.fShape.fShapeTypeDependentInfo.fNrPoints;	
-								
-								newSTDI = new PolygonShapeTypeDependentInfo(prevNrPoints,newRadius,prevColor);
-								break;						
-						}
-						if(newSTDI == null)
-							return;
-						newShape = new Shape(shapeType,newSTDI);
-						this.resizeShape(fSelectedObject.fMindObjectId,newShape);
-						return;
+							var isFirstCircleVertex = true;
+							if(Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius)
+									> Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius))
+								isFirstCircleVertex = false;
+							
+							console.log("isFirstCircleVertex : " + isFirstCircleVertex);
+							
+							var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;
+							var prevNrPoints = fSelectedObject.fShape.fShapeTypeDependentInfo.fNrPoints;
+							
+							if(isFirstCircleVertex)
+								newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, newRadius, fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius, prevColor);
+							else
+								newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius, newRadius , prevColor);
+							break;
+						case ShapeTypeEnum.Polygon :
+							var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
+																, x, y, z);
+							var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;	
+							var prevNrSides = fSelectedObject.fShape.fShapeTypeDependentInfo.fNrSides;	
+							
+							newSTDI = new PolygonShapeTypeDependentInfo(prevNrSides,newRadius,prevColor);
+							break;						
 					}
-				}	
+					if(newSTDI == null)
+						return;
+					newShape = new Shape(shapeType,newSTDI);
+					this.resizeShape(fSelectedObject.fMindObjectId,newShape);
+					return;
+					
+				}
+				return;			
+			}
+			else {
+	
 				fIsDragging = true;
 				moveCount++;
 				if(moveCount == moveCountLimit){
@@ -3719,8 +3736,7 @@ function SocketDataCommuHelperRecv (jobHandler,room) {
 		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
-		}
-		console.log(newJob);
+		}		
 		fJobHandler.pushNewJob(newJob);
 	
 		/*if(fJobHandler.getMindMap() == null)
@@ -4451,8 +4467,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 
 		paper.view.draw();
 		
-		fShapeObjects.push(drawingObject);
-			console.log(fShapeObjects);
+		fShapeObjects.push(drawingObject);		
 		
 	};
 	this.eraseRectangleShape = function(mindObjectId){
@@ -4619,7 +4634,9 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
 				var scaleRatio = info.fFirstRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fFirstRadius;
-
+				if(scaleRatio == 1)
+					scaleRatio = info.fSecondRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fSecondRadius;
+					
 				if(scaleRatio != Infinity && !isNaN(scaleRatio)){
 					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fFirstRadius = info.fFirstRadius;
 					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fSecondRadius = info.fSecondRadius;

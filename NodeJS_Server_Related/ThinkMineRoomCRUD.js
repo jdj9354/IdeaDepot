@@ -47,8 +47,7 @@ var emitter = null;
 var externalModule = exports;
 
 var StoreBack = function() {	
-	if(DBOperationQueue.length != 0){
-		console.log(DBOperationQueue)
+	if(DBOperationQueue.length != 0){		
 		var job = DBOperationQueue.shift();
 		var message = JSON.stringify(job);
 		message += nullCharDelimiter;
@@ -387,7 +386,7 @@ exports.Update = function(data){
 		
 		if(targetMindObj != null){
 			var changeShapeType = decoder.decodeShapeType(data.ST);
-			var changeShapeTypeDependentInfo = decoder.decodeShapeType(data.STDI);
+			var changeShapeTypeDependentInfo = TMO.getObjTypeDependentInfo(changeShapeType,data.STDI);
 			targetMindObj.changeShape(new Shape(changeShapeType,changeShapeTypeDependentInfo));
 		}
 			
