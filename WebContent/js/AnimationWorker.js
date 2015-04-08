@@ -73,7 +73,6 @@ function AnimationInfoGenerator(definableAnimationInfo, interval){
 		postMessage({flag : 0, info : fGetProgressStatusInfo()});
 		fUpdateFunc();
 		fRepeatCount--;	
-		console.log("a");
 		var passingObj = this;
 		setTimeout(function(){passingObj.runAnim();},fInterval);
 				
@@ -205,8 +204,12 @@ const DefinableAnimInfoFunc_StarShapeCreation = {
 		if(progressStatusInfo.count>=60)
 			progressStatusInfo.direction = -1;
 			
+		
+		var fsRatio = progressStatusInfo.fSecondRadius / progressStatusInfo.fFirstRadius;
+					
+
 		progressStatusInfo.fFirstRadius += progressStatusInfo.delta * progressStatusInfo.direction;
-		progressStatusInfo.fSecondRadius += progressStatusInfo.delta * progressStatusInfo.direction;
+		progressStatusInfo.fSecondRadius += progressStatusInfo.delta * fsRatio * progressStatusInfo.direction;
 		
 		progressStatusInfo.count++;
 	}
@@ -225,7 +228,7 @@ const DefinableAnimInfoFunc_StarShapeExpansion = {
 	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
 			
 		progressStatusInfo.fFirstRadius += progressStatusInfo.delta;
-		progressStatusInfo.fFirstSecond += progressStatusInfo.delta;
+		progressStatusInfo.fSecondRadius += progressStatusInfo.delta;
 		
 		progressStatusInfo.count++;
 	}

@@ -891,7 +891,6 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 									> Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius))
 								isFirstCircleVertex = false;
 							
-							console.log("isFirstCircleVertex : " + isFirstCircleVertex);
 							
 							var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;
 							var prevNrPoints = fSelectedObject.fShape.fShapeTypeDependentInfo.fNrPoints;
@@ -4056,8 +4055,7 @@ function DrawingObj(drawingCCInterface){
 		fDrawingJobQ.splice(0,1);
 		//console.log("Poped Item : ");		
 		//console.log(JSON.stringify(latestJob));
-		ret = handleEventCode(latestJob);
-		console.log(latestJob);
+		ret = handleEventCode(latestJob);		
 		if(ret == 0){
 			//오류 메세지 출력 및 MindMap 재 초기화
 		}
@@ -4633,18 +4631,44 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	this.resizeStarShape = function(info,mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
-				var scaleRatio = info.fFirstRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fFirstRadius;
-				if(scaleRatio == 1)
-					scaleRatio = info.fSecondRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fSecondRadius;
+				//var scaleRatio = info.fFirstRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fFirstRadius;
+				/*if(scaleRatio == 1)
+					scaleRatio = info.fSecondRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fSecondRadius;*/
 					
-				if(scaleRatio != Infinity && !isNaN(scaleRatio)){
-					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fFirstRadius = info.fFirstRadius;
+				//if(scaleRatio != Infinity && !isNaN(scaleRatio)){
+					/*fShapeObjects[i].fShape.fShapeTypeDependentInfo.fFirstRadius = info.fFirstRadius;
 					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fSecondRadius = info.fSecondRadius;
-					fShapeObjects[i].scale(scaleRatio);
-					
+					fShapeObjects[i].scale(scaleRatio);*/
+				var position = new paper.Point(fShapeObjects[i].position.x,fShapeObjects[i].position.y);	
 				
-					paper.view.draw();
-				}
+				
+				
+				var tempStar = new paper.Path.Star(position, info.fNrPoints, info.fFirstRadius, info.fSecondRadius);	
+				tempStar.position = position;
+				
+				
+				for(var j=0; j<fShapeObjects[i].segments.length; j++)
+					tempStar.segments[j].drawingObject = fShapeObjects[i].segments[j].drawingObject;
+				
+				fShapeObjects[i].segments = tempStar.segments;
+				
+
+				
+				for(var j=0; j<fShapeObjects[i].segments.length; j++)
+					fShapeObjects[i].segments[j].drawingObject = tempStar.segments[j].drawingObject;				
+				
+				if(verticesOnShape != null)
+					verticesOnShape = fShapeObjects[i].segments;
+				tempStar.remove();
+
+				/*fShapeObjects[i].opacity = opacity
+				fShapeObjects[i].fillColor = info.fColor;
+				fShapeObjects[i].fMindObjectId = mindObjectId;
+				fShapeObjects[i].fShape = {fShapeTypeDependentInfo : {fFirstRadius : info.fFirstRadius,
+																	fSecondRadius : info.fSecondRadius,
+																	fNrPoints : info.fNrPoints}};*/
+				paper.view.draw();
+				//}
 				break;
 			}
 				
