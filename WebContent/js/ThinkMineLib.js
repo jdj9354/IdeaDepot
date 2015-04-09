@@ -3924,15 +3924,17 @@ function DrawingObj(drawingCCInterface){
 	};
 	
 	var eraseMindObject = function(delMindObjectInfo, delEdgeInfo){
+	
+	fDrawingCCInterface.eraseCirclesOnShapeVertex(delMindObjectInfo.fMindObjectId);
 		
 		fDrawingCCInterface["erase"+delMindObjectInfo.fShape.fShapeType](delMindObjectInfo.fMindObjectId);
-
 		fDrawingCCInterface["erase"+delMindObjectInfo.fContents.fContentsType](delMindObjectInfo.fMindObjectId);
 		
 		for(var i=0; i<delEdgeInfo.length; i++){
 			fDrawingCCInterface["erase"+delEdgeInfo[i].fEdgeType](delEdgeInfo[i].fFirstMindObject.fMindObjectId, 
 																	delEdgeInfo[i].fSecondMindObject.fMindObjectId);
 		}		
+		
 	};
 	
 	var moveMindObject = function(movMindObjectInfo, movEdgeInfo, pointArray){		
@@ -5231,6 +5233,10 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	
 	this.eraseCirclesOnShapeVertex = function(mindObjectId){
 		var targetShape = null;
+		
+		if(verticesOnShape == null)
+			return;
+		
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
 				targetShape = fShapeObjects[i];
