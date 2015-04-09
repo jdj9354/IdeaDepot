@@ -794,28 +794,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			
 			else{
 				if(fMovingObject != null){
-					// Test Code Block start
-					if(DeletingCircle.contains(new paper.Point(x,y))){
-								
-					//			var tempShape;
-					//			var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,"#FF0000");
-					//			
-					//			var tempContents;
-					//			var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
-					//			
-					//			tempShape = new Shape("CircleShape",tempShapeTypeDependentInfo);
-					//			tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"Ok!!!");
-					//			
-					//			this.addMindObject(x,y,0,tempShape,tempContents);						
-								this.deleteMindObject(fMovingObject.fMindObjectId);
-					//			for(i=0; i< MindMap.lenOfMindObjectsArray(); i++){
-					//				var dst = distanceOfTwoPoints(MindMap.getMindObjectOnIndex(i).fX,MindMap.getMindObjectOnIndex(i).fY,MindMap.getMindObjectOnIndex(i).fZ,x,y,0);
-					//				if(dst<	MindMap.getMindObjectOnIndex(i).fShape.fShapeTypeDependentInfo.fRadius){
-					//					this.fSelectedObject = MindMap.getMindObjectOnIndex(i);
-					//					return;
-					//				}
-					//			}
-							
+					if(DeletingCircle.contains(new paper.Point(x,y))){				
+						this.deleteMindObject(fMovingObject.fMindObjectId);						
 					}
 					else{
 						for(var i=0; i< MindMap.lenOfMindObjectsArray(); i++){
@@ -826,7 +806,6 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 							}
 						}	
 					}
-					// Test Code Block end
 					fIsDragging = false;
 					fMovingObject = null;				
 				}
@@ -1159,6 +1138,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		}
 	};
 	
+
+	
 	//Basic Functionality Functions
 	
 	/*this.connectToServer = function(userAuth){
@@ -1219,6 +1200,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		
 		//fSocketHelper.fSocketDataCommuHelperSender.mindMapRequestMindInfo(mindMapId);
 	};
+	
+	
 	
 	
 	this.initWithNewMindMap = function(userAuth){
@@ -3925,7 +3908,7 @@ function DrawingObj(drawingCCInterface){
 	
 	var eraseMindObject = function(delMindObjectInfo, delEdgeInfo){
 	
-	fDrawingCCInterface.eraseCirclesOnShapeVertex(delMindObjectInfo.fMindObjectId);
+		fDrawingCCInterface.eraseCirclesOnShapeVertex(delMindObjectInfo.fMindObjectId);
 		
 		fDrawingCCInterface["erase"+delMindObjectInfo.fShape.fShapeType](delMindObjectInfo.fMindObjectId);
 		fDrawingCCInterface["erase"+delMindObjectInfo.fContents.fContentsType](delMindObjectInfo.fMindObjectId);

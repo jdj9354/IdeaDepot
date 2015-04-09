@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Template &middot; Bootstrap</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -468,8 +468,20 @@
 				TMCanvas.initWithNewMindMap(ua);
 			});
 			
+			
+			$('#newM').bind('touchstart',function(e) {
+				console.log("new mind map");
+				TMCanvas.initWithNewMindMap(ua);
+			});
+			
 			$('#joinM').click(function() {
 				console.log("join mind map");
+				TMCanvas.initWithMindMap("test",ua);
+			});
+			
+			$('#joinM').bind('touchstart',function(e) {
+				console.log("join mind map");
+				alert("aaa");
 				TMCanvas.initWithMindMap("test",ua);
 			});
 			
