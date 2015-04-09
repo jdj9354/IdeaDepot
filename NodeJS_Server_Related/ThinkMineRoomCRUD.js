@@ -392,6 +392,22 @@ exports.Update = function(data){
 			
 		ret = data;
 		break;
+	case Constants.CODE_MIND_CHANGE_VALUE_OF_CONTENTS :
+		var mindMap = MindMapObjects_HM.get(data.MMID);
+		var targetMindObj = null;
+		for(var i=0; i< mindMap.lenOfMindObjectsArray(); i++){
+			if(data.MOID == mindMap.getMindObjectOnIndex(i).fMindObjectId){
+				targetMindObj = mindMap.getMindObjectOnIndex(i);
+				break;
+			}
+		}		
+		if(targetMindObj != null){
+			targetMindObj.fContents.fValue = data.CV;
+		}
+			
+		ret = data;		
+		
+		break;
 	}
 
 	DBOperationQueue.push(data);
