@@ -1,98 +1,98 @@
-2015-04-08 23:08:46,020 [myid:] - INFO  [main:QuorumPeerConfig@103] - Reading configuration from: /home/jang/zookeeper/zookeeper-3.4.6/bin/../conf/zoo.cfg
-2015-04-08 23:08:46,026 [myid:] - ERROR [main:QuorumPeerConfig@289] - Invalid configuration, only one server specified (ignoring)
-2015-04-08 23:08:46,041 [myid:] - INFO  [main:DatadirCleanupManager@78] - autopurge.snapRetainCount set to 3
-2015-04-08 23:08:46,041 [myid:] - INFO  [main:DatadirCleanupManager@79] - autopurge.purgeInterval set to 0
-2015-04-08 23:08:46,041 [myid:] - INFO  [main:DatadirCleanupManager@101] - Purge task is not scheduled.
-2015-04-08 23:08:46,041 [myid:] - WARN  [main:QuorumPeerMain@113] - Either no config or no quorum defined in config, running  in standalone mode
-2015-04-08 23:08:46,064 [myid:] - INFO  [main:QuorumPeerConfig@103] - Reading configuration from: /home/jang/zookeeper/zookeeper-3.4.6/bin/../conf/zoo.cfg
-2015-04-08 23:08:46,065 [myid:] - ERROR [main:QuorumPeerConfig@289] - Invalid configuration, only one server specified (ignoring)
-2015-04-08 23:08:46,065 [myid:] - INFO  [main:ZooKeeperServerMain@95] - Starting server
-2015-04-08 23:08:46,090 [myid:] - INFO  [main:Environment@100] - Server environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT
-2015-04-08 23:08:46,090 [myid:] - INFO  [main:Environment@100] - Server environment:host.name=localhost
-2015-04-08 23:08:46,091 [myid:] - INFO  [main:Environment@100] - Server environment:java.version=1.7.0_76
-2015-04-08 23:08:46,091 [myid:] - INFO  [main:Environment@100] - Server environment:java.vendor=Oracle Corporation
-2015-04-08 23:08:46,092 [myid:] - INFO  [main:Environment@100] - Server environment:java.home=/usr/lib/jvm/java-7-oracle/jre
-2015-04-08 23:08:46,093 [myid:] - INFO  [main:Environment@100] - Server environment:java.class.path=/home/jang/zookeeper/zookeeper-3.4.6/bin/../build/classes:/home/jang/zookeeper/zookeeper-3.4.6/bin/../build/lib/*.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../lib/slf4j-log4j12-1.6.1.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../lib/slf4j-api-1.6.1.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../lib/netty-3.7.0.Final.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../lib/log4j-1.2.16.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../lib/jline-0.9.94.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../zookeeper-3.4.6.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../src/java/lib/*.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../conf:
-2015-04-08 23:08:46,093 [myid:] - INFO  [main:Environment@100] - Server environment:java.library.path=/usr/java/packages/lib/i386:/lib:/usr/lib
-2015-04-08 23:08:46,094 [myid:] - INFO  [main:Environment@100] - Server environment:java.io.tmpdir=/tmp
-2015-04-08 23:08:46,094 [myid:] - INFO  [main:Environment@100] - Server environment:java.compiler=<NA>
-2015-04-08 23:08:46,094 [myid:] - INFO  [main:Environment@100] - Server environment:os.name=Linux
-2015-04-08 23:08:46,094 [myid:] - INFO  [main:Environment@100] - Server environment:os.arch=i386
-2015-04-08 23:08:46,095 [myid:] - INFO  [main:Environment@100] - Server environment:os.version=3.2.0-23-generic-pae
-2015-04-08 23:08:46,095 [myid:] - INFO  [main:Environment@100] - Server environment:user.name=jang
-2015-04-08 23:08:46,095 [myid:] - INFO  [main:Environment@100] - Server environment:user.home=/home/jang
-2015-04-08 23:08:46,095 [myid:] - INFO  [main:Environment@100] - Server environment:user.dir=/home/jang/share/IdeaDepot
-2015-04-08 23:08:46,105 [myid:] - INFO  [main:ZooKeeperServer@755] - tickTime set to 2000
-2015-04-08 23:08:46,105 [myid:] - INFO  [main:ZooKeeperServer@764] - minSessionTimeout set to -1
-2015-04-08 23:08:46,105 [myid:] - INFO  [main:ZooKeeperServer@773] - maxSessionTimeout set to -1
-2015-04-08 23:08:46,129 [myid:] - INFO  [main:NIOServerCnxnFactory@94] - binding to port 0.0.0.0/0.0.0.0:2181
-2015-04-08 23:08:58,088 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:59852
-2015-04-08 23:08:58,124 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:59852
-2015-04-08 23:08:58,138 [myid:] - INFO  [SyncThread:0:FileTxnLog@199] - Creating new log file: log.fa0
-2015-04-08 23:08:58,410 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c995c9fa40000 with negotiated timeout 40000 for client /127.0.0.1:59852
-2015-04-08 23:08:58,628 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c995c9fa40000 type:create cxid:0x1 zxid:0xfa1 txntype:-1 reqpath:n/a Error Path:/hbase Error:KeeperErrorCode = NodeExists for /hbase
-2015-04-08 23:09:01,251 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:59853
-2015-04-08 23:09:01,281 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:59853
-2015-04-08 23:09:01,301 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c995c9fa40001 with negotiated timeout 40000 for client /127.0.0.1:59853
-2015-04-08 23:09:01,519 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:59854
-2015-04-08 23:09:01,520 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:59854
-2015-04-08 23:09:01,532 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c995c9fa40002 with negotiated timeout 40000 for client /127.0.0.1:59854
-2015-04-08 23:09:01,785 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c995c9fa40000 type:create cxid:0xe zxid:0xfa4 txntype:-1 reqpath:n/a Error Path:/hbase/master Error:KeeperErrorCode = NodeExists for /hbase/master
-2015-04-08 23:09:02,713 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c995c9fa40001 type:create cxid:0xb zxid:0xfa9 txntype:-1 reqpath:n/a Error Path:/hbase/online-snapshot/acquired Error:KeeperErrorCode = NodeExists for /hbase/online-snapshot/acquired
-2015-04-08 23:09:14,427 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:59869
-2015-04-08 23:09:14,428 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:59869
-2015-04-08 23:09:14,436 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c995c9fa40003 with negotiated timeout 40000 for client /127.0.0.1:59869
-2015-04-08 23:09:16,144 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c995c9fa40000 type:create cxid:0x37 zxid:0xfac txntype:-1 reqpath:n/a Error Path:/hbase/online-snapshot/acquired Error:KeeperErrorCode = NodeExists for /hbase/online-snapshot/acquired
-2015-04-08 23:09:16,374 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:59870
-2015-04-08 23:09:16,379 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:59870
-2015-04-08 23:09:16,387 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c995c9fa40004 with negotiated timeout 40000 for client /127.0.0.1:59870
-2015-04-08 23:09:16,475 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c995c9fa40004 type:create cxid:0x1 zxid:0xfae txntype:-1 reqpath:n/a Error Path:/hbase/replication/rs Error:KeeperErrorCode = NodeExists for /hbase/replication/rs
-2015-04-08 23:09:19,453 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:59873
-2015-04-08 23:09:19,454 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:59873
-2015-04-08 23:09:19,464 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c995c9fa40005 with negotiated timeout 40000 for client /127.0.0.1:59873
-2015-04-08 23:09:19,591 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:59874
-2015-04-08 23:09:19,592 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:59874
-2015-04-08 23:09:19,606 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c995c9fa40006 with negotiated timeout 40000 for client /127.0.0.1:59874
-2015-04-08 23:09:28,003 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c8f562a340002, timeout of 40000ms exceeded
-2015-04-08 23:09:28,007 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c8f562a340006, timeout of 40000ms exceeded
-2015-04-08 23:09:28,014 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c8f562a340005, timeout of 40000ms exceeded
-2015-04-08 23:09:28,014 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c8f562a340001, timeout of 40000ms exceeded
-2015-04-08 23:09:28,014 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c8f562a340003, timeout of 40000ms exceeded
-2015-04-08 23:09:28,014 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c8f562a340000, timeout of 40000ms exceeded
-2015-04-08 23:09:28,020 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c8f562a340004, timeout of 40000ms exceeded
-2015-04-08 23:09:28,020 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c8f562a340007, timeout of 40000ms exceeded
-2015-04-08 23:09:28,020 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c8f562a340002
-2015-04-08 23:09:28,021 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c8f562a340006
-2015-04-08 23:09:28,021 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c8f562a340005
-2015-04-08 23:09:28,026 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c8f562a340001
-2015-04-08 23:09:28,029 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c8f562a340003
-2015-04-08 23:09:28,030 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c8f562a340000
-2015-04-08 23:09:28,030 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c8f562a340004
-2015-04-08 23:09:28,036 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c8f562a340007
-2015-04-08 23:09:44,089 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c995c9fa40000 type:create cxid:0x473 zxid:0x101b txntype:-1 reqpath:n/a Error Path:/hbase/namespace/default Error:KeeperErrorCode = NodeExists for /hbase/namespace/default
-2015-04-08 23:09:44,111 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c995c9fa40000 type:create cxid:0x476 zxid:0x101d txntype:-1 reqpath:n/a Error Path:/hbase/namespace/hbase Error:KeeperErrorCode = NodeExists for /hbase/namespace/hbase
-2015-04-08 23:10:40,822 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:60066
-2015-04-08 23:10:40,830 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:60066
-2015-04-08 23:10:40,880 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c995c9fa40007 with negotiated timeout 40000 for client /127.0.0.1:60066
-2015-04-08 23:18:26,396 [myid:] - WARN  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxn@357] - caught end of stream exception
-EndOfStreamException: Unable to read additional data from client sessionid 0x14c995c9fa40007, likely client has closed socket
+2015-04-09 22:24:29,928 [myid:] - INFO  [main:QuorumPeerConfig@103] - Reading configuration from: /home/jang/zookeeper/zookeeper-3.4.6/bin/../conf/zoo.cfg
+2015-04-09 22:24:29,942 [myid:] - ERROR [main:QuorumPeerConfig@289] - Invalid configuration, only one server specified (ignoring)
+2015-04-09 22:24:29,947 [myid:] - INFO  [main:DatadirCleanupManager@78] - autopurge.snapRetainCount set to 3
+2015-04-09 22:24:29,947 [myid:] - INFO  [main:DatadirCleanupManager@79] - autopurge.purgeInterval set to 0
+2015-04-09 22:24:29,948 [myid:] - INFO  [main:DatadirCleanupManager@101] - Purge task is not scheduled.
+2015-04-09 22:24:29,948 [myid:] - WARN  [main:QuorumPeerMain@113] - Either no config or no quorum defined in config, running  in standalone mode
+2015-04-09 22:24:29,980 [myid:] - INFO  [main:QuorumPeerConfig@103] - Reading configuration from: /home/jang/zookeeper/zookeeper-3.4.6/bin/../conf/zoo.cfg
+2015-04-09 22:24:29,981 [myid:] - ERROR [main:QuorumPeerConfig@289] - Invalid configuration, only one server specified (ignoring)
+2015-04-09 22:24:29,981 [myid:] - INFO  [main:ZooKeeperServerMain@95] - Starting server
+2015-04-09 22:24:30,020 [myid:] - INFO  [main:Environment@100] - Server environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT
+2015-04-09 22:24:30,021 [myid:] - INFO  [main:Environment@100] - Server environment:host.name=localhost
+2015-04-09 22:24:30,021 [myid:] - INFO  [main:Environment@100] - Server environment:java.version=1.7.0_76
+2015-04-09 22:24:30,021 [myid:] - INFO  [main:Environment@100] - Server environment:java.vendor=Oracle Corporation
+2015-04-09 22:24:30,025 [myid:] - INFO  [main:Environment@100] - Server environment:java.home=/usr/lib/jvm/java-7-oracle/jre
+2015-04-09 22:24:30,025 [myid:] - INFO  [main:Environment@100] - Server environment:java.class.path=/home/jang/zookeeper/zookeeper-3.4.6/bin/../build/classes:/home/jang/zookeeper/zookeeper-3.4.6/bin/../build/lib/*.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../lib/slf4j-log4j12-1.6.1.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../lib/slf4j-api-1.6.1.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../lib/netty-3.7.0.Final.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../lib/log4j-1.2.16.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../lib/jline-0.9.94.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../zookeeper-3.4.6.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../src/java/lib/*.jar:/home/jang/zookeeper/zookeeper-3.4.6/bin/../conf:
+2015-04-09 22:24:30,026 [myid:] - INFO  [main:Environment@100] - Server environment:java.library.path=/usr/java/packages/lib/i386:/lib:/usr/lib
+2015-04-09 22:24:30,027 [myid:] - INFO  [main:Environment@100] - Server environment:java.io.tmpdir=/tmp
+2015-04-09 22:24:30,027 [myid:] - INFO  [main:Environment@100] - Server environment:java.compiler=<NA>
+2015-04-09 22:24:30,027 [myid:] - INFO  [main:Environment@100] - Server environment:os.name=Linux
+2015-04-09 22:24:30,027 [myid:] - INFO  [main:Environment@100] - Server environment:os.arch=i386
+2015-04-09 22:24:30,028 [myid:] - INFO  [main:Environment@100] - Server environment:os.version=3.2.0-23-generic-pae
+2015-04-09 22:24:30,028 [myid:] - INFO  [main:Environment@100] - Server environment:user.name=jang
+2015-04-09 22:24:30,028 [myid:] - INFO  [main:Environment@100] - Server environment:user.home=/home/jang
+2015-04-09 22:24:30,028 [myid:] - INFO  [main:Environment@100] - Server environment:user.dir=/test/IdeaDepot
+2015-04-09 22:24:30,046 [myid:] - INFO  [main:ZooKeeperServer@755] - tickTime set to 2000
+2015-04-09 22:24:30,046 [myid:] - INFO  [main:ZooKeeperServer@764] - minSessionTimeout set to -1
+2015-04-09 22:24:30,046 [myid:] - INFO  [main:ZooKeeperServer@773] - maxSessionTimeout set to -1
+2015-04-09 22:24:30,086 [myid:] - INFO  [main:NIOServerCnxnFactory@94] - binding to port 0.0.0.0/0.0.0.0:2181
+2015-04-09 22:24:45,168 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:55647
+2015-04-09 22:24:45,281 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:55647
+2015-04-09 22:24:45,287 [myid:] - INFO  [SyncThread:0:FileTxnLog@199] - Creating new log file: log.a35
+2015-04-09 22:24:45,378 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c9e5a75090000 with negotiated timeout 40000 for client /127.0.0.1:55647
+2015-04-09 22:24:45,456 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c9e5a75090000 type:create cxid:0x1 zxid:0xa36 txntype:-1 reqpath:n/a Error Path:/hbase Error:KeeperErrorCode = NodeExists for /hbase
+2015-04-09 22:24:49,225 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c9e5a75090000 type:create cxid:0xe zxid:0xa37 txntype:-1 reqpath:n/a Error Path:/hbase/master Error:KeeperErrorCode = NodeExists for /hbase/master
+2015-04-09 22:24:51,526 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:55657
+2015-04-09 22:24:51,528 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:55657
+2015-04-09 22:24:51,537 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c9e5a75090001 with negotiated timeout 40000 for client /127.0.0.1:55657
+2015-04-09 22:24:52,069 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c9e5a75090000 type:create cxid:0x37 zxid:0xa3e txntype:-1 reqpath:n/a Error Path:/hbase/online-snapshot/acquired Error:KeeperErrorCode = NodeExists for /hbase/online-snapshot/acquired
+2015-04-09 22:24:52,224 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:55658
+2015-04-09 22:24:52,225 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:55658
+2015-04-09 22:24:52,241 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c9e5a75090002 with negotiated timeout 40000 for client /127.0.0.1:55658
+2015-04-09 22:24:52,254 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c9e5a75090002 type:create cxid:0x1 zxid:0xa40 txntype:-1 reqpath:n/a Error Path:/hbase/replication/rs Error:KeeperErrorCode = NodeExists for /hbase/replication/rs
+2015-04-09 22:25:12,000 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c898d4d9f0001, timeout of 40000ms exceeded
+2015-04-09 22:25:12,001 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c898d4d9f0002, timeout of 40000ms exceeded
+2015-04-09 22:25:12,001 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c898d4d9f0004, timeout of 40000ms exceeded
+2015-04-09 22:25:12,001 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c898d4d9f0006, timeout of 40000ms exceeded
+2015-04-09 22:25:12,001 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c898d4d9f0000, timeout of 40000ms exceeded
+2015-04-09 22:25:12,001 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c898d4d9f0078, timeout of 40000ms exceeded
+2015-04-09 22:25:12,002 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c898d4d9f0005, timeout of 40000ms exceeded
+2015-04-09 22:25:12,002 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c898d4d9f0003, timeout of 40000ms exceeded
+2015-04-09 22:25:12,002 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c898d4d9f0001
+2015-04-09 22:25:12,003 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c898d4d9f0002
+2015-04-09 22:25:12,003 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c898d4d9f0004
+2015-04-09 22:25:12,003 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c898d4d9f0006
+2015-04-09 22:25:12,003 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c898d4d9f0000
+2015-04-09 22:25:12,003 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c898d4d9f0078
+2015-04-09 22:25:12,003 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c898d4d9f0005
+2015-04-09 22:25:12,004 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c898d4d9f0003
+2015-04-09 22:25:47,083 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:55659
+2015-04-09 22:25:47,114 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:55659
+2015-04-09 22:25:47,129 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c9e5a75090003 with negotiated timeout 40000 for client /127.0.0.1:55659
+2015-04-09 22:27:35,128 [myid:] - WARN  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxn@357] - caught end of stream exception
+EndOfStreamException: Unable to read additional data from client sessionid 0x14c9e5a75090003, likely client has closed socket
 	at org.apache.zookeeper.server.NIOServerCnxn.doIO(NIOServerCnxn.java:228)
 	at org.apache.zookeeper.server.NIOServerCnxnFactory.run(NIOServerCnxnFactory.java:208)
 	at java.lang.Thread.run(Thread.java:745)
-2015-04-08 23:18:26,445 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxn@1007] - Closed socket connection for client /127.0.0.1:60066 which had sessionid 0x14c995c9fa40007
-2015-04-08 23:18:34,186 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:60205
-2015-04-08 23:18:34,202 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:60205
-2015-04-08 23:18:34,222 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c995c9fa40008 with negotiated timeout 40000 for client /127.0.0.1:60205
-2015-04-08 23:18:50,706 [myid:] - WARN  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxn@357] - caught end of stream exception
-EndOfStreamException: Unable to read additional data from client sessionid 0x14c995c9fa40008, likely client has closed socket
+2015-04-09 22:27:35,139 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxn@1007] - Closed socket connection for client /127.0.0.1:55659 which had sessionid 0x14c9e5a75090003
+2015-04-09 22:27:42,427 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:55671
+2015-04-09 22:27:42,440 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:55671
+2015-04-09 22:27:42,452 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c9e5a75090004 with negotiated timeout 40000 for client /127.0.0.1:55671
+2015-04-09 22:28:12,000 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c9e5a75090003, timeout of 40000ms exceeded
+2015-04-09 22:28:12,001 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c9e5a75090003
+2015-04-09 22:29:41,218 [myid:] - WARN  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxn@357] - caught end of stream exception
+EndOfStreamException: Unable to read additional data from client sessionid 0x14c9e5a75090004, likely client has closed socket
 	at org.apache.zookeeper.server.NIOServerCnxn.doIO(NIOServerCnxn.java:228)
 	at org.apache.zookeeper.server.NIOServerCnxnFactory.run(NIOServerCnxnFactory.java:208)
 	at java.lang.Thread.run(Thread.java:745)
-2015-04-08 23:18:50,706 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxn@1007] - Closed socket connection for client /127.0.0.1:60205 which had sessionid 0x14c995c9fa40008
-2015-04-08 23:18:55,952 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:60208
-2015-04-08 23:18:55,961 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:60208
-2015-04-08 23:18:55,995 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c995c9fa40009 with negotiated timeout 40000 for client /127.0.0.1:60208
-2015-04-08 23:18:56,000 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c995c9fa40007, timeout of 40000ms exceeded
-2015-04-08 23:18:56,000 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c995c9fa40007
-2015-04-08 23:19:30,000 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c995c9fa40008, timeout of 40000ms exceeded
-2015-04-08 23:19:30,001 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c995c9fa40008
+2015-04-09 22:29:41,224 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxn@1007] - Closed socket connection for client /127.0.0.1:55671 which had sessionid 0x14c9e5a75090004
+2015-04-09 22:29:55,712 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:55689
+2015-04-09 22:29:55,728 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:55689
+2015-04-09 22:29:55,750 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c9e5a75090005 with negotiated timeout 40000 for client /127.0.0.1:55689
+2015-04-09 22:29:55,885 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:55690
+2015-04-09 22:29:55,888 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:55690
+2015-04-09 22:29:55,891 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c9e5a75090006 with negotiated timeout 40000 for client /127.0.0.1:55690
+2015-04-09 22:29:57,040 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c9e5a75090005 type:create cxid:0x9 zxid:0xa4e txntype:-1 reqpath:n/a Error Path:/hbase/online-snapshot/acquired Error:KeeperErrorCode = NodeExists for /hbase/online-snapshot/acquired
+2015-04-09 22:30:00,619 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:55693
+2015-04-09 22:30:00,634 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:55693
+2015-04-09 22:30:00,649 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c9e5a75090007 with negotiated timeout 40000 for client /127.0.0.1:55693
+2015-04-09 22:30:01,091 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:55694
+2015-04-09 22:30:01,092 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:55694
+2015-04-09 22:30:01,127 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c9e5a75090008 with negotiated timeout 40000 for client /127.0.0.1:55694
+2015-04-09 22:30:02,471 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxnFactory@197] - Accepted socket connection from /127.0.0.1:55695
+2015-04-09 22:30:02,490 [myid:] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:ZooKeeperServer@868] - Client attempting to establish new session at /127.0.0.1:55695
+2015-04-09 22:30:02,527 [myid:] - INFO  [SyncThread:0:ZooKeeperServer@617] - Established session 0x14c9e5a75090009 with negotiated timeout 40000 for client /127.0.0.1:55695
+2015-04-09 22:30:14,000 [myid:] - INFO  [SessionTracker:ZooKeeperServer@347] - Expiring session 0x14c9e5a75090004, timeout of 40000ms exceeded
+2015-04-09 22:30:14,001 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@494] - Processed session termination for sessionid: 0x14c9e5a75090004
+2015-04-09 22:30:16,641 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c9e5a75090000 type:create cxid:0x29c zxid:0xa7f txntype:-1 reqpath:n/a Error Path:/hbase/namespace/default Error:KeeperErrorCode = NodeExists for /hbase/namespace/default
+2015-04-09 22:30:16,661 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x14c9e5a75090000 type:create cxid:0x29f zxid:0xa81 txntype:-1 reqpath:n/a Error Path:/hbase/namespace/hbase Error:KeeperErrorCode = NodeExists for /hbase/namespace/hbase

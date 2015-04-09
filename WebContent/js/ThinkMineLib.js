@@ -611,6 +611,17 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				if(fSelectedObject != null){
 					if(fDrawingCCInterface.isCirclesOnShapeContaining(fSelectedObject.fMindObjectId, x,y,z)){
 						fIsNowResizingVirtually = true;
+						
+						if(fSelectedObject.fShape.fShapeType == ShapeTypeEnum.Star){
+							var distanceFromCenter = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
+																			, x, y, z);
+								
+							fSelectedObject.isFirstCircleVertex = true;
+							if(Math.abs(distanceFromCenter - fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius)
+									> Math.abs(distanceFromCenter - fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius))
+								fSelectedObject.isFirstCircleVertex = false;
+						}
+						
 						return;
 					}
 				}
@@ -666,6 +677,11 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		if(!fObjectAddMode){
 			if(fIsNowResizingVirtually){
 				fIsNowResizingVirtually = false;
+				
+				if(fSelectedObject != null){
+					if(fSelectedObject.fShape.fShapeType == ShapeTypeEnum.Star)
+						delete fSelectedObject.isFirstCircleVertex;
+				}				
 				return;
 			}
 		
@@ -886,16 +902,16 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 							var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
 																, x, y, z);
 								
-							var isFirstCircleVertex = true;
+							/*var isFirstCircleVertex = true;
 							if(Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius)
 									> Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius))
-								isFirstCircleVertex = false;
+								isFirstCircleVertex = false;*/
 							
 							
 							var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;
 							var prevNrPoints = fSelectedObject.fShape.fShapeTypeDependentInfo.fNrPoints;
 							
-							if(isFirstCircleVertex)
+							if(fSelectedObject.isFirstCircleVertex)
 								newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, newRadius, fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius, prevColor);
 							else
 								newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius, newRadius , prevColor);
