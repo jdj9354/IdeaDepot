@@ -29,6 +29,9 @@ const THINK_MINE_MIND_MAP_PAGE_NAME = "ThinkMine_MindMapPage_DEV.html";
 const THINK_MINE_RDWRAPPER_PARENT_SERVER_ADDR = "127.0.0.1";
 const THINK_MINE_RDWRAPPER_PARENT_SOCKET_IO_SERVER_PORT = 52274;
 
+const MEDIA_SERVER_ADDR = "127.0.0.1";
+const WEB_PREVIEW_PORT = "53374";
+
 
 //Server Constants
 if(typeof module != "undefined"){

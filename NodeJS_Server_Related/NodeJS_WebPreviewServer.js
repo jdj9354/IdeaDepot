@@ -19,7 +19,7 @@ app.use(function(request, response,next) {
 	runPageRessAndReply(url,resolution,userId,response);
 });
 
-http.createServer(app).listen(52274,function() {
+http.createServer(app).listen(53374,function() {
 	console.log('Web Preview Server is Running at http://127.0.0.1:52274');
 });
 

@@ -110,17 +110,17 @@ function DefinableAnimInfoFunc (){
 
 const DefinableAnimInfoFunc_CircleShapeCreation = {
 	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
-		return 70;
+		return 30;
 	},
 	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
 		progressStatusInfo.fRadius = 9;
 		progressStatusInfo.direction = 1;
-		progressStatusInfo.delta = (finalStatusInfo.fRadius - 9)/50;
+		progressStatusInfo.delta = (finalStatusInfo.fRadius - 9)/25;
 		progressStatusInfo.count = 0;
 		//finalStatusInfo.fRadius = 0;
 	},
 	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
-		if(progressStatusInfo.count>=60)
+		if(progressStatusInfo.count>=27)
 			progressStatusInfo.direction = -1;
 			
 		progressStatusInfo.fRadius += progressStatusInfo.delta * progressStatusInfo.direction;
@@ -128,12 +128,32 @@ const DefinableAnimInfoFunc_CircleShapeCreation = {
 	}
 };
 
+const DefinableAnimInfoFunc_CircleShapeDeletion = {
+	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
+		return 70;
+	},
+	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		progressStatusInfo.direction = 1;
+		progressStatusInfo.delta = (progressStatusInfo.fRadius - finalStatusInfo.fRadius)/50;
+		progressStatusInfo.count = 0;
+		//finalStatusInfo.fRadius = 0;
+	},
+	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		if(progressStatusInfo.count>=10)
+			progressStatusInfo.direction = -1;
+			
+		progressStatusInfo.fRadius += progressStatusInfo.delta * progressStatusInfo.direction;
+		progressStatusInfo.count++;
+	}
+};
+
+
 const DefinableAnimInfoFunc_CircleShapeExpansion = {
 	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
 		return 70;
 	},
 	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
-		progressStatusInfo.delta = (finalStatusInfo.fRadius - progressStatusInfo.fRadius)/70;
+		progressStatusInfo.delta = ( progressStatusInfo.fRadius - finalStatusInfo.fRadius)/70;
 		progressStatusInfo.count = 0;
 		//finalStatusInfo.fRadius = 0;
 	},
@@ -159,6 +179,28 @@ const DefinableAnimInfoFunc_RectangleShapeCreation = {
 	},
 	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
 		if(progressStatusInfo.count>=60)
+			progressStatusInfo.direction = -1;
+			
+		progressStatusInfo.fWidth += progressStatusInfo.delta * progressStatusInfo.direction;
+		progressStatusInfo.fHeight += progressStatusInfo.delta * progressStatusInfo.direction * progressStatusInfo.whRatio;
+		
+		progressStatusInfo.count++;
+	}
+};
+
+const DefinableAnimInfoFunc_RectangleShapeDeletion = {
+	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
+		return 70;
+	},
+	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		progressStatusInfo.direction = 1;
+		progressStatusInfo.delta = (progressStatusInfo.fWidth - finalStatusInfo.fWidth)/50;
+		progressStatusInfo.whRatio = progressStatusInfo.fHeight/progressStatusInfo.fWidth;
+		progressStatusInfo.count = 0;
+		//finalStatusInfo.fRadius = 0;
+	},
+	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		if(progressStatusInfo.count>=10)
 			progressStatusInfo.direction = -1;
 			
 		progressStatusInfo.fWidth += progressStatusInfo.delta * progressStatusInfo.direction;
@@ -215,6 +257,34 @@ const DefinableAnimInfoFunc_StarShapeCreation = {
 	}
 };
 
+const DefinableAnimInfoFunc_StarShapeDeletion = {
+	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
+		return 70;
+	},
+	initStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		progressStatusInfo.direction = 1;
+		var deltaFactor = finalStatusInfo.fFirstRadius > finalStatusInfo.fSecondRadius? finalStatusInfo.fFirstRadius : finalStatusInfo.fSecondRadius;
+		var deletaFactorInit = progressStatusInfo.fFirstRadius > progressStatusInfo.fSecondRadius? progressStatusInfo.fFirstRadius : progressStatusInfo.fSecondRadius;
+		progressStatusInfo.delta = (deletaFactorInit - deltaFactor)/50;
+		progressStatusInfo.count = 0;
+		//finalStatusInfo.fRadius = 0;
+	},
+	updateStatusInfo : function(progressStatusInfo, finalStatusInfo){
+		if(progressStatusInfo.count>=10)
+			progressStatusInfo.direction = -1;
+			
+		
+		var fsRatio = progressStatusInfo.fSecondRadius / progressStatusInfo.fFirstRadius;
+					
+
+		progressStatusInfo.fFirstRadius += progressStatusInfo.delta * progressStatusInfo.direction;
+		progressStatusInfo.fSecondRadius += progressStatusInfo.delta * fsRatio * progressStatusInfo.direction;
+		
+		progressStatusInfo.count++;
+	}
+};
+
+
 
 const DefinableAnimInfoFunc_StarShapeExpansion = {
 	getRepeatCount : function (progressStatusInfo, finalStatusInfo){
@@ -247,10 +317,15 @@ var functionContainer = {
 };
 
 functionContainer.set("DefinableAnimInfoFunc_CircleShapeCreation",DefinableAnimInfoFunc_CircleShapeCreation);
+functionContainer.set("DefinableAnimInfoFunc_CircleShapeDeletion",DefinableAnimInfoFunc_CircleShapeDeletion);
 functionContainer.set("DefinableAnimInfoFunc_CircleShapeExpansion",DefinableAnimInfoFunc_CircleShapeExpansion);
+
 functionContainer.set("DefinableAnimInfoFunc_RectangleShapeCreation",DefinableAnimInfoFunc_RectangleShapeCreation);
+functionContainer.set("DefinableAnimInfoFunc_RectangleShapeDeletion",DefinableAnimInfoFunc_RectangleShapeDeletion);
 functionContainer.set("DefinableAnimInfoFunc_RectangleShapeExpansion",DefinableAnimInfoFunc_RectangleShapeExpansion);
+
 functionContainer.set("DefinableAnimInfoFunc_StarShapeCreation",DefinableAnimInfoFunc_StarShapeCreation);
+functionContainer.set("DefinableAnimInfoFunc_StarShapeDeletion",DefinableAnimInfoFunc_StarShapeDeletion);
 functionContainer.set("DefinableAnimInfoFunc_StarShapeExpansion",DefinableAnimInfoFunc_StarShapeExpansion);
 
 function EllipseShapeMOCAnimationInfoGenerator(shapeType, shapeTypeDendentInfo){

@@ -198,8 +198,7 @@ const DEFAULT_TYPE_EDGE = "SimplePathEdge";
 const DEFAULT_OPACITY_SELECTED_MIND_OBJECT = 0.7;
 const DEFAULT_OPACITY_MOVING_MIND_OBJECT = 0.7;
 
-const MEDIA_SERVER_ADDR = "192.168.0.2";
-const WEB_PREVIEW_PORT = "52274";
+
 
 
 
@@ -2474,11 +2473,12 @@ console.log(now);
 				
 				var tempDelMindObject = fMindMap.getMindObjectOnIndex(i);
 				
-				tempShapeType = "" + tempDelMindObject.fShape.fShapeType;
-				tempContentsType = "" + tempDelMindObject.fContents.fContentsType;
+				var tempShapeType = "" + tempDelMindObject.fShape.fShapeType;
+				var tempContentsType = "" + tempDelMindObject.fContents.fContentsType;
 				
-				tempShapeTypeForDrawing = "" + tempDelMindObject.fShape.fShapeType;
-				tempContentsTypeForDrawing = "" + tempDelMindObject.fContents.fContentsType;
+				var tempShapeTypeForDrawing = "" + tempDelMindObject.fShape.fShapeType;
+				var tempShapeTypeDependentInfoForDrawing = tempDelMindObject.fShape.fShapeTypeDependentInfo;
+				var tempContentsTypeForDrawing = "" + tempDelMindObject.fContents.fContentsType;
 				
 				var tempDelMindObjectInfoForDrawing = {fShape : {fShapeType : tempShapeTypeForDrawing},
 														fContents : {fContentsType : tempContentsTypeForDrawing},
@@ -2501,12 +2501,100 @@ console.log(now);
 				fMindMap.getMindObjectOnIndex(i).removeMindObject();
 				fMindMap.removeMindObjectOnIndex(i);
 				
-				var drawingJob = new Array();
-				drawingJob.push(CODE_MIND_DEL);
-				drawingJob.push(tempDelMindObjectInfoForDrawing);
-				drawingJob.push(tempDelEdgeInfoArrayForDrawing);
+				var finalStatusInfo;
+				var progressStatusInfo;
+				var interval;
+				var objData;
 				
-				fDrawingObj.pushNewJob(drawingJob);					
+				switch(tempShapeTypeForDrawing){
+				case ShapeTypeEnum.Polygon :
+				case ShapeTypeEnum.Circle :
+					finalStatusInfo = {};
+					finalStatusInfo.fRadius = 0;
+					
+					progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
+
+					interval = 1;
+
+					objData = {definedFuncSetName : "DefinableAnimInfoFunc_CircleShapeDeletion" 
+									,progressStatusInfo : progressStatusInfo
+									,finalStatusInfo : finalStatusInfo
+									,interval : interval};			
+					
+
+					
+					break;
+				case ShapeTypeEnum.Ellipse :
+					break;
+				case ShapeTypeEnum.Rectangle :
+					finalStatusInfo = {};
+					finalStatusInfo.fWidth = 0;
+					finalStatusInfo.fHeight = 0;
+					
+					progressStatusInfo = tempShapeTypeDependentInfoForDrawing;
+
+					interval = 1;
+
+					objData = {definedFuncSetName : "DefinableAnimInfoFunc_RectangleShapeDeletion" 
+									,progressStatusInfo : progressStatusInfo
+									,finalStatusInfo : finalStatusInfo
+									,interval : interval};	
+					break;
+				case ShapeTypeEnum.Star :
+					finalStatusInfo = {};
+					finalStatusInfo.fFirstRadius = 0;
+					finalStatusInfo.fSecondRadius = 0;
+					
+					progressStatusInfo = tempShapeTypeDependentInfoForDrawing;			
+
+					interval = 1;
+
+					objData = {definedFuncSetName : "DefinableAnimInfoFunc_StarShapeDeletion" 
+									,progressStatusInfo : progressStatusInfo
+									,finalStatusInfo : finalStatusInfo
+									,interval : interval};	
+					break;
+				}		
+				
+				
+
+				
+				var animWorker = new Worker("AnimationWorker.js");
+				
+				
+				animWorker.onmessage = function (event){
+					var data = event.data;
+					tempShapeTypeDependentInfoForDrawing = event.data.info;
+					
+					
+					if(data.flag == 0){
+						
+						fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
+							{fMindObjectId : tempDelMindObjectInfoForDrawing.fMindObjectId,
+							fShape : {fShapeType : tempShapeTypeForDrawing,
+										fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing
+							}}]);
+						
+					}
+					else{
+						animWorker.terminate();
+						animWorker = null;
+						
+						var drawingJob = new Array();
+						drawingJob.push(CODE_MIND_DEL);
+						drawingJob.push(tempDelMindObjectInfoForDrawing);
+						drawingJob.push(tempDelEdgeInfoArrayForDrawing);
+						
+						fDrawingObj.pushNewJob(drawingJob);		
+					}
+					
+			
+				};	
+
+
+				animWorker.postMessage(objData);
+				
+			
 				
 				break;
 			}
