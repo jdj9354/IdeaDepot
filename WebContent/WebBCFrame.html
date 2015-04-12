@@ -2,25 +2,51 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 	</head>
 	<body>
 		<div class="row">
 			<div class="col-lg-6">
 				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Search for...">
+					<input id="urlText" type="text" class="form-control" placeholder="Search for...">
 					<span class="input-group-btn">
-						<button class="btn btn-default" type="button">Go</button>
+						<button id="goBtn" class="btn btn-default" type="button">Go</button>
+						<button id="captureBtn" class="btn btn-default" type="button">Capture</button>
 					</span>
 				</div><!-- /input-group -->
 			</div><!-- /.col-lg-6 -->	  
 		</div><!-- /.row -->
 		
-		<iframe src="http://www.naver.com"></iframe>
-		
+		<iframe width=1000 height =400 id="browsingIframe" src="http://portal.korea.ac.kr"></iframe>
+		<br>
+		<canvas width=1000 height =800 id="captureCanvas"></canvas>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script src="bootstrap/js/bootstrap.min.js"></script>				
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script>
+			const MEDIA_SERVER_ADDR = "127.0.0.1";
+			const WEB_PREVIEW_PORT = "53374";
+			$('#goBtn').click(function(){
+				document.getElementById("browsingIframe").src = document.getElementById("urlText").value;
+			});
+			$('#captureBtn').click(function(){
+					//var iframe = document.getElementById('browsingIframe');
+					//console.log(iframe.scrollTop);
+					var frame_top = $('#browsingIframe').scrollTop();
+					console.log(frame_top);
+					var webPreviewSrcUrl = "http://"+MEDIA_SERVER_ADDR+":"+WEB_PREVIEW_PORT+"?url="+document.getElementById("urlText").value+"&userId=jdj9354test"+"&resolution=1280X840";	
+				    var ctx = document.getElementById('captureCanvas').getContext('2d');
+					var img = new Image();
+					img.onload = function(){
+					  ctx.drawImage(img,0,0);
+					};
+					img.src = webPreviewSrcUrl;
+			});
+			var iframe = document.getElementById('browsingIframe');
+			iframe.scrollTop= 30;
+			console.log(iframe.scrollTop);
+			var a = 3;
+			//var webPreviewSrcUrl = "http://"+MEDIA_SERVER_ADDR+":"+WEB_PREVIEW_PORT+"?url="+value+"&resolution="+info.fResolution+"&userId="+currentUserId;	
+		</script>
 	</body>
 </html>

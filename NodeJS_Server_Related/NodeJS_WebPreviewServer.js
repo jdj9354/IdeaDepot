@@ -25,7 +25,7 @@ http.createServer(app).listen(53374,function() {
 
 function runPageRessAndReply(url, resolution, userId,responseObj){	
 	var pageres = new Pageres({delay:2})
-					.src(url,[resolution],{crop:true})
+					.src(url,[resolution],{crop:false})
 					.dest(__dirname+"/"+imageRootFolder+"/"+userId);	
 
 	pageres.run(function(err,items){
