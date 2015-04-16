@@ -220,7 +220,8 @@ const ContentsTypeEnum = {
 };
 
 const EdgeTypeEnum = {
-	SimplePath : "SimplePathEdge"
+	SimplePath : "SimplePathEdge",
+	OrientedPath : "OrientedPathEdge"
 };
 
 const TM_SOCKET_MODE = {
@@ -936,13 +937,16 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					
 					if(Distance !=0 && Distance <= maxRelDistanceBySquare && !isConnectedMindObject){
 						//console.log("connect");
+						/*this.connectMindObject(fMovingObject.fMindObjectId,
+												MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath, new SimplePathEdgeTypeDependentInfo(8,this.getShapeColor()));*/
 						this.connectMindObject(fMovingObject.fMindObjectId,
-												MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath, new SimplePathEdgeTypeDependentInfo(8,this.getShapeColor()));
+												MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.OrientedPath, new OrientedPathEdgeTypeDependentInfo(fMovingObject.fMindObjectId,false,8,this.getShapeColor()));
+						
 					}
 					else if(Distance !=0 && Distance > maxRelDistanceBySquare && isConnectedMindObject){
 						//console.log("disconnect");
 						this.disconnectMindObject(fMovingObject.fMindObjectId,
-								MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath);
+								MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.OrientedPath);
 					}
 				}
 				
@@ -1776,7 +1780,14 @@ function SimplePathEdgeTypeDependentInfo(width, color){
 SimplePathEdgeTypeDependentInfo.prototype = new EdgeTypeDependentInfo();
 SimplePathEdgeTypeDependentInfo.constructor = SimplePathEdgeTypeDependentInfo;
 
-
+function OrientedPathEdgeTypeDependentInfo(originId, bidirectional,  width, color){
+	this.fOriginId = originId;
+	this.fBidirectional = bidirectional;
+	this.fWidth = width;
+	this.fColor = color;
+}
+OrientedPathEdgeTypeDependentInfo.prototype = new EdgeTypeDependentInfo();
+OrientedPathEdgeTypeDependentInfo.constructor = OrientedPathEdgeTypeDependentInfo;
 
 //------------------- Shape Section------------------------------------
 
@@ -1947,6 +1958,9 @@ function Encoder(){
 		case EdgeTypeEnum.SimplePath :
 			ret = 16777216;
 			break;
+		case EdgeTypeEnum.OrientedPath :
+			ret = 16777217;
+			break;
 		default :
 			ret = 0;
 			break;		
@@ -2009,6 +2023,9 @@ function Decoder(){
 		switch (edgeType){
 		case 16777216 :
 			ret = EdgeTypeEnum.SimplePath;
+			break;
+		case 16777217 :
+			ret = EdgeTypeEnum.OrientedPath;
 			break;
 		default :
 			ret = null;
@@ -2671,8 +2688,14 @@ console.log(now);
 					
 					
 					var tempEdgeForDrawing = {fEdgeType : "" + fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fEdgeType , 
-											  fFirstMindObject : {fMindObjectId : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fFirstMindObject.fMindObjectId} ,
-					                          fSecondMindObject : {fMindObjectId : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fSecondMindObject.fMindObjectId}
+											  fFirstMindObject : {fMindObjectId : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fFirstMindObject.fMindObjectId,
+																	fX : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fFirstMindObject.fX,
+																	fY : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fFirstMindObject.fY,
+																	fZ : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fFirstMindObject.fZ} ,
+					                          fSecondMindObject : {fMindObjectId : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fSecondMindObject.fMindObjectId,
+																	fX : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fSecondMindObject.fX,
+																	fY : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fSecondMindObject.fY,
+																	fZ : fMindMap.getMindObjectOnIndex(i).getConnectedEdgeOnIndex(j).fSecondMindObject.fZ}
 					
 											};
 					
@@ -3086,6 +3109,7 @@ console.log(now);
 	
 	var getObjTypeDependentInfo = function(type, parameterArray){
 		var ret;
+		console.log("type : " + type);
 		switch (type){
 		//Shape
 		case ShapeTypeEnum.Circle :
@@ -3117,8 +3141,11 @@ console.log(now);
 			ret = new WebPreviewContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 			break;
 		//Edge
-		case EdgeTypeEnum.SimplePath :
+		case EdgeTypeEnum.SimplePath :			
 			ret = new SimplePathEdgeTypeDependentInfo(parameterArray[0], parameterArray[1]);
+			break;
+		case EdgeTypeEnum.OrientedPath :
+			ret =  new OrientedPathEdgeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 			break;
 		}
 		return ret;
@@ -3287,22 +3314,7 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 							STDI : tempShapeTypeDependentInfoArray,
 							CT : fEncoder.encodeContentsType(tempContentsType),
 							CTDI : tempContentsTypeDependentInfoArray,
-							CV : tempContentsValue},OPERATION_TYPE.CREATE);
-		
-		
-		
-		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_ADD,
-									MMID : mindMapId,
-									MOID : mindObjectId,									
-									X : x,
-									Y : y,
-									Z : z,
-									ST : fEncoder.encodeShapeType(tempShapeType),
-									STDI : tempShapeTypeDependentInfoArray,
-									CT : fEncoder.encodeContentsType(tempContentsType),
-									CTDI : tempContentsTypeDependentInfoArray,
-									CV : tempContentsValue});*/		
-		
+							CV : tempContentsValue},OPERATION_TYPE.CREATE);	
 	};
 	this.mindObjectRemoveSend = function(mindMapId,mindObjectId){		
 		if(fJobHandler == null || fRoom == null){
@@ -3329,15 +3341,8 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 							MOID : mindObjectId,
 							X : x,
 							Y : y,
-							Z : z},OPERATION_TYPE.UPDATE);
-		
-		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_MOVE,
-									MMID : mindMapId,
-									MOID : mindObjectId,
-									X : x,
-									Y : y,
-									Z : z});	*/	
-		
+							Z : z},OPERATION_TYPE.UPDATE);	
+	
 	};
 	this.mindObjectPutIntoSend = function(mindMapId, mindObject, destinationMindMapId, x, y, z){
 		if(fJobHandler == null || fRoom == null){
@@ -3426,15 +3431,6 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 							TMOID : targetMindObjectId,
 							ET : fEncoder.encodeEdgeType(tempEdgeType),
 							ETDI : tempEdgeTypeDependentInfoArray},OPERATION_TYPE.CREATE);
-		
-		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_CONNECT_TO,
-									MMID : mindMapId,
-									MOID : mindObjectId,
-									TMOID : targetMindObjectId,
-									ET : fEncoder.encodeEdgeType(tempEdgeType),
-									ETDI : tempEdgeTypeDependentInfoArray});*/	
-		
-		
 	};
 	this.mindObjectDisconnectFromSend = function(mindMapId, mindObjectId, targetMindObjectId, edgeType){
 		if(fJobHandler == null || fRoom == null){
@@ -3447,12 +3443,6 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 							MOID : mindObjectId,
 							TMOID : targetMindObjectId,
 							ET : fEncoder.encodeEdgeType(edgeType)},OPERATION_TYPE.DELETE);
-		
-		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_DISCONNECT_FROM,
-									MMID : mindMapId,
-									MOID : mindObjectId,
-									TMOID : targetMindObjectId,
-									ET : fEncoder.encodeEdgeType(edgeType)});	*/
 	};
 	this.mindObjectChangeColorOfContentsSend = function(mindMapId, mindObjectId, colorCode){
 		if(fJobHandler == null || fRoom == null){
@@ -3464,10 +3454,6 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 							MMID : mindMapId,
 							MOID : mindObjectId,
 							CC : colorCode},OPERATION_TYPE.UPDATE);
-		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_CHANGE_COLOR_OF_CONTENTS,
-			MMID : mindMapId,
-			MOID : mindObjectId,
-			CC : colorCode});	*/
 	};
 	this.mindObjectChangeValueOfContentsSend = function(mindMapId, mindObjectId, contentsType, contentsValue){
 		if(fJobHandler == null || fRoom == null){
@@ -3480,12 +3466,6 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 							MOID : mindObjectId,
 							CT : fEncoder.encodeContentsType(contentsType),
 							CV : contentsValue},OPERATION_TYPE.UPDATE);
-			
-		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_CHANGE_VALUE_OF_CONTENTS,
-			MMID : mindMapId,
-			MOID : mindObjectId,
-			CT : fEncoder.encodeContentsType(contentsType),
-			CV : contentsValue});*/	
 	};
 	this.mindObjectChangeContentsSend = function(mindMapId, mindObjectId, contentsType, contents){
 		if(fJobHandler == null || fRoom == null){
@@ -3504,11 +3484,6 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 							MMID : mindMapId,
 							MOID : mindObjectId,
 							CC : colorCode},OPERATION_TYPE.UPDATE);
-		
-		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_CHANGE_COLOR_OF_SHAPE,
-			MMID : mindMapId,
-			MOID : mindObjectId,
-			CC : colorCode});	*/
 	};	
 	this.mindObjectChangeShape = function(mindMapId, mindObjectId, shapeType){
 		if(fJobHandler == null || fRoom == null){
@@ -3518,7 +3493,6 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		var SendInfo = "";
 		
 		fRoom.publicToCR(SendInfo,OPERATION_TYPE.UPDATE);
-		//fWSocket.emit('NewEvent',SendInfo);
 	};
 	this.mindObjectChangeParentMindMapSend = function(mindMapId, mindObjectId, targetMindMapId){
 		if(fJobHandler == null || fRoom == null){
@@ -3528,7 +3502,6 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		var SendInfo = "";
 		
 		fRoom.publicToCR(SendInfo,OPERATION_TYPE.UPDATE);
-		//fWSocket.emit('NewEvent',SendInfo);
 	};
 	this.mindObjectResizeShapeSend = function(mindMapId,mindObjectId, shape){
 		if(fJobHandler == null || fRoom == null){
@@ -3543,14 +3516,6 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 							MOID : mindObjectId,
 							ST : fEncoder.encodeShapeType(shape.fShapeType),
 							STDI : tempShapeTypeDependentInfoArray},OPERATION_TYPE.UPDATE);			
-		
-		
-/*		fWSocket.emit('NewEvent',{Code : CODE_MIND_RESIZE_SHAPE,
-			MMID : mindMapId,
-			MOID : mindObjectId,
-			ST : fEncoder.encodeShapeType(shape.fShapeType),
-			STDI : tempShapeTypeDependentInfoArray});	*/
-		
 	};
 
 	this.mindMapRequestMindInfo = function(mindMapId){	
@@ -3561,25 +3526,7 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		
 		fRoom.privateToSelf({Code : CODE_MIND_MAP_REQUEST_MIND_INFO,
 							MMID : mindMapId},OPERATION_TYPE.READ);
-		
-		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_MAP_REQUEST_MIND_INFO,
-										MMID : mindMapId});*/
-	};
-	
-	
-	/*this.newMindMapRequestMindInfo = function(mindMapId){	
-		if(fJobHandler == null || fRoom == null){
-			console.log("SocketDataCommuHelperSender : Object is not Initialized");
-			return;
-		}
-		
-		fRoom.privateToSelf({Code : CODE_MIND_MAP_REQUEST_NEW_MIND_MAP,
-							MMID : mindMapId},OPERATION_TYPE.CREATE);
-		
-		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_MAP_REQUEST_MIND_INFO,
-										MMID : mindMapId});
-	};*/
-	
+	};	
 	
 	this.mindMapRequestNewMindMap = function(mindMapId){	
 		if(fJobHandler == null || fRoom == null){
@@ -3590,13 +3537,10 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		
 		fRoom.privateToSelf({Code : CODE_MIND_MAP_REQUEST_NEW_MIND_MAP,
 								MMID : mindMapId},OPERATION_TYPE.CREATE);
-										
-		/*fWSocket.emit('NewEvent',{Code : CODE_MIND_MAP_REQUEST_NEW_MIND_MAP,
-										MMID : UUID.genV4()});*/
 	};
 	
 	var genArrayForCommu = function(type, typeDependentInfo){
-		var ret;
+		var ret;		
 		switch(type){
 		//Shape
 		case  ShapeTypeEnum.Circle :
@@ -3650,13 +3594,18 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		case EdgeTypeEnum.SimplePath :
 			ret = [typeDependentInfo.fWidth, typeDependentInfo.fColor];
 			break;
+		case EdgeTypeEnum.OrientedPath :			
+			ret = [	typeDependentInfo.fOriginId,
+					typeDependentInfo.fBidirectional,
+					typeDependentInfo.fWidth, 
+					typeDependentInfo.fColor];
+			break;
 		default :
 			ret = null;
 			break;
 		}
 		return ret;
-	};
-	
+	};	
 }
 
 
@@ -3969,12 +3918,22 @@ function DrawingObj(drawingCCInterface){
 			
 			var tempEdgeType = edgeObjects[i].fEdgeType;
 			
-			fDrawingCCInterface["draw"+tempEdgeType](edgeObjects[i].fFirstMindObject.fX,							//Frist X
-														edgeObjects[i].fFirstMindObject.fY,						//First Y
-														edgeObjects[i].fFirstMindObject.fZ,						//First Z
-														edgeObjects[i].fSecondMindObject.fX,					//Second X
-														edgeObjects[i].fSecondMindObject.fY,					//Second Y
-														edgeObjects[i].fSecondMindObject.fZ,					//Second Z
+			var firstObjectCoord = fDrawingCCInterface.getIntersectionFromCenter(edgeObjects[i].fSecondMindObject.fX,					
+																					edgeObjects[i].fSecondMindObject.fY,					
+																					edgeObjects[i].fSecondMindObject.fZ,
+																					edgeObjects[i].fFirstMindObject.fMindObjectId);
+																					
+			var secondObjectCoord = fDrawingCCInterface.getIntersectionFromCenter(edgeObjects[i].fFirstMindObject.fX,					
+																					edgeObjects[i].fFirstMindObject.fY,					
+																					edgeObjects[i].fFirstMindObject.fZ,
+																					edgeObjects[i].fSecondMindObject.fMindObjectId);
+			
+			fDrawingCCInterface["draw"+tempEdgeType](firstObjectCoord[0],							//Frist X
+														firstObjectCoord[1],						//First Y
+														firstObjectCoord[2],						//First Z
+														secondObjectCoord[0],					//Second X
+														secondObjectCoord[1],					//Second Y
+														secondObjectCoord[2],					//Second Z
 														edgeObjects[i].fEdgeTypeDependentInfo, 					//Info
 														edgeObjects[i].fFirstMindObject.fMindObjectId,			//FirstID
 														edgeObjects[i].fSecondMindObject.fMindObjectId);		//SecondID
@@ -4027,37 +3986,37 @@ function DrawingObj(drawingCCInterface){
 			fDrawingCCInterface.syncCirclesOnShapeVertex(movMindObjectInfo.fMindObjectId);
 			
 			for(var j=0; j<movEdgeInfo.length; j++){
-				fDrawingCCInterface["move"+movEdgeInfo[j].fEdgeType](pointArray[i][0],
-																		pointArray[i][1],
-																		pointArray[i][2],
+				var connectedMindObj = compareIdValue(movMindObjectInfo.fMindObjectId,movEdgeInfo[j].fFirstMindObject.fMindObjectId)?
+										movEdgeInfo[j].fSecondMindObject : movEdgeInfo[j].fFirstMindObject;
+										
+				var intersectCoord = fDrawingCCInterface.getIntersectionFromCenter(connectedMindObj.fX,
+																					connectedMindObj.fY,
+																					connectedMindObj.fZ,
+																					movMindObjectInfo.fMindObjectId);
+				fDrawingCCInterface["move"+movEdgeInfo[j].fEdgeType](intersectCoord[0],
+																		intersectCoord[1],
+																		intersectCoord[2],
 																		movEdgeInfo[j].fFirstMindObject.fMindObjectId, 
 																		movEdgeInfo[j].fSecondMindObject.fMindObjectId,
 																		movMindObjectInfo.fMindObjectId);
+				
+
+				
+				
+				intersectCoord = fDrawingCCInterface.getIntersectionFromCenter(movMindObjectInfo.fX,
+																					movMindObjectInfo.fY,
+																					movMindObjectInfo.fZ,
+																					connectedMindObj.fMindObjectId);
+				fDrawingCCInterface["move"+movEdgeInfo[j].fEdgeType](intersectCoord[0],
+																		intersectCoord[1],
+																		intersectCoord[2],
+																		movEdgeInfo[j].fFirstMindObject.fMindObjectId, 
+																		movEdgeInfo[j].fSecondMindObject.fMindObjectId,
+																		connectedMindObj.fMindObjectId);
+				
+				
 			}			
-		}
-		
-									
-		
-//		getDrawingFunctionRef(movMindObjectInfo.fShape.fShapeType, "move")(movMindObjectInfo.fX,
-//				movMindObjectInfo.fY,
-//				movMindObjectInfo.fZ,
-//				movMindObjectInfo.fMindObjectId);
-//		getDrawingFunctionRef(movMindObjectInfo.fContents.fContentsType, "move")(movMindObjectInfo.fX,
-//							movMindObjectInfo.fY,
-//							movMindObjectInfo.fZ,
-//							movMindObjectInfo.fMindObjectId);
-//		
-//		for(var i=0; i<movEdgeInfo.length; i++){
-//		getDrawingFunctionRef(movEdgeInfo[i].fEdgeType, "move")(movMindObjectInfo.fX,
-//				movMindObjectInfo.fY,
-//				movMindObjectInfo.fZ,
-//				movEdgeInfo[i].fFirstMindObject.fMindObjectId, 
-//				movEdgeInfo[i].fSecondMindObject.fMindObjectId,
-//				movMindObjectInfo.fMindObjectId);
-//		}
-		
-		
-		
+		}	
 	};
 	
 	var putIntoMindObject = function(flagValue, delMindObjectInfo_or_addMindObjectInfo, delEdgeInfo){
@@ -4089,15 +4048,26 @@ function DrawingObj(drawingCCInterface){
 	};
 	
 	var drawEdge = function(newEdgeInfo){
-		fDrawingCCInterface["draw"+newEdgeInfo.fEdgeType](newEdgeInfo.fFirstMindObject.fX,
-																newEdgeInfo.fFirstMindObject.fY,
-																newEdgeInfo.fFirstMindObject.fZ,
-																newEdgeInfo.fSecondMindObject.fX,
-																newEdgeInfo.fSecondMindObject.fY,
-																newEdgeInfo.fSecondMindObject.fZ,
-																newEdgeInfo.fEdgeTypeDependentInfo,
-																newEdgeInfo.fFirstMindObject.fMindObjectId,
-																newEdgeInfo.fSecondMindObject.fMindObjectId);
+		
+		var firstIntersects = fDrawingCCInterface.getIntersectionFromCenter(newEdgeInfo.fSecondMindObject.fX,
+																			newEdgeInfo.fSecondMindObject.fY,
+																			newEdgeInfo.fSecondMindObject.fZ,
+																			newEdgeInfo.fFirstMindObject.fMindObjectId);
+																			
+		var secondIntersects = fDrawingCCInterface.getIntersectionFromCenter(newEdgeInfo.fFirstMindObject.fX,
+																			newEdgeInfo.fFirstMindObject.fY,
+																			newEdgeInfo.fFirstMindObject.fZ,
+																			newEdgeInfo.fSecondMindObject.fMindObjectId);
+		
+		fDrawingCCInterface["draw"+newEdgeInfo.fEdgeType](firstIntersects[0],
+															firstIntersects[1],
+															firstIntersects[2],
+															secondIntersects[0],
+															secondIntersects[1],
+															secondIntersects[2],
+															newEdgeInfo.fEdgeTypeDependentInfo,
+															newEdgeInfo.fFirstMindObject.fMindObjectId,
+															newEdgeInfo.fSecondMindObject.fMindObjectId);
 	};
 	
 	var eraseEdge = function(delEdgeInfo){
@@ -4342,6 +4312,16 @@ function DrawingCCInterface(backBoneType){
 	};
 	this.moveSimplePathEdge = function(x, y, z, startMindObjectId, endMindObjectId, movingMindObjectId){
 		
+	};	
+
+	this.drawOrientedPathEdge = function(startX ,startY, startZ, endX, endY, endZ, info, startMindObjectId, endMindObjectId){
+		
+	};
+	this.eraseOrientedPathEdge = function(startMindObjectId, endMindObjectId){
+		
+	};
+	this.moveOrientedPathEdge = function(x, y, z, startMindObjectId, endMindObjectId, movingMindObjectId){
+		
 	};
 	
 	//All
@@ -4368,7 +4348,7 @@ function DrawingCCInterface(backBoneType){
 	};
 	this.isContaining = function(x, y, z, mindObject){		
 	};
-	this.isVertextContaining = function(x, y, z, mindObject){
+	this.getIntersectionFromCenter = function(x, y, z, mindObjectId){
 	};
 }
 
@@ -5139,7 +5119,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		drawingObject.strokeColor = info.fColor;
 		drawingObject.strokeWidth = info.fWidth;
 		//drawingObject.sendToBack();
-		drawingObject.moveAbove(paper.project.activeLayer.firstChild);
+		//drawingObject.moveAbove(paper.project.activeLayer.firstChild);
 		//drawingObject.
 		drawingObject.fStartMindObjectId = startMindObjectId;
 		drawingObject.fEndMindObjectId = endMindObjectId;
@@ -5188,6 +5168,64 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 			}			
 		}
 		paper.view.draw();
+	};
+	
+	this.drawOrientedPathEdge = function(startX ,startY, startZ, endX, endY, endZ, info, startMindObjectId, endMindObjectId){
+		var startPoint = new paper.Point(startX,startY);
+		var endPoint = new paper.Point(endX,endY);
+		var drawingObject = new paper.Path.Line(startPoint,endPoint);
+		drawingObject.strokeColor = info.fColor;
+		drawingObject.strokeWidth = info.fWidth;
+		//drawingObject.sendToBack();
+		//drawingObject.moveAbove(paper.project.activeLayer.firstChild);
+		//drawingObject.
+		drawingObject.fStartMindObjectId = startMindObjectId;
+		drawingObject.fEndMindObjectId = endMindObjectId;
+		
+		var th;
+		var b = info.fWidth;
+		var D = distanceOfTwoPoints(startX ,startY, startZ, endX, endY, endZ);
+		var A = 10;
+		var x;
+		var y;
+		
+		if(startMindObjectId == info.fOriginId){
+			x = startX;
+			y = startY;
+			th = Math.atan2(endY-startY,endX-startX);
+			//th = Math.atan2(endX-startX,endY-startY);
+		}			
+		else{
+			x = endX;
+			y = endY;
+			th = Math.atan2(startY-endY,startX-endX);
+			//th = Math.atan2(startX-endX,startY-endY);
+		}
+		
+		var newPoint1 = new paper.Point(Math.trunc((D-A)*Math.cos(th)-(b/2)*Math.sin(th)) + x,
+										Math.trunc((D-A)*Math.sin(th)+(b/2)*Math.cos(th)) + y);
+		
+		var newPoint2 = new paper.Point(Math.trunc((D-A)*Math.cos(th)+(b/2)*Math.sin(th)) + x,
+										Math.trunc((D-A)*Math.sin(th)-(b/2)*Math.cos(th)) + y);
+		
+		drawingObject.add(newPoint1);
+		drawingObject.add(newPoint2);
+		
+		for(var i=0; i<drawingObject.segments.length;i++){
+			var test = new paper.Path.Circle(drawingObject.segments[i].point,3);
+			test.strokeColor = 'red';
+			
+		}
+		
+		paper.view.draw();
+		
+		fEdgeObjects.push(drawingObject);
+	};
+	this.eraseOrientedPathEdge = function(startMindObjectId, endMindObjectId){
+		
+	};
+	this.moveOrientedPathEdge = function(x, y, z, startMindObjectId, endMindObjectId, movingMindObjectId){
+		
 	};
 	
 	//All
@@ -5353,6 +5391,37 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		point = null;	
 		
 		return (shapeRet || contentsRet);
+	};
+	
+	this.getIntersectionFromCenter = function(x, y, z, mindObjectId){
+		var targetShape = null;
+		
+		for(var i=0; i<fShapeObjects.length;i++){
+			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+				targetShape = fShapeObjects[i];
+				break;
+			}				
+		}
+		if(targetShape == null)
+			return null;
+		
+		var from = new paper.Point(x,y);
+		var to = targetShape.position;
+		var tempPath = new paper.Path.Line(from,to);
+		
+		var interSection = targetShape.getIntersections(tempPath);		
+		var ret = null;
+		if(interSection.length == 0)
+			ret = [x,y,z];
+		else
+			ret = [interSection[0].point.x,interSection[0].point.y,0];
+		
+		
+		tempPath.remove();
+		tempPath = null;
+		from = null;
+		
+		return ret;		
 	};
 }
 

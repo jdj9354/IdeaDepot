@@ -15,9 +15,9 @@ const ContentsTypeEnum = {
 };
 
 const EdgeTypeEnum = {
-	SimplePath : "SimplePathEdge"
+	SimplePath : "SimplePathEdge",
+	OrientedPath : "OrientedPathEdge"
 };
-
 
 function compareIdValue(firstIdValue,secondIdValue){
 	if(firstIdValue == secondIdValue)
@@ -81,6 +81,9 @@ function Encoder(){
 		case EdgeTypeEnum.SimplePath :
 			ret = 16777216;
 			break;
+		case EdgeTypeEnum.OrientedPath :
+			ret = 16777217;
+			break;
 		default :
 			ret = 0;
 			break;		
@@ -143,6 +146,9 @@ function Decoder(){
 		switch (edgeType){
 		case 16777216 :
 			ret = EdgeTypeEnum.SimplePath;
+			break;
+		case 16777217 :
+			ret = EdgeTypeEnum.OrientedPath;
 			break;
 		default :
 			ret = null;
@@ -459,6 +465,15 @@ SimplePathEdgeTypeDependentInfo.prototype = new EdgeTypeDependentInfo();
 SimplePathEdgeTypeDependentInfo.constructor = SimplePathEdgeTypeDependentInfo;
 
 
+function OrientedPathEdgeTypeDependentInfo(originId, bidirectional,  width, color){
+	this.fOriginId = originId;
+	this.fBidirectional = bidirectional;
+	this.fWidth = width;
+	this.fColor = color;
+}
+OrientedPathEdgeTypeDependentInfo.prototype = new EdgeTypeDependentInfo();
+OrientedPathEdgeTypeDependentInfo.constructor = OrientedPathEdgeTypeDependentInfo;
+
 
 //------------------- Shape Section------------------------------------
 
@@ -610,6 +625,9 @@ var getObjTypeDependentInfo = function(type, parameterArray){
 	case EdgeTypeEnum.SimplePath :
 		ret = new SimplePathEdgeTypeDependentInfo(parameterArray[0], parameterArray[1]);
 		break;
+	case EdgeTypeEnum.OrientedPath :
+		ret =  new OrientedPathEdgeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+		break;
 	}
 	return ret;
 }
@@ -669,13 +687,18 @@ var genArrayForCommu = function(type, typeDependentInfo){
 	case EdgeTypeEnum.SimplePath :
 		ret = [typeDependentInfo.fWidth, typeDependentInfo.fColor];
 		break;
+	case EdgeTypeEnum.OrientedPath :
+		ret = [	typeDependentInfo.fOriginId,
+				typeDependentInfo.bidirectional,
+				typeDependentInfo.fWidth, 
+				typeDependentInfo.fColor];
+		break;
 	default :
 		ret = null;
 		break;
 	}
 	return ret;
-};
-
+};	
 
 if(typeof module != "undefined"){
 	if(module != null){

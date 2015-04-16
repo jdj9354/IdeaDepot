@@ -15,6 +15,7 @@ var MindObject = TMO.MindObject;
 var Edge = TMO.Edge;
 var EdgeTypeDependentInfo = TMO.EdgeTypeDependentInfo;
 var SimplePathEdgeTypeDependentInfo = TMO.SimplePathEdgeTypeDependentInfo;
+var OriPathEdgeTypeDependentInfo = TMO.OriPathEdgeTypeDependentInfo;
 
 var Shape = TMO.Shape;
 var ShapeTypeDependentInfo = TMO.ShapeTypeDependentInfo;
