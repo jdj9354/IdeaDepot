@@ -937,10 +937,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					
 					if(Distance !=0 && Distance <= maxRelDistanceBySquare && !isConnectedMindObject){
 						//console.log("connect");
-						/*this.connectMindObject(fMovingObject.fMindObjectId,
-												MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath, new SimplePathEdgeTypeDependentInfo(8,this.getShapeColor()));*/
-						this.connectMindObject(fMovingObject.fMindObjectId,
-												MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.OrientedPath, new OrientedPathEdgeTypeDependentInfo(fMovingObject.fMindObjectId,false,8,this.getShapeColor()));
+						//this.connectMindObject(fMovingObject.fMindObjectId,MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath, new SimplePathEdgeTypeDependentInfo(8,this.getShapeColor()));
+						this.connectMindObject(fMovingObject.fMindObjectId,MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.OrientedPath, new OrientedPathEdgeTypeDependentInfo(fMovingObject.fMindObjectId,true,20,this.getShapeColor()));
 						
 					}
 					else if(Distance !=0 && Distance > maxRelDistanceBySquare && isConnectedMindObject){
@@ -5176,9 +5174,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		var drawingObject = new paper.Path.Line(startPoint,endPoint);
 		drawingObject.strokeColor = info.fColor;
 		drawingObject.strokeWidth = info.fWidth;
-		//drawingObject.sendToBack();
-		//drawingObject.moveAbove(paper.project.activeLayer.firstChild);
-		//drawingObject.
+
 		drawingObject.fStartMindObjectId = startMindObjectId;
 		drawingObject.fEndMindObjectId = endMindObjectId;
 		
@@ -5207,25 +5203,156 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		
 		var newPoint2 = new paper.Point(Math.trunc((D-A)*Math.cos(th)+(b/2)*Math.sin(th)) + x,
 										Math.trunc((D-A)*Math.sin(th)-(b/2)*Math.cos(th)) + y);
+										
+		var newPoint3 = new paper.Point(drawingObject.lastSegment.point.x,drawingObject.lastSegment.point.y);
+		var newPoint4 = new paper.Point((newPoint1.x+newPoint2.x)/2,(newPoint1.y+newPoint2.y)/2);
+		
+		drawingObject.lastSegment.point.x = (newPoint1.x+newPoint2.x)/2;
+		drawingObject.lastSegment.point.y = (newPoint1.y+newPoint2.y)/2;
 		
 		drawingObject.add(newPoint1);
-		drawingObject.add(newPoint2);
+		drawingObject.add(newPoint3);		
+		drawingObject.add(newPoint2);		
+		drawingObject.add(newPoint4);
 		
-		for(var i=0; i<drawingObject.segments.length;i++){
-			var test = new paper.Path.Circle(drawingObject.segments[i].point,3);
-			test.strokeColor = 'red';
+		drawingObject.bidirectional = info.fBidirectional;
+		
+		if(info.fBidirectional){
+			if(startMindObjectId == info.fOriginId){
+				x = endX;
+				y = endY;
+				th = Math.atan2(startY-endY,startX-endX);
+				//th = Math.atan2(endX-startX,endY-startY);
+			}			
+			else{
+				x = startX;
+				y = startY;
+				th = Math.atan2(endY-startY,endX-startX);				
+				//th = Math.atan2(startX-endX,startY-endY);
+			}
 			
+			var newPoint1 = new paper.Point(Math.trunc((D-A)*Math.cos(th)-(b/2)*Math.sin(th)) + x,
+											Math.trunc((D-A)*Math.sin(th)+(b/2)*Math.cos(th)) + y);
+			
+			var newPoint2 = new paper.Point(Math.trunc((D-A)*Math.cos(th)+(b/2)*Math.sin(th)) + x,
+											Math.trunc((D-A)*Math.sin(th)-(b/2)*Math.cos(th)) + y);
+											
+			var newPoint3 = new paper.Point(drawingObject.firstSegment.point.x,drawingObject.firstSegment.point.y);
+			var newPoint4 = new paper.Point((newPoint1.x+newPoint2.x)/2,(newPoint1.y+newPoint2.y)/2);
+			
+			drawingObject.firstSegment.point.x = (newPoint1.x+newPoint2.x)/2;
+			drawingObject.firstSegment.point.y = (newPoint1.y+newPoint2.y)/2;
+			
+			drawingObject.insert(0,newPoint1);
+			drawingObject.insert(0,newPoint3);		
+			drawingObject.insert(0,newPoint2);		
+			drawingObject.insert(0,newPoint4);
 		}
+		
 		
 		paper.view.draw();
 		
 		fEdgeObjects.push(drawingObject);
 	};
 	this.eraseOrientedPathEdge = function(startMindObjectId, endMindObjectId){
-		
+		for(var i=0;i<fEdgeObjects.length; i++){
+			if( ((compareIdValue(fEdgeObjects[i].fStartMindObjectId, startMindObjectId)) && (compareIdValue(fEdgeObjects[i].fEndMindObjectId, endMindObjectId)))
+					||
+				((compareIdValue(fEdgeObjects[i].fStartMindObjectId, endMindObjectId)) && (compareIdValue(fEdgeObjects[i].fEndMindObjectId, startMindObjectId))) ) {			
+					
+				fEdgeObjects[i].remove();
+				paper.view.draw();
+				
+				fEdgeObjects.splice(i,1);
+				
+				break;
+			}			
+		}		
 	};
 	this.moveOrientedPathEdge = function(x, y, z, startMindObjectId, endMindObjectId, movingMindObjectId){
-		
+		for(var i=0;i<fEdgeObjects.length; i++){  
+			if( ((compareIdValue(fEdgeObjects[i].fStartMindObjectId, startMindObjectId)) && (compareIdValue(fEdgeObjects[i].fEndMindObjectId, endMindObjectId)))
+					||
+				((compareIdValue(fEdgeObjects[i].fStartMindObjectId, endMindObjectId)) && (compareIdValue(fEdgeObjects[i].fEndMindObjectId, startMindObjectId))) ) {			
+				
+				var movingSegmentObject = null;
+				var movingSegmentObjectIdx = 0;
+				
+				var fixedSegmentObject = null;
+				var fixedSegmentObjectIdx = 0;
+	
+				var rotationAngle = null;
+
+				
+				if(compareIdValue(movingMindObjectId, fEdgeObjects[i].fStartMindObjectId)){
+					if(fEdgeObjects[i].bidirectional)						
+						movingSegmentObjectIdx = 4;					
+					else
+						movingSegmentObjectIdx = 0;
+					
+					movingSegmentObject = fEdgeObjects[i].segments[movingSegmentObjectIdx];
+					fixedSegmentObject = fEdgeObjects[i].segments[fEdgeObjects[i].segments.length-5];
+						
+					var diff_x = x - movingSegmentObject.point.x;
+					var diff_y = y - movingSegmentObject.point.y;
+					
+					var originalVector = new paper.Point(movingSegmentObject.point.x - fixedSegmentObject.point.x, 
+														movingSegmentObject.point.y - fixedSegmentObject.point.y);
+					
+					var movedVector = new paper.Point(x - fixedSegmentObject.point.x, 
+														y - fixedSegmentObject.point.y);
+						
+					var rotationAngle = originalVector.getAngle(movedVector);
+					console.log(rotationAngle);
+					
+					for(var j=movingSegmentObjectIdx;j>=0; j--){
+						fEdgeObjects[i].segments[j].point.x += diff_x;
+						fEdgeObjects[i].segments[j].point.y += diff_y;
+					}
+					for(var j=0; j<fEdgeObjects[i].segments.length-1; j++){
+						fEdgeObjects[i].segments[j].point.rotate(-rotationAngle,fixedSegmentObject.point);
+					}
+				}
+				else if(compareIdValue(movingMindObjectId, fEdgeObjects[i].fEndMindObjectId)){						
+					
+				
+					if(fEdgeObjects[i].bidirectional)						
+						fixedSegmentObjectIdx = 4;					
+					else
+						fixedSegmentObjectIdx = 0;
+					
+					movingSegmentObject = fEdgeObjects[i].segments[fEdgeObjects[i].segments.length-5];
+					fixedSegmentObject = fEdgeObjects[i].segments[fixedSegmentObjectIdx];
+						
+					var diff_x = x - movingSegmentObject.point.x;
+					var diff_y = y - movingSegmentObject.point.y;
+					
+					var originalVector = new paper.Point(movingSegmentObject.point.x - fixedSegmentObject.point.x, 
+														movingSegmentObject.point.y - fixedSegmentObject.point.y);
+					
+					var movedVector = new paper.Point(x - fixedSegmentObject.point.x, 
+														y - fixedSegmentObject.point.y);
+						
+					var rotationAngle = originalVector.getAngle(movedVector);
+					
+					for(var j=fEdgeObjects[i].segments.length-5; j<fEdgeObjects[i].segments.length-1; j++){
+						fEdgeObjects[i].segments[j].point.x += diff_x;
+						fEdgeObjects[i].segments[j].point.y += diff_y;
+					}
+					for(var j=0; j<fEdgeObjects[i].segments.length-1; j++){
+						fEdgeObjects[i].segments[j].point.rotate(-rotationAngle,fixedSegmentObject.point);
+					}
+				}
+				
+				if(movingSegmentObject != null){
+					
+					movingSegmentObject.point = new paper.Point(x,y);
+					
+				}
+				break;
+			}			
+		}
+		paper.view.draw();
 	};
 	
 	//All
