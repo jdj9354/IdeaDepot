@@ -1,0 +1,300 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+
+<script>
+
+
+
+
+
+
+ 
+  
+//셀렉션 함수 
+document.getSelection2 = function(evt, document) { 
+  
+    var result = { 
+        text : "", 
+        st : -1, 
+        ed : -1 
+    }; 
+  
+    if (document.getSelection) { //FF, Chrome 
+  
+        var selection = document.getSelection(); 
+        var startOffset = -1; 
+        var previousSibling = null; 
+        if ( selection.anchorOffset >= selection.focusOffset ) { 
+            startOffset = selection.focusOffset; 
+            previousSibling = selection.focusNode.previousSibling; 
+        } else { 
+            startOffset = selection.anchorOffset; 
+            previousSibling = selection.anchorNode.previousSibling; 
+        } 
+  
+        while( previousSibling != null ) { 
+            var node = previousSibling; 
+            if ( node.nodeType == 3 ) { 
+                startOffset += node.data.length; 
+            } else { 
+                startOffset += node.find(".dragtag").text().length; 
+            } 
+            previousSibling = node.previousSibling; 
+        } 
+  
+        result.text = node.trim(selection.toString()); 
+        result.st = startOffset + (selection.toString().length - selection.toString().replace(/^\s*/,'').length); 
+        result.ed = startOffset + selection.toString().replace(/\s*$/, '').length; 
+  
+    } else if (document.selection) { //IE 
+  
+        var selection = document.selection.createRange(); 
+        var selection2 = document.selection.createRange(); 
+        selection2.moveToElementText(selection.parentElement()); 
+        selection2.setEndPoint('EndToStart', selection); 
+        result.text = $.trim(selection.text); 
+        result.st = selection2.text.length + (selection.text.length - selection.text.replace(/^\s*/,'').length); 
+        result.ed = selection2.text.length + selection.text.replace(/\s*$/, '').length; 
+  
+    } 
+  
+    return result; 
+};
+function allowDrop(ev)
+{
+ev.preventDefault();
+}
+
+function drag(ev)
+{
+ev.dataTransfer.setData("Text",ev.target.id);
+}
+
+function drop(ev)
+{
+alert("aaaaaaaaaa");
+ev.preventDefault();
+var data = ev.dataTransfer.getData("Text");
+ev.target.appendChild(document.getElementById(data));
+}
+
+    function dragEnter(event) {
+        event.target.style.border = "2px dashed #ff0000";
+    }
+
+    function dragOver(event) {
+        event.preventDefault();
+        return false;
+    }
+
+    function dragLeave(event) {
+        event.target.style.border = "none";
+    }
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+
+<body onLoad="on();">	
+    <ul id="pageTabs">
+        <!-- hrefs of the links point to the ids of the pages' contents -->
+        <li><a href="#page1">choose page1</a></li>
+        <li><a href="#page2">choose page2</a></li>
+    </ul>
+
+    
+    <!-- page 1 message colored in red -->
+    <p id="page1" style="font-size:40px;color:red" >This is page 1</p>
+
+    <!-- page 2 message colored in blue -->
+    <p id="page2" style="font-size:40px;color:blue">This is page 2</p>
+</body>
+
+
+아무 키나 입력해보세요.
+<br>char <input type='text' id='keychar' />
+<br>keycode <input type='text' id='keycode' />
+<br>Alt키 <input type='checkbox' id='altkey' />
+<br>왼쪽 Ctrl키 <input type='checkbox' id='left_ctrl' />
+<br>오른쪽 Ctrl키 <input type='checkbox' id='right_ctrl' />
+
+
+adsfasdfasdfasdf
+asdfasdf
+asdf
+<br>
+adsfasdfa
+<br>
+adfadsfsdㅁㅁㅁㅁ
+<br>
+<img id="drag1" src="http://cfile25.uf.tistory.com/image/167A813D4ED44F211FEC86" draggable="true"
+ondragstart="drag(event)" width="336" height="336">
+
+
+
+<iframe  id="naver" src="http://www.naver.com" width="700" height="800" scrolling="auto" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"> </iframe>
+
+<iframe id="test" src="b.html" width="700" height="800" scrolling="auto" draggable="true"> </iframe>
+<!--<div contentEditable="true" id="edit" > Type here. You can insert images too </div>-->
+<div contentEditable="true" id="edit" style="display:hidden;"> Type here. You can insert images too </div>
+<div id="dtarget">aaaaaaaa </div>
+<textarea id="ta"  > TTT </textarea>
+<canvas id="canvas"  > TTT </canvas>
+<input type="text" id="hiddeni">
+<button id="testbtn">okok</button>
+<script>
+
+
+
+function on(){
+
+    $(document).ready(function () {
+        $("body").tabs(); // turns the hyperlinks into tabs
+    });
+//처리 이벤트 
+var a =document.getElementById("naver").contentWindow;
+//var a =document.getElementById("test").contentWindow;
+var b;
+//alert(document.getElementById("test").contentWindow.document.getElementById("drag1").src);
+if(a!=null)
+a.document.onmouseup= function( evt ){ 
+//document.onmouseup= function( evt ){ 
+
+    alert( getSelectionHtml(a) ); 
+}; 
+
+}
+var cc =  document.getElementById("edit");
+cc;
+
+function getSelectionHtml(s) {
+
+    var html = "";
+    if (typeof s.window.getSelection != "undefined") {
+
+        var sel = s.window.getSelection();
+        if (sel.rangeCount) {
+            var container = s.document.createElement("div");
+            for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                container.appendChild(sel.getRangeAt(i).cloneContents());
+            }
+            html = container.innerHTML;
+        }
+    } else if (typeof s.document.selection != "undefined") {
+	
+        if (s.document.selection.type == "Text") {
+            html = s.document.selection.createRange().htmlText;
+        }
+    }
+    return html;
+}
+
+var b;
+
+
+document.getElementById("dtarget").addEventListener('drop',drop,false);
+document.getElementById("dtarget").addEventListener('dragenter', dragEnter  , false);
+document.getElementById("dtarget").addEventListener('dragover' , dragOver   , false);
+document.getElementById("dtarget").addEventListener('dragleave', dragLeave  , false);
+
+
+document.addEventListener('paste', function(event){
+	alert(event.clipboardData.getData('text/plain'));
+	document.getElementById("edit").value = event.clipboardData;
+},false);
+
+//alert(document.getElementById("edit").innerHTML);
+document.getElementById("edit").addEventListener('keydown', function(event){
+alert(document.getElementById("edit").innerHTML);
+},false);
+
+document.getElementById("edit").style.display="";
+
+
+document.addEventListener('keyup', function(event){
+
+	if (!event) { /* This will happen in IE*/ 
+		event = window.event;
+	}
+		
+	var keyCode = event.keyCode;
+	console.log(event.charCode
+	);
+	//if(keyCode != 8)
+	//alert(event.keyCode);	
+	/*if (keyCode == 8 &&
+		((event.target || event.srcElement).tagName != "TEXTAREA") && 
+		((event.target || event.srcElement).tagName != "INPUT")) { 
+		
+		if (navigator.userAgent.toLowerCase().indexOf("msie") == -1) {
+			event.stopPropagation();
+		} else {
+			alert("prevented");
+			event.returnValue = false;
+		}
+		
+		return false;
+	}*/
+
+
+	//alert(event.keyCode);	
+},false);
+var tat = document.getElementById("ta");
+document.defaultView.onkeydown = 
+   function (event) {
+	
+	if (!event) {  /*This will happen in IE */
+		event = window.event;
+	}
+		
+	var keyCode = event.keyCode;
+	//alert(event.keyCode);
+	
+	if (keyCode == 8 &&
+		((event.target || event.srcElement).tagName != "TEXTAREA") && 
+		((event.target || event.srcElement).tagName != "INPUT")) { 
+		
+			
+		if (navigator.userAgent.toLowerCase().indexOf("msie") == -1) {
+			event.stopPropagation();
+		} else {
+			alert("prevented");
+			event.returnValue = false;
+		}
+		
+		return false;
+	}
+	
+
+	
+	//alert(event.keyCode +" " +String.fromCharCode(event.keyCode));
+};
+
+tat.addEventListener('compositionstart', function(event){
+alert("start : " + event.data);
+},false);
+
+tat.addEventListener('compositionupdate', function(event){
+alert("update : " + event.data);
+},false);
+
+
+tat.addEventListener('compositionend', function(event){
+alert("end : " +event.data);
+},false);
+
+tat.focus();
+
+document.getElementById("testbtn").addEventListener('click',function(event){
+alert(Math.random());
+alert(document.getElementById("hiddeni").value);
+document.getElementById("canvas").width = 0;	
+document.getElementById("canvas").height = 0;
+},false);
+
+</script>
+
+<img src='http://127.0.0.1:52274?url=http://www.melon.com&resolution=1920X1920&userId=jdj9354' />
+
+</body>
+</html>
