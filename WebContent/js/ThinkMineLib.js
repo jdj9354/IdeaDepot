@@ -938,7 +938,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					if(Distance !=0 && Distance <= maxRelDistanceBySquare && !isConnectedMindObject){
 						//console.log("connect");
 						//this.connectMindObject(fMovingObject.fMindObjectId,MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath, new SimplePathEdgeTypeDependentInfo(8,this.getShapeColor()));
-						this.connectMindObject(fMovingObject.fMindObjectId,MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.OrientedPath, new OrientedPathEdgeTypeDependentInfo(fMovingObject.fMindObjectId,false,20,this.getShapeColor()));
+						this.connectMindObject(fMovingObject.fMindObjectId,MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.OrientedPath, new OrientedPathEdgeTypeDependentInfo(fMovingObject.fMindObjectId,true,8,this.getShapeColor()));
 						
 					}
 					else if(Distance !=0 && Distance > maxRelDistanceBySquare && isConnectedMindObject){
@@ -5171,12 +5171,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	this.drawOrientedPathEdge = function(startX ,startY, startZ, endX, endY, endZ, info, startMindObjectId, endMindObjectId){
 		var startPoint = new paper.Point(startX,startY);
 		var endPoint = new paper.Point(endX,endY);
-		var drawingObject = new paper.Path.Line(startPoint,endPoint);
-		drawingObject.strokeColor = info.fColor;
-		drawingObject.strokeWidth = info.fWidth;
-
-		drawingObject.fStartMindObjectId = startMindObjectId;
-		drawingObject.fEndMindObjectId = endMindObjectId;
+		var drawingObject;
 		
 		var th;
 		var b = info.fWidth;
@@ -5189,14 +5184,25 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 			x = startX;
 			y = startY;
 			th = Math.atan2(endY-startY,endX-startX);
-			//th = Math.atan2(endX-startX,endY-startY);
+			
+			drawingObject = new paper.Path.Line(startPoint,endPoint);
+
+			drawingObject.fStartMindObjectId = startMindObjectId;
+			drawingObject.fEndMindObjectId = endMindObjectId;
 		}			
 		else{
 			x = endX;
 			y = endY;
 			th = Math.atan2(startY-endY,startX-endX);
-			//th = Math.atan2(startX-endX,startY-endY);
+			
+			drawingObject = new paper.Path.Line(endPoint,startPoint);
+
+			drawingObject.fStartMindObjectId = endMindObjectId;
+			drawingObject.fEndMindObjectId = startMindObjectId;
 		}
+		
+		drawingObject.strokeColor = info.fColor;
+		drawingObject.strokeWidth = info.fWidth;
 		
 		var newPoint1 = new paper.Point(Math.trunc((D-A)*Math.cos(th)-(b/2)*Math.sin(th)) + x,
 										Math.trunc((D-A)*Math.sin(th)+(b/2)*Math.cos(th)) + y);
