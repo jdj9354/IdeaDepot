@@ -725,7 +725,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 						}
 						else{
 		
-							fDrawingCCInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
+							/*fDrawingCCInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
 							fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
 							
 							fDrawingCCInterface.eraseCirclesOnShapeVertex(fSelectedObject.fMindObjectId);
@@ -733,7 +733,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 							resetTMCanvas();
 							
 							
-							this.onDoubleMouseDownInterface(x,y,z);
+							this.onDoubleMouseDownInterface(x,y,z);*/
 							
 							return;
 						}

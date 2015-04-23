@@ -287,6 +287,94 @@ ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 }
 
 
+ThinkMine.Lib.ExternalUI.RecentColor = new function(undefined){
+	var fRecentColorDivName = null;
+	var fRecentColorDivElement = null;
+	var numRecentColors = 0;
+	var countRecentColors = 0;
+	
+	var recentCanvasArray = null;
+	
+	var fTmCanvas = null;
+	
+	
+	this.attach = function(recentColorDivName, tmCanvas) {		
+		
+		fRecentColorDivName = recentColorDivName;
+		
+		fRecentColorDivElement = document.getElementById(fRecentColorDivName);
+		
+		if(fRecentColorDivName == null || fRecentColorDivElement == undefined){
+			console.log("There is no such fRecentColorDivElement element " + fRecentColorDivName);
+			return;
+		}
+		
+		recentCanvasArray = fRecentColorDivElement.getElementsByTagName("canvas");
+		numRecentColors = recentCanvasArray.length;		
+		
+		fTmCanvas = tmCanvas;
+		
+		
+		for(var i=0; i<numRecentColors; i++){	
+			
+			var fMouseUP = function(){
+				var tempColorInfo = this.colorInfo;						
+				
+				var fRedString  = tempColorInfo.r.toString(16);
+				var fGreenString  = tempColorInfo.g.toString(16);
+				var fBlueString  = tempColorInfo.b.toString(16);					
+				
+				fTmCanvas.setShapeColor("#"+(fRedString.length == 1? "0"+fRedString : fRedString)
+									+(fGreenString.length == 1? "0"+fGreenString : fGreenString)
+									+(fBlueString.length == 1? "0"+fBlueString : fBlueString));	
+			};			
+			
+			recentCanvasArray[i].addEventListener('mouseup', fMouseUP, false);
+			recentCanvasArray[i].colorInfo = {color : 'rgb(255,255,255)',
+												r : 255,
+												g : 255,
+												b : 255};
+		}
+				
+	};
+
+	this.updateRecentColor = function(usedR, usedG, usedB){
+		var color = 'rgb(' + usedR + ',' + usedG + ',' + usedB + ')';
+		
+		var colorIdx = countRecentColors;
+		
+		if(countRecentColors < numRecentColors){
+			recentCanvasArray[countRecentColors].colorInfo = {color : color,
+															r : usedR,
+															g : usedG,
+															b : usedB};
+			countRecentColors ++;
+		}
+		else{
+			for(var i=0; i<recentCanvasArray.length-1; i++){
+				recentCanvasArray[i].colorInfo = recentCanvasArray[i+1].colorInfo;
+			}
+			recentCanvasArray[countRecentColors-1].colorInfo = {color : color,
+															r : usedR,
+															g : usedG,
+															b : usedB};
+		}
+		
+		for(var i=0; i<countRecentColors; i++){			
+			var canvas = recentCanvasArray[i];
+			var context = canvas.getContext('2d');
+			
+			context.clearRect(0,0,canvas.width,canvas.height);
+			
+			context.beginPath();
+			context.fillStyle = recentCanvasArray[i].colorInfo.color;
+			context.fillRect(0, 0, canvas.width,canvas.height);
+			context.strokeRect(0, 0, canvas.width,canvas.height);			
+		}
+	};
+}
+
+
 ThinkMine.Lib.ExternalUI.CircleImageButton = new function(undefined){
 	var fImageButtonName = null;
 	var fImageButtonElement = null;

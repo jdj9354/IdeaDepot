@@ -179,7 +179,7 @@
 					<p class="text-warning"><small>If you don't save, your changes will be lost.</small></p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button id="exit" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					<button type="button" class="btn btn-primary">Save changes</button>
 				</div>
 				
@@ -193,16 +193,26 @@
 		</div>
 	</div>
 	
-		<script>
+	<script>				
 		(function() {
 			var dialog = document.getElementById('window');
 			document.getElementById('show').onclick = function() {
 				$("#myModal").modal('show');
 			};
-			/*document.getElementById('exit').onclick = function() {
-				dialog.close();
-			};*/
+			
+			var numRecentColors = 10;
+			var countRecentColors = 0;
+			var recentColorArray = new Array(numRecentColors);
+			
+			document.getElementById('exit').onclick = function() {
+				var r = ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getRedValue();
+				var g = ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getGreenValue();
+				var b = ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getBlueValue();	
+
+				ThinkMine.Lib.ExternalUI.RecentColor.updateRecentColor(r,g,b);				
+			};
 		})();
+		
 	</script>	
 	
 	
@@ -221,7 +231,54 @@
 			<img src="res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
 		</div>
 	</div>
-	
+	<div id="group_id_recent_color" height=auto width=100% style="border:1px solid red;border-width:2px 1px">
+		<canvas id="recent_1" style="border:1px solid red;border-width:2px 1px"></canvas>
+		<canvas id="recent_2" style="border:1px solid red;border-width:2px 1px"></canvas>
+		<canvas id="recent_3" style="border:1px solid red;border-width:2px 1px"></canvas>
+		<canvas id="recent_4" style="border:1px solid red;border-width:2px 1px"></canvas>
+		<canvas id="recent_5" style="border:1px solid red;border-width:2px 1px"></canvas>
+		<canvas id="recent_6" style="border:1px solid red;border-width:2px 1px"></canvas>
+		<canvas id="recent_7" style="border:1px solid red;border-width:2px 1px"></canvas>
+		<canvas id="recent_8" style="border:1px solid red;border-width:2px 1px"></canvas>
+		<canvas id="recent_9" style="border:1px solid red;border-width:2px 1px"></canvas>
+		<canvas id="recent_10" style="border:1px solid red;border-width:2px 1px"></canvas>
+	</div>
+
+	+<script>				
+		
+		var recentColorDiv = document.getElementById('group_id_recent_color');
+		var recentColorCanvasArr = recentColorDiv.getElementsByTagName("canvas");
+		
+		var recentColorDivWidth = recentColorDiv.offsetWidth;
+		var widthOfEachCanvas = recentColorDivWidth/recentColorCanvasArr.length;
+		recentColorDiv.style.height = widthOfEachCanvas;
+		var recentColorDivHeight = recentColorDiv.clientHeight;
+		
+		
+		var heightOfEachCanvas = widthOfEachCanvas;
+		
+		widthOfEachCanvas *=0.9;
+		
+		for(var i=0; i< recentColorCanvasArr.length; i++){
+			recentColorCanvasArr[i].width = widthOfEachCanvas;
+			recentColorCanvasArr[i].height = widthOfEachCanvas;
+		}
+		
+		//recentColorDiv.style.width = "auto";
+		
+		var numRecentColors = recentColorCanvasArr.length;
+		var countRecentColors = 0;
+		var recentColorArray = new Array(numRecentColors);
+		
+		document.getElementById('exit').onclick = function() {
+			var r = ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getRedValue();
+			var g = ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getGreenValue();
+			var b = ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getBlueValue();	
+
+			ThinkMine.Lib.ExternalUI.RecentColor.updateRecentColor(r,g,b);				
+		};
+
+	</script>		
 	
 	<div class="progress">
 	  <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
@@ -391,10 +448,11 @@
 			//wrappedEventHandler.setOnCompositionEnd(TMCanvas.onCompositionEventEndInterface);
 			
 			ThinkMine.Lib.ExternalUI.ColorPickerCanvas.attach("color_picker_canvas",TMCanvas);
+			ThinkMine.Lib.ExternalUI.RecentColor.attach("group_id_recent_color",TMCanvas);
 			
-			ThinkMine.Lib.ExternalUI.ColorPickerRedInput.attach("color_picker_red_input",TMCanvas);
-			ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.attach("color_picker_green_input",TMCanvas);
-			ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input",TMCanvas);
+			ThinkMine.Lib.ExternalUI.ColorPickerRedInput.attach("color_picker_red_input");
+			ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.attach("color_picker_green_input");
+			ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input");
 			
 			ThinkMine.Lib.ExternalUI.CircleImageButton.attach("CircleShapeImage",TMCanvas);
 			ThinkMine.Lib.ExternalUI.RectangleImageButton.attach("RectangleShapeImage",TMCanvas);
