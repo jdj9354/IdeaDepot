@@ -307,25 +307,26 @@ function MindObject (mindObjectId, childMindMapId, parentMindMapId, shape, conte
 	
 	
 	this.removeMindObject = function(){
-		for(var i=0; i<fRelatedObjects.length; i++){
-			for(var j=0; j<fRelatedObjects[i].lenOfRelatedObjectsArray();j++){
-				if(fRelatedObjects[i].getRelatedObjectOnIndex(j) == this){
-					fRelatedObjects[i].removeRelatedObjectOnIndex(j);
+		while(fRelatedObjects.length!=0){
+			var frontRelObject = fRelatedObjects[0];
+
+			for(var j=0; j<frontRelObject.lenOfRelatedObjectsArray();j++){
+				if(frontRelObject.getRelatedObjectOnIndex(j) == this){
+					frontRelObject.removeRelatedObjectOnIndex(j);
 					break;
 				}
 			}	
-			for(var j=0; j<fRelatedObjects[i].lenOfConnectedEdgesArray();j++){
-				if(fRelatedObjects[i].getConnectedEdgeOnIndex(j).indexOfComponent(this) != -1){
-					fRelatedObjects[i].removeConnectedEdgeOnIndex(j);
+			for(var j=0; j<frontRelObject.lenOfConnectedEdgesArray();j++){
+				if(frontRelObject.getConnectedEdgeOnIndex(j).indexOfComponent(this) != -1){
+					frontRelObject.removeConnectedEdgeOnIndex(j);
 					break;
 				}
 			}
-			this.removeRelatedObjectOnIndex(i);					
-		}
-		
-		for(var i=0; i<fConnectedEdges.length; i++){
-			//this.ConnectedEdges[i].EraseEdge();
-			this.removeConnectedEdgeOnIndex(i);
+			this.removeRelatedObjectOnIndex(0);		
+		}	
+	
+		while(fConnectedEdges.length!=0){
+			this.removeConnectedEdgeOnIndex(0);
 		}
 		
 	//	this.EraseMindObject();
