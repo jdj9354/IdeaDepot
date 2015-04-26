@@ -27,7 +27,7 @@ addJavascript("/EventParserWorker.js");
 addJavascript("/AnimationWorker.js");
 addJavascript("/kinetic-v5.0.2.min.js");
 addJavascript("/uuid_js/uuid.js");
-addJavascript("/room.js");
+addJavascript("/Room.js");
 addJavascript("/ThinkMineConstants.js");
 addJavascript("/ThinkMineObjects.js");
 addJavascript("/ThinkMineDefInterface.js");
@@ -2548,7 +2548,7 @@ console.log(now);
 		};
 	};
 	
-	var getObjTypeDependentInfo = getObjTypeDependentInfo;
+	var getObjTypeDependentInfo = window.getObjTypeDependentInfo;
 }
 
 //------------------- SocketCommunication Section--------------------------------------
@@ -2938,7 +2938,7 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 								MMID : mindMapId},OPERATION_TYPE.CREATE);
 	};
 	
-	var genArrayForCommu = genArrayForCommu;
+	var genArrayForCommu = window.genArrayForCommu;
 }
 
 

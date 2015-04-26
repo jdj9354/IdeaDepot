@@ -37,7 +37,8 @@ var app = express();
 app.use(express.static(__dirname+'/res'));
 app.use(express.static(__dirname));
 app.use(express.static(__dirname+'/res_usr'));*/
-app.use(express.static(__dirname+'/../Constants'));
+app.use(express.static(__dirname+'/../Common'));
+app.use(express.static(__dirname+'/../Common/Constants'));
 app.use(express.static(__dirname+'/../WebContent/js'));
 app.use(express.static(__dirname+'/../WebContent/res'));
 app.use(express.static(__dirname+'/../WebContent/'));

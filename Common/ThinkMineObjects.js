@@ -690,7 +690,7 @@ var genArrayForCommu = function(type, typeDependentInfo){
 		break;
 	case EdgeTypeEnum.OrientedPath :
 		ret = [	typeDependentInfo.fOriginId,
-				typeDependentInfo.bidirectional,
+				typeDependentInfo.fBidirectional,
 				typeDependentInfo.fWidth, 
 				typeDependentInfo.fColor];
 		break;

@@ -4,9 +4,9 @@ const spaceDelimiter = " ";
 const nullCharDelimiter = "\0";
 const nullCharValue = 0;
 
-var TMO = require('./ThinkMineObjects');
+var TMO = require('../Common/ThinkMineObjects');
 //var ConstantsModule = 
-var Constants = require('../Constants/ThinkMineConstants');
+var Constants = require('../Common/Constants/ThinkMineConstants');
 
 var MindMap = TMO.MindMap;
 var MindObject = TMO.MindObject;
