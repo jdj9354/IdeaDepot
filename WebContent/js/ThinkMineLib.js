@@ -682,14 +682,13 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 						if(curSelectedObject != fSelectedObject){	
 						
 							fDrawingCCInterface.changeOpacityOfCircleShape(0.5,curSelectedObject.fMindObjectId);
-							fDrawingCCInterface.changeOpacityOfTextContents(0.5,curSelectedObject.fMindObjectId);	
-
-							fDrawingCCInterface.drawCirclesOnShapeVertex(curSelectedObject.fMindObjectId,5,"#000000");
+							fDrawingCCInterface.changeOpacityOfTextContents(0.5,curSelectedObject.fMindObjectId);								
 							
 							fDrawingCCInterface.changeOpacityOfCircleShape(1,fSelectedObject.fMindObjectId);
 							fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
 							
 							fDrawingCCInterface.eraseCirclesOnShapeVertex(fSelectedObject.fMindObjectId);
+							fDrawingCCInterface.drawCirclesOnShapeVertex(curSelectedObject.fMindObjectId,5,"#000000");
 							
 							fSelectedObject = curSelectedObject;
 							
