@@ -486,29 +486,33 @@ function Shape (shapeType, shapeTypeDependentInfo){
 }
 
 function ShapeTypeDependentInfo() {
-	
+	this.fFilling;
+	this.fOpacity;
 }
 
-function CircleShapeTypeDependentInfo(radius, color){
+function CircleShapeTypeDependentInfo(radius, filling, opacity){
 	this.fRadius = radius;
-	this.fColor = color;
+	this.fFilling = filling;
+	this.fOpacity = opacity;
 }
 CircleShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 CircleShapeTypeDependentInfo.constructor = CircleShapeTypeDependentInfo; 
 
-function EllipseShapeTypeDependentInfo(width, height, color){
+function EllipseShapeTypeDependentInfo(width, height, filling, opacity){
 	this.fWidth = width;
 	this.fHeight = height;
-	this.fColor = color;
+	this.fFilling = filling;
+	this.fOpacity = opacity;
 }
 EllipseShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 EllipseShapeTypeDependentInfo.constructor = EllipseShapeTypeDependentInfo; 
 
 
-function RectangleShapeTypeDependentInfo(width, height, color, isRounded){
+function RectangleShapeTypeDependentInfo(width, height, filling, opacity, isRounded){
 	this.fWidth = width;
 	this.fHeight = height;
-	this.fColor = color;
+	this.fFilling = filling;
+	this.fOpacity = opacity;
 	this.fIsRounded = isRounded;
 }
 RectangleShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
@@ -516,25 +520,73 @@ RectangleShapeTypeDependentInfo.constructor = RectangleShapeTypeDependentInfo;
 
 
 
-function StarShapeTypeDependentInfo(nrPoints, firstRadius, secondRadius,color){
+function StarShapeTypeDependentInfo(nrPoints, firstRadius, secondRadius, filling, opacity){
 	this.fNrPoints = nrPoints;
 	this.fFirstRadius = firstRadius;
 	this.fSecondRadius = secondRadius;
-	this.fColor = color;
+	this.fFilling = filling;
+	this.fOpacity = opacity;
 }
 StarShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 StarShapeTypeDependentInfo.constructor = StarShapeTypeDependentInfo; 
 
 
 
-function PolygonShapeTypeDependentInfo(nrSides, radius, color){
+function PolygonShapeTypeDependentInfo(nrSides, radius, filling, opacity){
 	this.fNrSides = nrSides;
 	this.fRadius = radius;
-	this.fColor = color;
+	this.fFilling = filling;
+	this.fOpacity = opacity;
 }
 PolygonShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 PolygonShapeTypeDependentInfo.constructor = PolygonShapeTypeDependentInfo; 
 
+
+//------------------- shapeFill Section------------------------------------
+function shapeFill(){
+}
+
+function simpleColorShapeFill(color){
+	this.fColor = color;	
+}
+simpleColorShapeFill.prototype = new shapeFill();
+simpleColorShapeFill.constructor = simpleColorShapeFill; 
+
+function gradientShapeFill(){
+	this.fStopInfoArray; //Even Index : rgb color (#xxxxxx), Odd Index : offset (0.0 ~ 1.0)
+}
+gradientShapeFill.prototype = new shapeFill();
+gradientShapeFill.constructor = gradientShapeFill; 
+
+
+function linearGradientShapeFill(startX,startY,startZ,endX,endY,endZ,stopInfoArray){
+	this.fStartX = startX;
+	this.fStartY = startY;
+	this.fStartZ = startZ;
+	
+	this.fEndX = endX;
+	this.fEndY = endY;
+	this.fEndZ = endZ;
+	
+	this.fStopInfoArray = stopInfoArray;
+}
+linearGradientShapeFill.prototype = new gradientShapeFill();
+linearGradientShapeFill.constructor = linearGradientShapeFill; 
+
+function radialGradientShapeFill(originX,originY,originZ,radiusX,radiusY,radiusZ,stopInfoArray){
+	this.fOriginX = originX;
+	this.fOriginY = originY;
+	this.fOriginZ = originZ;
+	
+	this.fRadiusX = radiusX;
+	this.fRadiusY = radiusY;
+	this.fRadiusZ = radiusZ;
+	
+	this.fStopInfoArray = stopInfoArray;
+
+}
+radialGradientShapeFill.prototype = new gradientShapeFill();
+radialGradientShapeFill.constructor = radialGradientShapeFill; 
 
 //------------------- Contents Section------------------------------------
 
