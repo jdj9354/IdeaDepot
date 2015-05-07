@@ -26,7 +26,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	this.drawCircleShape = function(x, y, z, info, mindObjectId){
 		var position = new paper.Point(x,y);
 		var drawingObject = new paper.Path.Circle(position, info.fRadius);		
-		drawingObject.fillColor = info.fColor;
+		drawingObject.fillColor = generateFillingInfo(info.fFilling);
 		drawingObject.fMindObjectId = mindObjectId;
 		drawingObject.fShape = {fShapeTypeDependentInfo : {fRadius : info.fRadius}};
 						
@@ -72,10 +72,10 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				
 		}
 	};	
-	this.changeColorOfCircleShape = function(colorCode, mindObjectId){
+	this.changeFillingOfCircleShape = function(filling, mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
-				fShapeObjects[i].fillColor = colorCode;
+				fShapeObjects[i].fillColor = generateFillingInfo(filling);
 				
 								
 				paper.view.draw();
@@ -133,10 +133,10 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				
 		}
 	};
-	this.changeColorOfEllipseShape = function(colorCode, mindObjectId){
+	this.changeFillingOfEllipseShape = function(filling, mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
-				fShapeObjects[i].fillColor = colorCode;
+				fShapeObjects[i].fillColor = generateFillingInfo(filling);
 				
 				paper.view.draw();
 				break;
@@ -169,7 +169,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 			drawingObject = new paper.Path.Rectangle(rectangle);	
 			
 		drawingObject.strokeColor = info.fColor;
-		drawingObject.fillColor = info.fColor;
+		drawingObject.fillColor = generateFillingInfo(info.fFilling);
 		drawingObject.fMindObjectId = mindObjectId;
 		drawingObject.fShape = {fShapeTypeDependentInfo : {fWidth : info.fWidth,
 															fHeight : info.fHeight}};
@@ -275,10 +275,10 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				
 		}
 	};		
-	this.changeColorOfRectangleShape = function(colorCode, mindObjectId){
+	this.changeFillingOfRectangleShape = function(filling, mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
-				fShapeObjects[i].fillColor = colorCode;
+				fShapeObjects[i].fillColor = generateFillingInfo(filling);
 				
 				paper.view.draw();
 				break;
@@ -306,7 +306,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	
 		var drawingObject = new paper.Path.Star(position, info.fNrPoints, info.fFirstRadius, info.fSecondRadius);				
 
-		drawingObject.fillColor = info.fColor;
+		drawingObject.fillColor = generateFillingInfo(info.fFilling);
 		drawingObject.fMindObjectId = mindObjectId;
 		drawingObject.fShape = {fShapeTypeDependentInfo : {fFirstRadius : info.fFirstRadius,
 															fSecondRadius : info.fSecondRadius,
@@ -386,10 +386,10 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				
 		}
 	};	
-	this.changeColorOfStarShape = function(colorCode, mindObjectId){
+	this.changeFillingOfStarShape = function(filling, mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
-				fShapeObjects[i].fillColor = colorCode;
+				fShapeObjects[i].fillColor = generateFillingInfo(filling);
 				
 				paper.view.draw();
 				break;
@@ -418,7 +418,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	
 		var drawingObject = new paper.Path.RegularPolygon(position, info.fNrSides, info.fRadius);				
 
-		drawingObject.fillColor = info.fColor;
+		drawingObject.fillColor = generateFillingInfo(info.fFilling);
 		drawingObject.fMindObjectId = mindObjectId;
 		drawingObject.fShape = drawingObject.fShape = {fShapeTypeDependentInfo : {fRadius : info.fRadius,
 																				fNrPoints : info.fNrPoints,
@@ -469,10 +469,10 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				
 		}
 	};	
-	this.changeColorOfPolygonShape = function(colorCode, mindObjectId){
+	this.changeFillingOfPolygonShape = function(filling, mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
-				fShapeObjects[i].fillColor = colorCode;
+				fShapeObjects[i].fillColor = generateFillingInfo(filling);
 				
 				paper.view.draw();
 				break;
@@ -501,7 +501,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		contentsObject.justification = 'center';
 		contentsObject.content = value;
 		contentsObject.fontSize = info.fFontSize;
-		contentsObject.fillColor = info.fColor;
+		contentsObject.fillColor = generateFillingInfo(info.fFilling);
 		contentsObject.fMindObjectId = mindObjectId;
 		contentsObject.position = new paper.Point(x,y);
 		paper.view.draw();
@@ -533,11 +533,11 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				
 		}
 	};
-	this.changeColorOfTextContents = function(colorCode, mindObjectId){
+	this.changeFillingOfTextContents = function(filling, mindObjectId){
 		for(var i=0; i<fContentsObjects.length;i++){
 			if(compareIdValue(fContentsObjects[i].fMindObjectId, mindObjectId)){
 
-				fContentsObjects[i].fillColor = colorCode;
+				fContentsObjects[i].fillColor = generateFillingInfo(filling);
 				
 				paper.view.draw();
 				break;
@@ -1308,4 +1308,35 @@ function WrappedPaperJSEventHandler() {
 	this.setOnCompositionEnd = function(onCompositionEnd){
 		this.compositionend = onCompositionEnd;
 	};
+}
+
+function generateFillingInfo(filling){
+	var ret = null;
+	switch (filling.fFillType){
+	case ShapeTypeEnum.SimpleColor : 
+		ret = fFillInfo.fColor;
+		break;
+	case ShapeTypeEnum.Gradient : 		
+		break;
+	case ShapeTypeEnum.LinearGradient : 
+		ret =	{
+				gradient: {stops: [[filling.fFillInfo.fStopInfoArray[0], filling.fFillInfo.fStopInfoArray[1]]
+									, [filling.fFillInfo.fStopInfoArray[2], filling.fFillInfo.fStopInfoArray[3]]
+									, [filling.fFillInfo.fStopInfoArray[4], filling.fFillInfo.fStopInfoArray[5]]]},
+				origin: new paper.Point(filling.fFillInfo.fStartX, filling.fFillInfo.fStartY),
+				destination: new paper.Point(filling.fFillInfo.fEndX, filling.fFillInfo.fEndY)
+				};
+		break;
+	case ShapeTypeEnum.RadialGradient : 
+		ret =	{
+				gradient: {stops: [[filling.fFillInfo.fStopInfoArray[0], filling.fFillInfo.fStopInfoArray[1]]
+									, [filling.fFillInfo.fStopInfoArray[2], filling.fFillInfo.fStopInfoArray[3]]
+									, [filling.fFillInfo.fStopInfoArray[4], filling.fFillInfo.fStopInfoArray[5]]],
+						   radial : true},
+				origin: new paper.Point(filling.fFillInfo.fOriginX, filling.fFillInfo.fOriginY),
+				destination: new paper.Point(filling.fFillInfo.fOriginX + filling.fFillInfo.fRadiusX, filling.fFillInfo.fOriginY)
+				};
+		break;
+	}
+	return ret;
 }

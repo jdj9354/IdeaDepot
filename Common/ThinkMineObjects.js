@@ -7,6 +7,13 @@ const ShapeTypeEnum = {
 	Polygon : "PolygonShape",	
 };
 
+const FillingTypeEnum = {	
+	SimpleColor : "SimpleColorFill",
+	Gradient : "GradientFill",
+	LinearGradient : "LinearGradientFill",
+	RadialGradient : "RadialGradientFill",	
+};
+
 const ContentsTypeEnum = {
 	Text : "TextContents",
 	Image : "ImageContents",
@@ -50,6 +57,27 @@ function Encoder(){
 			break;		
 		}
 		return ret;
+	}
+	this.encodeFillingType = function(fillingType){
+		var ret;
+		switch (fillingType){
+		case FillingTypeEnum.SimpleColor :
+			ret = 16777216;
+			break;
+		case FillingTypeEnum.Gradient :
+			ret = 33554432;
+			break;
+		case FillingTypeEnum.LinearGradient : 
+			ret = 50331648;
+			break;
+		case FillingTypeEnum.RadialGradient : 
+			ret = 67108864;
+			break;
+		default :
+			ret = 0;
+			break;		
+		}
+		return ret;		
 	}
 	this.encodeContentsType = function(contentsType){
 		var ret;
@@ -116,6 +144,27 @@ function Decoder(){
 			break;		
 		}
 		return ret;
+	}
+	this.decodeFillingType = function(fillingType){
+		var ret;
+		switch (fillingType){
+		case 16777216 :
+			ret = FillingTypeEnum.SimpleColor ;
+			break;
+		case 33554432 :
+			ret = FillingTypeEnum.Gradient;
+			break;
+		case 50331648  : 
+			ret = FillingTypeEnum.LinearGradient;
+			break;
+		case 67108864 : 
+			ret = FillingTypeEnum.RadialGradient;
+			break;
+		default :
+			ret = 0;
+			break;		
+		}
+		return ret;		
 	}
 	this.decodeContentsType = function(contentsType){
 		var ret;
@@ -407,14 +456,14 @@ function MindObject (mindObjectId, childMindMapId, parentMindMapId, shape, conte
 	};
 	
 
-	this.changeColorOfContents = function(color){
-		this.fContents.fColor = color;
+	this.changeFillingOfContents = function(filling){
+		this.fContents.fContentsTypeDependentInfo.fFilling = filling;
 	};
 	this.changeContents = function(contents){
 		this.fContents = contents;
 	};
-	this.changeColorOfShape = function(color){
-		this.fShape.fColor = color;
+	this.changeFillingOfShape = function(filling){
+		this.fShape.fShapeTypeDependentInfo.fFilling = filling;
 	};
 	this.changeShape = function(shape){
 		this.fShape = shape;
@@ -455,22 +504,22 @@ function Edge(firstMindObject, secondMindObject, edgeType, edgeTypeDependentInfo
 }
 
 function EdgeTypeDependentInfo(){
-	
+	this.fFilling;
 }
 
-function SimplePathEdgeTypeDependentInfo(width, color){
+function SimplePathEdgeTypeDependentInfo(width, filling){
 	this.fWidth = width;
-	this.fColor = color;
+	this.fFilling = filling;
 }
 SimplePathEdgeTypeDependentInfo.prototype = new EdgeTypeDependentInfo();
 SimplePathEdgeTypeDependentInfo.constructor = SimplePathEdgeTypeDependentInfo;
 
 
-function OrientedPathEdgeTypeDependentInfo(originId, bidirectional,  width, color){
+function OrientedPathEdgeTypeDependentInfo(originId, bidirectional,  width, filling){
 	this.fOriginId = originId;
 	this.fBidirectional = bidirectional;
 	this.fWidth = width;
-	this.fColor = color;
+	this.fFilling = filling;
 }
 OrientedPathEdgeTypeDependentInfo.prototype = new EdgeTypeDependentInfo();
 OrientedPathEdgeTypeDependentInfo.constructor = OrientedPathEdgeTypeDependentInfo;
@@ -542,51 +591,63 @@ PolygonShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 PolygonShapeTypeDependentInfo.constructor = PolygonShapeTypeDependentInfo; 
 
 
-//------------------- shapeFill Section------------------------------------
-function shapeFill(){
+//------------------- Filling Section------------------------------------
+function Filling(){
+	this.fFillType;
+	this.fFillInfo;
 }
 
-function simpleColorShapeFill(color){
-	this.fColor = color;	
+function SimpleColorFilling(color){
+	this.fFillType = FillingTypeEnum.SimpleColor;
+	this.fFillInfo.fColor = color;	
 }
-simpleColorShapeFill.prototype = new shapeFill();
-simpleColorShapeFill.constructor = simpleColorShapeFill; 
+SimpleColorFilling.prototype = new Filling();
+SimpleColorFilling.constructor = SimpleColorFilling; 
 
-function gradientShapeFill(){
-	this.fStopInfoArray; //Even Index : rgb color (#xxxxxx), Odd Index : offset (0.0 ~ 1.0)
+function GradientFilling(){
+	this.fFillType = FillingTypeEnum.Gradient;
+	this.fFillInfo = {fStopInfoArray : null}; //Even Index : rgb color (#xxxxxx), Odd Index : offset (0.0 ~ 1.0)
 }
-gradientShapeFill.prototype = new shapeFill();
-gradientShapeFill.constructor = gradientShapeFill; 
+GradientFilling.prototype = new Filling();
+GradientFilling.constructor = GradientFilling; 
 
 
-function linearGradientShapeFill(startX,startY,startZ,endX,endY,endZ,stopInfoArray){
-	this.fStartX = startX;
-	this.fStartY = startY;
-	this.fStartZ = startZ;
+function LinearGradientFilling(startX,startY,startZ,endX,endY,endZ,stopInfoArray){
+	this.fFillType = FillingTypeEnum.LinearGradient;
 	
-	this.fEndX = endX;
-	this.fEndY = endY;
-	this.fEndZ = endZ;
+	this.fFillInfo = {};
 	
-	this.fStopInfoArray = stopInfoArray;
+	this.fFillInfo.fStartX = startX;
+	this.fFillInfo.fStartY = startY;
+	this.fFillInfo.fStartZ = startZ;
+	
+	this.fFillInfo.fEndX = endX;
+	this.fFillInfo.fEndY = endY;
+	this.fFillInfo.fEndZ = endZ;
+	
+	this.fFillInfo.fStopInfoArray = stopInfoArray; //Even Index : rgb color (#xxxxxx), Odd Index : offset (0.0 ~ 1.0)
 }
-linearGradientShapeFill.prototype = new gradientShapeFill();
-linearGradientShapeFill.constructor = linearGradientShapeFill; 
+LinearGradientFilling.prototype = new GradientFilling();
+LinearGradientFilling.constructor = LinearGradientFilling; 
 
-function radialGradientShapeFill(originX,originY,originZ,radiusX,radiusY,radiusZ,stopInfoArray){
-	this.fOriginX = originX;
-	this.fOriginY = originY;
-	this.fOriginZ = originZ;
+function RadialGradientFilling(originX,originY,originZ,radiusX,radiusY,radiusZ,stopInfoArray){
+	this.fFillType = FillingTypeEnum.RadialGradient;
 	
-	this.fRadiusX = radiusX;
-	this.fRadiusY = radiusY;
-	this.fRadiusZ = radiusZ;
+	this.fFillInfo = {};
 	
-	this.fStopInfoArray = stopInfoArray;
+	this.fFillInfo.fOriginX = originX;
+	this.fFillInfo.fOriginY = originY;
+	this.fFillInfo.fOriginZ = originZ;
+	
+	this.fFillInfo.fRadiusX = radiusX;
+	this.fFillInfo.fRadiusY = radiusY;
+	this.fFillInfo.fRadiusZ = radiusZ;
+	
+	this.fFillInfo.fStopInfoArray = stopInfoArray; //Even Index : rgb color (#xxxxxx), Odd Index : offset (0.0 ~ 1.0)
 
 }
-radialGradientShapeFill.prototype = new gradientShapeFill();
-radialGradientShapeFill.constructor = radialGradientShapeFill; 
+RadialGradientFilling.prototype = new GradientFilling();
+RadialGradientFilling.constructor = RadialGradientFilling; 
 
 //------------------- Contents Section------------------------------------
 
@@ -599,11 +660,11 @@ function Contents(contentsType, contentsTypeDependentInfo, value){
 }
 
 function ContentsTypeDependentInfo(){
-	
+	this.fFilling;
 }
 
-function TextContentsTypeDependentInfo(color, fontFamily, fontWeight, fontSize){
-	this.fColor = color;
+function TextContentsTypeDependentInfo(fontFamily, fontWeight, fontSize, filling){
+	this.fFilling = filling;
 	this.fFontFamily = fontFamily;
 	this.fFontWeight = fontWeight;
 	this.fFontSize = fontSize;
@@ -613,7 +674,8 @@ TextContentsTypeDependentInfo.prototype = new ContentsTypeDependentInfo();
 TextContentsTypeDependentInfo.constructor = TextContentsTypeDependentInfo;
 
 
-function ImageContentsTypeDependentInfo(width, height, opacity){
+function ImageContentsTypeDependentInfo(width, height, opacity, filling){
+	this.fFilling = filling;
 	this.fWidth = width;
 	this.fHeight = height;
 	this.fOpacity = opacity;	
@@ -622,7 +684,8 @@ function ImageContentsTypeDependentInfo(width, height, opacity){
 ImageContentsTypeDependentInfo.prototype = new ContentsTypeDependentInfo();
 ImageContentsTypeDependentInfo.constructor = ImageContentsTypeDependentInfo;
 
-function MovieContentsTypeDependentInfo(width, height){
+function MovieContentsTypeDependentInfo(width, height, filling){
+	this.fFilling = filling;
 	this.fWidth = width;
 	this.fHeight = height;	
 }
@@ -630,7 +693,8 @@ function MovieContentsTypeDependentInfo(width, height){
 MovieContentsTypeDependentInfo.prototype = new ContentsTypeDependentInfo();
 MovieContentsTypeDependentInfo.constructor = MovieContentsTypeDependentInfo;
 
-function WebPreviewContentsTypeDependentInfo(width, height, resolution, opacity){
+function WebPreviewContentsTypeDependentInfo(width, height, resolution, opacity, filling){
+	this.fFilling = filling;
 	this.fWidth = width;
 	this.fHeight = height;
 	this.fResolution = resolution;
@@ -647,32 +711,32 @@ var getObjTypeDependentInfo = function(type, parameterArray){
 	switch (type){
 	//Shape
 	case ShapeTypeEnum.Circle :
-		ret = new CircleShapeTypeDependentInfo(parameterArray[0], parameterArray[1]);
+		ret = new CircleShapeTypeDependentInfo(parameterArray[0], parameterArray[1] parameterArray[2]);
 		break;
 	case ShapeTypeEnum.Ellipse :
-		ret = new EllipseShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
+		ret = new EllipseShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 		break;
 	case ShapeTypeEnum.Rectangle :
-		ret = new RectangleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+		ret = new RectangleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3], parameterArray[4]);
 		break;
 	case ShapeTypeEnum.Star :
-		ret = new StarShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+		ret = new StarShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3], parameterArray[4]);
 		break;
 	case ShapeTypeEnum.Polygon :
-		ret = new PolygonShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
+		ret = new PolygonShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 		break;
 	//Contents
 	case ContentsTypeEnum.Text :
 		ret = new TextContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 		break;
 	case ContentsTypeEnum.Image :
-		ret = new ImageContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
+		ret = new ImageContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 		break;
 	case ContentsTypeEnum.Movie :
-		ret = new MovieContentsTypeDependentInfo(parameterArray[0], parameterArray[1]);
+		ret = new MovieContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
 		break;
 	case ContentsTypeEnum.WebPreview :
-		ret = new WebPreviewContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+		ret = new WebPreviewContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3], parameterArray[4]);
 		break;
 	//Edge
 	case EdgeTypeEnum.SimplePath :
@@ -691,60 +755,69 @@ var genArrayForCommu = function(type, typeDependentInfo){
 	//Shape
 	case  ShapeTypeEnum.Circle :
 		ret = [typeDependentInfo.fRadius,	//Radius
-			   typeDependentInfo.fColor];	//Color
+			   typeDependentInfo.fFilling,	//Filling
+			   typeDependentInfo.fOpacity];	//Opacity
 		break;
 	case ShapeTypeEnum.Ellipse :
 		ret = [typeDependentInfo.fWidth,	//Width
 			   typeDependentInfo.fHeight,	//Height
-			   typeDependentInfo.fColor];	//Color 
+			   typeDependentInfo.fFilling,	//Filling
+			   typeDependentInfo.fOpacity];	//Opacity 
 		break;
 	case  ShapeTypeEnum.Rectangle :
 		ret = [typeDependentInfo.fWidth,	//Width
 			   typeDependentInfo.fHeight,	//Height
-			   typeDependentInfo.fColor,	//Color
+			   typeDependentInfo.fFilling,	//Filling
+			   typeDependentInfo.fOpacity,;	//Opacity
 			   typeDependentInfo.fIsRounded];	//IsRounded
 		break;
 	case  ShapeTypeEnum.Star :
 		ret = [typeDependentInfo.fNrPoints,	//Nr of Points
 			   typeDependentInfo.fFirstRadius,	//First Radius
 			   typeDependentInfo.fSecondRadius,	//Second Radius
-			   typeDependentInfo.fColor];	//Color
+			   typeDependentInfo.fFilling,	//Filling
+			   typeDependentInfo.fOpacity];	//Opacity
 		break;
 	case  ShapeTypeEnum.Polygon :
 		ret = [typeDependentInfo.fNrSides,	//Nr of Sides
 			   typeDependentInfo.fRadius,	//Radius
-			   typeDependentInfo.fColor];	//Color
+			   typeDependentInfo.fFilling,	//Filling
+			   typeDependentInfo.fOpacity];	//Opacity
 		break;
 	//Contents
 	case ContentsTypeEnum.Text :
-		ret = [typeDependentInfo.fColor,			//Color
-			   typeDependentInfo.fFontFamily,		//FontFamily
+		ret = [typeDependentInfo.fFontFamily,		//FontFamily
 			   typeDependentInfo.fFontWeight,		//FontWeight
-			   typeDependentInfo.fFontSize];		//FontSize
+			   typeDependentInfo.fFontSize,			//FontSize
+			   typeDependentInfo.fFilling];			//Filling
+			   		
 		break;
 	case ContentsTypeEnum.Image :
 		ret = [typeDependentInfo.fWidth,			//Width
 			   typeDependentInfo.fHeight,			//Height
-			   typeDependentInfo.fOpacity];			//Opacity                   
+			   typeDependentInfo.fOpacity,			//Opacity                   
+			   typeDependentInfo.fFilling];			//Filling
 		break;
 	case ContentsTypeEnum.Movie :
 		ret = [typeDependentInfo.fWidth,			//Width
-			   typeDependentInfo.fHeight];			//Height                                      
+			   typeDependentInfo.fHeight,			//Height   
+			   typeDependentInfo.fFilling];			//Filling
 		break;
 	case ContentsTypeEnum.WebPreview :
 		ret = [typeDependentInfo.fWidth,			//Width
 			   typeDependentInfo.fHeight,			//Height
 			   typeDependentInfo.fResolution,		//Resolution
-			   typeDependentInfo.fOpacity];			//Opacity  
+			   typeDependentInfo.fOpacity,			//Opacity  
+			   typeDependentInfo.fFilling];			//Filling
 		break;
 	case EdgeTypeEnum.SimplePath :
-		ret = [typeDependentInfo.fWidth, typeDependentInfo.fColor];
+		ret = [typeDependentInfo.fWidth, typeDependentInfo.fFilling];
 		break;
 	case EdgeTypeEnum.OrientedPath :
 		ret = [	typeDependentInfo.fOriginId,
 				typeDependentInfo.fBidirectional,
 				typeDependentInfo.fWidth, 
-				typeDependentInfo.fColor];
+				typeDependentInfo.fFilling];
 		break;
 	default :
 		ret = null;
@@ -755,29 +828,42 @@ var genArrayForCommu = function(type, typeDependentInfo){
 
 if(typeof module != "undefined"){
 	if(module != null){
+		module.exports.ShapeTypeEnum = ShapeTypeEnum;
+		module.exports.FillingTypeEnum = FillingTypeEnum;
 		module.exports.ContentsTypeEnum = ContentsTypeEnum;
 		module.exports.EdgeTypeEnum = EdgeTypeEnum;
 		module.exports.compareIdValue = compareIdValue;
 		module.exports.Encoder = Encoder;
 		module.exports.Decoder = Decoder;
 		module.exports.MindMap = MindMap;
-		module.exports.MindObject = MindObject;
+		module.exports.MindObject = MindObject;		
+		
 		module.exports.Edge = Edge;
 		module.exports.EdgeTypeDependentInfo = EdgeTypeDependentInfo;
 		module.exports.SimplePathEdgeTypeDependentInfo = SimplePathEdgeTypeDependentInfo;
+		module.exports.OrientedPathEdgeTypeDependentInfo = OrientedPathEdgeTypeDependentInfo;		
+		
 		module.exports.Shape = Shape;
 		module.exports.ShapeTypeDependentInfo = ShapeTypeDependentInfo;
 		module.exports.CircleShapeTypeDependentInfo = CircleShapeTypeDependentInfo;
 		module.exports.EllipseShapeTypeDependentInfo = EllipseShapeTypeDependentInfo;
 		module.exports.RectangleShapeTypeDependentInfo = RectangleShapeTypeDependentInfo;
 		module.exports.StarShapeTypeDependentInfo = StarShapeTypeDependentInfo;
-		module.exports.PolygonShapeTypeDependentInfo = PolygonShapeTypeDependentInfo;
+		module.exports.PolygonShapeTypeDependentInfo = PolygonShapeTypeDependentInfo;		
+		
+		module.exports.Filling = Filling;
+		module.exports.SimpleColorFilling = SimpleColorFilling;
+		module.exports.GradientFilling = GradientFilling;
+		module.exports.LinearGradientFilling = LinearGradientFilling;
+		module.exports.RadialGradientFilling = RadialGradientFilling;
+		
 		module.exports.Contents = Contents;
 		module.exports.ContentsTypeDependentInfo = ContentsTypeDependentInfo;
 		module.exports.TextContentsTypeDependentInfo = TextContentsTypeDependentInfo;
 		module.exports.ImageContentsTypeDependentInfo = ImageContentsTypeDependentInfo;
 		module.exports.MovieContentsTypeDependentInfo = MovieContentsTypeDependentInfo;
-		module.exports.WebPreviewContentsTypeDependentInfo = WebPreviewContentsTypeDependentInfo;
+		module.exports.WebPreviewContentsTypeDependentInfo = WebPreviewContentsTypeDependentInfo;		
+		
 		module.exports.getObjTypeDependentInfo = getObjTypeDependentInfo;
 		module.exports.genArrayForCommu = genArrayForCommu;
 	}

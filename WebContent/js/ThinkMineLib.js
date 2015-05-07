@@ -259,7 +259,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	
 	var fSelectedShapeType = "CircleShape";
-	var fSelectedShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,"#FF0000");
+	var fSelectedShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorShapeFill("#FF0000"));
 	var fSelectedContentsType = "TextContents";
 	var fSelectedContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
 	
@@ -289,7 +289,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	var fObjectAddMode = false;
 	
-	var fShapeColor = "#FFFFFF";
+	var fShapeFilling = new SimpleColorShapeFill("#FFFFFF");
 	
 	//fObjectAddMode = true;
 	var fVirtualMindObject = null;
@@ -360,11 +360,14 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	};
 	
 	this.setShapeColor = function(color){
-		fShapeColor = color;
+		fShapeFilling = new SimpleColorShapeFill(color);
 	};
 	
 	this.getShapeColor = function(){
-		return fShapeColor;
+		if(fShapeFilling instanceof SimpleColorShapeFill)
+			return fShapeFilling.fColor;
+		else
+			return null;
 	};
 	
 	this.setMenuSelectedShape = function(shapeIndex){
@@ -492,10 +495,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			if(CreatingCircle.contains(new paper.Point(x,y))){
 				
 				var tempShape;
-				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,"#FF0000");
+				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorShapeFill("#FF0000"));
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorShapeFill("#FFFFFF"));
 				
 				tempShape = new Shape(ShapeTypeEnum.Circle,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"Ok!!!");
@@ -520,11 +523,11 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			else if(CreatingImageCircle.contains(new paper.Point(x,y))){
 				
 				var tempShape;
-				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(290,"#FF0000");
+				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(290,new SimpleColorShapeFill("#FF0000"));
 				
 				var tempContents;
 				//var tempContentsTypeDependentInfo = new ImageContentsTypeDependentInfo(400,400);
-				var tempContentsTypeDependentInfo = new MovieContentsTypeDependentInfo(400,400);
+				var tempContentsTypeDependentInfo = new MovieContentsTypeDependentInfo(400,400,new SimpleColorShapeFill("#FFFFFF"));
 				
 				tempShape = new Shape(ShapeTypeEnum.Circle,tempShapeTypeDependentInfo);
 				//tempContents = new Contents("ImageContents",tempContentsTypeDependentInfo,"http://cfile27.uf.tistory.com/image/0151AC3F51D28D6F2CF37B");
@@ -550,10 +553,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			}
 			else if(CreatingRectangle.contains(new paper.Point(x,y))){
 				var tempShape;
-				var tempShapeTypeDependentInfo = new RectangleShapeTypeDependentInfo(70,70,"#FFFF00",true);
+				var tempShapeTypeDependentInfo = new RectangleShapeTypeDependentInfo(70,70,new SimpleColorShapeFill("#FFFF00"),true);
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new WebPreviewContentsTypeDependentInfo(500,500, "1280X840",0.7); //TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
+				var tempContentsTypeDependentInfo = new WebPreviewContentsTypeDependentInfo(500,500, "1280X840",0.7,,new SimpleColorShapeFill("#FFFFFF")); //TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
 				
 				tempShape = new Shape(ShapeTypeEnum.Rectangle,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.WebPreview ,tempContentsTypeDependentInfo,"http://www.melon.com");
@@ -562,10 +565,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			}
 			else if(CreatingStar.contains(new paper.Point(x,y))){
 				var tempShape;
-				var tempShapeTypeDependentInfo = new StarShapeTypeDependentInfo(5,200,100,"#0FEF1F");
+				var tempShapeTypeDependentInfo = new StarShapeTypeDependentInfo(5,200,100,new SimpleColorShapeFill("#0FEF1F"));
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorShapeFill("#2FF1F3"));
 				
 				tempShape = new Shape(ShapeTypeEnum.Star,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"This is a Star Shape");
@@ -574,10 +577,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			}
 			else if(CreatingPolygon.contains(new paper.Point(x,y))){
 				var tempShape;
-				var tempShapeTypeDependentInfo = new PolygonShapeTypeDependentInfo(12,200,"#FF0F0F");
+				var tempShapeTypeDependentInfo = new PolygonShapeTypeDependentInfo(12,200,new SimpleColorShapeFill("#FF0F0F"));
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorShapeFill("#2FF1F3"));
 				
 				tempShape = new Shape(ShapeTypeEnum.Polyon,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"This is a Polygon Shape");
@@ -688,7 +691,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 							fDrawingCCInterface.changeOpacityOfTextContents(1,fSelectedObject.fMindObjectId);
 							
 							fDrawingCCInterface.eraseCirclesOnShapeVertex(fSelectedObject.fMindObjectId);
-							fDrawingCCInterface.drawCirclesOnShapeVertex(curSelectedObject.fMindObjectId,5,"#000000");
+							fDrawingCCInterface.drawCirclesOnShapeVertex(curSelectedObject.fMindObjectId,5,SHAPE_VERTEX_COLOR);
 							
 							fSelectedObject = curSelectedObject;
 							
@@ -726,7 +729,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 						fDrawingCCInterface.changeOpacityOfCircleShape(0.5,fSelectedObject.fMindObjectId);
 						fDrawingCCInterface.changeOpacityOfTextContents(0.5,fSelectedObject.fMindObjectId);		
 						
-						fDrawingCCInterface.drawCirclesOnShapeVertex(fSelectedObject.fMindObjectId,5,"#000000");
+						fDrawingCCInterface.drawCirclesOnShapeVertex(fSelectedObject.fMindObjectId,5,SHAPE_VERTEX_COLOR);
 					
 						var contentsEditor = document.createElement('input');
 						contentsEditor.setAttribute('id',"ContentsEditor");
@@ -841,8 +844,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 						case ShapeTypeEnum.Circle :
 							var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
 																, x, y, z);
-							var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;															
-							newSTDI = new CircleShapeTypeDependentInfo(newRadius,prevColor);						
+							var prevFilling = fSelectedObject.fShape.fShapeTypeDependentInfo.fFilling;															
+							newSTDI = new CircleShapeTypeDependentInfo(newRadius,prevFilling);						
 							break;
 						case ShapeTypeEnum.Ellipse :
 							break;
@@ -850,10 +853,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 							var newWidth = Math.abs(fSelectedObject.fX - x)*2;
 							var newHeight = Math.abs(fSelectedObject.fY - y)*2;
 							
-							var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;
+							var prevFilling = fSelectedObject.fShape.fShapeTypeDependentInfo.fFilling;
 							var prevIsRounded = fSelectedObject.fShape.fShapeTypeDependentInfo.fIsRounded;
 							
-							newSTDI = new RectangleShapeTypeDependentInfo(newWidth,newHeight,prevColor,prevIsRounded);						
+							newSTDI = new RectangleShapeTypeDependentInfo(newWidth,newHeight,prevFilling,prevIsRounded);						
 							break;
 						case ShapeTypeEnum.Star :
 							var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
@@ -862,24 +865,23 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 							/*var isFirstCircleVertex = true;
 							if(Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius)
 									> Math.abs(newRadius - fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius))
-								isFirstCircleVertex = false;*/
+								isFirstCircleVertex = false;*/							
 							
-							
-							var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;
+							var prevFilling = fSelectedObject.fShape.fShapeTypeDependentInfo.fFilling;
 							var prevNrPoints = fSelectedObject.fShape.fShapeTypeDependentInfo.fNrPoints;
 							
 							if(fSelectedObject.isFirstCircleVertex)
-								newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, newRadius, fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius, prevColor);
+								newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, newRadius, fSelectedObject.fShape.fShapeTypeDependentInfo.fSecondRadius, prevFilling);
 							else
-								newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius, newRadius , prevColor);
+								newSTDI = new StarShapeTypeDependentInfo(prevNrPoints, fSelectedObject.fShape.fShapeTypeDependentInfo.fFirstRadius, newRadius , prevFilling);
 							break;
 						case ShapeTypeEnum.Polygon :
 							var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
 																, x, y, z);
-							var prevColor = fSelectedObject.fShape.fShapeTypeDependentInfo.fColor;	
+							var prevFilling = fSelectedObject.fShape.fShapeTypeDependentInfo.fFilling;	
 							var prevNrSides = fSelectedObject.fShape.fShapeTypeDependentInfo.fNrSides;	
 							
-							newSTDI = new PolygonShapeTypeDependentInfo(prevNrSides,newRadius,prevColor);
+							newSTDI = new PolygonShapeTypeDependentInfo(prevNrSides,newRadius,prevFilling);
 							break;						
 					}
 					if(newSTDI == null)
@@ -916,7 +918,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					if(Distance !=0 && Distance <= maxRelDistanceBySquare && !isConnectedMindObject){
 						//console.log("connect");
 						//this.connectMindObject(fMovingObject.fMindObjectId,MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.SimplePath, new SimplePathEdgeTypeDependentInfo(8,this.getShapeColor()));
-						this.connectMindObject(fMovingObject.fMindObjectId,MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.OrientedPath, new OrientedPathEdgeTypeDependentInfo(fMovingObject.fMindObjectId,true,8,this.getShapeColor()));
+						this.connectMindObject(fMovingObject.fMindObjectId,MindMap.getMindObjectOnIndex(i).fMindObjectId, EdgeTypeEnum.OrientedPath, new OrientedPathEdgeTypeDependentInfo(fMovingObject.fMindObjectId,true,8,this.getShapeFilling()));
 						
 					}
 					else if(Distance !=0 && Distance > maxRelDistanceBySquare && isConnectedMindObject){
@@ -934,16 +936,16 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				switch(fMenuSelectedShape){
 
 				case ShapeTypeEnum.Circle :
-					fMenuInsertedSDI = new CircleShapeTypeDependentInfo(10,this.getShapeColor());
+					fMenuInsertedSDI = new CircleShapeTypeDependentInfo(10,this.getShapeFilling());
 					break;
 				case ShapeTypeEnum.Rectangle :
-					fMenuInsertedSDI = new RectangleShapeTypeDependentInfo(10, 10, this.getShapeColor(), true);
+					fMenuInsertedSDI = new RectangleShapeTypeDependentInfo(10, 10, this.getShapeFilling(), true);
 					break;	
 				case ShapeTypeEnum.Star :
-					fMenuInsertedSDI = new StarShapeTypeDependentInfo(5, 10, 5,this.getShapeColor());
+					fMenuInsertedSDI = new StarShapeTypeDependentInfo(5, 10, 5,this.getShapeFilling());
 					break;hh
 				case ShapeTypeEnum.Polygon :
-					fMenuInsertedSDI = new PolygonShapeTypeDependentInfo(3, 1,this.getShapeColor());
+					fMenuInsertedSDI = new PolygonShapeTypeDependentInfo(3, 1,this.getShapeFilling());
 					break;							
 				}
 				
@@ -1272,7 +1274,6 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			console.log("ThinkMineCanvas - deleteMindObject Error : mindObjectId is invalid");
 			return;		
 		}
-		console.log("delete send");
 		fSocketHelper.fSocketDataCommuHelperSender.mindObjectRemoveSend(fJobHandler.getMindMap().fMindMapId,	
 																		mindObjectId);
 		
@@ -1535,8 +1536,8 @@ function JobHandler(drawingObj){
 			break;
 		case CODE_MIND_CHANGE_CONTENTS :
 			break;
-		case CODE_MIND_CHANGE_COLOR_OF_SHAPE :
-			handleChangeColorOfShapeEvent(eventCode);
+		case CODE_MIND_CHANGE_FILLING_OF_SHAPE :
+			handleChangeFillingOfShapeEvent(eventCode);
 			break;
 		case CODE_MIND_CHANGE_SHAPE :
 			break;
@@ -2426,7 +2427,7 @@ console.log(now);
 
 	};
 	
-	var handleChangeColorOfShapeEvent = function(eventCode){
+	var handleChangeFillingOfShapeEvent = function(eventCode){
 		var targetIndex = -1;
 		
 		for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
@@ -2438,19 +2439,21 @@ console.log(now);
 		if(targetIndex == -1)
 			return;			
 		
-		if(fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fColor == undefined)
+		if(fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fFilling == undefined)
 			return;
-		else
-			fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fColor = eventCode.CC;
+		else{
+			//HERE
+			fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fFilling = eventCode.SF;
+		}
 		
 		var tempMindObjectForDrawing = {fShape : {fShapeType : ""+fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeType},
 										fMindObjectId : fMindMap.getMindObjectOnIndex(targetIndex).fMindObjectId						
 										};
 		
 		
-		fDrawingObj.pushNewJob([CODE_MIND_CHANGE_COLOR_OF_SHAPE,
+		fDrawingObj.pushNewJob([CODE_MIND_CHANGE_FILLING_OF_SHAPE,
 		                        tempMindObjectForDrawing,
-		                        ""+fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fColor
+		                        ""+fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fFilling
 		                        ]);
 		
 	};
@@ -2878,7 +2881,7 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 			return;
 		}
 		
-		fRoom.publicToCR({Code : CODE_MIND_CHANGE_COLOR_OF_SHAPE,
+		fRoom.publicToCR({Code : CODE_MIND_CHANGE_FILLING_OF_SHAPE,
 							MMID : mindMapId,
 							MOID : mindObjectId,
 							CC : colorCode},OPERATION_TYPE.UPDATE);
@@ -3205,8 +3208,8 @@ function DrawingObj(drawingCCInterface){
 		case CODE_MIND_CHANGE_CONTENTS :
 			change
 			break;
-		case CODE_MIND_CHANGE_COLOR_OF_SHAPE :
-			changeColorOfShape(drawingJob[1],drawingJob[2]);
+		case CODE_MIND_CHANGE_FILLING_OF_SHAPE :
+			changeFillingOfShape(drawingJob[1],drawingJob[2]);
 			break;
 		case CODE_MIND_CHANGE_SHAPE :
 			break;
@@ -3432,9 +3435,9 @@ function DrawingObj(drawingCCInterface){
 																				mindObjectInfo.fMindObjectId);
 	};
 	
-	var changeColorOfShape = function(mindObjectInfo, colorCode){
+	var changeFillingOfShape = function(mindObjectInfo, fillInfo){
 		
-		fDrawingCCInterface["changeColorOf"+mindObjectInfo.fShape.fShapeType](colorCode,
+		fDrawingCCInterface["changeFillingOf"+mindObjectInfo.fShape.fShapeType](fillInfo,
 																				mindObjectInfo.fMindObjectId);
 	};
 	

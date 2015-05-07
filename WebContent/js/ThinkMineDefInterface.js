@@ -20,7 +20,7 @@ function DrawingCCInterface(backBoneType){
 	this.resizeCircleShape = function(info,mindObjectId){
 	};
 	
-	this.changeColorOfCircleShape = function(colorCode, mindObjectId){
+	this.changeFillingOfCircleShape = function(filling, mindObjectId){
 		
 	};
 	
@@ -37,7 +37,7 @@ function DrawingCCInterface(backBoneType){
 	this.moveEllipseShape = function(x, y, z, mindObjectId){
 		
 	};	
-	this.changeColorOfEllipseShape = function(colorCode, mindObjectId){
+	this.changeFillingOfEllipseShape = function(filling, mindObjectId){
 		
 	};
 	
@@ -58,7 +58,7 @@ function DrawingCCInterface(backBoneType){
 	this.resizeRectangleShape = function(info,mindObjectId){
 	
 	};	
-	this.changeColorOfRectangleShape = function(colorCode, mindObjectId){
+	this.changeFillingOfRectangleShape = function(filling, mindObjectId){
 		
 	};
 	
@@ -79,7 +79,7 @@ function DrawingCCInterface(backBoneType){
 	this.resizeStarShape = function(info,mindObjectId){
 	
 	};	
-	this.changeColorOfStarShape = function(colorCode, mindObjectId){
+	this.changeFillingOfStarShape = function(filling, mindObjectId){
 		
 	};
 	
@@ -101,7 +101,7 @@ function DrawingCCInterface(backBoneType){
 	this.resizePolygonShape = function(info,mindObjectId){
 	
 	};		
-	this.changeColorOfPolygonShape = function(colorCode, mindObjectId){
+	this.changeFillingOfPolygonShape = function(filling, mindObjectId){
 		
 	};
 	
@@ -122,7 +122,7 @@ function DrawingCCInterface(backBoneType){
 	this.moveTextContents = function(x, y, z, mindObjectId){
 		
 	};
-	this.changeColorOfTextContents = function(colorCode, mindObjectId){
+	this.changeFillingOfTextContents = function(filling, mindObjectId){
 		
 	};
 	this.changeOpacityOfTextContents = function(opacity, mindObjectId){

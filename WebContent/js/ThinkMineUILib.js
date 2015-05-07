@@ -416,7 +416,7 @@ ThinkMine.Lib.ExternalUI.CircleImageButton = new function(undefined){
 			
 		//Currently Test Code
 		fTmCanvas.setMenuSelectedContents(0);
-		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25, new SimpleColorFilling("#FFFFFF")));
 		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
 		//Currently Test Code
 		
@@ -463,7 +463,7 @@ ThinkMine.Lib.ExternalUI.RectangleImageButton = new function(undefined){
 			
 		//Currently Test Code
 		fTmCanvas.setMenuSelectedContents(0);
-		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25, new SimpleColorFilling("#FFFFFF")));
 		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
 		//Currently Test Code
 		
@@ -511,7 +511,7 @@ ThinkMine.Lib.ExternalUI.StarImageButton = new function(undefined){
 			
 		//Currently Test Code
 		fTmCanvas.setMenuSelectedContents(0);
-		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF")));
 		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
 		//Currently Test Code
 		
@@ -559,7 +559,7 @@ ThinkMine.Lib.ExternalUI.PolygonImageButton = new function(undefined){
 			
 		//Currently Test Code
 		fTmCanvas.setMenuSelectedContents(0);
-		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
+		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF")));
 		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
 		//Currently Test Code
 		
