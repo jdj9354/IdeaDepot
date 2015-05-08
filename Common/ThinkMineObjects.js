@@ -599,7 +599,7 @@ function Filling(){
 
 function SimpleColorFilling(color){
 	this.fFillType = FillingTypeEnum.SimpleColor;
-	this.fFillInfo.fColor = color;	
+	this.fFillInfo = {fColor : color};	
 }
 SimpleColorFilling.prototype = new Filling();
 SimpleColorFilling.constructor = SimpleColorFilling; 
@@ -711,7 +711,7 @@ var getObjTypeDependentInfo = function(type, parameterArray){
 	switch (type){
 	//Shape
 	case ShapeTypeEnum.Circle :
-		ret = new CircleShapeTypeDependentInfo(parameterArray[0], parameterArray[1] parameterArray[2]);
+		ret = new CircleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
 		break;
 	case ShapeTypeEnum.Ellipse :
 		ret = new EllipseShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
@@ -768,7 +768,7 @@ var genArrayForCommu = function(type, typeDependentInfo){
 		ret = [typeDependentInfo.fWidth,	//Width
 			   typeDependentInfo.fHeight,	//Height
 			   typeDependentInfo.fFilling,	//Filling
-			   typeDependentInfo.fOpacity,;	//Opacity
+			   typeDependentInfo.fOpacity,	//Opacity
 			   typeDependentInfo.fIsRounded];	//IsRounded
 		break;
 	case  ShapeTypeEnum.Star :

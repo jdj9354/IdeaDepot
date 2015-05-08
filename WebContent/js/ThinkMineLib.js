@@ -259,7 +259,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	
 	var fSelectedShapeType = "CircleShape";
-	var fSelectedShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorShapeFill("#FF0000"));
+	var fSelectedShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorFilling("#FF0000"));
 	var fSelectedContentsType = "TextContents";
 	var fSelectedContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
 	
@@ -289,7 +289,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	var fObjectAddMode = false;
 	
-	var fShapeFilling = new SimpleColorShapeFill("#FFFFFF");
+	var fShapeFilling = new SimpleColorFilling("#FFFFFF");
 	
 	//fObjectAddMode = true;
 	var fVirtualMindObject = null;
@@ -360,11 +360,11 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	};
 	
 	this.setShapeColor = function(color){
-		fShapeFilling = new SimpleColorShapeFill(color);
+		fShapeFilling = new SimpleColorFilling(color);
 	};
 	
 	this.getShapeColor = function(){
-		if(fShapeFilling instanceof SimpleColorShapeFill)
+		if(fShapeFilling instanceof SimpleColorFilling)
 			return fShapeFilling.fColor;
 		else
 			return null;
@@ -495,10 +495,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			if(CreatingCircle.contains(new paper.Point(x,y))){
 				
 				var tempShape;
-				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorShapeFill("#FF0000"));
+				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorFilling("#FF0000"));
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorShapeFill("#FFFFFF"));
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF"));
 				
 				tempShape = new Shape(ShapeTypeEnum.Circle,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"Ok!!!");
@@ -523,11 +523,11 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			else if(CreatingImageCircle.contains(new paper.Point(x,y))){
 				
 				var tempShape;
-				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(290,new SimpleColorShapeFill("#FF0000"));
+				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(290,new SimpleColorFilling("#FF0000"));
 				
 				var tempContents;
 				//var tempContentsTypeDependentInfo = new ImageContentsTypeDependentInfo(400,400);
-				var tempContentsTypeDependentInfo = new MovieContentsTypeDependentInfo(400,400,new SimpleColorShapeFill("#FFFFFF"));
+				var tempContentsTypeDependentInfo = new MovieContentsTypeDependentInfo(400,400,new SimpleColorFilling("#FFFFFF"));
 				
 				tempShape = new Shape(ShapeTypeEnum.Circle,tempShapeTypeDependentInfo);
 				//tempContents = new Contents("ImageContents",tempContentsTypeDependentInfo,"http://cfile27.uf.tistory.com/image/0151AC3F51D28D6F2CF37B");
@@ -553,10 +553,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			}
 			else if(CreatingRectangle.contains(new paper.Point(x,y))){
 				var tempShape;
-				var tempShapeTypeDependentInfo = new RectangleShapeTypeDependentInfo(70,70,new SimpleColorShapeFill("#FFFF00"),true);
+				var tempShapeTypeDependentInfo = new RectangleShapeTypeDependentInfo(70,70,new SimpleColorFilling("#FFFF00"),true);
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new WebPreviewContentsTypeDependentInfo(500,500, "1280X840",0.7,,new SimpleColorShapeFill("#FFFFFF")); //TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
+				var tempContentsTypeDependentInfo = new WebPreviewContentsTypeDependentInfo(500,500, "1280X840",0.7,new SimpleColorFilling("#FFFFFF")); //TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
 				
 				tempShape = new Shape(ShapeTypeEnum.Rectangle,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.WebPreview ,tempContentsTypeDependentInfo,"http://www.melon.com");
@@ -565,10 +565,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			}
 			else if(CreatingStar.contains(new paper.Point(x,y))){
 				var tempShape;
-				var tempShapeTypeDependentInfo = new StarShapeTypeDependentInfo(5,200,100,new SimpleColorShapeFill("#0FEF1F"));
+				var tempShapeTypeDependentInfo = new StarShapeTypeDependentInfo(5,200,100,new SimpleColorFilling("#0FEF1F"));
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorShapeFill("#2FF1F3"));
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#2FF1F3"));
 				
 				tempShape = new Shape(ShapeTypeEnum.Star,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"This is a Star Shape");
@@ -577,10 +577,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			}
 			else if(CreatingPolygon.contains(new paper.Point(x,y))){
 				var tempShape;
-				var tempShapeTypeDependentInfo = new PolygonShapeTypeDependentInfo(12,200,new SimpleColorShapeFill("#FF0F0F"));
+				var tempShapeTypeDependentInfo = new PolygonShapeTypeDependentInfo(12,200,new SimpleColorFilling("#FF0F0F"));
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorShapeFill("#2FF1F3"));
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#2FF1F3"));
 				
 				tempShape = new Shape(ShapeTypeEnum.Polyon,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"This is a Polygon Shape");
@@ -1372,20 +1372,20 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			
 	};
 	
-	this.changeColorOfContents = function(mindObjectId, color){
+	this.changeFillingOfContents = function(mindObjectId, filling){
 		if(mindObjectId == null || mindObjectId == undefined){
 			console.log("ThinkMineCanvas - changeColorOfContents Error : mindObjectId is invalid");
 			return;		
 		}
 		
-		if(color == null || color == undefined || typeof(color) != "string"){
-			console.log("ThinkMineCanvas - changeColorOfContents Error : color is invalid");
+		if(filling == null || filling == undefined || typeof(filling) != "string"){
+			console.log("ThinkMineCanvas - changeColorOfContents Error : filling is invalid");
 			return;
 		}
 		
-		fSocketHelper.fSocketDataCommuHelperSender.mindObjectChangeColorOfContentsSend(fJobHandler.getMindMap().fMindMapId,
+		fSocketHelper.fSocketDataCommuHelperSender.mindObjectChangeFillingOfContentsSend(fJobHandler.getMindMap().fMindMapId,
 																						 mindObjectId,
-																						 color);		
+																						 filling);		
 	};
 	
 	this.changeValueOfContents = function(mindObjectId, contentsType ,contentsValue){
@@ -1409,20 +1409,20 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	};
 	
 	
-	this.changeColorOfShape = function(mindObjectId, color){
+	this.changeFillingOfShape = function(mindObjectId, filling){
 		if(mindObjectId == null || mindObjectId == undefined){
 			console.log("ThinkMineCanvas - changeColorOfShape Error : mindObjectId is invalid");
 			return;		
 		}
 		
-		if(color == null || color == undefined || typeof(color) != "string"){
-			console.log("ThinkMineCanvas - changeColorOfShape Error : color is invalid");
+		if(filling == null || filling == undefined || typeof(filling) != "string"){
+			console.log("ThinkMineCanvas - changeColorOfShape Error : filling is invalid");
 			return;
 		}
 		
-		fSocketHelper.fSocketDataCommuHelperSender.mindObjectChangeColorOfShapeSend(fJobHandler.getMindMap().fMindMapId,
+		fSocketHelper.fSocketDataCommuHelperSender.mindObjectChangeFillingOfShapeSend(fJobHandler.getMindMap().fMindMapId,
 																						 mindObjectId,
-																						 color);		
+																						 filling);		
 	};
 	
 	this.resizeShape = function(mindObjectId, shape){
@@ -1528,8 +1528,8 @@ function JobHandler(drawingObj){
 		case CODE_MIND_DISCONNECT_FROM :
 			handleMindObjectDisconnectFromEvent(eventCode);
 			break;
-		case CODE_MIND_CHANGE_COLOR_OF_CONTENTS :
-			handleChangeColorOfContentsEvent(eventCode);
+		case CODE_MIND_CHANGE_FILLING_OF_CONTENTS :
+			handleChangeFillingOfContentsEvent(eventCode);
 			break;
 		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS : 
 			handleChangeValueOfContentsEvent(eventCode);
@@ -2359,7 +2359,7 @@ console.log(now);
 									tempEdgeForDrawing]);		
 	};
 	
-	var handleChangeColorOfContentsEvent = function(eventCode){
+	var handleChangeFillingOfContentsEvent = function(eventCode){
 		
 		var targetIndex = -1;
 		
@@ -2372,17 +2372,17 @@ console.log(now);
 		if(targetIndex == -1)
 			return;			
 		
-		if(fMindMap.getMindObjectOnIndex(targetIndex).fContents.fContentsTypeDependentInfo.fColor == undefined)
+		if(fMindMap.getMindObjectOnIndex(targetIndex).fContents.fContentsTypeDependentInfo.fFilling == undefined)
 			return;
 		else
-			fMindMap.getMindObjectOnIndex(targetIndex).fContents.fContentsTypeDependentInfo.fColor = eventCode.CC;
+			fMindMap.getMindObjectOnIndex(targetIndex).fContents.fContentsTypeDependentInfo.fFilling = eventCode.F;
 		
 		var tempMindObjectForDrawing = {fContents : {fContentsType : ""+fMindMap.getMindObjectOnIndex(targetIndex).fContents.fContentsType},
 										fMindObjectId : fMindMap.getMindObjectOnIndex(targetIndex).fMindObjectId						
 										};
 		
 		
-		fDrawingObj.pushNewJob([CODE_MIND_CHANGE_COLOR_OF_CONTENTS,
+		fDrawingObj.pushNewJob([CODE_MIND_CHANGE_FILLING_OF_CONTENTS,
 		                        tempMindObjectForDrawing,
 		                        ""+fMindMap.getMindObjectOnIndex(targetIndex).fContents.fContentsTypeDependentInfo.fColor
 		                        ]);
@@ -2442,8 +2442,7 @@ console.log(now);
 		if(fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fFilling == undefined)
 			return;
 		else{
-			//HERE
-			fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fFilling = eventCode.SF;
+			fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fFilling = eventCode.F;
 		}
 		
 		var tempMindObjectForDrawing = {fShape : {fShapeType : ""+fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeType},
@@ -2845,7 +2844,7 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 							TMOID : targetMindObjectId,
 							ET : fEncoder.encodeEdgeType(edgeType)},OPERATION_TYPE.DELETE);
 	};
-	this.mindObjectChangeColorOfContentsSend = function(mindMapId, mindObjectId, colorCode){
+	this.mindObjectChangeFillingOfContentsSend = function(mindMapId, mindObjectId, filling){
 		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
@@ -2854,7 +2853,7 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		fRoom.publicToCR({Code : CODE_MIND_CHANGE_COLOR_OF_CONTENTS,
 							MMID : mindMapId,
 							MOID : mindObjectId,
-							CC : colorCode},OPERATION_TYPE.UPDATE);
+							F : filling},OPERATION_TYPE.UPDATE);
 	};
 	this.mindObjectChangeValueOfContentsSend = function(mindMapId, mindObjectId, contentsType, contentsValue){
 		if(fJobHandler == null || fRoom == null){
@@ -2875,7 +2874,7 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		}
 
 	};
-	this.mindObjectChangeColorOfShapeSend = function(mindMapId, mindObjectId, colorCode){
+	this.mindObjectChangeFillingOfShapeSend = function(mindMapId, mindObjectId, filling){
 		if(fJobHandler == null || fRoom == null){
 			console.log("SocketDataCommuHelperSender : Object is not Initialized");
 			return;
@@ -2884,7 +2883,7 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		fRoom.publicToCR({Code : CODE_MIND_CHANGE_FILLING_OF_SHAPE,
 							MMID : mindMapId,
 							MOID : mindObjectId,
-							CC : colorCode},OPERATION_TYPE.UPDATE);
+							F : filling},OPERATION_TYPE.UPDATE);
 	};	
 	this.mindObjectChangeShape = function(mindMapId, mindObjectId, shapeType){
 		if(fJobHandler == null || fRoom == null){
@@ -3199,8 +3198,8 @@ function DrawingObj(drawingCCInterface){
 		case CODE_MIND_DISCONNECT_FROM :
 			eraseEdge(drawingJob[1]);
 			break;
-		case CODE_MIND_CHANGE_COLOR_OF_CONTENTS :
-			changeColorOfContents(drawingJob[1],drawingJob[2]);
+		case CODE_MIND_CHANGE_FILLING_OF_CONTENTS :
+			changeFillingOfContents(drawingJob[1],drawingJob[2]);
 			break;
 		case CODE_MIND_CHANGE_VALUE_OF_CONTENTS : 
 			changeValueOfContents(drawingJob[1]);
@@ -3420,8 +3419,8 @@ function DrawingObj(drawingCCInterface){
 																delEdgeInfo.fSecondMindObject.fMindObjectId);
 	};
 	
-	var changeColorOfContents = function(mindObjectInfo, colorCode){
-		fDrawingCCInterface["changeColorOf"+mindObjectInfo.fContents.fContentsType](colorCode,
+	var changeFillingOfContents = function(mindObjectInfo, filling){
+		fDrawingCCInterface["changeFillingOf"+mindObjectInfo.fContents.fContentsType](filling,
 																					mindObjectInfo.fMindObjectId);
 	};
 	
@@ -3435,9 +3434,9 @@ function DrawingObj(drawingCCInterface){
 																				mindObjectInfo.fMindObjectId);
 	};
 	
-	var changeFillingOfShape = function(mindObjectInfo, fillInfo){
+	var changeFillingOfShape = function(mindObjectInfo, filling){
 		
-		fDrawingCCInterface["changeFillingOf"+mindObjectInfo.fShape.fShapeType](fillInfo,
+		fDrawingCCInterface["changeFillingOf"+mindObjectInfo.fShape.fShapeType](filling,
 																				mindObjectInfo.fMindObjectId);
 	};
 	
