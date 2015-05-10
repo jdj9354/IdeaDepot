@@ -259,7 +259,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	
 	var fSelectedShapeType = "CircleShape";
-	var fSelectedShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorFilling("#FF0000"));
+	var fSelectedShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorFilling("#FF0000"),1.0);
 	var fSelectedContentsType = "TextContents";
 	var fSelectedContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
 	
@@ -368,6 +368,15 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			return fShapeFilling.fColor;
 		else
 			return null;
+	};
+	
+	
+	this.setShapeFilling = function(filling){
+		fShapeFilling = filling;
+	};
+	
+	this.getShapeFilling = function(){
+		return fShapeFilling;
 	};
 	
 	this.setMenuSelectedShape = function(shapeIndex){
@@ -495,7 +504,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			if(CreatingCircle.contains(new paper.Point(x,y))){
 				
 				var tempShape;
-				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorFilling("#FF0000"));
+				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorFilling("#FF0000"),1.0);
 				
 				var tempContents;
 				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF"));
@@ -523,7 +532,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			else if(CreatingImageCircle.contains(new paper.Point(x,y))){
 				
 				var tempShape;
-				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(290,new SimpleColorFilling("#FF0000"));
+				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(290,new SimpleColorFilling("#FF0000"),1.0);
 				
 				var tempContents;
 				//var tempContentsTypeDependentInfo = new ImageContentsTypeDependentInfo(400,400);
@@ -553,7 +562,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			}
 			else if(CreatingRectangle.contains(new paper.Point(x,y))){
 				var tempShape;
-				var tempShapeTypeDependentInfo = new RectangleShapeTypeDependentInfo(70,70,new SimpleColorFilling("#FFFF00"),true);
+				var tempShapeTypeDependentInfo = new RectangleShapeTypeDependentInfo(70,70,new SimpleColorFilling("#FFFF00"),1.0,true);
 				
 				var tempContents;
 				var tempContentsTypeDependentInfo = new WebPreviewContentsTypeDependentInfo(500,500, "1280X840",0.7,new SimpleColorFilling("#FFFFFF")); //TextContentsTypeDependentInfo("#000000",'Courier New','bold',25);
@@ -565,7 +574,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			}
 			else if(CreatingStar.contains(new paper.Point(x,y))){
 				var tempShape;
-				var tempShapeTypeDependentInfo = new StarShapeTypeDependentInfo(5,200,100,new SimpleColorFilling("#0FEF1F"));
+				var tempShapeTypeDependentInfo = new StarShapeTypeDependentInfo(5,200,100,new SimpleColorFilling("#0FEF1F"),1.0);
 				
 				var tempContents;
 				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#2FF1F3"));
@@ -845,7 +854,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 							var newRadius = distanceOfTwoPoints(fSelectedObject.fX, fSelectedObject.fY,fSelectedObject.fZ
 																, x, y, z);
 							var prevFilling = fSelectedObject.fShape.fShapeTypeDependentInfo.fFilling;															
-							newSTDI = new CircleShapeTypeDependentInfo(newRadius,prevFilling);						
+							newSTDI = new CircleShapeTypeDependentInfo(newRadius,prevFilling,1.0);						
 							break;
 						case ShapeTypeEnum.Ellipse :
 							break;
@@ -936,16 +945,16 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				switch(fMenuSelectedShape){
 
 				case ShapeTypeEnum.Circle :
-					fMenuInsertedSDI = new CircleShapeTypeDependentInfo(10,this.getShapeFilling());
+					fMenuInsertedSDI = new CircleShapeTypeDependentInfo(10,this.getShapeFilling(),1.0);
 					break;
 				case ShapeTypeEnum.Rectangle :
-					fMenuInsertedSDI = new RectangleShapeTypeDependentInfo(10, 10, this.getShapeFilling(), true);
+					fMenuInsertedSDI = new RectangleShapeTypeDependentInfo(10, 10, this.getShapeFilling(),1.0, true);
 					break;	
 				case ShapeTypeEnum.Star :
-					fMenuInsertedSDI = new StarShapeTypeDependentInfo(5, 10, 5,this.getShapeFilling());
+					fMenuInsertedSDI = new StarShapeTypeDependentInfo(5, 10, 5,this.getShapeFilling(), 1.0);
 					break;hh
 				case ShapeTypeEnum.Polygon :
-					fMenuInsertedSDI = new PolygonShapeTypeDependentInfo(3, 1,this.getShapeFilling());
+					fMenuInsertedSDI = new PolygonShapeTypeDependentInfo(3, 1,this.getShapeFilling(), 1.0);
 					break;							
 				}
 				
@@ -1591,8 +1600,8 @@ function JobHandler(drawingObj){
 			
 			
 							
-			tempShapeTypeDependentInfo = getObjTypeDependentInfo(tempShapeType, eventCode.CMOS[i][6]);						
-			tempShapeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempShapeType, eventCode.CMOS[i][6]);
+			tempShapeTypeDependentInfo = genObjTypeDependentInfo(tempShapeType, eventCode.CMOS[i][6]);						
+			tempShapeTypeDependentInfoForDrawing = genObjTypeDependentInfo(tempShapeType, eventCode.CMOS[i][6]);
 							
 			
 			var tempShape = new Shape(tempShapeType, tempShapeTypeDependentInfo);				
@@ -1605,8 +1614,8 @@ function JobHandler(drawingObj){
 			var tempContentsTypeForDrawing = fDecoder.decodeContentsType(eventCode.CMOS[i][7]);				
 			var tempContentsTypeDependentInfoForDrawing;
 			
-			tempContentsTypeDependentInfo = getObjTypeDependentInfo(tempContentsType, eventCode.CMOS[i][8]);
-			tempContentsTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempContentsType, eventCode.CMOS[i][8]);
+			tempContentsTypeDependentInfo = genObjTypeDependentInfo(tempContentsType, eventCode.CMOS[i][8]);
+			tempContentsTypeDependentInfoForDrawing = genObjTypeDependentInfo(tempContentsType, eventCode.CMOS[i][8]);
 			
 			
 			var tempContentsValue = eventCode.CMOS[i][9];
@@ -1673,8 +1682,8 @@ function JobHandler(drawingObj){
 						var tempEdgeTypeForDrawing = fDecoder.decodeEdgeType(relatedMindObjectsInfo[j+1]);							
 						var tempEdgeTypeDependentInfoForDrawing;		
 						
-						tempEdgeTypeDependentInfo = getObjTypeDependentInfo(tempEdgeType, relatedMindObjectsInfo[j+2]);
-						tempEdgeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempEdgeType, relatedMindObjectsInfo[j+2]);
+						tempEdgeTypeDependentInfo = genObjTypeDependentInfo(tempEdgeType, relatedMindObjectsInfo[j+2]);
+						tempEdgeTypeDependentInfoForDrawing = genObjTypeDependentInfo(tempEdgeType, relatedMindObjectsInfo[j+2]);
 						
 						mindMapTemp.getMindObjectOnIndex(i).connectTo(connectingObj, tempEdgeType, tempEdgeTypeDependentInfo);
 						
@@ -1732,8 +1741,8 @@ function JobHandler(drawingObj){
 		var tempShapeTypeDependentInfoForDrawing;	
 		
 		
-		tempShapeTypeDependentInfo = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);						
-		tempShapeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);
+		tempShapeTypeDependentInfo = genObjTypeDependentInfo(tempShapeType, eventCode.STDI);						
+		tempShapeTypeDependentInfoForDrawing = genObjTypeDependentInfo(tempShapeType, eventCode.STDI);
 		
 			
 		tempShape = new Shape(tempShapeType, tempShapeTypeDependentInfo);
@@ -1750,8 +1759,8 @@ function JobHandler(drawingObj){
 		var tempContentsValueForDrawing = ""+eventCode.CV;	
 		
 		
-		tempContentsTypeDependentInfo = getObjTypeDependentInfo(tempContentsType, eventCode.CTDI);
-		tempContentsTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempContentsType, eventCode.CTDI);
+		tempContentsTypeDependentInfo = genObjTypeDependentInfo(tempContentsType, eventCode.CTDI);
+		tempContentsTypeDependentInfoForDrawing = genObjTypeDependentInfo(tempContentsType, eventCode.CTDI);
 
 		
 		tempContents = new Contents(tempContentsType, tempContentsTypeDependentInfo, tempContentsValue);
@@ -2193,8 +2202,8 @@ console.log(now);
 			var tempShapeTypeDependentInfoForDrawing;	
 			
 			
-			tempShapeTypeDependentInfo = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);						
-			tempShapeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempShapeType, eventCode.STDI);			
+			tempShapeTypeDependentInfo = genObjTypeDependentInfo(tempShapeType, eventCode.STDI);						
+			tempShapeTypeDependentInfoForDrawing = genObjTypeDependentInfo(tempShapeType, eventCode.STDI);			
 
 			
 			tempShape = new Shape(tempShapeType, tempShapeTypeDependentInfo);
@@ -2211,8 +2220,8 @@ console.log(now);
 			var tempContentsValueForDrawing = ""+eventCode.CV;	
 			
 			
-			tempContentsTypeDependentInfo = getObjTypeDependentInfo(tempContentsType, eventCode.CTDI);
-			tempContentsTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempContentsType, eventCode.CTDI);
+			tempContentsTypeDependentInfo = genObjTypeDependentInfo(tempContentsType, eventCode.CTDI);
+			tempContentsTypeDependentInfoForDrawing = genObjTypeDependentInfo(tempContentsType, eventCode.CTDI);
 
 			
 			tempContents = new Contents(tempContentsType, tempContentsTypeDependentInfo, tempContentsValue);
@@ -2280,8 +2289,8 @@ console.log(now);
 		tempEdgeTypeForDrawing = fDecoder.decodeEdgeType(eventCode.ET); 			
 		
 		
-		tempEdgeTypeDependentInfo = getObjTypeDependentInfo(tempEdgeType, eventCode.ETDI);
-		tempEdgeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempEdgeType, eventCode.ETDI);
+		tempEdgeTypeDependentInfo = genObjTypeDependentInfo(tempEdgeType, eventCode.ETDI);
+		tempEdgeTypeDependentInfoForDrawing = genObjTypeDependentInfo(tempEdgeType, eventCode.ETDI);
 		
 		
 		
@@ -2461,7 +2470,7 @@ console.log(now);
 	
 		var targetIndex = -1;
 		var tempShapeType = fDecoder.decodeShapeType(eventCode.ST);
-		var tempShapeTypeDependentInfo = getObjTypeDependentInfo(tempShapeType,eventCode.STDI);
+		var tempShapeTypeDependentInfo = genObjTypeDependentInfo(tempShapeType,eventCode.STDI);
 		
 		for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
 			if(compareIdValue(fMindMap.getMindObjectOnIndex(i).fMindObjectId,eventCode.MOID)){
@@ -2478,7 +2487,7 @@ console.log(now);
 			fMindMap.getMindObjectOnIndex(targetIndex).changeShape(new Shape(tempShapeType,tempShapeTypeDependentInfo));
 
 		var tempShapeTypeForDrawing = fDecoder.decodeShapeType(eventCode.ST);
-		var tempShapeTypeDependentInfoForDrawing = getObjTypeDependentInfo(tempShapeTypeForDrawing,eventCode.STDI);
+		var tempShapeTypeDependentInfoForDrawing = genObjTypeDependentInfo(tempShapeTypeForDrawing,eventCode.STDI);
 		
 		var tempMindObjectForDrawing = {fShape : {fShapeType : ""+tempShapeTypeForDrawing,
 													fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing},
@@ -2549,7 +2558,7 @@ console.log(now);
 		};
 	};
 	
-	var getObjTypeDependentInfo = window.getObjTypeDependentInfo;
+	var genObjTypeDependentInfo = window.genObjTypeDependentInfo;
 }
 
 //------------------- SocketCommunication Section--------------------------------------
@@ -2674,34 +2683,17 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		
 		var tempShapeType = shape.fShapeType;
 		var tempShapeTypeDependentInfo = shape.fShapeTypeDependentInfo;
-		var tempShapeTypeDependentInfoArray;
-		
-		
-		
-		
-		tempShapeTypeDependentInfoArray = genArrayForCommu(tempShapeType, tempShapeTypeDependentInfo);
-		
-		if(tempShapeTypeDependentInfoArray == null){			
-			console.log("SocketDataCommuHelperSender - mindObjectCreateSend : There is no matched type");			
-			return;
-		}
+
 		
 		
 		
 		var tempContentsType = contents.fContentsType;
 		var tempContentsTypeDependentInfo = contents.fContentsTypeDependentInfo;
-		var tempContentsTypeDependentInfoArray;
 		var tempContentsValue = contents.fValue;
 		
 		
 		
 		
-		tempContentsTypeDependentInfoArray = genArrayForCommu(tempContentsType, tempContentsTypeDependentInfo);
-		
-		if(tempContentsTypeDependentInfoArray == null){			
-			console.log("SocketDataCommuHelperSender - mindObjectCreateSend : There is no matched type");			
-			return;
-		}
 		
 		
 		fRoom.publicToCR({Code : CODE_MIND_ADD,
@@ -2711,9 +2703,9 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 							Y : y,
 							Z : z,
 							ST : fEncoder.encodeShapeType(tempShapeType),
-							STDI : tempShapeTypeDependentInfoArray,
+							STDI : tempShapeTypeDependentInfo,
 							CT : fEncoder.encodeContentsType(tempContentsType),
-							CTDI : tempContentsTypeDependentInfoArray,
+							CTDI : tempContentsTypeDependentInfo,
 							CV : tempContentsValue},OPERATION_TYPE.CREATE);	
 	};
 	this.mindObjectRemoveSend = function(mindMapId,mindObjectId){		
@@ -2751,36 +2743,12 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		}
 		
 		var tempShapeType = mindObject.fShape.fShapeType;
-		var tempShapeTypeDependentInfo = mindObject.fShape.fShapeTypeDependentInfo;
-		var tempShapeTypeDependentInfoArray;
-		
-		
-		
-		
-		tempShapeTypeDependentInfoArray = genArrayForCommu(tempShapeType, tempShapeTypeDependentInfo);
-		
-		if(tempShapeTypeDependentInfoArray == null){			
-			console.log("SocketDataCommuHelperSender - mindObjectPutIntoSend : There is no matched type");			
-			return;
-		}
-		
-		
+		var tempShapeTypeDependentInfo = mindObject.fShape.fShapeTypeDependentInfo;		
 		
 		var tempContentsType = mindObject.fContents.fContentsType;
 		var tempContentsTypeDependentInfo = mindObject.fContents.fContentsTypeDependentInfo;
-		var tempContentsTypeDependentInfoArray;
-		var tempContentsValue = mindObject.fContents.fValue;
-		
-		
-		
-		
-		tempContentsTypeDependentInfoArray = genArrayForCommu(tempContentsType, tempContentsTypeDependentInfo);
-		
-		if(tempContentsTypeDependentInfoArray == null){			
-			console.log("SocketDataCommuHelperSender - mindObjectPutIntoSend : There is no matched type");			
-			return;
-		}
-		
+		var tempContentsValue = mindObject.fContents.fValue;	
+	
 		
 		var SendInfo = {Code : CODE_MIND_PUT_INTO,
 						MMID : mindMapId,
@@ -2790,9 +2758,9 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 						Y : y,
 						Z : z,
 						ST : fEncoder.encodeShapeType(tempShapeType),
-						STDI : tempShapeTypeDependentInfoArray,
+						STDI : tempShapeTypeDependentInfo,
 						CT : fEncoder.encodeContentsType(tempContentsType),
-						CTDI : tempContentsTypeDependentInfoArray,
+						CTDI : tempContentsTypeDependentInfo,
 						CV : tempContentsValue};	
 		
 		fRoom.publicToCR(SendInfo,OPERATION_TYPE.UPDATE);
@@ -2814,23 +2782,14 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 			return;
 		}
 		
-		var tempEdgeType = edgeType;
-		var tempEdgeTypeDependentInfoArray;
-		
-		
-		tempEdgeTypeDependentInfoArray = genArrayForCommu(tempEdgeType, edgeTypeDependentInfo);
-		
-		if(tempEdgeTypeDependentInfoArray == null){			
-			console.log("SocketDataCommuHelperSender - mindObjectConnectToSend : There is no matched type");			
-			return;
-		}		
+		var tempEdgeType = edgeType;	
 
 		fRoom.publicToCR({Code : CODE_MIND_CONNECT_TO,
 							MMID : mindMapId,
 							MOID : mindObjectId,
 							TMOID : targetMindObjectId,
 							ET : fEncoder.encodeEdgeType(tempEdgeType),
-							ETDI : tempEdgeTypeDependentInfoArray},OPERATION_TYPE.CREATE);
+							ETDI : edgeTypeDependentInfo},OPERATION_TYPE.CREATE);
 	};
 	this.mindObjectDisconnectFromSend = function(mindMapId, mindObjectId, targetMindObjectId, edgeType){
 		if(fJobHandler == null || fRoom == null){
@@ -2909,13 +2868,11 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 			return;
 		}
 		
-		var tempShapeTypeDependentInfoArray = genArrayForCommu(shape.fShapeType, shape.fShapeTypeDependentInfo);
-
 		fRoom.publicToCR({Code : CODE_MIND_RESIZE_SHAPE,
 							MMID : mindMapId,
 							MOID : mindObjectId,
 							ST : fEncoder.encodeShapeType(shape.fShapeType),
-							STDI : tempShapeTypeDependentInfoArray},OPERATION_TYPE.UPDATE);			
+							STDI : shape.fShapeTypeDependentInfo},OPERATION_TYPE.UPDATE);			
 	};
 
 	this.mindMapRequestMindInfo = function(mindMapId){	
@@ -2937,9 +2894,7 @@ function SocketDataCommuHelperSender (jobHandler,room) {
 		
 		fRoom.privateToSelf({Code : CODE_MIND_MAP_REQUEST_NEW_MIND_MAP,
 								MMID : mindMapId},OPERATION_TYPE.CREATE);
-	};
-	
-	var genArrayForCommu = window.genArrayForCommu;
+	};	
 }
 
 
@@ -3205,7 +3160,7 @@ function DrawingObj(drawingCCInterface){
 			changeValueOfContents(drawingJob[1]);
 			break;
 		case CODE_MIND_CHANGE_CONTENTS :
-			change
+			//change
 			break;
 		case CODE_MIND_CHANGE_FILLING_OF_SHAPE :
 			changeFillingOfShape(drawingJob[1],drawingJob[2]);

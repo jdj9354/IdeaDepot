@@ -1,4 +1,4 @@
-const CODE_MIND_ADD = 32;
+/*const CODE_MIND_ADD = 32;
 const CODE_MIND_DEL = 33;
 const CODE_MIND_MOVE = 34;
 const CODE_MIND_PUT_INTO = 35;
@@ -12,7 +12,7 @@ const CODE_MIND_CHANGE_COLOR_OF_SHAPE = 42;
 const CODE_MIND_CHANGE_SHAPE = "MCS";
 const CODE_MIND_CHANGE_PARENT_MINDMAP = "MCPMM";
 const CODE_MIND_RESIZE_SHAPE = 45;
-const CODE_MIND_MAP_REQUEST_MIND_INFO = 65;
+const CODE_MIND_MAP_REQUEST_MIND_INFO = 65;*/
 
 const SocketCommuDelimiter = "\\";
 const Nested_SocketCommuDelimiter_1 = ",";

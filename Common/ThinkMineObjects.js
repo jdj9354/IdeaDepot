@@ -539,29 +539,29 @@ function ShapeTypeDependentInfo() {
 	this.fOpacity;
 }
 
-function CircleShapeTypeDependentInfo(radius, filling, opacity){
+function CircleShapeTypeDependentInfo(radius, filling){
 	this.fRadius = radius;
 	this.fFilling = filling;
-	this.fOpacity = opacity;
+	this.fOpacity = 1.0;
 }
 CircleShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 CircleShapeTypeDependentInfo.constructor = CircleShapeTypeDependentInfo; 
 
-function EllipseShapeTypeDependentInfo(width, height, filling, opacity){
+function EllipseShapeTypeDependentInfo(width, height, filling){
 	this.fWidth = width;
 	this.fHeight = height;
 	this.fFilling = filling;
-	this.fOpacity = opacity;
+	this.fOpacity = 1.0;
 }
 EllipseShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 EllipseShapeTypeDependentInfo.constructor = EllipseShapeTypeDependentInfo; 
 
 
-function RectangleShapeTypeDependentInfo(width, height, filling, opacity, isRounded){
+function RectangleShapeTypeDependentInfo(width, height, filling, isRounded){
 	this.fWidth = width;
 	this.fHeight = height;
 	this.fFilling = filling;
-	this.fOpacity = opacity;
+	this.fOpacity = 1.0;
 	this.fIsRounded = isRounded;
 }
 RectangleShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
@@ -569,23 +569,23 @@ RectangleShapeTypeDependentInfo.constructor = RectangleShapeTypeDependentInfo;
 
 
 
-function StarShapeTypeDependentInfo(nrPoints, firstRadius, secondRadius, filling, opacity){
+function StarShapeTypeDependentInfo(nrPoints, firstRadius, secondRadius, filling){
 	this.fNrPoints = nrPoints;
 	this.fFirstRadius = firstRadius;
 	this.fSecondRadius = secondRadius;
 	this.fFilling = filling;
-	this.fOpacity = opacity;
+	this.fOpacity = 1.0;
 }
 StarShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 StarShapeTypeDependentInfo.constructor = StarShapeTypeDependentInfo; 
 
 
 
-function PolygonShapeTypeDependentInfo(nrSides, radius, filling, opacity){
+function PolygonShapeTypeDependentInfo(nrSides, radius, filling){
 	this.fNrSides = nrSides;
 	this.fRadius = radius;
 	this.fFilling = filling;
-	this.fOpacity = opacity;
+	this.fOpacity = 1.0;
 }
 PolygonShapeTypeDependentInfo.prototype = new ShapeTypeDependentInfo();
 PolygonShapeTypeDependentInfo.constructor = PolygonShapeTypeDependentInfo; 
@@ -711,19 +711,19 @@ var getObjTypeDependentInfo = function(type, parameterArray){
 	switch (type){
 	//Shape
 	case ShapeTypeEnum.Circle :
-		ret = new CircleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
+		ret = new CircleShapeTypeDependentInfo(parameterArray[0], parameterArray[1]);
 		break;
 	case ShapeTypeEnum.Ellipse :
-		ret = new EllipseShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+		ret = new EllipseShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
 		break;
 	case ShapeTypeEnum.Rectangle :
-		ret = new RectangleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3], parameterArray[4]);
+		ret = new RectangleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 		break;
 	case ShapeTypeEnum.Star :
-		ret = new StarShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3], parameterArray[4]);
+		ret = new StarShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
 		break;
 	case ShapeTypeEnum.Polygon :
-		ret = new PolygonShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+		ret = new PolygonShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
 		break;
 	//Contents
 	case ContentsTypeEnum.Text :
@@ -749,6 +749,52 @@ var getObjTypeDependentInfo = function(type, parameterArray){
 	return ret;
 }
 
+
+var genObjTypeDependentInfo = function(type, info){
+	var ret;
+	switch (type){
+	//Shape
+	case ShapeTypeEnum.Circle :
+		ret = new CircleShapeTypeDependentInfo();
+		break;
+	case ShapeTypeEnum.Ellipse :
+		ret = new EllipseShapeTypeDependentInfo();
+		break;
+	case ShapeTypeEnum.Rectangle :
+		ret = new RectangleShapeTypeDependentInfo();
+		break;
+	case ShapeTypeEnum.Star :
+		ret = new StarShapeTypeDependentInfo();
+		break;
+	case ShapeTypeEnum.Polygon :
+		ret = new PolygonShapeTypeDependentInfo();
+		break;
+	//Contents
+	case ContentsTypeEnum.Text :
+		ret = new TextContentsTypeDependentInfo();
+		break;
+	case ContentsTypeEnum.Image :
+		ret = new ImageContentsTypeDependentInfo();
+		break;
+	case ContentsTypeEnum.Movie :
+		ret = new MovieContentsTypeDependentInfo();
+		break;
+	case ContentsTypeEnum.WebPreview :
+		ret = new WebPreviewContentsTypeDependentInfo();
+		break;
+	//Edge
+	case EdgeTypeEnum.SimplePath :
+		ret = new SimplePathEdgeTypeDependentInfo();
+		break;
+	case EdgeTypeEnum.OrientedPath :
+		ret =  new OrientedPathEdgeTypeDependentInfo();
+		break;
+	}
+	for(var attr in info) 
+		ret[attr]=info[attr];
+	return ret;
+}
+
 var genArrayForCommu = function(type, typeDependentInfo){
 	var ret;
 	switch(type){
@@ -762,13 +808,12 @@ var genArrayForCommu = function(type, typeDependentInfo){
 		ret = [typeDependentInfo.fWidth,	//Width
 			   typeDependentInfo.fHeight,	//Height
 			   typeDependentInfo.fFilling,	//Filling
-			   typeDependentInfo.fOpacity];	//Opacity 
+			   typeDependentInfo.fOpacity];	
 		break;
 	case  ShapeTypeEnum.Rectangle :
 		ret = [typeDependentInfo.fWidth,	//Width
 			   typeDependentInfo.fHeight,	//Height
 			   typeDependentInfo.fFilling,	//Filling
-			   typeDependentInfo.fOpacity,	//Opacity
 			   typeDependentInfo.fIsRounded];	//IsRounded
 		break;
 	case  ShapeTypeEnum.Star :
@@ -865,6 +910,7 @@ if(typeof module != "undefined"){
 		module.exports.WebPreviewContentsTypeDependentInfo = WebPreviewContentsTypeDependentInfo;		
 		
 		module.exports.getObjTypeDependentInfo = getObjTypeDependentInfo;
+		module.exports.genObjTypeDependentInfo = genObjTypeDependentInfo;
 		module.exports.genArrayForCommu = genArrayForCommu;
 	}
 }

@@ -108,14 +108,14 @@ DbGateConnector.on('data', function(data){
 					var tempShapeType = decoder.decodeShapeType(mindMapObj.CMOS[i][5]);				
 					var tempShapeTypeDependentInfo;					
 									
-					tempShapeTypeDependentInfo = TMO.getObjTypeDependentInfo(tempShapeType, mindMapObj.CMOS[i][6]);														
+					tempShapeTypeDependentInfo = TMO.genObjTypeDependentInfo(tempShapeType, mindMapObj.CMOS[i][6]);														
 					
 					var tempShape = new TMO.Shape(tempShapeType, tempShapeTypeDependentInfo);								
 					
 					var tempContentsType = decoder.decodeContentsType(mindMapObj.CMOS[i][7]);				
 					var tempContentsTypeDependentInfo;
 					
-					tempContentsTypeDependentInfo = TMO.getObjTypeDependentInfo(tempContentsType, mindMapObj.CMOS[i][8]);				
+					tempContentsTypeDependentInfo = TMO.genObjTypeDependentInfo(tempContentsType, mindMapObj.CMOS[i][8]);				
 					
 					var tempContentsValue = mindMapObj.CMOS[i][9];
 					var tempContents = new TMO.Contents(tempContentsType, tempContentsTypeDependentInfo, tempContentsValue);	
@@ -153,7 +153,7 @@ DbGateConnector.on('data', function(data){
 								var tempEdgeType = decoder.decodeEdgeType(relatedMindObjectsInfo[j+1]);							
 								var tempEdgeTypeDependentInfo;							
 								
-								tempEdgeTypeDependentInfo = TMO.getObjTypeDependentInfo(tempEdgeType, relatedMindObjectsInfo[j+2]);						
+								tempEdgeTypeDependentInfo = TMO.genObjTypeDependentInfo(tempEdgeType, relatedMindObjectsInfo[j+2]);						
 								
 								resultMindMap.getMindObjectOnIndex(i).connectTo(connectingObj, tempEdgeType, tempEdgeTypeDependentInfo);							
 							}
@@ -190,10 +190,10 @@ exports.Create = function(data){
 						};
 			}
 
-			var newShapeTypeDependentInfo = TMO.getObjTypeDependentInfo(decoder.decodeShapeType(data.ST), data.STDI);
+			var newShapeTypeDependentInfo = TMO.genObjTypeDependentInfo(decoder.decodeShapeType(data.ST), data.STDI);
 			var newShape = new Shape(decoder.decodeShapeType(data.ST), newShapeTypeDependentInfo);
 			
-			var newContentsTypeDependentInfo = TMO.getObjTypeDependentInfo(decoder.decodeContentsType(data.CT), data.CTDI);
+			var newContentsTypeDependentInfo = TMO.genObjTypeDependentInfo(decoder.decodeContentsType(data.CT), data.CTDI);
 			var newContents = new Contents(decoder.decodeContentsType(data.CT), newContentsTypeDependentInfo, data.CV);
 			
 			var newMindObject = new TMO.MindObject(data.MOID, data.MOID, data.MMID, newShape, newContents, data.X, data.Y, data.Z);
@@ -236,7 +236,7 @@ exports.Create = function(data){
 						};
 			}
 			
-			var newEdgeTypeDependentInfo = TMO.getObjTypeDependentInfo(decoder.decodeEdgeType(data.ET), data.ETDI);			
+			var newEdgeTypeDependentInfo = TMO.genObjTypeDependentInfo(decoder.decodeEdgeType(data.ET), data.ETDI);			
 
 			mindObj.connectTo(targetMindObj, decoder.decodeEdgeType(data.ET), newEdgeTypeDependentInfo);
 			ret = data;
@@ -314,10 +314,10 @@ exports.Read = function(data){
 				childMindObjCommuArray[i].push(curMindObj.fZ);
 				
 				childMindObjCommuArray[i].push(encoder.encodeShapeType(curMindObj.fShape.fShapeType));
-				childMindObjCommuArray[i].push(TMO.genArrayForCommu(curMindObj.fShape.fShapeType,curMindObj.fShape.fShapeTypeDependentInfo));
+				childMindObjCommuArray[i].push(curMindObj.fShape.fShapeTypeDependentInfo);
 				
 				childMindObjCommuArray[i].push(encoder.encodeContentsType(curMindObj.fContents.fContentsType));
-				childMindObjCommuArray[i].push(TMO.genArrayForCommu(curMindObj.fContents.fContentsType,curMindObj.fContents.fContentsTypeDependentInfo));
+				childMindObjCommuArray[i].push(curMindObj.fContents.fContentsTypeDependentInfo);
 				childMindObjCommuArray[i].push(curMindObj.fContents.fValue);
 				
 				childMindObjCommuArray[i].push([]);
@@ -329,7 +329,7 @@ exports.Read = function(data){
 					childMindObjCommuArray[i][childMindObjCommuArray[i].length-1].push(curRelMindObj.fMindObjectId);
 					
 					childMindObjCommuArray[i][childMindObjCommuArray[i].length-1].push(encoder.encodeEdgeType(curRelEdge.fEdgeType));
-					childMindObjCommuArray[i][childMindObjCommuArray[i].length-1].push(TMO.genArrayForCommu(curRelEdge.fEdgeType,curRelEdge.fEdgeTypeDependentInfo));					
+					childMindObjCommuArray[i][childMindObjCommuArray[i].length-1].push(curRelEdge.fEdgeTypeDependentInfo);					
 				}
 			}
 			
@@ -387,7 +387,7 @@ exports.Update = function(data){
 		
 		if(targetMindObj != null){
 			var changeShapeType = decoder.decodeShapeType(data.ST);
-			var changeShapeTypeDependentInfo = TMO.getObjTypeDependentInfo(changeShapeType,data.STDI);
+			var changeShapeTypeDependentInfo = TMO.genObjTypeDependentInfo(changeShapeType,data.STDI);
 			targetMindObj.changeShape(new Shape(changeShapeType,changeShapeTypeDependentInfo));
 		}
 			

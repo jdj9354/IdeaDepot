@@ -168,7 +168,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		else
 			drawingObject = new paper.Path.Rectangle(rectangle);	
 			
-		drawingObject.strokeColor = info.fColor;
+		drawingObject.strokeColor = generateFillingInfo(info.fFilling);
 		drawingObject.fillColor = generateFillingInfo(info.fFilling);
 		drawingObject.fMindObjectId = mindObjectId;
 		drawingObject.fShape = {fShapeTypeDependentInfo : {fWidth : info.fWidth,
@@ -422,7 +422,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		drawingObject.fMindObjectId = mindObjectId;
 		drawingObject.fShape = drawingObject.fShape = {fShapeTypeDependentInfo : {fRadius : info.fRadius,
 																				fNrPoints : info.fNrPoints,
-																				fColor : info.fColor}};
+																				fFilling : info.fFilling}};
 		paper.view.draw();
 		
 		fShapeObjects.push(drawingObject);
@@ -759,7 +759,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	this.drawSimplePathEdge = function(startX ,startY, startZ, endX, endY, endZ, info, startMindObjectId, endMindObjectId){
 		var drawingObject = new paper.Path.Line(new paper.Point(startX,startY),
 				new paper.Point(endX,endY));
-		drawingObject.strokeColor = info.fColor;
+		drawingObject.strokeColor = generateFillingInfo(info.fFilling);
 		drawingObject.strokeWidth = info.fWidth;
 		//drawingObject.sendToBack();
 		//drawingObject.moveAbove(paper.project.activeLayer.firstChild);
@@ -846,7 +846,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 			drawingObject.fEndMindObjectId = startMindObjectId;
 		}
 		
-		drawingObject.strokeColor = info.fColor;
+		drawingObject.strokeColor = generateFillingInfo(info.fFilling);
 		drawingObject.strokeWidth = info.fWidth;
 		
 		var newPoint1 = new paper.Point(Math.trunc((D-A)*Math.cos(th)-(b/2)*Math.sin(th)) + x,
@@ -1313,12 +1313,12 @@ function WrappedPaperJSEventHandler() {
 function generateFillingInfo(filling){
 	var ret = null;
 	switch (filling.fFillType){
-	case ShapeTypeEnum.SimpleColor : 
-		ret = fFillInfo.fColor;
+	case FillingTypeEnum.SimpleColor : 
+		ret = filling.fFillInfo.fColor;
 		break;
-	case ShapeTypeEnum.Gradient : 		
+	case FillingTypeEnum.Gradient : 		
 		break;
-	case ShapeTypeEnum.LinearGradient : 
+	case FillingTypeEnum.LinearGradient : 
 		ret =	{
 				gradient: {stops: [[filling.fFillInfo.fStopInfoArray[0], filling.fFillInfo.fStopInfoArray[1]]
 									, [filling.fFillInfo.fStopInfoArray[2], filling.fFillInfo.fStopInfoArray[3]]
@@ -1327,7 +1327,7 @@ function generateFillingInfo(filling){
 				destination: new paper.Point(filling.fFillInfo.fEndX, filling.fFillInfo.fEndY)
 				};
 		break;
-	case ShapeTypeEnum.RadialGradient : 
+	case FillingTypeEnum.RadialGradient : 
 		ret =	{
 				gradient: {stops: [[filling.fFillInfo.fStopInfoArray[0], filling.fFillInfo.fStopInfoArray[1]]
 									, [filling.fFillInfo.fStopInfoArray[2], filling.fFillInfo.fStopInfoArray[3]]
