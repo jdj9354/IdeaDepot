@@ -26,6 +26,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	this.drawCircleShape = function(x, y, z, info, mindObjectId){
 		var position = new paper.Point(x,y);
 		var drawingObject = new paper.Path.Circle(position, info.fRadius);		
+		
 		drawingObject.fillColor = generateFillingInfo(drawingObject,info.fFilling);
 		drawingObject.fMindObjectId = mindObjectId;
 		drawingObject.fShape = {fShapeTypeDependentInfo : {fRadius : info.fRadius}};
@@ -62,9 +63,38 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 
 				if(scaleRatio != Infinity && !isNaN(scaleRatio)){
 					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius = info.fRadius;
-					fShapeObjects[i].scale(scaleRatio);
 					
-				
+					if(fShapeObjects[i].fillColor.origin != undefined && fShapeObjects[i].fillColor.destination != undefined){
+					
+						var diffX = -fShapeObjects[i].position.x;
+						var diffY = -fShapeObjects[i].position.y; 
+						var diffRaidus = info.fRadius - fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius;
+						
+						var tempOriginX = new paper.Point(fShapeObjects[i].fillColor.origin.x , fShapeObjects[i].fillColor.origin.y);
+						var tempDestX = new paper.Point(fShapeObjects[i].fillColor.destination.x , fShapeObjects[i].fillColor.destination.y);
+						
+						fShapeObjects[i].scale(scaleRatio);
+						
+						diffX += fShapeObjects[i].position.x;
+						diffY += fShapeObjects[i].position.y;
+						
+						tempOriginX.x += diffX;
+						tempOriginX.y += diffY;
+						
+						tempDestX.x += diffX;
+						tempDestX.y += diffY;
+						
+						tempDestX.x += diffRaidus;
+						
+						fShapeObjects[i].fillColor.origin = tempOriginX;
+						fShapeObjects[i].fillColor.destination = tempDestX;
+						console.log(tempOriginX);
+						console.log(tempDestX);
+						
+					}
+					else{
+						fShapeObjects[i].scale(scaleRatio);
+					}				
 					paper.view.draw();
 				}
 				break;
@@ -459,7 +489,20 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 
 				if(scaleRatio != Infinity && !isNaN(scaleRatio)){
 					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius = info.fRadius;
-					fShapeObjects[i].scale(scaleRatio);
+					
+					
+					if(fShapeObjects[i].fillColor.origin != undefined && fShapeObjects[i].fillColor.destination != undefined){
+						var tempOriginX = new paper.Point(fShapeObjects[i].fillColor.origin.x * scaleRatio, fShapeObjects[i].fillColor.origin.y * scaleRatio);
+						var tempDestX = new paper.Point(fShapeObjects[i].fillColor.destination.x * scaleRatio, fShapeObjects[i].fillColor.destination.y * scaleRatio);
+						
+						fShapeObjects[i].scale(scaleRatio);
+						
+						fShapeObjects[i].fillColor.origin = tempOriginX;
+						fShapeObjects[i].fillColor.destination = tempDestX;
+					}
+					else{
+						fShapeObjects[i].scale(scaleRatio);
+					}		
 					
 				
 					paper.view.draw();
@@ -1319,9 +1362,14 @@ function generateFillingInfo(drawingObj,filling){
 	case FillingTypeEnum.Gradient : 		
 		break;
 	case FillingTypeEnum.LinearGradient : 
-		var gradient = new paper.Gradient([[filling.fFillInfo.fStopInfoArray[0], filling.fFillInfo.fStopInfoArray[1]]
-									, [filling.fFillInfo.fStopInfoArray[2], filling.fFillInfo.fStopInfoArray[3]]
-									, [filling.fFillInfo.fStopInfoArray[4], filling.fFillInfo.fStopInfoArray[5]]], false);
+		var stops = [];
+		
+		for(var i=0; i< filling.fFillInfo.fStopInfoArray.length; i+=2){
+			stops.push([filling.fFillInfo.fStopInfoArray[i], filling.fFillInfo.fStopInfoArray[i+1]]);
+		}
+		
+		var gradient = new paper.Gradient(stops, false);
+		
 		ret =	{
 				gradient: gradient,
 				origin: new paper.Point(drawingObj.position.x + filling.fFillInfo.fStartX, drawingObj.position.y + filling.fFillInfo.fStartY),
@@ -1329,9 +1377,13 @@ function generateFillingInfo(drawingObj,filling){
 				};
 		break;
 	case FillingTypeEnum.RadialGradient : 
-		var gradient = new paper.Gradient([[filling.fFillInfo.fStopInfoArray[0], filling.fFillInfo.fStopInfoArray[1]]
-								, [filling.fFillInfo.fStopInfoArray[2], filling.fFillInfo.fStopInfoArray[3]]
-								, [filling.fFillInfo.fStopInfoArray[4], filling.fFillInfo.fStopInfoArray[5]]], true);
+		var stops = [];
+		
+		for(var i=0; i< filling.fFillInfo.fStopInfoArray.length; i+=2){
+			stops.push([filling.fFillInfo.fStopInfoArray[i], filling.fFillInfo.fStopInfoArray[i+1]]);
+		}
+		
+		var gradient = new paper.Gradient(stops, true);
 		ret =	{
 				gradient: gradient,
 				origin: new paper.Point(drawingObj.position.x + filling.fFillInfo.fOriginX, drawingObj.position.y + filling.fFillInfo.fOriginY),

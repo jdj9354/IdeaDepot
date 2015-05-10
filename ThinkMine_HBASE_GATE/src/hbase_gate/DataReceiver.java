@@ -228,12 +228,12 @@ public class DataReceiver {
 					case Constants.CODE_MIND_DISCONNECT_FROM :
 						mTMHBA.disconnectMindObjectEach(jObj);
 						break;
-					case Constants.CODE_MIND_CHANGE_COLOR_OF_CONTENTS :					
+					case Constants.CODE_MIND_CHANGE_FILLING_OF_CONTENTS :					
 						break;
 					case Constants.CODE_MIND_CHANGE_VALUE_OF_CONTENTS :
 						mTMHBA.changeMindObjectContentsValue(jObj);
 						break;
-					case Constants.CODE_MIND_CHANGE_COLOR_OF_SHAPE :
+					case Constants.CODE_MIND_CHANGE_FILLING_OF_SHAPE :
 						break;
 					case Constants.CODE_MIND_RESIZE_SHAPE :
 						mTMHBA.resizeMindObjectContentsValue(jObj);

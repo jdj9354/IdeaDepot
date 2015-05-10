@@ -379,8 +379,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		return fShapeFilling;
 		
 		//test CODE
-		//return new RadialGradientFilling(0,0,0,40,40,40,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
-		//return new LinearGradientFilling(0,0,0,100,100,100,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
+		//return new RadialGradientFilling(0,0,0,40,40,40,["#f0f0f0",0.2,"#0f0f0f",0.4,"#00ff00",0.6,"#0000ff",0.8,"#ff0000",1]);
+		//return new LinearGradientFilling(0,0,0,40,40,40,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
 		
 	};
 	
@@ -957,7 +957,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					break;	
 				case ShapeTypeEnum.Star :
 					fMenuInsertedSDI = new StarShapeTypeDependentInfo(5, 10, 5,this.getShapeFilling(), 1.0);
-					break;hh
+					break;
 				case ShapeTypeEnum.Polygon :
 					fMenuInsertedSDI = new PolygonShapeTypeDependentInfo(3, 1,this.getShapeFilling(), 1.0);
 					break;							

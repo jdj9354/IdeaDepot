@@ -19,10 +19,10 @@ public class Constants {
 	//public static final int CODE_MIND_PULL_OUT = "MPO";
 	public static final int CODE_MIND_CONNECT_TO = 37;
 	public static final int CODE_MIND_DISCONNECT_FROM = 38;
-	public static final int CODE_MIND_CHANGE_COLOR_OF_CONTENTS = 39;
+	public static final int CODE_MIND_CHANGE_FILLING_OF_CONTENTS = 39;
 	public static final int CODE_MIND_CHANGE_VALUE_OF_CONTENTS = 40;
 	//public static final int CODE_MIND_CHANGE_CONTENTS = "MCC";
-	public static final int CODE_MIND_CHANGE_COLOR_OF_SHAPE = 42;
+	public static final int CODE_MIND_CHANGE_FILLING_OF_SHAPE = 42;
 	//public static final int CODE_MIND_CHANGE_SHAPE = "MCS";
 	//public static final int CODE_MIND_CHANGE_PARENT_MIND_MAP = "MCPMM";
 	public static final int CODE_MIND_RESIZE_SHAPE = 45;
