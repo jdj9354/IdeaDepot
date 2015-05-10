@@ -377,6 +377,11 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	this.getShapeFilling = function(){
 		return fShapeFilling;
+		
+		//test CODE
+		//return new RadialGradientFilling(0,0,0,40,40,40,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
+		//return new LinearGradientFilling(0,0,0,100,100,100,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
+		
 	};
 	
 	this.setMenuSelectedShape = function(shapeIndex){
