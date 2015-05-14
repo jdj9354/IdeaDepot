@@ -617,13 +617,13 @@ function LinearGradientFilling(startX,startY,startZ,endX,endY,endZ,stopInfoArray
 	
 	this.fFillInfo = {};
 	
-	this.fFillInfo.fStartX = startX;
-	this.fFillInfo.fStartY = startY;
-	this.fFillInfo.fStartZ = startZ;
+	this.fFillInfo.fStartX = startX;	//Relative coordinate from center
+	this.fFillInfo.fStartY = startY;	//Relative coordinate from center
+	this.fFillInfo.fStartZ = startZ;	//Relative coordinate from center
 	
-	this.fFillInfo.fEndX = endX;
-	this.fFillInfo.fEndY = endY;
-	this.fFillInfo.fEndZ = endZ;
+	this.fFillInfo.fEndX = endX;	//Relative coordinate from center
+	this.fFillInfo.fEndY = endY;	//Relative coordinate from center
+	this.fFillInfo.fEndZ = endZ;	//Relative coordinate from center
 	
 	this.fFillInfo.fStopInfoArray = stopInfoArray; //Even Index : rgb color (#xxxxxx), Odd Index : offset (0.0 ~ 1.0)
 }
@@ -635,9 +635,9 @@ function RadialGradientFilling(originX,originY,originZ,radiusX,radiusY,radiusZ,s
 	
 	this.fFillInfo = {};
 	
-	this.fFillInfo.fOriginX = originX;
-	this.fFillInfo.fOriginY = originY;
-	this.fFillInfo.fOriginZ = originZ;
+	this.fFillInfo.fOriginX = originX;	//Relative coordinate from center
+	this.fFillInfo.fOriginY = originY;	//Relative coordinate from center
+	this.fFillInfo.fOriginZ = originZ;	//Relative coordinate from center
 	
 	this.fFillInfo.fRadiusX = radiusX;
 	this.fFillInfo.fRadiusY = radiusY;
@@ -705,51 +705,6 @@ WebPreviewContentsTypeDependentInfo.prototype = new ContentsTypeDependentInfo();
 WebPreviewContentsTypeDependentInfo.constructor = WebPreviewContentsTypeDependentInfo;
 
 
-
-var getObjTypeDependentInfo = function(type, parameterArray){
-	var ret;
-	switch (type){
-	//Shape
-	case ShapeTypeEnum.Circle :
-		ret = new CircleShapeTypeDependentInfo(parameterArray[0], parameterArray[1]);
-		break;
-	case ShapeTypeEnum.Ellipse :
-		ret = new EllipseShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
-		break;
-	case ShapeTypeEnum.Rectangle :
-		ret = new RectangleShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
-		break;
-	case ShapeTypeEnum.Star :
-		ret = new StarShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
-		break;
-	case ShapeTypeEnum.Polygon :
-		ret = new PolygonShapeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
-		break;
-	//Contents
-	case ContentsTypeEnum.Text :
-		ret = new TextContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
-		break;
-	case ContentsTypeEnum.Image :
-		ret = new ImageContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
-		break;
-	case ContentsTypeEnum.Movie :
-		ret = new MovieContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2]);
-		break;
-	case ContentsTypeEnum.WebPreview :
-		ret = new WebPreviewContentsTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3], parameterArray[4]);
-		break;
-	//Edge
-	case EdgeTypeEnum.SimplePath :
-		ret = new SimplePathEdgeTypeDependentInfo(parameterArray[0], parameterArray[1]);
-		break;
-	case EdgeTypeEnum.OrientedPath :
-		ret =  new OrientedPathEdgeTypeDependentInfo(parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
-		break;
-	}
-	return ret;
-}
-
-
 var genObjTypeDependentInfo = function(type, info){
 	var ret;
 	switch (type){
@@ -795,81 +750,92 @@ var genObjTypeDependentInfo = function(type, info){
 	return ret;
 }
 
-var genArrayForCommu = function(type, typeDependentInfo){
-	var ret;
-	switch(type){
-	//Shape
-	case  ShapeTypeEnum.Circle :
-		ret = [typeDependentInfo.fRadius,	//Radius
-			   typeDependentInfo.fFilling,	//Filling
-			   typeDependentInfo.fOpacity];	//Opacity
+var getScaledXYZFromCenter = function(prevShapeTypeDependentInfo, changedShapeTypeDependentInfo, shapeType , shapeCenterCoord, beforeScaledCoord){
+	ret = [1,1,1];
+	
+	var xFactor = beforeScaledCoord[0] - shapeCenterCoord[0];
+	var yFactor = beforeScaledCoord[1] - shapeCenterCoord[1];
+	var zFactor = beforeScaledCoord[2] - shapeCenterCoord[2];
+	
+	var xScale;
+	var yScale;
+	var zScale;
+	
+	switch(shapeType){
+	case ShapeTypeEnum.Circle :
+		if(prevShapeTypeDependentInfo.fRadius !=0)
+			xScale = changedShapeTypeDependentInfo.fRadius / prevShapeTypeDependentInfo.fRadius;		
+		else
+			xScale = 1;
+		yScale = xScale;
+		zScale = xScale; 		
 		break;
 	case ShapeTypeEnum.Ellipse :
-		ret = [typeDependentInfo.fWidth,	//Width
-			   typeDependentInfo.fHeight,	//Height
-			   typeDependentInfo.fFilling,	//Filling
-			   typeDependentInfo.fOpacity];	
+		if(prevShapeTypeDependentInfo.fWidth != 0)
+			xScale = changedShapeTypeDependentInfo.fWidth / prevShapeTypeDependentInfo.fWidth;	
+		else
+			xScale = 1;
+		
+		if(prevShapeTypeDependentInfo.fHeight != 0)
+			yScale = changedShapeTypeDependentInfo.fHeight / prevShapeTypeDependentInfo.fHeight;		
+		else
+			yScale = 1;
+		zScale = 1; 
 		break;
-	case  ShapeTypeEnum.Rectangle :
-		ret = [typeDependentInfo.fWidth,	//Width
-			   typeDependentInfo.fHeight,	//Height
-			   typeDependentInfo.fFilling,	//Filling
-			   typeDependentInfo.fIsRounded];	//IsRounded
+	case ShapeTypeEnum.Rectangle :
+		if(prevShapeTypeDependentInfo.fWidth != 0)
+			xScale = changedShapeTypeDependentInfo.fWidth / prevShapeTypeDependentInfo.fWidth;	
+		else
+			xScale = 1;
+		
+		if(prevShapeTypeDependentInfo.fHeight != 0)
+			yScale = changedShapeTypeDependentInfo.fHeight / prevShapeTypeDependentInfo.fHeight;		
+		else
+			yScale = 1;	
+		zScale = 1; 
 		break;
-	case  ShapeTypeEnum.Star :
-		ret = [typeDependentInfo.fNrPoints,	//Nr of Points
-			   typeDependentInfo.fFirstRadius,	//First Radius
-			   typeDependentInfo.fSecondRadius,	//Second Radius
-			   typeDependentInfo.fFilling,	//Filling
-			   typeDependentInfo.fOpacity];	//Opacity
+	case ShapeTypeEnum.Star :
+		var changedRadiusToBeCompared;
+		var prevRadiusToBeCompared;
+		
+		if(changedShapeTypeDependentInfo.fFirstRadius  > changedShapeTypeDependentInfo.fSecondRadius){
+			changedRadiusToBeCompared = changedShapeTypeDependentInfo.fFirstRadius;
+			prevRadiusToBeCompared = prevShapeTypeDependentInfo.fFirstRadius;
+		}
+		else if(changedShapeTypeDependentInfo.fFirstRadius  < changedShapeTypeDependentInfo.fSecondRadius){
+			changedRadiusToBeCompared = changedShapeTypeDependentInfo.fSecondRadius;
+			prevRadiusToBeCompared = prevShapeTypeDependentInfo.fSecondRadius;
+		}
+		else{
+			if(changedShapeTypeDependentInfo.fFirstRadius - prevShapeTypeDependentInfo.fFirstRadius != 0){
+				changedRadiusToBeCompared = changedShapeTypeDependentInfo.fFirstRadius;
+				prevRadiusToBeCompared = prevShapeTypeDependentInfo.fFirstRadius;			
+			}
+			else{
+				changedRadiusToBeCompared = changedShapeTypeDependentInfo.fSecondRadius;
+				prevRadiusToBeCompared = prevShapeTypeDependentInfo.fSecondRadius;			
+			}
+				
+			changedRadiusToBeCompared = changedShapeTypeDependentInfo.fFirstRadius;
+			prevRadiusToBeCompared = prevShapeTypeDependentInfo.fFirstRadius;			
+		}
+		
+		xScale = changedRadiusToBeCompared / prevRadiusToBeCompared;		
+		yScale = xScale;
+		zScale = xScale; 
 		break;
-	case  ShapeTypeEnum.Polygon :
-		ret = [typeDependentInfo.fNrSides,	//Nr of Sides
-			   typeDependentInfo.fRadius,	//Radius
-			   typeDependentInfo.fFilling,	//Filling
-			   typeDependentInfo.fOpacity];	//Opacity
-		break;
-	//Contents
-	case ContentsTypeEnum.Text :
-		ret = [typeDependentInfo.fFontFamily,		//FontFamily
-			   typeDependentInfo.fFontWeight,		//FontWeight
-			   typeDependentInfo.fFontSize,			//FontSize
-			   typeDependentInfo.fFilling];			//Filling
-			   		
-		break;
-	case ContentsTypeEnum.Image :
-		ret = [typeDependentInfo.fWidth,			//Width
-			   typeDependentInfo.fHeight,			//Height
-			   typeDependentInfo.fOpacity,			//Opacity                   
-			   typeDependentInfo.fFilling];			//Filling
-		break;
-	case ContentsTypeEnum.Movie :
-		ret = [typeDependentInfo.fWidth,			//Width
-			   typeDependentInfo.fHeight,			//Height   
-			   typeDependentInfo.fFilling];			//Filling
-		break;
-	case ContentsTypeEnum.WebPreview :
-		ret = [typeDependentInfo.fWidth,			//Width
-			   typeDependentInfo.fHeight,			//Height
-			   typeDependentInfo.fResolution,		//Resolution
-			   typeDependentInfo.fOpacity,			//Opacity  
-			   typeDependentInfo.fFilling];			//Filling
-		break;
-	case EdgeTypeEnum.SimplePath :
-		ret = [typeDependentInfo.fWidth, typeDependentInfo.fFilling];
-		break;
-	case EdgeTypeEnum.OrientedPath :
-		ret = [	typeDependentInfo.fOriginId,
-				typeDependentInfo.fBidirectional,
-				typeDependentInfo.fWidth, 
-				typeDependentInfo.fFilling];
-		break;
-	default :
-		ret = null;
-		break;
+	case ShapeTypeEnum.Polygon :
+		xScale = changedShapeTypeDependentInfo.fRadius / prevShapeTypeDependentInfo.fRadius;		
+		yScale = xScale;
+		zScale = xScale; 
+		break;		
 	}
+	if(!isFinite(xScale))
+		xScale = 1;
+	ret = [shapeCenterCoord[0] + xFactor * xScale, shapeCenterCoord[1] + yFactor * yScale, shapeCenterCoord[2] + zFactor * zScale];
 	return ret;
-};	
+}
+
 
 if(typeof module != "undefined"){
 	if(module != null){
@@ -909,8 +875,7 @@ if(typeof module != "undefined"){
 		module.exports.MovieContentsTypeDependentInfo = MovieContentsTypeDependentInfo;
 		module.exports.WebPreviewContentsTypeDependentInfo = WebPreviewContentsTypeDependentInfo;		
 		
-		module.exports.getObjTypeDependentInfo = getObjTypeDependentInfo;
 		module.exports.genObjTypeDependentInfo = genObjTypeDependentInfo;
-		module.exports.genArrayForCommu = genArrayForCommu;
+		module.exports.getScaledXYZFromCenter = getScaledXYZFromCenter;
 	}
 }

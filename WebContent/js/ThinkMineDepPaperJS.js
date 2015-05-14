@@ -62,39 +62,42 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				var scaleRatio = info.fRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius;
 
 				if(scaleRatio != Infinity && !isNaN(scaleRatio)){
+				
+					//var diffRaidus = info.fRadius - fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius;
 					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius = info.fRadius;
 					
-					if(fShapeObjects[i].fillColor.origin != undefined && fShapeObjects[i].fillColor.destination != undefined){
+					/*if(fShapeObjects[i].fillColor.origin != undefined && fShapeObjects[i].fillColor.destination != undefined){
 					
-						var diffX = -fShapeObjects[i].position.x;
-						var diffY = -fShapeObjects[i].position.y; 
-						var diffRaidus = info.fRadius - fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius;
+						
+						var originPointVectorXYRatio = (fShapeObjects[i].position.y - fShapeObjects[i].fillColor.origin.y)/
+														(fShapeObjects[i].position.x - fShapeObjects[i].fillColor.origin.x);
+														
+						var destinationPointVectorXYRatio = (fShapeObjects[i].position.y - fShapeObjects[i].fillColor.destination.y)/
+																(fShapeObjects[i].position.x - fShapeObjects[i].fillColor.destination.x);
 						
 						var tempOriginX = new paper.Point(fShapeObjects[i].fillColor.origin.x , fShapeObjects[i].fillColor.origin.y);
 						var tempDestX = new paper.Point(fShapeObjects[i].fillColor.destination.x , fShapeObjects[i].fillColor.destination.y);
 						
 						fShapeObjects[i].scale(scaleRatio);
 						
-						diffX += fShapeObjects[i].position.x;
-						diffY += fShapeObjects[i].position.y;
+
 						
-						tempOriginX.x += diffX;
-						tempOriginX.y += diffY;
 						
-						tempDestX.x += diffX;
-						tempDestX.y += diffY;
+						tempOriginX.x *= (scaleRatio / Math.sqrt(1+originPointVectorXYRatio * originPointVectorXYRatio));
+						tempOriginX.y *= (scaleRatio / Math.sqrt(1+1/(originPointVectorXYRatio * originPointVectorXYRatio)));
 						
-						tempDestX.x += diffRaidus;
+						tempDestX.x *= (scaleRatio / Math.sqrt(1+destinationPointVectorXYRatio * destinationPointVectorXYRatio));
+						tempDestX.y *= (scaleRatio / Math.sqrt(1+1/(destinationPointVectorXYRatio * destinationPointVectorXYRatio)));
 						
 						fShapeObjects[i].fillColor.origin = tempOriginX;
-						fShapeObjects[i].fillColor.destination = tempDestX;
-						console.log(tempOriginX);
-						console.log(tempDestX);
-						
+						fShapeObjects[i].fillColor.destination = tempDestX;		
+						console.log("scaleRatio : " + scaleRatio + " curRadius : " + info.fRadius);
+						console.log("origin : " + fShapeObjects[i].fillColor.origin + " destination : " + fShapeObjects[i].fillColor.destination);
 					}
 					else{
 						fShapeObjects[i].scale(scaleRatio);
-					}				
+					}	*/		
+					fShapeObjects[i].scale(scaleRatio);
 					paper.view.draw();
 				}
 				break;
@@ -198,7 +201,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		else
 			drawingObject = new paper.Path.Rectangle(rectangle);	
 			
-		drawingObject.strokeColor = generateFillingInfo(drawingObject,info.fFilling);
+		//drawingObject.strokeColor = generateFillingInfo(drawingObject,info.fFilling);
 		drawingObject.fillColor = generateFillingInfo(drawingObject,info.fFilling);
 		drawingObject.fMindObjectId = mindObjectId;
 		drawingObject.fShape = {fShapeTypeDependentInfo : {fWidth : info.fWidth,
@@ -283,23 +286,21 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 					fShapeObjects[i].segments[3].point.y += heightFactor;
 
 				}
+				
+				
+				/*if(fShapeObjects[i].fillColor.origin != undefined && fShapeObjects[i].fillColor.destination != undefined){
+
+						var newX = fShapeObjects[i].fillColor.destination.x + widthFactor * 2;
+						var newY = fShapeObjects[i].fillColor.destination.y + heightFactor * 2;		
+						
+						fShapeObjects[i].fillColor.destination = new paper.Point(newX,newY);						
+
+
+				}*/
 
 				
-				paper.view.draw();
-				/*if(scaleRatioVertical != Infinity && !isNaN(scaleRatioVertical)
-					&& scaleRatioHorizontal != Infinity && !isNaN(scaleRatioHorizontal)){
-					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fHeight = info.fHeight;
-					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fWidth = info.fWidth;
-					//fShapeObjects[i].scale(scaleRatioHorizontal,scaleRatioVertical);
-					//console.log(fShapeObjects[i]._bounds.getStrokeBounds.__proto__);
-					for(var j=0; j<fShapeObjects[i].segments.length-1; j++){					
-						var drawingObject = new paper.Path.Circle(fShapeObjects[i].segments[j].point,10);		
-						drawingObject.fillColor =  "#ffffff";
-						fShapeObjects[i].segments[j].point.x = fShapeObjects[i].segments[j].point.x+50;
-						}
+				paper.view.draw();				
 				
-					paper.view.draw();
-				}*/
 				break;
 			}
 				
@@ -373,17 +374,8 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	this.resizeStarShape = function(info,mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
-				//var scaleRatio = info.fFirstRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fFirstRadius;
-				/*if(scaleRatio == 1)
-					scaleRatio = info.fSecondRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fSecondRadius;*/
-					
-				//if(scaleRatio != Infinity && !isNaN(scaleRatio)){
-					/*fShapeObjects[i].fShape.fShapeTypeDependentInfo.fFirstRadius = info.fFirstRadius;
-					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fSecondRadius = info.fSecondRadius;
-					fShapeObjects[i].scale(scaleRatio);*/
-				var position = new paper.Point(fShapeObjects[i].position.x,fShapeObjects[i].position.y);	
-				
-				
+
+				var position = new paper.Point(fShapeObjects[i].position.x,fShapeObjects[i].position.y);					
 				
 				var tempStar = new paper.Path.Star(position, info.fNrPoints, info.fFirstRadius, info.fSecondRadius);	
 				tempStar.position = position;
@@ -401,14 +393,20 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				
 				if(verticesOnShape != null)
 					verticesOnShape = fShapeObjects[i].segments;
+				
 				tempStar.remove();
 
-				/*fShapeObjects[i].opacity = opacity
-				fShapeObjects[i].fillColor = info.fColor;
-				fShapeObjects[i].fMindObjectId = mindObjectId;
-				fShapeObjects[i].fShape = {fShapeTypeDependentInfo : {fFirstRadius : info.fFirstRadius,
-																	fSecondRadius : info.fSecondRadius,
-																	fNrPoints : info.fNrPoints}};*/
+				/*if(fShapeObjects[i].fillColor.origin != undefined && fShapeObjects[i].fillColor.destination != undefined){
+					var addFactor = info.fFirstRadius >= info.fSecondRadius ? info.fFirstRadius : info.fSecondRadius;
+			
+						
+					var newX = fShapeObjects[i].fillColor.origin.x + addFactor;
+					var newY = fShapeObjects[i].fillColor.origin.y ;		
+					
+					fShapeObjects[i].fillColor.destination = new paper.Point(newX,newY);						
+				}*/
+																	
+															
 				paper.view.draw();
 				//}
 				break;
@@ -488,23 +486,38 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				var scaleRatio = info.fRadius/fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius;
 
 				if(scaleRatio != Infinity && !isNaN(scaleRatio)){
+				
+					//var diffRaidus = info.fRadius - fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius;
 					fShapeObjects[i].fShape.fShapeTypeDependentInfo.fRadius = info.fRadius;
 					
+					/*if(fShapeObjects[i].fillColor.origin != undefined && fShapeObjects[i].fillColor.destination != undefined){
 					
-					if(fShapeObjects[i].fillColor.origin != undefined && fShapeObjects[i].fillColor.destination != undefined){
-						var tempOriginX = new paper.Point(fShapeObjects[i].fillColor.origin.x * scaleRatio, fShapeObjects[i].fillColor.origin.y * scaleRatio);
-						var tempDestX = new paper.Point(fShapeObjects[i].fillColor.destination.x * scaleRatio, fShapeObjects[i].fillColor.destination.y * scaleRatio);
+						var diffX = -fShapeObjects[i].position.x;
+						var diffY = -fShapeObjects[i].position.y; 
+						
+						var tempOriginX = new paper.Point(fShapeObjects[i].fillColor.origin.x , fShapeObjects[i].fillColor.origin.y);
+						var tempDestX = new paper.Point(fShapeObjects[i].fillColor.destination.x , fShapeObjects[i].fillColor.destination.y);
 						
 						fShapeObjects[i].scale(scaleRatio);
 						
+						diffX += fShapeObjects[i].position.x;
+						diffY += fShapeObjects[i].position.y;
+						
+						tempOriginX.x += diffX;
+						tempOriginX.y += diffY;
+						
+						tempDestX.x += diffX;
+						tempDestX.y += diffY;
+						
+						tempDestX.x += diffRaidus;
+						
 						fShapeObjects[i].fillColor.origin = tempOriginX;
-						fShapeObjects[i].fillColor.destination = tempDestX;
+						fShapeObjects[i].fillColor.destination = tempDestX;						
 					}
 					else{
 						fShapeObjects[i].scale(scaleRatio);
-					}		
-					
-				
+					}	*/			
+					fShapeObjects[i].scale(scaleRatio);
 					paper.view.draw();
 				}
 				break;
