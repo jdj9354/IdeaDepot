@@ -815,10 +815,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			if(fMovingObject == null){
 				if(fIsNowResizingVirtually){					
 					var shapeType = fSelectedObject.fShape.fShapeType;
-					var diff_fromCenter_x = fSelectedObject.fX - x;
-					var diff_fromCenter_y = fSelectedObject.fY - y;
-					var diff_fromCenter_z = fSelectedObject.fZ - z;
-					
+	
 					var newSTDI = null;
 					var newShape = null;
 									
@@ -970,8 +967,9 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					var zDiff = z - fAddEventStartPointZ;
 					
 					var distance = distanceOfTwoPoints(x,y,z,fAddEventStartPointX,fAddEventStartPointY,fAddEventStartPointZ);
-					var ratioFactor = zDiff==0?1.414:1.732;
-					var eDistance = distance/ratioFactor;
+							
+					var eDistance = distance/(zDiff==0?1.414:1.732);
+					var eDistance_ZCoord = zDiff==0?0:eDistance;
 					
 					var midX;
 					var midY;
@@ -988,9 +986,9 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 						midY = fAddEventStartPointY - eDistance;
 					
 					if(zDiff>=0)
-						midZ = fAddEventStartPointZ + eDistance;
+						midZ = fAddEventStartPointZ + eDistance_ZCoord;
 					else
-						midZ = fAddEventStartPointZ - eDistance;
+						midZ = fAddEventStartPointZ - eDistance_ZCoord;
 					
 					newX = (fAddEventStartPointX + midX)/2;
 					newY = (fAddEventStartPointY + midY)/2;
@@ -1024,8 +1022,9 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					var zDiff = z - fAddEventStartPointZ;
 					
 					var distance = distanceOfTwoPoints(x,y,z,fAddEventStartPointX,fAddEventStartPointY,fAddEventStartPointZ);
-					var ratioFactor = zDiff==0?1.414:1.732;
-					var eDistance = distance/ratioFactor;
+					
+					var eDistance = distance/(zDiff==0?1.414:1.732);
+					var eDistance_ZCoord = zDiff==0?0:eDistance;
 					
 					var midX;
 					var midY;
@@ -1042,9 +1041,9 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 						midY = fAddEventStartPointY - eDistance;
 					
 					if(zDiff>=0)
-						midZ = fAddEventStartPointZ + eDistance;
+						midZ = fAddEventStartPointZ + eDistance_ZCoord;
 					else
-						midZ = fAddEventStartPointZ - eDistance;
+						midZ = fAddEventStartPointZ - eDistance_ZCoord;
 					
 					newX = (fAddEventStartPointX + midX)/2;
 					newY = (fAddEventStartPointY + midY)/2;
