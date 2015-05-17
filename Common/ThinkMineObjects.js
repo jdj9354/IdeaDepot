@@ -948,5 +948,6 @@ if(typeof module != "undefined"){
 		
 		module.exports.genObjTypeDependentInfo = genObjTypeDependentInfo;
 		module.exports.getScaledXYZFromCenter = getScaledXYZFromCenter;
+		module.exports.scaleFilling = scaleFilling;
 	}
 }

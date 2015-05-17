@@ -232,7 +232,7 @@ public class ThinkMineHBaseAdapter {
 		
 		
 		int shapeType = ((Number) aMindObjectInfo.get("ST")).intValue();
-		String shapeTypeDependentInfo = ((JSONArray) aMindObjectInfo.get("STDI")).toJSONString();
+		String shapeTypeDependentInfo = ((JSONObject) aMindObjectInfo.get("STDI")).toJSONString();
 		
 		p = new Put(Bytes.toBytes(mindObjectId));
 		p.add(CF_SHAPE_BYTE[0], CF_SHAPE_BYTE[0], Bytes.toBytes(shapeType));
@@ -240,7 +240,7 @@ public class ThinkMineHBaseAdapter {
 		mShapeHTable.put(p);
 		
 		int contentsType = ((Number) aMindObjectInfo.get("CT")).intValue();
-		String contentsTypeDependentInfo = ((JSONArray) aMindObjectInfo.get("CTDI")).toJSONString();
+		String contentsTypeDependentInfo = ((JSONObject) aMindObjectInfo.get("CTDI")).toJSONString();
 		String contentesValue = (String)aMindObjectInfo.get("CV");
 		
 		p = new Put(Bytes.toBytes(mindObjectId));
@@ -355,7 +355,7 @@ public class ThinkMineHBaseAdapter {
 		byte[] edgeIdByte = edgeId.getBytes();
 				
 		int edgeType = ((Number)connectInfo.get("ET")).intValue();
-		String edgeTypeDependentInfo = ((JSONArray)connectInfo.get("ETDI")).toString();
+		String edgeTypeDependentInfo = ((JSONObject)connectInfo.get("ETDI")).toString();
 		
 		Put put = new Put(edgeIdByte);
 		put.add(CF_EDGE_BYTE[0], CF_EDGE_BYTE[0], originMindObjectIdByte);
@@ -439,7 +439,7 @@ public class ThinkMineHBaseAdapter {
 		byte[] mindObjectIdByte = Bytes.toBytes(mindObjectId);
 		
 		
-		String newSTDI = ((JSONArray)changeInfo.get("STDI")).toJSONString();
+		String newSTDI = ((JSONObject)changeInfo.get("STDI")).toJSONString();
 		byte[] newSTDIByte = Bytes.toBytes(newSTDI);
 		
 		Put put = new Put(mindObjectIdByte);
@@ -518,7 +518,7 @@ public class ThinkMineHBaseAdapter {
 			// shapeTypeDependentInfo
 			tempQuali = Bytes.toBytes(CF_SHAPE[1]);
 			value = shapeInfo.getValue(tempQuali, tempQuali);			
-			curMO.add((JSONArray)parser.parse(Bytes.toString(value)));
+			curMO.add((JSONObject)parser.parse(Bytes.toString(value)));
 
 			// contentsType
 			tempQuali = Bytes.toBytes(CF_CONTENTS[0]);
@@ -528,7 +528,7 @@ public class ThinkMineHBaseAdapter {
 			// contentsTypeDependentInfo
 			tempQuali = Bytes.toBytes(CF_CONTENTS[1]);
 			value = contentsInfo.getValue(tempQuali, tempQuali);
-			curMO.add((JSONArray)parser.parse(Bytes.toString(value)));
+			curMO.add((JSONObject)parser.parse(Bytes.toString(value)));
 
 			// contentsValue
 			tempQuali = Bytes.toBytes(CF_CONTENTS[2]);
@@ -564,7 +564,7 @@ public class ThinkMineHBaseAdapter {
 				tempQuali = Bytes.toBytes(CF_EDGE[3]);
 				value = edgeInfo.getValue(tempQuali, tempQuali);
 
-				curMORelInfo.add((JSONArray)parser.parse(Bytes.toString(value)));
+				curMORelInfo.add((JSONObject)parser.parse(Bytes.toString(value)));
 			}
 
 			curMO.add(curMORelInfo);
