@@ -379,8 +379,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		//return fShapeFilling;
 		
 		//test CODE
-		//return new RadialGradientFilling(0,0,0,40,40,40,["#FF6C6C",0.2,"#DB0000",0.4,"#D9418C",0.6,"#7F0032",0.8,"#DB00B9",1]);
-		return new LinearGradientFilling(-5,-5,-5,5,5,5,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
+		return new RadialGradientFilling(0,0,0,5,5,5,["#FF6C6C",0.2,"#DB0000",0.4,"#D9418C",0.6,"#7F0032",0.8,"#DB00B9",1]);
+		//return new LinearGradientFilling(-5,-5,-5,5,5,5,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
 		
 	};
 	
@@ -916,7 +916,6 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			if(fVirtualMindObject == null){
 			
 				switch(fMenuSelectedShape){
-				//here aa
 				case ShapeTypeEnum.Circle :
 					fMenuInsertedSDI = new CircleShapeTypeDependentInfo(10,this.getShapeFilling(),1.0);
 					break;

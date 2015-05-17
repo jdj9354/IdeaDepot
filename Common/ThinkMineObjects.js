@@ -881,9 +881,9 @@ var scaleFilling = function(fillingType, toBeScaledFilling, originalSDI, resized
 															mindObject.fY + originalSDI.fFilling.fFillInfo.fOriginY,
 															mindObject.fZ + originalSDI.fFilling.fFillInfo.fOriginZ]);
 			
-			toBeScaledFilling.fFilling.fFillInfo.fOriginX = scaledOriginCoord[0] - mindObject.fY;
-			toBeScaledFilling.fFilling.fFillInfo.fOriginY = scaledOriginCoord[1] - mindObject.fY;
-			toBeScaledFilling.fFilling.fFillInfo.fOriginZ = scaledOriginCoord[2] - mindObject.fZ;			
+			toBeScaledFilling.fFillInfo.fOriginX = scaledOriginCoord[0] - mindObject.fX;
+			toBeScaledFilling.fFillInfo.fOriginY = scaledOriginCoord[1] - mindObject.fY;
+			toBeScaledFilling.fFillInfo.fOriginZ = scaledOriginCoord[2] - mindObject.fZ;			
 			
 			var scaledRadius = getScaledXYZFromCenter(originalSDI, 
 														resizedSDI, 
@@ -893,9 +893,11 @@ var scaleFilling = function(fillingType, toBeScaledFilling, originalSDI, resized
 														originalSDI.fFilling.fFillInfo.fRadiusY,
 														originalSDI.fFilling.fFillInfo.fRadiusZ]);
 			
-			toBeScaledFilling.fFilling.fFillInfo.fRadiusX = scaledRadius[0];
-			toBeScaledFilling.fFilling.fFillInfo.fRadiusY = scaledRadius[1];
-			toBeScaledFilling.fFilling.fFillInfo.fRadiusZ = scaledRadius[2];		
+			toBeScaledFilling.fFillInfo.fRadiusX = scaledRadius[0];
+			toBeScaledFilling.fFillInfo.fRadiusY = scaledRadius[1];
+			toBeScaledFilling.fFillInfo.fRadiusZ = scaledRadius[2];		
+			
+		
 
 			break;
 		}
