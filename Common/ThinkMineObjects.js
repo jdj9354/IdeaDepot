@@ -825,15 +825,84 @@ var getScaledXYZFromCenter = function(prevShapeTypeDependentInfo, changedShapeTy
 		zScale = xScale; 
 		break;
 	case ShapeTypeEnum.Polygon :
-		xScale = changedShapeTypeDependentInfo.fRadius / prevShapeTypeDependentInfo.fRadius;		
+		if(prevShapeTypeDependentInfo.fRadius !=0)
+			xScale = changedShapeTypeDependentInfo.fRadius / prevShapeTypeDependentInfo.fRadius;		
+		else
+			xScale = 1;
 		yScale = xScale;
-		zScale = xScale; 
-		break;		
+		zScale = xScale; 		
+		break;	
 	}
 	if(!isFinite(xScale))
 		xScale = 1;
 	ret = [shapeCenterCoord[0] + xFactor * xScale, shapeCenterCoord[1] + yFactor * yScale, shapeCenterCoord[2] + zFactor * zScale];
 	return ret;
+}
+
+var scaleFilling = function(fillingType, toBeScaledFilling, originalSDI, resizedSDI, mindObject){
+
+	
+	if(fillingType != FillingTypeEnum.SimpleColor){
+		switch(fillingType){
+		case FillingTypeEnum.LinearGradient :
+
+			var scaledStartCoord = getScaledXYZFromCenter(originalSDI, 
+															resizedSDI, 
+															mindObject.fShape.fShapeType, 
+															[mindObject.fX, mindObject.fY, mindObject.fZ],
+															[mindObject.fX + originalSDI.fFilling.fFillInfo.fStartX,
+															mindObject.fY + originalSDI.fFilling.fFillInfo.fStartY,
+															mindObject.fZ + originalSDI.fFilling.fFillInfo.fStartZ]);
+			
+			toBeScaledFilling.fFillInfo.fStartX = scaledStartCoord[0] - mindObject.fX;
+			toBeScaledFilling.fFillInfo.fStartY = scaledStartCoord[1] - mindObject.fY;
+			toBeScaledFilling.fFillInfo.fStartZ = scaledStartCoord[2] - mindObject.fZ;
+
+			var scaledEndCoord = getScaledXYZFromCenter(originalSDI, 
+															resizedSDI, 
+															mindObject.fShape.fShapeType, 
+															[mindObject.fX, mindObject.fY, mindObject.fZ],
+															[mindObject.fX + originalSDI.fFilling.fFillInfo.fEndX,
+															mindObject.fY + originalSDI.fFilling.fFillInfo.fEndY,
+															mindObject.fZ + originalSDI.fFilling.fFillInfo.fEndZ]);
+			
+			toBeScaledFilling.fFillInfo.fEndX = scaledEndCoord[0] - mindObject.fX;
+			toBeScaledFilling.fFillInfo.fEndY = scaledEndCoord[1] - mindObject.fY;
+			toBeScaledFilling.fFillInfo.fEndZ = scaledEndCoord[2] - mindObject.fZ;
+			
+			break;
+		case FillingTypeEnum.RadialGradient :
+
+			var scaledOriginCoord = getScaledXYZFromCenter(originalSDI, 
+															resizedSDI, 
+															mindObject.fShape.fShapeType, 
+															[mindObject.fX, mindObject.fY, mindObject.fZ],
+															[mindObject.fX + originalSDI.fFilling.fFillInfo.fOriginX,
+															mindObject.fY + originalSDI.fFilling.fFillInfo.fOriginY,
+															mindObject.fZ + originalSDI.fFilling.fFillInfo.fOriginZ]);
+			
+			toBeScaledFilling.fFilling.fFillInfo.fOriginX = scaledOriginCoord[0] - mindObject.fY;
+			toBeScaledFilling.fFilling.fFillInfo.fOriginY = scaledOriginCoord[1] - mindObject.fY;
+			toBeScaledFilling.fFilling.fFillInfo.fOriginZ = scaledOriginCoord[2] - mindObject.fZ;			
+			
+			var scaledRadius = getScaledXYZFromCenter(originalSDI, 
+														resizedSDI, 
+														mindObject.fShape.fShapeType, 
+														[0,0,0],
+														[originalSDI.fFilling.fFillInfo.fRadiusX,
+														originalSDI.fFilling.fFillInfo.fRadiusY,
+														originalSDI.fFilling.fFillInfo.fRadiusZ]);
+			
+			toBeScaledFilling.fFilling.fFillInfo.fRadiusX = scaledRadius[0];
+			toBeScaledFilling.fFilling.fFillInfo.fRadiusY = scaledRadius[1];
+			toBeScaledFilling.fFilling.fFillInfo.fRadiusZ = scaledRadius[2];		
+
+			break;
+		}
+	}
+	
+	return;
+
 }
 
 

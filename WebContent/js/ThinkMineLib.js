@@ -380,7 +380,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		
 		//test CODE
 		//return new RadialGradientFilling(0,0,0,40,40,40,["#FF6C6C",0.2,"#DB0000",0.4,"#D9418C",0.6,"#7F0032",0.8,"#DB00B9",1]);
-		return new LinearGradientFilling(1,1,1,40,40,40,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
+		return new LinearGradientFilling(-5,-5,-5,5,5,5,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
 		
 	};
 	
@@ -522,18 +522,6 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 
 				
 			}	
-			/*else if(CreatingEllipse.contains(new paper.Point(x,y))){
-				var tempShape;
-				var tempShapeTypeDependentInfo = new EllipseShapeTypeDependentInfo(150,250,"#F361A6");
-				
-				var tempContents;
-				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#2FF1F3",'Courier New','bold',25);
-				
-				tempShape = new Shape("EllipseShape",tempShapeTypeDependentInfo);
-				tempContents = new Contents("TextContents",tempContentsTypeDependentInfo,"This is a Ellipse Shape");
-				
-				this.addMindObject(x,y,z,tempShape,tempContents);
-			}*/
 			else if(CreatingImageCircle.contains(new paper.Point(x,y))){
 				
 				var tempShape;
@@ -550,20 +538,6 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				
 				this.addMindObject(x,y,z,tempShape,tempContents);
 				
-				//var newMindObject = new MindObject(0,0,0,new EllipseShape(),new TextContents("ThinkTest"),x,y,0);		
-				//newMindObject.DrawMindObject();
-				//this.MindObjects.push(newMindObject);
-				
-				//this.SelectedObject = newMindObject;
-				
-				/*for(i=0; i< this.MindObjects.length; i++){
-					this.SelectedObject.Shape.position;
-					var Distance = this.SelectedObject.Shape.DrawingObject.position.getDistance(this.MindObjects[i].Shape.DrawingObject.position);
-					if(Distance !=0 && Distance <= this.MaxRelDistance){
-						this.SelectedObject.ConnectTo(this.MindObjects[i], "SimplePathEdge");
-					}
-				}
-				return;*/
 			}
 			else if(CreatingRectangle.contains(new paper.Point(x,y))){
 				var tempShape;
@@ -628,12 +602,6 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 						moveCount = 0;
 						return;
 					}
-					/*var dst = distanceOfTwoPoints(MindMap.getMindObjectOnIndex(i).fX,MindMap.getMindObjectOnIndex(i).fY,MindMap.getMindObjectOnIndex(i).fZ,x,y,0);
-					if(dst<	MindMap.getMindObjectOnIndex(i).fShape.fShapeTypeDependentInfo.fRadius){
-						fMovingObject = MindMap.getMindObjectOnIndex(i);
-						moveCount = 0;
-						return;
-					}*/
 				}
 			}
 		}
@@ -959,14 +927,15 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					fMenuInsertedSDI = new StarShapeTypeDependentInfo(5, 10, 5,this.getShapeFilling(), 1.0);
 					break;
 				case ShapeTypeEnum.Polygon :
-					fMenuInsertedSDI = new PolygonShapeTypeDependentInfo(3, 1,this.getShapeFilling(), 1.0);
+					fMenuInsertedSDI = new PolygonShapeTypeDependentInfo(12, 10,this.getShapeFilling(), 1.0);
 					break;							
 				}
 				
 				fVirtualMindObject = {fX : x,
 										fY : y,
 										fZ : z,
-										fShape:{fShapeTypeDependentInfo:fMenuInsertedSDI}};
+										fShape:{fShapeType : fMenuSelectedShape,
+												fShapeTypeDependentInfo:fMenuInsertedSDI}};
 				
 				fAddEventStartPointX = x;
 				fAddEventStartPointY = y;
@@ -1107,67 +1076,9 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				
 				var fillingType = fVirtualMindObject.fShape.fShapeTypeDependentInfo.fFilling.fFillType;
 				var changedShapeTypeDependentInfo = fVirtualMindObject.fShape.fShapeTypeDependentInfo;
-			
-				if(fillingType != FillingTypeEnum.SimpleColor){
-					switch(fillingType){
-					case FillingTypeEnum.LinearGradient :
-
-						var scaledStartCoord = getScaledXYZFromCenter(originalShapeTypeDependentInfo, 
-																		changedShapeTypeDependentInfo, 
-																		fVirtualMindObject.fShape.fShapeType, 
-																		[fVirtualMindObject.fX, fVirtualMindObject.fY, fVirtualMindObject.fZ],
-																		[fVirtualMindObject.fX + originalShapeTypeDependentInfo.fFilling.fFillInfo.fStartX,
-																		fVirtualMindObject.fY + originalShapeTypeDependentInfo.fFilling.fFillInfo.fStartY,
-																		fVirtualMindObject.fZ + originalShapeTypeDependentInfo.fFilling.fFillInfo.fStartZ]);
-						
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fStartX = scaledStartCoord[0] - fVirtualMindObject.fX;
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fStartY = scaledStartCoord[1] - fVirtualMindObject.fY;
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fStartZ = scaledStartCoord[2] - fVirtualMindObject.fZ;
-
-						var scaledEndCoord = getScaledXYZFromCenter(originalShapeTypeDependentInfo, 
-																		changedShapeTypeDependentInfo, 
-																		fVirtualMindObject.fShape.fShapeType, 
-																		[fVirtualMindObject.fX, fVirtualMindObject.fY, fVirtualMindObject.fZ],
-																		[fVirtualMindObject.fX + originalShapeTypeDependentInfo.fFilling.fFillInfo.fEndX,
-																		fVirtualMindObject.fY + originalShapeTypeDependentInfo.fFilling.fFillInfo.fEndY,
-																		fVirtualMindObject.fZ + originalShapeTypeDependentInfo.fFilling.fFillInfo.fEndZ]);
-						
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fEndX = scaledEndCoord[0] - fVirtualMindObject.fX;
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fEndY = scaledEndCoord[1] - fVirtualMindObject.fY;
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fEndZ = scaledEndCoord[2] - fVirtualMindObject.fZ;
-						
-						break;
-					case FillingTypeEnum.RadialGradient :
-
-						var scaledOriginCoord = getScaledXYZFromCenter(originalShapeTypeDependentInfo, 
-																		changedShapeTypeDependentInfo, 
-																		fVirtualMindObject.fShape.fShapeType, 
-																		[fVirtualMindObject.fX, fVirtualMindObject.fY, fVirtualMindObject.fZ],
-																		[fVirtualMindObject.fX + originalShapeTypeDependentInfo.fFilling.fFillInfo.fOriginX,
-																		fVirtualMindObject.fY + originalShapeTypeDependentInfo.fFilling.fFillInfo.fOriginY,
-																		fVirtualMindObject.fZ + originalShapeTypeDependentInfo.fFilling.fFillInfo.fOriginZ]);
-						
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fOriginX = scaledOriginCoord[0] - fVirtualMindObject.fY;
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fOriginY = scaledOriginCoord[1] - fVirtualMindObject.fY;
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fOriginZ = scaledOriginCoord[2] - fVirtualMindObject.fZ;			
-						
-						var scaledRadius = getScaledXYZFromCenter(originalShapeTypeDependentInfo, 
-																	changedShapeTypeDependentInfo, 
-																	fVirtualMindObject.fShape.fShapeType, 
-																	[0,0,0],
-																	[originalShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusX,
-																	originalShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusY,
-																	originalShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusZ]);
-						
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusX = scaledRadius[0];
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusY = scaledRadius[1];
-						changedShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusZ = scaledRadius[2];		
-
-						break;
-					}
-				}
 				
-				
+				scaleFilling(fillingType, changedShapeTypeDependentInfo.fFilling, originalShapeTypeDependentInfo, changedShapeTypeDependentInfo, fVirtualMindObject);
+								
 				fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
 										{fMindObjectId : "virtual",
 										fShape : {fShapeType : fMenuSelectedShape,
@@ -2562,65 +2473,9 @@ console.log(now);
 			
 			var fillingType = fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fFilling.fFillType;
 			var originalShapeTypeDependentInfo = fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo;
-		
-			if(fillingType != FillingTypeEnum.SimpleColor){
-				switch(fillingType){
-				case FillingTypeEnum.LinearGradient :
-
-					var scaledStartCoord = getScaledXYZFromCenter(originalShapeTypeDependentInfo, 
-																	tempShapeTypeDependentInfo, 
-																	fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeType, 
-																	[fMindMap.getMindObjectOnIndex(targetIndex).fX, fMindMap.getMindObjectOnIndex(targetIndex).fY, fMindMap.getMindObjectOnIndex(targetIndex).fZ],
-																	[fMindMap.getMindObjectOnIndex(targetIndex).fX + originalShapeTypeDependentInfo.fFilling.fFillInfo.fStartX,
-																	fMindMap.getMindObjectOnIndex(targetIndex).fY + originalShapeTypeDependentInfo.fFilling.fFillInfo.fStartY,
-																	fMindMap.getMindObjectOnIndex(targetIndex).fZ + originalShapeTypeDependentInfo.fFilling.fFillInfo.fStartZ]);
-					
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fStartX = scaledStartCoord[0] - fMindMap.getMindObjectOnIndex(targetIndex).fX;
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fStartY = scaledStartCoord[1] - fMindMap.getMindObjectOnIndex(targetIndex).fY;
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fStartZ = scaledStartCoord[2] - fMindMap.getMindObjectOnIndex(targetIndex).fZ;
-
-					var scaledEndCoord = getScaledXYZFromCenter(originalShapeTypeDependentInfo, 
-																	tempShapeTypeDependentInfo, 
-																	fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeType, 
-																	[fMindMap.getMindObjectOnIndex(targetIndex).fX, fMindMap.getMindObjectOnIndex(targetIndex).fY, fMindMap.getMindObjectOnIndex(targetIndex).fZ],
-																	[fMindMap.getMindObjectOnIndex(targetIndex).fX + originalShapeTypeDependentInfo.fFilling.fFillInfo.fEndX,
-																	fMindMap.getMindObjectOnIndex(targetIndex).fY + originalShapeTypeDependentInfo.fFilling.fFillInfo.fEndY,
-																	fMindMap.getMindObjectOnIndex(targetIndex).fZ + originalShapeTypeDependentInfo.fFilling.fFillInfo.fEndZ]);
-					
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fEndX = scaledEndCoord[0] - fMindMap.getMindObjectOnIndex(targetIndex).fX;
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fEndY = scaledEndCoord[1] - fMindMap.getMindObjectOnIndex(targetIndex).fY;
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fEndZ = scaledEndCoord[2] - fMindMap.getMindObjectOnIndex(targetIndex).fZ;
-					
-					break;
-				case FillingTypeEnum.RadialGradient :
-
-					var scaledOriginCoord = getScaledXYZFromCenter(originalShapeTypeDependentInfo, 
-																	tempShapeTypeDependentInfo, 
-																	fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeType, 
-																	[fMindMap.getMindObjectOnIndex(targetIndex).fX, fMindMap.getMindObjectOnIndex(targetIndex).fY, fMindMap.getMindObjectOnIndex(targetIndex).fZ],
-																	[fMindMap.getMindObjectOnIndex(targetIndex).fX + originalShapeTypeDependentInfo.fFilling.fFillInfo.fOriginX,
-																	fMindMap.getMindObjectOnIndex(targetIndex).fY + originalShapeTypeDependentInfo.fFilling.fFillInfo.fOriginY,
-																	fMindMap.getMindObjectOnIndex(targetIndex).fZ + originalShapeTypeDependentInfo.fFilling.fFillInfo.fOriginZ]);
-					
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fOriginX = scaledOriginCoord[0] - fMindMap.getMindObjectOnIndex(targetIndex).fY;
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fOriginY = scaledOriginCoord[1] - fMindMap.getMindObjectOnIndex(targetIndex).fY;
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fOriginZ = scaledOriginCoord[2] - fMindMap.getMindObjectOnIndex(targetIndex).fZ;			
-					
-					var scaledRadius = getScaledXYZFromCenter(originalShapeTypeDependentInfo, 
-																tempShapeTypeDependentInfo, 
-																fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeType, 
-																[0,0,0],
-																[originalShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusX,
-																originalShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusY,
-																originalShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusZ]);
-					
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusX = scaledRadius[0];
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusY = scaledRadius[1];
-					tempShapeTypeDependentInfo.fFilling.fFillInfo.fRadiusZ = scaledRadius[2];		
-
-					break;
-				}
-			}
+			
+			scaleFilling(fillingType, tempShapeTypeDependentInfo.fFilling, originalShapeTypeDependentInfo, tempShapeTypeDependentInfo, fMindMap.getMindObjectOnIndex(targetIndex));
+						
 			fMindMap.getMindObjectOnIndex(targetIndex).changeShape(new Shape(tempShapeType,tempShapeTypeDependentInfo));
 		}
 
