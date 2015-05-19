@@ -112,7 +112,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 			context.drawImage(imageObj, padding, padding);
 			drawColorSquare(canvas, 'white', imageObj);
 		};		
-		imageObj.src = '/res/color-picker.png'			
+		imageObj.src = '/ThinkMineCV/res/color-picker.png'			
 
 
 		

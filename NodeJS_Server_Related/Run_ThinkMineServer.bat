@@ -1,5 +1,3 @@
-start node NodeJS_ThinkMineServer.js
-
 set CRUDPATH=%cd%\ThinkMineRoomCRUD.js
 
 cd RoomFramework_Server

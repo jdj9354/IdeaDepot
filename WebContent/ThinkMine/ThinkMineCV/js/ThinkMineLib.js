@@ -20,18 +20,23 @@ function addJavascript(jsname) {
 	th.appendChild(s);
 }
 
-addJavascript("/paper-full.js");
-addJavascript("/socket.io/socket.io.js");
-addJavascript("/DrawingWorker.js");
-addJavascript("/EventParserWorker.js");
-addJavascript("/AnimationWorker.js");
-addJavascript("/kinetic-v5.0.2.min.js");
-addJavascript("/uuid_js/uuid.js");
-addJavascript("/Room.js");
-addJavascript("/ThinkMineConstants.js");
-addJavascript("/ThinkMineObjects.js");
-addJavascript("/ThinkMineDefInterface.js");
-addJavascript("/ThinkMineDepPaperJS.js");
+const RELATIVE_PATH_DRAWING_WORKER = "/ThinkMineCV/js/DrawingWorker.js";
+const RELATIVE_PATH_EVENT_PARSER_WORKER = "/ThinkMineCV/js/EventParserWorker.js";
+const RELATIVE_PATH_ANIMATION_WORKER = "/ThinkMineCV/js/AnimationWorker.js";
+
+
+addJavascript("/ThinkMineCV/js/paper-full.js");
+//addJavascript("js/socket.io.js");
+addJavascript(RELATIVE_PATH_DRAWING_WORKER);
+addJavascript(RELATIVE_PATH_EVENT_PARSER_WORKER);
+addJavascript(RELATIVE_PATH_ANIMATION_WORKER);
+addJavascript("/ThinkMineCV/js/kinetic-v5.0.2.min.js");
+addJavascript("/ThinkMineCV/js/uuid_js/uuid.js");
+addJavascript("/ThinkMineCV/js/Room.js");
+addJavascript("/Common/Constants/ThinkMineConstants.js");
+addJavascript("/Common/ThinkMineObjects.js");
+addJavascript("/ThinkMineCV/js/ThinkMineDefInterface.js");
+addJavascript("/ThinkMineCV/js/ThinkMineDepPaperJS.js");
 
 
 
@@ -1837,7 +1842,7 @@ function JobHandler(drawingObj){
 
 
 		
-		var animWorker = new Worker("AnimationWorker.js");
+		var animWorker = new Worker(RELATIVE_PATH_ANIMATION_WORKER);
 		
 		
 		animWorker.onmessage = function (event){
@@ -1987,7 +1992,7 @@ console.log(now);
 				
 
 				
-				var animWorker = new Worker("AnimationWorker.js");
+				var animWorker = new Worker(RELATIVE_PATH_ANIMATION_WORKER);
 				
 				
 				animWorker.onmessage = function (event){
@@ -2541,7 +2546,7 @@ console.log(now);
 	
 	this.startEventLoop = function(){
 		fIsStarted = true;
-		fWorker = new Worker("EventParserWorker.js");
+		fWorker = new Worker(RELATIVE_PATH_EVENT_PARSER_WORKER);
 		
 		var callBackInterface = handleLatestJob;
 		fWorker.onmessage = function (event){
@@ -3007,7 +3012,7 @@ function SocketDataCommuHelperRecv (jobHandler,room) {
 				break;
 			}
 			
-			var animWorker = new Worker('AnimationWorker.js');
+			var animWorker = new Worker(RELATIVE_PATH_ANIMATION_WORKER);
 			var hasFinished = false;
 			var current_Obj = this;
 			
@@ -3463,7 +3468,7 @@ function DrawingObj(drawingCCInterface){
 	};
 	this.startEventLoop = function(){
 		fIsStarted = true;
-		fWorker = new Worker("DrawingWorker.js");
+		fWorker = new Worker(RELATIVE_PATH_DRAWING_WORKER);
 		
 		var callBackInterface = handleLatestJob;
 		fWorker.onmessage = function (event){
