@@ -14,6 +14,9 @@ function runAnimation(repeatCount, interval){
 }
 
 self.addEventListener('message', function(e){
+	
+	if(e.data.definedFuncSetName == undefined)
+		return;
 
 	var DAI = new DefinableAnimationInfo(e.data.finalStatusInfo,e.data.progressStatusInfo,functionContainer.get(e.data.definedFuncSetName));			
 	var AIG = new AnimationInfoGenerator(DAI,e.data.interval);

@@ -4,6 +4,8 @@ Template Name: Full Width
 */
 ?>
 
+<script src="/ThinkMineCV/js/ThinkMineLib.js"></script>
+<script src="/ThinkMineCV/js/ThinkMineUILib.js"></script>
 <?php get_header(); ?>
 
 	<div id="content">
@@ -13,6 +15,7 @@ Template Name: Full Width
 		<?php do_action( 'bp_before_blog_page' ); ?>
 
 		<div class="page" id="blog-page" role="main">
+			<canvas id="tmCanvas" height = "800" width="1500"></canvas>	
 
 			<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 

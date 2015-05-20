@@ -397,19 +397,7 @@
 			
 			
 			window.onload = function() {
-			//com.local.SVGHandlers.Initialize();
-			//setUpPaperLib('myCanvas');
-			
 
-	//	var ms;
-//Today = new Date();
-//Prev = new Date('1970-01-01');
-//var a = Prev-Today
-//ms = a.getMilliseconds(); 
-	
-	
-//	console.log(ms);
-			
 	
 			setUpPaperLib('myCanvas');
 			var drawingCC_Interface = new PaperJS_DrawingCCInterface("PaperJS",'myCanvas');			
@@ -442,10 +430,6 @@
 													TMCanvas.onMouseMoveInterface(event.point.x,event.point.y,0);
 													
 												});
-							//wrappedEventHandler.setOnKeyDown(TMCanvas.onKeyDownInterface);
-			//wrappedEventHandler.setOnCompositionStart(TMCanvas.onCompositionEventStartInterface);
-		//	wrappedEventHandler.setOnCompositionUpdate(TMCanvas.onCompositionEventUpdateInterface);
-			//wrappedEventHandler.setOnCompositionEnd(TMCanvas.onCompositionEventEndInterface);
 			
 			ThinkMine.Lib.ExternalUI.ColorPickerCanvas.attach("color_picker_canvas",TMCanvas);
 			ThinkMine.Lib.ExternalUI.RecentColor.attach("group_id_recent_color",TMCanvas);
@@ -461,42 +445,9 @@
 			
 			initPaperJSMindMap(1000,600,wrappedEventHandler);
 
-			
-			//var layer = paper.project.activeLayer;
-
-
-			
-
-			//var layer = new paper.Layer();
-			
-			
-			
-			/*var onMD = 
-			
-			var onMU = function(event){
-				TMCanvas.onMouseUpInterface(event.point.x,event.point.y,0);
-			}
-			var onBGMU = function(event){
-				TMCanvas.onBGMouseUpInterface(event.point.x,event.point.y,0);
-			}
-			
-			var onMDr = function(event){
-				TMCanvas.onMouseDragInterface(event.point.x,event.point.y,0);
-			}*/
-			
-			/*layer.on({mousedown : onMD,
-				mouseup : onMU,
-				mousedrag : onMDr});*/
-				
-			//firstLayer.onMouseUp = onBGMU;
-
-
-			//TMCanvas.connectToServer();
-			//TMCanvas.initWithMindMap("5419a2a443caa5a02237ae41");
 			var ua = new UserAuth("JDJ9354");
 			ua.getAuthentication("JDJ9354","test");
-			//TMCanvas.initWithNewMindMap(ua);
-			//TMCanvas.initWithMindMap("5447c235e95398a80b6b451a");
+
 			
 			var lastDownTarget, canvas;
 
@@ -512,11 +463,7 @@
 			    
 			document.addEventListener('paste', function(event) {			        
 				if(lastDownTarget == canvas) {
-					//alert("aa");
-					//window.clipboardData.setData("text","aaaa");
-					//alert(window.clipboardData.getData("text"));
-					TMCanvas.onPasteInterface(event);
-					//TMCanvas.onPaste(event);			        
+					TMCanvas.onPasteInterface(event);       
 				}			    
 			}, false);
 			
@@ -541,70 +488,9 @@
 				console.log("join mind map");
 				alert("aaa");
 				TMCanvas.initWithMindMap("test",ua);
-			});
-			
-			
-			
+			});			
 		}
-		/*$(function(){		
-			$("#CircleShapeImage").click(function(){
-				TMCanvas.enableObjectAddMode();
-				TMCanvas.setMenuSelectedShape(0);
-				var shapeColor = "#" +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getRedValue().toString(16) +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getGreenValue().toString(16) +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getBlueValue().toString(16) ;
-				TMCanvas.setMenuInsertedSDI(new CircleShapeTypeDependentInfo(10,shapeColor));
-				TMCanvas.setMenuSelectedContents(0);
-				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
-				TMCanvas.setMenuInsertedCV("UI Interaction Test");
-				}); 
-		});
-		
-		$(function(){
-			$("#RectangleShapeImage").click(function(){
-				TMCanvas.enableObjectAddMode();
-				TMCanvas.setMenuSelectedShape(1);
-				var shapeColor = "#" +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getRedValue().toString(16) +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getGreenValue().toString(16) +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getBlueValue().toString(16) ;
-				TMCanvas.setMenuInsertedSDI(new RectangleShapeTypeDependentInfo(10, 10, shapeColor, true));
-				TMCanvas.setMenuSelectedContents(0);
-				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
-				TMCanvas.setMenuInsertedCV("UI Interaction Test");
-				}); 
-		});
-		
-		$(function(){
-			$("#StarShapeImage").click(function(){
-				TMCanvas.enableObjectAddMode();
-				TMCanvas.setMenuSelectedShape(2);
-				var shapeColor = "#" +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getRedValue().toString(16) +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getGreenValue().toString(16) +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getBlueValue().toString(16) ;
-				TMCanvas.setMenuInsertedSDI(new StarShapeTypeDependentInfo(5, 150, 75,shapeColor));
-				TMCanvas.setMenuSelectedContents(0);
-				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
-				TMCanvas.setMenuInsertedCV("UI Interaction Test");
-				}); 
-		});
 
-		$(function(){
-			$("#PolygonShapeImage").click(function(){
-				TMCanvas.enableObjectAddMode();
-				TMCanvas.setMenuSelectedShape(3);
-				var shapeColor = "#" +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getRedValue().toString(16) +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getGreenValue().toString(16) +
-								ThinkMine.Lib.ExternalUI.ColorPickerCanvas.getBlueValue().toString(16) ;
-				TMCanvas.setMenuInsertedSDI(new PolygonShapeTypeDependentInfo(14, 10, shapeColor));
-				TMCanvas.setMenuSelectedContents(0);
-				TMCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25));
-				TMCanvas.setMenuInsertedCV("UI Interaction Test");
-				}); 
-		});*/
 	
 		$('#dd_shapetype').on('hide.bs.dropdown', function (event) {
 		  console.log(event.relatedTarget);
