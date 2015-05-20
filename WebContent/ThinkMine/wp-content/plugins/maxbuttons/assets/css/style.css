@@ -1,0 +1,79 @@
+#maxbuttons {
+  /*.shortcode-container { 
+  	max-width: 60%;
+  	overflow: hidden;
+  } */ }
+  #maxbuttons .preview-buttons {
+    background-color: #fff;
+    border: 1px solid #dfdfdf;
+    overflow: hidden; }
+    #maxbuttons .preview-buttons .heading {
+      width: 100%;
+      clear: both;
+      display: inline-block;
+      border-bottom: 1px solid #dfdfdf; }
+      #maxbuttons .preview-buttons .heading > span {
+        display: inline-block;
+        font-weight: 700;
+        font-size: 14px;
+        float: left; }
+    #maxbuttons .preview-buttons .button-row {
+      width: 100%;
+      clear: both;
+      display: inline-block;
+      border-bottom: 1px solid #dfdfdf; }
+      #maxbuttons .preview-buttons .button-row > span {
+        display: inline-block;
+        font-size: 13px;
+        float: left; }
+      #maxbuttons .preview-buttons .button-row .actions {
+        margin: 10px 15px;
+        display: inline-block; }
+    #maxbuttons .preview-buttons .mb-container {
+      margin: 0; }
+    #maxbuttons .preview-buttons .mb-center {
+      text-align: left !important; }
+    #maxbuttons .preview-buttons .mb-center .mb-text {
+      text-align: center !important; }
+    #maxbuttons .preview-buttons .col {
+      padding: 10px 0 10px 1%; }
+    #maxbuttons .preview-buttons .col_check {
+      width: 20px; }
+    #maxbuttons .preview-buttons .col_button {
+      width: 60%;
+      overflow: hidden; }
+    #maxbuttons .preview-buttons .col_name {
+      width: 15%; }
+    #maxbuttons .preview-buttons .col_shortcode {
+      width: 15%;
+      padding-right: 0; }
+  #maxbuttons .main {
+    max-width: 72%;
+    position: relative;
+    z-index: 500; }
+  #maxbuttons .pagination {
+    width: 100%;
+    display: inline-block;
+    margin: 15px 0 5px; }
+    #maxbuttons .pagination li {
+      float: left;
+      margin-right: 5px; }
+      #maxbuttons .pagination li a, #maxbuttons .pagination li span {
+        background: #ccc;
+        vertical-align: middle;
+        padding: 4px 10px 8px;
+        height: 15px;
+        display: inline-block;
+        border: 1px solid #eee;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold; }
+  #maxbuttons .input .input_url {
+    width: 600px; }
+
+.media_button_table .media_row .mb-container {
+  margin: 0 !important; }
+.media_button_table .media_row .mb-center {
+  text-align: left !important; }
+.media_button_table .media_row .mb-center .mb-text {
+  text-align: center !important; }

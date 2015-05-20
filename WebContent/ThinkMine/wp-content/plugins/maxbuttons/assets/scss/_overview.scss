@@ -1,0 +1,96 @@
+
+.preview-buttons {
+	background-color: #fff; 
+	border: 1px solid #dfdfdf;
+	overflow: hidden;
+	
+	.heading 
+	{
+		width: 100%;
+		clear:both;
+		display: inline-block; 
+		border-bottom: 1px solid #dfdfdf;
+		&> span { 
+			display: inline-block; 
+			font-weight: 700; 
+			font-size: 14px;
+			float: left;
+		}
+	}
+	.button-row 
+	{
+		width: 100%; 
+		clear: both;
+		display: inline-block;
+		border-bottom: 1px solid #dfdfdf;
+		
+		&> span {
+			display: inline-block; 
+			font-size: 13px;
+			float: left;
+		}
+		.actions { 
+			margin: 10px 15px; 
+			display: inline-block;
+		}
+	}
+	.mb-container { margin: 0;  } 
+	.mb-center { text-align: left !important; } // default
+	.mb-center .mb-text { text-align: center !important; } // counter since container sets center over the whole thing 
+	
+
+	.col { 
+		padding: 10px 0 10px 1%;
+	}
+	.col_check { 
+		width: 20px; 
+	} 
+	.col_button { 
+		//padding-left: 0;
+		width: 60%;
+		//min-width: 50%;
+		overflow: hidden;
+	}
+	.col_name { 
+		width: 15%; 
+	} 
+	.col_shortcode { 
+		width: 15%;
+		padding-right: 0;
+	}
+
+}
+
+.main {
+	max-width: 72%; 
+	position: relative; 
+	z-index: 500; 
+}
+
+/*.shortcode-container { 
+	max-width: 60%;
+	overflow: hidden;
+} */
+
+.pagination { 
+
+	width: 100%; 
+	display: inline-block; 
+	margin: 15px 0 5px; 
+	
+	li { 
+		float: left;
+		margin-right: 5px;
+	a,span 	{
+			background: #ccc; 
+ 			vertical-align: middle;
+			padding: 4px 10px 8px ; 
+			height: 15px; 
+			display: inline-block;
+			border: 1px solid #eee;
+			text-decoration: none;
+			font-size: 14px;
+			font-weight: bold;
+		}
+	}
+}
