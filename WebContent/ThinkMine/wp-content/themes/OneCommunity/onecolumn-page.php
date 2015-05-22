@@ -65,11 +65,13 @@ Template Name: Full Width
 	<div id="content">
 
 	<div class="page-title"><?php the_title(); ?></div>
+		<?php do_action( 'bp_before_blog_page' );  ?>
 
-		<?php do_action( 'bp_before_blog_page' ); ?>
+
 
 		<div class="page" id="blog-page" role="main">
 			<a  class="maxbutton-1 maxbutton" href="javascript:void(0);"><span class='mb-text'>Add MindMap</span></a>
+			<input type="text" class="color-picker" name="overlay_color" value="#EEE" data-default-color="#effeff" />
 			<canvas id="tmCanvas" height = "800" width="1500"></canvas>	
 
 			<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
