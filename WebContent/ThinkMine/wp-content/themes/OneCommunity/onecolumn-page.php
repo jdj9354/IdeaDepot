@@ -79,18 +79,41 @@ Template Name: Full Width
 		<?php do_action( 'bp_before_blog_page' );  ?>
 
 	
-		<a  class="maxbutton-1 maxbutton" href="javascript:void(0);"><span class='mb-text'>Add MindMap</span></a>
+		<a id="btn_add_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Add MindMap (id : test)</span></a>
+		<a id="btn_join_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Join MindMap (id : test)</span></a><br>
+		
+		<div id="group_div_shape" style="margin: 0 auto;">
+			<div id="div_circleshape" width='50' height='50'  style="float:left;">
+				<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
+			</div>
+			<div id="div_rectangleshape" width='50' height='50'  style="float:left;">
+				<img src="/ThinkMineCV/res/RectangleShape.png" id="RectangleShapeImage" width='50' height='50' />
+			</div>
+			<div id="div_starshape" width='50' height='50' style="float:left;">
+				<img src="/ThinkMineCV/res/StarShape.png" id="StarShapeImage" width='50' height='50' />
+			</div>
+			<div id="div_polygonshape" width='50' height='50'>
+				<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
+			</div>
+		</div>
+		
 		<div class="page" id="blog-page" role="main">
 			
 			<div id="tmWorkingArea">
-				<div style="display:inline; vertical-align: top;"><canvas id="tmCanvas"  style="border:1px solid #000000;"></canvas></div>
-				<div style="display:inline; vertical-align: middle;"><div id="tm_main_cp"></div></td></div>
+				<div style="display:inline; vertical-align: top;">
+					<canvas id="tmCanvas"  style="border:1px solid #000000;"></canvas>
+					<div id="tm_main_cp"></div> 
+				</div>								
 			</div>
+			
 			
 			<script>
 				$('#tm_main_cp').spectrum({
 					move: function(color) {
-						;
+						var rgb = color.toRgb();
+						ThinkMine.Lib.ExternalUI.ColorPickerRedInput.setRedValue(rgb.r);
+						ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.setGreenValue(rgb.g);
+						ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(rgb.b);
 					},
 					change: function() {
 						;
@@ -99,13 +122,37 @@ Template Name: Full Width
 					showAlpha: true,
 					color: "#ffffff",
 					clickoutFiresChange: true,
-					showInput: true,
+					showInput: false,
 					showButtons: false
 				});
+
+				
 				
 				$('#tmCanvas')[0].width = $('#blog-page')[0].offsetWidth - $('.sp-container')[0].offsetWidth * 1.1;
-				$('#tmCanvas')[0].height = $('#tmCanvas')[0].offsetWidth * 0.8;
-				$('.sp-container')[0].style.verticalAlign="top";
+				$('#tmCanvas')[0].height = $('#tmCanvas')[0].offsetWidth * 0.8;				
+
+				var spc = $('.sp-container')[0];
+				spc.style.verticalAlign="top";
+				
+				
+				var sppc = $('.sp-picker-container')[0];
+				
+				var inputElement = document.createElement('input');
+				inputElement.id="color_picker_red_input";
+				sppc.appendChild(inputElement);				
+				var br = document.createElement('br');
+				sppc.appendChild(br);
+				
+				inputElement = document.createElement('input');				
+				sppc.appendChild(inputElement);				
+				inputElement.id="color_picker_green_input";
+				br = document.createElement('br');
+				sppc.appendChild(br);
+				
+				inputElement = document.createElement('input');
+				inputElement.id="color_picker_blue_input";
+				sppc.appendChild(inputElement);
+
 		
 			</script>
 
@@ -133,6 +180,125 @@ Template Name: Full Width
 	<?php comments_template(); ?>
 
 	</div><!-- #content -->
+	
+	<script>
+			var TMCanvas;
+			var wrappedEventHandler;
+			
+			
+			window.onload = function() {		
+	
+				setUpPaperLib('tmCanvas');
+				var drawingCC_Interface = new PaperJS_DrawingCCInterface("PaperJS",'tmCanvas');			
+
+				TMCanvas = new ThinkMineCanvas(drawingCC_Interface);
+				
+				
+				wrappedEventHandler = new WrappedPaperJSEventHandler();
+				wrappedEventHandler.setOnMouseDown(function(event){					
+			
+														wrappedEventHandler.dragCount = 0;
+														TMCanvas.onMouseDownInterface(event.point.x,event.point.y,0);
+													});
+				wrappedEventHandler.setOnMouseUp(function(event){					
+			
+														TMCanvas.onMouseUpInterface(event.point.x,event.point.y,0);
+														
+													});
+				wrappedEventHandler.setOnMouseDrag(function(event){
+
+														wrappedEventHandler.dragCount++;
+														
+														if(wrappedEventHandler.dragCount>1)
+															TMCanvas.onMouseDragInterface(event.point.x,event.point.y,0);
+																		
+															
+															
+													});
+				wrappedEventHandler.setOnMouseMove(function(event){
+														TMCanvas.onMouseMoveInterface(event.point.x,event.point.y,0);
+														
+													});
+				
+				ThinkMine.Lib.ExternalUI.ColorPickerCanvas.attach("color_picker_canvas",TMCanvas);
+				ThinkMine.Lib.ExternalUI.RecentColor.attach("group_id_recent_color",TMCanvas);
+				
+				ThinkMine.Lib.ExternalUI.ColorPickerRedInput.attach("color_picker_red_input");
+				ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.attach("color_picker_green_input");
+				ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input");
+				
+				ThinkMine.Lib.ExternalUI.CircleImageButton.attach("CircleShapeImage",TMCanvas);
+				ThinkMine.Lib.ExternalUI.RectangleImageButton.attach("RectangleShapeImage",TMCanvas);
+				ThinkMine.Lib.ExternalUI.StarImageButton.attach("StarShapeImage",TMCanvas);
+				ThinkMine.Lib.ExternalUI.PolygonImageButton.attach("PolygonShapeImage",TMCanvas);
+				
+				initPaperJSMindMap(1000,600,wrappedEventHandler);
+				
+
+				var ua = new UserAuth("JDJ9354");
+				ua.getAuthentication("JDJ9354","test");
+				
+				var lastDownTarget, canvas;
+
+				
+				canvas = document.getElementById('tmCanvas');
+				
+				
+				
+				document.addEventListener('mousedown', function(event) {
+					lastDownTarget = event.target;			   
+				}, false);
+
+					
+				document.addEventListener('paste', function(event) {			        
+					if(lastDownTarget == canvas) {
+						TMCanvas.onPasteInterface(event);   
+					}			    
+				}, false);
+				
+				
+				/*$('#btn_add_mindmap')[0].href = "javascript : " +
+				"function() { " +
+					"console.log('new mind map'); " +
+					"TMCanvas.initWithNewMindMap(ua); " +
+				"};";
+				var a = $('#btn_add_mindmap');
+				
+	
+				
+				$('#btn_join_mindmap')[0].href = "javascript : " +
+				"function() { " +
+					"console.log('join mind map'); " +
+					"TMCanvas.initWithMindMap('test',ua); " +
+				"};";
+				*/
+				
+			$('#btn_add_mindmap').click(function() {
+				console.log("new mind map");
+				TMCanvas.initWithNewMindMap(ua);
+			});
+			
+			
+			$('#btn_add_mindmap').bind('touchstart',function(e) {
+				console.log("new mind map");
+				TMCanvas.initWithNewMindMap(ua);
+			});
+			
+			$('#btn_join_mindmap').click(function() {
+				console.log("join mind map");
+				TMCanvas.initWithMindMap("test",ua);
+			});
+			
+			$('#btn_join_mindmap').bind('touchstart',function(e) {
+				console.log("join mind map");
+				alert("aaa");
+				TMCanvas.initWithMindMap("test",ua);
+			});
+
+			
+		}	
+	
+	</script>
 	
 
 
