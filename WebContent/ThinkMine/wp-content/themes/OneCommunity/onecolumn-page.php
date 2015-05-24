@@ -7,6 +7,17 @@ Template Name: Full Width
 <script src="/ThinkMineCV/js/ThinkMineLib.js"></script>
 <script src="/ThinkMineCV/js/ThinkMineUILib.js"></script>
 
+<script src="/thidparty/gradx-master/lib/js/jquery.js"></script>
+
+
+<script src="/thidparty/gradx-master/colorpicker/js/colorpicker.js"></script>
+<script src="/thidparty/gradx-master/dom-drag.js"></script>
+
+<script src="/thidparty/gradx-master/gradX.js"></script>
+
+<link type="text/css" rel="stylesheet" href="/thidparty/gradx-master/gradX.css" />
+<link type="text/css" rel="stylesheet" href="/thidparty/gradx-master/colorpicker/css/colorpicker.css" />
+
 <style type='text/css'>
 .maxbutton-1.maxbutton {
   position : relative;
@@ -67,12 +78,36 @@ Template Name: Full Width
 	<div class="page-title"><?php the_title(); ?></div>
 		<?php do_action( 'bp_before_blog_page' );  ?>
 
-
-
+	
+		<a  class="maxbutton-1 maxbutton" href="javascript:void(0);"><span class='mb-text'>Add MindMap</span></a>
 		<div class="page" id="blog-page" role="main">
-			<a  class="maxbutton-1 maxbutton" href="javascript:void(0);"><span class='mb-text'>Add MindMap</span></a>
-			<input type="text" class="color-picker" name="overlay_color" value="#EEE" data-default-color="#effeff" />
-			<canvas id="tmCanvas" height = "800" width="1500"></canvas>	
+			
+			<div id="tmWorkingArea">
+				<div style="display:inline; vertical-align: top;"><canvas id="tmCanvas"  style="border:1px solid #000000;"></canvas></div>
+				<div style="display:inline; vertical-align: middle;"><div id="tm_main_cp"></div></td></div>
+			</div>
+			
+			<script>
+				$('#tm_main_cp').spectrum({
+					move: function(color) {
+						;
+					},
+					change: function() {
+						;
+					},
+					flat: true,
+					showAlpha: true,
+					color: "#ffffff",
+					clickoutFiresChange: true,
+					showInput: true,
+					showButtons: false
+				});
+				
+				$('#tmCanvas')[0].width = $('#blog-page')[0].offsetWidth - $('.sp-container')[0].offsetWidth * 1.1;
+				$('#tmCanvas')[0].height = $('#tmCanvas')[0].offsetWidth * 0.8;
+				$('.sp-container')[0].style.verticalAlign="top";
+		
+			</script>
 
 			<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 
@@ -98,5 +133,7 @@ Template Name: Full Width
 	<?php comments_template(); ?>
 
 	</div><!-- #content -->
+	
+
 
 <?php get_footer(); ?>

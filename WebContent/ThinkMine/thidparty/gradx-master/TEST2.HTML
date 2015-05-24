@@ -1,0 +1,48 @@
+<html>
+
+    <head>
+
+        <title>GradX</title>
+
+        <script src="lib/js/jquery.js"></script>
+        <!--  <script src="lib/js/jquery-ui.js"></script>
+        -->
+
+        <!-- <link type="text/css" rel="stylesheet" href="lib/css/jquery-ui.css" />-->
+        <link type="text/css" rel="stylesheet" href="colorpicker/css/colorpicker.css" />
+        <script src="colorpicker/js/colorpicker.js"></script>
+
+
+    </head>
+
+
+    <body>
+
+        <!--     <input type='text' id="basic" value='red' /> -->
+		<div id="test"></div>
+
+
+	<script>
+		window.onload = function(){
+			$('#test').spectrum({
+					move: function(color) {
+						;
+					},
+					change: function() {
+						;
+					},
+					flat: true,
+					showAlpha: true,
+					color: "#ffffff",
+					clickoutFiresChange: true,
+					showInput: true,
+					showButtons: false
+
+				});
+		}
+	</script>
+
+    </body>
+
+
+</html>
