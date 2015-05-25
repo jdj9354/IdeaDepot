@@ -87,7 +87,6 @@ function linearInterpolation(x1,y1,z1, x2,y2,z2, n){
 	var retArray = new Array();
 	
 	retArray.push([x1,y1,z1]);	
-	
 	if(x2-x1 !=0){	
 		while(count < n){
 			var interpolatedX;
@@ -492,7 +491,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	this.onMouseDownInterface = function(x,y,z){
 		//충돌검사, 모양들 전부 inner interface로 제공 각 타입의 캔버스들이 구현해야함
 		fMovingObject = null;
-		var MindMap = fJobHandler.getMindMap();
+		var MindMap = fJobHandler.getMindMap();		
 		/*if(CreatingCircle.contains(new paper.Point(x,y))){
 			/*var newMindObject = new MindObject(0,0,0,new CircleShape(),new PictureContents("http://cfile22.uf.tistory.com/image/2432574E5215F11118F817"),x,y,0);		
 			newMindObject.DrawMindObject();
@@ -1254,8 +1253,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				console.log("ThinkMineCanvas - addMindObject Error : ContentsTypeDependentInfo Obj is invalid");
 				return;
 			}
-		}
-		
+		}		
 		fSocketHelper.fSocketDataCommuHelperSender.mindObjectCreateSend(fJobHandler.getMindMap().fMindMapId,
 																			UUID.genV4().hexString,
 																			x,
@@ -1459,6 +1457,8 @@ function JobHandler(drawingObj){
 	var fDrawingObj = drawingObj;
 	var fEncoder = new Encoder();
 	var fDecoder = new Decoder();
+	
+	var self = this;
 
 	this.getMindMap = function(){
 		return fMindMap;
@@ -1511,8 +1511,9 @@ function JobHandler(drawingObj){
 		case CODE_MIND_DEL :			
 			handleMindObjectDelEvent(eventCode);			
 			break;
-		case CODE_MIND_MOVE :
-			handleMindObjectMoveEvent(eventCode);			
+		case CODE_MIND_MOVE :	
+			console.log("d");
+			handleMindObjectMoveEvent(eventCode);						
 			break;
 		case CODE_MIND_PUT_INTO :
 			handleMindObjectPutIntoEvent(eventCode);
@@ -1544,6 +1545,7 @@ function JobHandler(drawingObj){
 		case CODE_MIND_CHANGE_PARENT_MIND_MAP :
 			break;
 		default :
+			console.log("asdfafasdf");
 			break;		
 		}
 		return 1;
@@ -1717,7 +1719,7 @@ function JobHandler(drawingObj){
 	var handleMindObjectAddEvent = function(eventCode){
 		for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
 			if(compareIdValue(fMindMap.getMindObjectOnIndex(i).fMindObjectId,eventCode.MOID))
-				return;
+				return;			
 		}
 		
 		var tempShape;
@@ -1837,7 +1839,7 @@ function JobHandler(drawingObj){
 										};
 		var drawingJob = new Array();
 		drawingJob.push(CODE_MIND_ADD);
-		drawingJob.push(tempMindObjectForDrawing);
+		drawingJob.push(tempMindObjectForDrawing);		
 		fDrawingObj.pushNewJob(drawingJob);
 
 
@@ -1847,11 +1849,9 @@ function JobHandler(drawingObj){
 		
 		animWorker.onmessage = function (event){
 			var data = event.data;
-			tempShapeTypeDependentInfoForDrawing = event.data.info;
+			tempShapeTypeDependentInfoForDrawing = event.data.info;			
 			
-			
-			if(data.flag == 0){
-				
+			if(data.flag == 0){				
 				fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
 					{fMindObjectId : tempMindObject.fMindObjectId,
 					fShape : {fShapeType : tempShapeTypeForDrawing,
@@ -2037,8 +2037,8 @@ console.log(now);
 	};
 	
 	var handleMindObjectMoveEvent = function(eventCode){
-		var tempEdgeArrayForDrawing = [];
-		
+		console.log("asdfafasdf");
+		var tempEdgeArrayForDrawing = [];		
 		for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
 			if( compareIdValue(fMindMap.getMindObjectOnIndex(i).fMindObjectId,eventCode.MOID)){
 				
@@ -2117,16 +2117,14 @@ console.log(now);
 											};
 					
 					tempEdgeArrayForDrawing.push(tempEdgeForDrawing);
-				}
-				
+				}				
 				fDrawingObj.pushNewJob([CODE_MIND_MOVE,
 				                        tempMindObjectForDrawing,
 				                        tempEdgeArrayForDrawing,
 				                        pointArray]);
-				
 				break;
 			}
-		}
+		}		
 	};
 	
 	var handleMindObjectPutIntoEvent = function(eventCode){
@@ -2517,15 +2515,17 @@ console.log(now);
 	};
 
 	var handleLatestJob = function(){
-		if(fJobQ.length == 0 || fMutexLocked == true)
+		if(fJobQ.length == 0 || fMutexLocked == true){			
 			return;
+		}
 		fMutexLocked = true;
 		var latestJob = fJobQ[0];
 		fJobQ.splice(0,1);
 		var ret = 0;
 		if(fMindMap != null){
-			if(latestJob.MMID == fMindMap.fMindMapId) 
-				ret = handleEventCode(latestJob);			
+			if(latestJob.MMID == fMindMap.fMindMapId){				
+				ret = handleEventCode(latestJob);						
+			}
 			else {
 				if(latestJob.Code == CODE_MIND_PUT_INTO) {
 					if(latestJob.DMMID == fMindMap.fMindMapId){
@@ -2550,7 +2550,12 @@ console.log(now);
 		
 		var callBackInterface = handleLatestJob;
 		fWorker.onmessage = function (event){
-			callBackInterface();
+			try{
+				callBackInterface();
+			} catch (err) {				
+				self.resetJobHandler();
+			}
+			
 		};
 	};
 	
@@ -3089,10 +3094,10 @@ function DrawingObj(drawingCCInterface){
 	var fIsStarted = false;
 	var fMutexLocked = false;
 	
+	var self = this;
 	
-	this.resetDrawingObj = function(){
-
-		
+	
+	this.resetDrawingObj = function(){		
 		if(fIsStarted){
 			fWorker.terminate();
 			fWorker = null;		
@@ -3101,22 +3106,31 @@ function DrawingObj(drawingCCInterface){
 		fDrawingCCInterface.eraseAll();
 		
 		fDrawingJobQ = null;
-		fDrawingJobQ = new Array();
-		
+		fDrawingJobQ = new Array();		
 		fMutexLocked = false;
 		
 		this.startEventLoop();
 	};
 	
+	this.exceptionRoutine = function(){
+		if(fIsStarted){
+			fWorker.terminate();
+			fWorker = null;		
+		}
+		
+		fDrawingJobQ = null;
+		fDrawingJobQ = new Array();		
+		fMutexLocked = false;	
+	};
+	
 	
 	this.pushNewJob = function(drawingJobObject){
-		while(fMutexLocked){				
+		while(fMutexLocked){	
 			;
 		}
 		////Drawing과 공유하지 않는, 순수 대기리스트 큐가 하나 더필요할듯 ( 순서 보장)
 		fMutexLocked = true;
-		fDrawingJobQ.push(drawingJobObject);
-		console.log(fDrawingJobQ.length);
+		fDrawingJobQ.push(drawingJobObject);		
 		fMutexLocked = false;
 	};
 	
@@ -3452,18 +3466,11 @@ function DrawingObj(drawingCCInterface){
 			return;			
 		
 		fMutexLocked = true;
+		
 		var latestJob = fDrawingJobQ[0];
-		/*console.log("Before Pop : ");
-		for(var i=0; i< fDrawingJobQ.length; i++){
-			console.log("["+i+"] : "+JSON.stringify(fDrawingJobQ[i]));
-		}*/
 		fDrawingJobQ.splice(0,1);
-		//console.log("Poped Item : ");		
-		//console.log(JSON.stringify(latestJob));
 		ret = handleEventCode(latestJob);		
-		if(ret == 0){
-			//오류 메세지 출력 및 MindMap 재 초기화
-		}
+
 		fMutexLocked = false;
 	};
 	this.startEventLoop = function(){
@@ -3471,8 +3478,15 @@ function DrawingObj(drawingCCInterface){
 		fWorker = new Worker(RELATIVE_PATH_DRAWING_WORKER);
 		
 		var callBackInterface = handleLatestJob;
+		var exceptionRoutine = this.exceptionRoutine;
 		fWorker.onmessage = function (event){
-			callBackInterface();			
+			try{				
+				callBackInterface();						
+			}
+			catch (err){		
+				exceptionRoutine();
+				//오류 메세지 출력 및 MindMap 재 초기화
+			}
 		};
 	};
 }

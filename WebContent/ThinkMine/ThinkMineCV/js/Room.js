@@ -148,7 +148,6 @@ function Room(serverAddr, serverPort, userId){
 				}
 			});			
 			RoomSocketIo.on("RoomMessage", function(data){
-				console.log("aaa");
 				self.messageCallBack(data);
 			});
 			
