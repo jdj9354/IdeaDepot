@@ -1511,8 +1511,7 @@ function JobHandler(drawingObj){
 		case CODE_MIND_DEL :			
 			handleMindObjectDelEvent(eventCode);			
 			break;
-		case CODE_MIND_MOVE :	
-			console.log("d");
+		case CODE_MIND_MOVE :				
 			handleMindObjectMoveEvent(eventCode);						
 			break;
 		case CODE_MIND_PUT_INTO :
@@ -2036,8 +2035,7 @@ console.log(now);
 		
 	};
 	
-	var handleMindObjectMoveEvent = function(eventCode){
-		console.log("asdfafasdf");
+	var handleMindObjectMoveEvent = function(eventCode){		
 		var tempEdgeArrayForDrawing = [];		
 		for(var i=0; i<fMindMap.lenOfMindObjectsArray(); i++){
 			if( compareIdValue(fMindMap.getMindObjectOnIndex(i).fMindObjectId,eventCode.MOID)){

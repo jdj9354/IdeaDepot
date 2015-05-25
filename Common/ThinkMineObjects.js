@@ -763,8 +763,7 @@ var getScaledXYZFromCenter = function(prevShapeTypeDependentInfo, changedShapeTy
 	
 	switch(shapeType){
 	case ShapeTypeEnum.Circle :
-		if(prevShapeTypeDependentInfo.fRadius !=0){
-			prevShapeTypeDependentInfo.fRadius = 0;
+		if(prevShapeTypeDependentInfo.fRadius !=0){			
 			xScale = changedShapeTypeDependentInfo.fRadius / prevShapeTypeDependentInfo.fRadius;		
 		}
 		else
