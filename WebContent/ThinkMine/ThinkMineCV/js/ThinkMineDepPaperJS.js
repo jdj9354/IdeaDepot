@@ -28,6 +28,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		var drawingObject = new paper.Path.Circle(position, info.fRadius);		
 		
 		drawingObject.fillColor = generateFillingInfo(drawingObject,info.fFilling);
+		
 		drawingObject.fMindObjectId = mindObjectId;
 		drawingObject.fShape = {fShapeTypeDependentInfo : {fRadius : info.fRadius}};
 						
@@ -76,9 +77,9 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	this.changeFillingOfCircleShape = function(filling, mindObjectId){
 		for(var i=0; i<fShapeObjects.length;i++){
 			if(compareIdValue(fShapeObjects[i].fMindObjectId,mindObjectId)){
+			
 				fShapeObjects[i].fillColor = generateFillingInfo(fShapeObjects[i],filling);
 				
-								
 				paper.view.draw();
 				break;
 			}
@@ -168,6 +169,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 			drawingObject = new paper.Path.Rectangle(rectangle, new paper.Size(10,10));	
 		else
 			drawingObject = new paper.Path.Rectangle(rectangle);	
+
 			
 		//drawingObject.strokeColor = generateFillingInfo(drawingObject,info.fFilling);
 		drawingObject.fillColor = generateFillingInfo(drawingObject,info.fFilling);
@@ -1285,7 +1287,8 @@ function generateFillingInfo(drawingObj,filling){
 	var ret = null;
 	switch (filling.fFillType){
 	case FillingTypeEnum.SimpleColor : 
-		ret = filling.fFillInfo.fColor;
+		var color = new paper.Color(filling.fRed/255, filling.fGreen/255, filling.fBlue/255, filling.fOpacity);
+		ret = color;
 		break;
 	case FillingTypeEnum.Gradient : 		
 		break;
@@ -1293,7 +1296,11 @@ function generateFillingInfo(drawingObj,filling){
 		var stops = [];
 		
 		for(var i=0; i< filling.fFillInfo.fStopInfoArray.length; i+=2){
-			stops.push([filling.fFillInfo.fStopInfoArray[i], filling.fFillInfo.fStopInfoArray[i+1]]);
+			var color = new paper.Color(filling.fFillInfo.fStopInfoArray[i].fRed/255, 
+									filling.fFillInfo.fStopInfoArray[i].fGreen/255, 
+									filling.fFillInfo.fStopInfoArray[i].fBlue/255, 
+									filling.fFillInfo.fStopInfoArray[i].fOpacity);
+			stops.push([color, filling.fFillInfo.fStopInfoArray[i+1]]);
 		}
 		
 		var gradient = new paper.Gradient(stops, false);
@@ -1308,7 +1315,11 @@ function generateFillingInfo(drawingObj,filling){
 		var stops = [];
 		
 		for(var i=0; i< filling.fFillInfo.fStopInfoArray.length; i+=2){
-			stops.push([filling.fFillInfo.fStopInfoArray[i], filling.fFillInfo.fStopInfoArray[i+1]]);
+			var color = new paper.Color(filling.fFillInfo.fStopInfoArray[i].fRed/255, 
+									filling.fFillInfo.fStopInfoArray[i].fGreen/255, 
+									filling.fFillInfo.fStopInfoArray[i].fBlue/255, 
+									filling.fFillInfo.fStopInfoArray[i].fOpacity);
+			stops.push([color, filling.fFillInfo.fStopInfoArray[i+1]]);
 		}
 		
 		var gradient = new paper.Gradient(stops, true);

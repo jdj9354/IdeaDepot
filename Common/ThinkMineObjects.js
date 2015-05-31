@@ -599,14 +599,17 @@ function Filling(){
 
 function SimpleColorFilling(color){
 	this.fFillType = FillingTypeEnum.SimpleColor;
-	this.fFillInfo = {fColor : color};	
+	this.fFillInfo = {fRed : color.fRed,						//0 ~ 255
+						fGreen : color.fGreen,					//0 ~ 255
+						fBlue : color.fBlue,					//0 ~ 255
+						fOpacity : color.fOpacity};				//0.0 ~ 1.0
 }
 SimpleColorFilling.prototype = new Filling();
 SimpleColorFilling.constructor = SimpleColorFilling; 
 
 function GradientFilling(){
 	this.fFillType = FillingTypeEnum.Gradient;
-	this.fFillInfo = {fStopInfoArray : null}; //Even Index : rgb color (#xxxxxx), Odd Index : offset (0.0 ~ 1.0)
+	this.fFillInfo = {fStopInfoArray : null}; //Even Index : SimpleColorFilling, Odd Index : offset (0.0 ~ 1.0)
 }
 GradientFilling.prototype = new Filling();
 GradientFilling.constructor = GradientFilling; 
@@ -625,7 +628,7 @@ function LinearGradientFilling(startX,startY,startZ,endX,endY,endZ,stopInfoArray
 	this.fFillInfo.fEndY = endY;	//Relative coordinate from center
 	this.fFillInfo.fEndZ = endZ;	//Relative coordinate from center
 	
-	this.fFillInfo.fStopInfoArray = stopInfoArray; //Even Index : rgb color (#xxxxxx), Odd Index : offset (0.0 ~ 1.0)
+	this.fFillInfo.fStopInfoArray = stopInfoArray; //Even Index : SimpleColorFilling, Odd Index : offset (0.0 ~ 1.0)
 }
 LinearGradientFilling.prototype = new GradientFilling();
 LinearGradientFilling.constructor = LinearGradientFilling; 
@@ -643,7 +646,7 @@ function RadialGradientFilling(originX,originY,originZ,radiusX,radiusY,radiusZ,s
 	this.fFillInfo.fRadiusY = radiusY;
 	this.fFillInfo.fRadiusZ = radiusZ;
 	
-	this.fFillInfo.fStopInfoArray = stopInfoArray; //Even Index : rgb color (#xxxxxx), Odd Index : offset (0.0 ~ 1.0)
+	this.fFillInfo.fStopInfoArray = stopInfoArray; //Even Index : SimpleColorFilling, Odd Index : offset (0.0 ~ 1.0)
 
 }
 RadialGradientFilling.prototype = new GradientFilling();
