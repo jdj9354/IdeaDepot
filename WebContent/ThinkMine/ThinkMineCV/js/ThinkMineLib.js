@@ -383,7 +383,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		//return fShapeFilling;
 		
 		//test CODE
-		return new RadialGradientFilling(0,0,0,5,5,5,["#FF6C6C",0.2,"#DB0000",0.4,"#D9418C",0.6,"#7F0032",0.8,"#DB00B9",1]);
+		return new RadialGradientFilling(0,0,0,5,5,5,[{fRed:32,fGreen:42,fBlue:255,fOpacity:1.0},0.2,{fRed:77,fGreen:66,fBlue:33,fOpacity:1.0},0.4,{fRed:99,fGreen:100,fBlue:34,fOpacity:1.0},0.6,{fRed:76,fGreen:232,fBlue:255,fOpacity:1.0},0.8,{fRed:78,fGreen:23,fBlue:7,fOpacity:1.0},1]);
 		//return new LinearGradientFilling(-5,-5,-5,5,5,5,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
 		
 	};
