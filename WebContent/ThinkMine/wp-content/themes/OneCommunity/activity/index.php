@@ -19,7 +19,7 @@ get_header( 'buddypress' ); ?>
 
 			<?php do_action( 'bp_before_directory_activity' ); ?>
 
-			<?php if ( !is_user_logged_in() ) : ?>
+			<?php if ( is_user_logged_in() ) : ?>
 
 			<?php _e('You can browse all activities here. Use menu below if you want to browse only specific activities like Group Memberships, New Topics, New Members ...', 'OneCommunity'); ?><br />
 
@@ -27,7 +27,7 @@ get_header( 'buddypress' ); ?>
 
 			<?php do_action( 'bp_before_directory_activity_content' ); ?>
 
-			<?php if ( is_user_logged_in() ) : ?>
+			<?php if ( !is_user_logged_in() ) : ?>
 
 				<?php locate_template( array( 'activity/post-form.php'), true ); ?>
 

@@ -84,9 +84,10 @@ Template Name: Full Width
 			<div id="tmWorkingArea">
 				<a id="btn_add_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Add MindMap (id : test)</span></a>
 				<a id="btn_join_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Join MindMap (id : test)</span></a>
+				
 				<div id="group_div_cp" style="position:relative; top:0px; left:0px; "> 
-					<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div> 
-					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 
+					<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 
+					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div> 
 				</div>
 
 				<div id="group_div_shape" style="margin: 0 auto;">

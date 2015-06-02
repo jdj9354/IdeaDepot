@@ -1287,7 +1287,7 @@ function generateFillingInfo(drawingObj,filling){
 	var ret = null;
 	switch (filling.fFillType){
 	case FillingTypeEnum.SimpleColor : 
-		var color = new paper.Color(filling.fRed/255, filling.fGreen/255, filling.fBlue/255, filling.fOpacity);
+		var color = new paper.Color(filling.fFillInfo.fRed/255, filling.fFillInfo.fGreen/255, filling.fFillInfo.fBlue/255, filling.fFillInfo.fOpacity);
 		ret = color;
 		break;
 	case FillingTypeEnum.Gradient : 		
@@ -1296,10 +1296,10 @@ function generateFillingInfo(drawingObj,filling){
 		var stops = [];
 		
 		for(var i=0; i< filling.fFillInfo.fStopInfoArray.length; i+=2){
-			var color = new paper.Color(filling.fFillInfo.fStopInfoArray[i].fRed/255, 
-									filling.fFillInfo.fStopInfoArray[i].fGreen/255, 
-									filling.fFillInfo.fStopInfoArray[i].fBlue/255, 
-									filling.fFillInfo.fStopInfoArray[i].fOpacity);
+			var color = new paper.Color(filling.fFillInfo.fStopInfoArray[i].fFillInfo.fRed/255, 
+									filling.fFillInfo.fStopInfoArray[i].fFillInfo.fGreen/255, 
+									filling.fFillInfo.fStopInfoArray[i].fFillInfo.fBlue/255, 
+									filling.fFillInfo.fStopInfoArray[i].fFillInfo.fOpacity);
 			stops.push([color, filling.fFillInfo.fStopInfoArray[i+1]]);
 		}
 		
@@ -1315,10 +1315,10 @@ function generateFillingInfo(drawingObj,filling){
 		var stops = [];
 		
 		for(var i=0; i< filling.fFillInfo.fStopInfoArray.length; i+=2){
-			var color = new paper.Color(filling.fFillInfo.fStopInfoArray[i].fRed/255, 
-									filling.fFillInfo.fStopInfoArray[i].fGreen/255, 
-									filling.fFillInfo.fStopInfoArray[i].fBlue/255, 
-									filling.fFillInfo.fStopInfoArray[i].fOpacity);
+			var color = new paper.Color(filling.fFillInfo.fStopInfoArray[i].fFillInfo.fRed/255, 
+									filling.fFillInfo.fStopInfoArray[i].fFillInfo.fGreen/255, 
+									filling.fFillInfo.fStopInfoArray[i].fFillInfo.fBlue/255, 
+									filling.fFillInfo.fStopInfoArray[i].fFillInfo.fOpacity);
 			stops.push([color, filling.fFillInfo.fStopInfoArray[i+1]]);
 		}
 		
