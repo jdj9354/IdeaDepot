@@ -743,7 +743,7 @@
             destroy: destroy,
             container: container
         };
-
+		
         spect.id = spectrums.push(spect) - 1;
 
         return spect;

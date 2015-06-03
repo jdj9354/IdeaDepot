@@ -151,6 +151,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 	var fInputTextName = null;
 	var fInputElement = null;
+	var self = this;
 	this.attach = function(inputTextName) {
 		if(fInputTextName != null){
 			fInputElement.onkeypress = null;
@@ -166,7 +167,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 			return;
 		}
 		fInputElement.onkeypress = validateNumber;
-		fInputElement.onkeyup = preventLargerThan255;
+		fInputElement.onkeyup = onKeyUp;
 		
 	};
 	this.setRedValue = function(value){
@@ -180,6 +181,13 @@ ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 			fInputElement.value = value;
 		}
 	};
+	this.getRedValue = function(){
+		return fInputElement.value;
+
+	};
+	this.valueChangedCallback = function(){
+		
+	};
 	function validateNumber(evt){
 		var charCode = (evt.which) ? evt.which : evt.keyCode
 		if (charCode > 31 && (charCode < 48 || charCode > 57))
@@ -192,11 +200,16 @@ ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 		if(parseInt(element.value) > 255)
 			element.value = 255;
 	}	
+	function onKeyUp(){
+		preventLargerThan255();
+		self.valueChangedCallback();
+	}	
 }
 
 ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 	var fInputTextName = null;
 	var fInputElement = null;
+	var self = this;
 	this.attach = function(inputTextName) {
 		if(fInputTextName != null){
 			fInputElement.onkeypress = null;
@@ -212,7 +225,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 			return;
 		}
 		fInputElement.onkeypress = validateNumber;
-		fInputElement.onkeyup = preventLargerThan255;
+		fInputElement.onkeyup = onKeyUp;
 		
 	};
 	this.setGreenValue = function(value){
@@ -226,6 +239,13 @@ ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 			fInputElement.value = value;
 		}
 	};
+	this.getGreenValue = function(){
+		return fInputElement.value;
+
+	};
+	this.valueChangedCallback = function(){
+		
+	};
 	function validateNumber(evt){
 		var charCode = (evt.which) ? evt.which : evt.keyCode
 		if (charCode > 31 && (charCode < 48 || charCode > 57))
@@ -238,11 +258,16 @@ ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 		if(parseInt(element.value) > 255)
 			element.value = 255;
 	}	
+	function onKeyUp(){
+		preventLargerThan255();
+		self.valueChangedCallback();
+	}	
 }
 
 ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 	var fInputTextName = null;
 	var fInputElement = null;
+	var self = this;
 	this.attach = function(inputTextName) {
 		if(fInputTextName != null){
 			fInputElement.onkeypress = null;
@@ -258,7 +283,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 			return;
 		}
 		fInputElement.onkeypress = validateNumber;
-		fInputElement.onkeyup = preventLargerThan255;
+		fInputElement.onkeyup = onKeyUp;
 		
 	};
 	this.setBlueValue = function(value){
@@ -272,6 +297,12 @@ ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 			fInputElement.value = value;
 		}
 	};
+	this.getBlueValue = function(){
+		return fInputElement.value;
+	};
+	this.valueChangedCallback = function(){
+		
+	};
 	function validateNumber(evt){
 		var charCode = (evt.which) ? evt.which : evt.keyCode
 		if (charCode > 31 && (charCode < 48 || charCode > 57))
@@ -284,6 +315,70 @@ ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 		if(parseInt(element.value) > 255)
 			element.value = 255;
 	}	
+	function onKeyUp(){
+		preventLargerThan255();
+		self.valueChangedCallback();
+	}
+}
+
+ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput = new function(undefined){
+	var fInputTextName = null;
+	var fInputElement = null;
+	var self = this;
+	this.attach = function(inputTextName) {
+		if(fInputTextName != null){
+			fInputElement.onkeypress = null;
+			fInputElement.onkeyup = null;
+		}
+		
+		fInputTextName = inputTextName;
+		
+		fInputElement = document.getElementById(fInputTextName);
+		
+		if(fInputElement == null || fInputElement == undefined){
+			console.log("There is no such fInputElement element " + fInputTextName);
+			return;
+		}
+		fInputElement.onkeypress = validateNumber;
+		fInputElement.onkeyup = onKeyUp;
+		
+	};
+	this.setAlphaValue = function(value){
+		if(fInputElement == null || fInputElement == undefined)
+			return;
+		if(isNaN(value))
+			return;
+		else{
+			if(value <0 || value >1)
+				return;
+			fInputElement.value = value;
+		}
+	};
+	this.getAlphaValue = function(){
+		return fInputElement.value;
+
+	};
+	this.valueChangedCallback = function(){
+		
+	};
+	function validateNumber(evt){
+		var charCode = (evt.which) ? evt.which : evt.keyCode;
+		if ((charCode != 46) && (charCode > 31 && (charCode < 48 || charCode > 57)))
+			return false;
+		if(charCode == 46 && fInputElement.value.lastIndexOf(".") != -1)
+			return false;
+		return true;
+	}
+	
+	function preventLargerThanOne(){
+		var element = document.getElementById(fInputTextName);
+		if(parseFloat(element.value) > 1.0)
+			element.value = 1.0;
+	}	
+	function onKeyUp(){
+		preventLargerThanOne();
+		self.valueChangedCallback();
+	}
 }
 
 

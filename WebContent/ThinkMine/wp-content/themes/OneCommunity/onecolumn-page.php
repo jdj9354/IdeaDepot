@@ -87,9 +87,9 @@ Template Name: Full Width
 				
 				<div id="group_div_cp" style="position:relative; top:0px; left:0px; "> 
 					<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 
-					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div> 
+					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>
 				</div>
-
+ 
 				<div id="group_div_shape" style="margin: 0 auto;">
 					<div id="div_circleshape" width='50' height='50'  style="float:left;">
 						<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
@@ -138,9 +138,10 @@ Template Name: Full Width
 						ThinkMine.Lib.ExternalUI.ColorPickerRedInput.setRedValue(rgb.r);
 						ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.setGreenValue(rgb.g);
 						ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(rgb.b);
+						ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.setAlphaValue(rgb.a);
 					},
 					change: function() {
-						;
+						var a = 3;
 					},
 					flat: true,
 					showAlpha: true,
@@ -160,21 +161,28 @@ Template Name: Full Width
 				var sppc = $('.sp-picker-container')[0];
 				
 				var inputElement = document.createElement('input');
+				inputElement.value = 255;
 				inputElement.id="color_picker_red_input";
 				sppc.appendChild(inputElement);				
 				var br = document.createElement('br');
 				sppc.appendChild(br);
 				
-				inputElement = document.createElement('input');				
+				inputElement = document.createElement('input');	
+				inputElement.value = 255;				
 				sppc.appendChild(inputElement);				
 				inputElement.id="color_picker_green_input";
 				br = document.createElement('br');
 				sppc.appendChild(br);
 				
 				inputElement = document.createElement('input');
+				inputElement.value = 255;
 				inputElement.id="color_picker_blue_input";
 				sppc.appendChild(inputElement);	
-				
+
+				inputElement = document.createElement('input');
+				inputElement.value = 1.0;
+				inputElement.id="color_picker_alpha_input";
+				sppc.appendChild(inputElement);					
 				
 				gradX("#tm_gradient_cp");
 				
@@ -239,6 +247,35 @@ Template Name: Full Width
 					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.attach("color_picker_red_input");
 					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.attach("color_picker_green_input");
 					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input");
+					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.attach("color_picker_alpha_input");
+					
+					//var main_cp = $('#tm_main_cp .sp-input');
+					
+					var hiddenColorInput = $('#tm_main_cp').siblings('.sp-container').find('.sp-input');			
+				//	console.log(hiddenColorInput[0].value);
+
+					var colorTextInputChangeCallback = function (){
+						var color = {r : ThinkMine.Lib.ExternalUI.ColorPickerRedInput.getRedValue(),
+									 g : ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.getGreenValue(),
+									 b : ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.getBlueValue(),
+									 a : ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.getAlphaValue()
+						};
+						var colorString;
+						if (color.a == 1.0){
+							colorString = "rgb(" + color.r+ "," + color.g + "," + color.b + ")";
+						}
+						else{							
+							colorString = "rgba(" + color.r+ "," + color.g + "," + color.b + "," + color.a + ")";
+						}
+						hiddenColorInput[0].value = colorString;
+						
+						var changeEvent = jQuery.Event('change');						
+						hiddenColorInput.trigger('change');
+					}
+					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.valueChangedCallback = colorTextInputChangeCallback;
+					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.valueChangedCallback = colorTextInputChangeCallback;
+					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.valueChangedCallback = colorTextInputChangeCallback;
+					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.valueChangedCallback = colorTextInputChangeCallback;
 					
 					ThinkMine.Lib.ExternalUI.CircleImageButton.attach("CircleShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.RectangleImageButton.attach("RectangleShapeImage",TMCanvas);
