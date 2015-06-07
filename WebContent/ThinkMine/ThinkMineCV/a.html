@@ -96,6 +96,10 @@ ev.target.appendChild(document.getElementById(data));
 </head>
 
 <body onLoad="on();">	
+			<div class="TransformDemoDiv TransformDemoDivOriginal TransformDemoDivFadeOut" aria-haspopup="true">
+			Hover over or tap to trigger animation.</div>
+</div>
+
     <ul id="pageTabs">
         <!-- hrefs of the links point to the ids of the pages' contents -->
         <li><a href="#page1">choose page1</a></li>
@@ -108,6 +112,55 @@ ev.target.appendChild(document.getElementById(data));
 
     <!-- page 2 message colored in blue -->
     <p id="page2" style="font-size:40px;color:blue">This is page 2</p>
+<style media="screen" type="text/css">
+.TransformDemoDivOriginal {
+    background-color: #FFB900;
+    color: black;
+}
+@-webkit-keyframes fadeOut {
+    from {
+        opacity: 1;
+        }
+    to {
+        opacity: 0;
+        }
+    }
+@-moz-keyframes fadeOut {
+    from {
+        opacity: 1;
+        }
+    to {
+        opacity: 0;
+        }
+    }
+@-o-keyframes fadeOut {
+    from {
+        opacity: 1;
+        }
+    to {
+        opacity: 0;
+        }
+    }
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        }
+    to {
+        opacity: 0;
+        }
+    }
+.TransformDemoDivFadeOut:hover {
+    -webkit-animation-duration: 2s;
+    -moz-animation-duration: 2s;
+    -o-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-name: fadeOut;
+    -moz-animation-name: fadeOut;
+    -o-animation-name: fadeOut;
+    animation-name: fadeOut;
+}
+</style>
+
 </body>
 
 

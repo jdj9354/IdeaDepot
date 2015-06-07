@@ -10,6 +10,8 @@ Template Name: Full Width
 <script src="/thidparty/gradx-master/lib/js/jquery.js"></script>
 <script src="/thidparty/gradx-master/colorpicker/js/colorpicker.js"></script>
 
+<script src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/js/EDMHandler.js"></script>
+
 <style type='text/css'>
 .maxbutton-1.maxbutton {
 	position : relative;
@@ -65,15 +67,23 @@ Template Name: Full Width
 
 .maxbutton-1.maxbutton:hover .mb-text {
 	color : #fff; 
-}
-  
-
-
-  
+}  
   </style>
+	<div id="group_div_cp" draggable="false" 
+			onmousedown="ElementDragAndMoveEventHandler.dragstart(this, event)" 
+			onmousemove = "ElementDragAndMoveEventHandler.drag(this, event);" 
+			onmouseup="ElementDragAndMoveEventHandler.dragend(this, event);" 
+			ontouchstart="ElementDragAndMoveEventHandler.touchDragstart(this, event);" 
+			ontouchmove="ElementDragAndMoveEventHandler.touchDrag(this, event);" 
+			ontouchend="ElementDragAndMoveEventHandler.touchDragend(this, event);" 
+			style="border:1px solid #000000; position:absolute; top:0px; left:0px; "> 
+			
+		<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 
+		<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>
+		
+	</div>
 
 <?php get_header(); ?>
-
 	<div id="content">
 
 	<div class="page-title"><?php the_title(); ?></div>
@@ -83,13 +93,8 @@ Template Name: Full Width
 			
 			<div id="tmWorkingArea">
 				<a id="btn_add_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Add MindMap (id : test)</span></a>
-				<a id="btn_join_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Join MindMap (id : test)</span></a>
-				
-				<div id="group_div_cp" style="position:relative; top:0px; left:0px; "> 
-					<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 
-					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>
-				</div>
- 
+				<a id="btn_join_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Join MindMap (id : test)</span></a>			
+
 				<div id="group_div_shape" style="margin: 0 auto;">
 					<div id="div_circleshape" width='50' height='50'  style="float:left;">
 						<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
@@ -130,8 +135,7 @@ Template Name: Full Width
 			</style>
 
 			
-			<script>				
-				
+			<script>							
 				$('#tm_main_cp').spectrum({
 					move: function(color) {
 						var rgb = color.toRgb();
