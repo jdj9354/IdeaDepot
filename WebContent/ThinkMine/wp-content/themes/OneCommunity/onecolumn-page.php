@@ -166,25 +166,41 @@ Template Name: Full Width
 				
 				var inputElement = document.createElement('input');
 				inputElement.value = 255;
+				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
+				inputElement.addEventListener("touchstart",function(event){event.stopPropagation();});
+				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});
+				inputElement.addEventListener("touchmove",function(event){event.stopPropagation();});
 				inputElement.id="color_picker_red_input";
 				sppc.appendChild(inputElement);				
 				var br = document.createElement('br');
 				sppc.appendChild(br);
 				
 				inputElement = document.createElement('input');	
-				inputElement.value = 255;				
-				sppc.appendChild(inputElement);				
+				inputElement.value = 255;			
+				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
+				inputElement.addEventListener("touchstart",function(event){event.stopPropagation();});				
+				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});
+				inputElement.addEventListener("touchmove",function(event){event.stopPropagation();});
+				sppc.appendChild(inputElement);							
 				inputElement.id="color_picker_green_input";
 				br = document.createElement('br');
 				sppc.appendChild(br);
 				
 				inputElement = document.createElement('input');
 				inputElement.value = 255;
+				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
+				inputElement.addEventListener("touchstart",function(event){event.stopPropagation();});
+				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});
+				inputElement.addEventListener("touchmove",function(event){event.stopPropagation();});
 				inputElement.id="color_picker_blue_input";
 				sppc.appendChild(inputElement);	
 
 				inputElement = document.createElement('input');
 				inputElement.value = 1.0;
+				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
+				inputElement.addEventListener("touchstart",function(event){event.stopPropagation();});
+				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});
+				inputElement.addEventListener("touchmove",function(event){event.stopPropagation();});
 				inputElement.id="color_picker_alpha_input";
 				sppc.appendChild(inputElement);					
 				
