@@ -36,7 +36,7 @@ ElementDragAndMoveEventHandler = new function(undefined){
 			target.style.top =  event.touches.item(0).pageY - target.relativeCoord.y + "px";		
 		}
 		this.touchDragend = function(target,event) {    	
-			event.preventDefault();
+			//event.preventDefault();
 			delete target.relativeCoord;		
 		};	
 }
