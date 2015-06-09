@@ -206,6 +206,11 @@ Template Name: Full Width
 				
 				gradX("#tm_gradient_cp");
 				
+				//$("#tm_gradient_cp > .gradx_container")[0].addEventListener("mousedown",function(event){event.stopPropagation();});
+				//$("#tm_gradient_cp > .gradx_container")[0].addEventListener("touchstart",function(event){event.stopPropagation();});
+				//$("#tm_gradient_cp > .gradx_container")[0].addEventListener("mousemove",function(event){event.stopPropagation();});
+				//$("#tm_gradient_cp > .gradx_container")[0].addEventListener("touchmove",function(event){event.stopPropagation();});				
+				
 				var group_div_cp_child_maxW = -1;
 				var group_div_cp_child_maxH = -1;
 				

@@ -14,6 +14,7 @@ var Drag = {
     init : function(o, oRoot, minX, maxX, minY, maxY, bSwapHorzRef, bSwapVertRef, fXMapper, fYMapper)
     {
         o.onmousedown	= Drag.start;
+		o.ontouchstart = Drag.start;
 
         o.hmode			= bSwapHorzRef ? false : true ;
         o.vmode			= bSwapVertRef ? false : true ;
@@ -35,7 +36,11 @@ var Drag = {
 
         o.root.onDragStart	= new Function();
         o.root.onDragEnd	= new Function();
-        o.root.onDrag		= new Function();
+        o.root.onDrag		= new Function();	
+ 
+		
+		o.addEventListener("mousedown",function(event){event.stopPropagation();});
+		o.addEventListener("touchstart",function(event){event.stopPropagation();});		
     },
 
     start : function(e)
@@ -47,7 +52,14 @@ var Drag = {
         var y = parseInt(o.vmode ? o.root.style.top  : o.root.style.bottom);
         var x = parseInt(o.hmode ? o.root.style.left : o.root.style.right );
         o.root.onDragStart(x, y);
-
+		
+		
+		//for TouchEvent
+		if(e.clientX == undefined){
+			e.clientX = e.touches.item(0).clientX.toFixed(0);
+			e.clientY = e.touches.item(0).clientY.toFixed(0)				
+		}
+			
         o.lastMouseX	= e.clientX;
         o.lastMouseY	= e.clientY;
 
@@ -67,9 +79,11 @@ var Drag = {
             if (o.minY != null) o.maxMouseY = -o.minY + e.clientY + y;
             if (o.maxY != null) o.minMouseY = -o.maxY + e.clientY + y;
         }
-
         document.onmousemove	= Drag.drag;
         document.onmouseup	= Drag.end;
+			
+		document.ontouchmove	= Drag.drag;
+        document.ontouchend		= Drag.end;
 
         return false;
     },
@@ -105,7 +119,12 @@ var Drag = {
         //but what happens if @color is not in RGB ? :(
         var rgb = gradx.get_rgb_obj(color);
         gradx.cp.spectrum("set",rgb);
-
+		
+		//for TouchEvent
+		if(e.clientX == undefined){
+			e.clientX = e.touches.item(0).clientX.toFixed(0);
+			e.clientY = e.touches.item(0).clientY.toFixed(0);			
+		}
 
         var ey	= e.clientY;
         var ex	= e.clientX;
@@ -134,9 +153,11 @@ var Drag = {
     },
 
     end : function()
-    {
+    {		
         document.onmousemove = null;
         document.onmouseup   = null;
+		document.ontouchmove	= null;
+        document.ontouchend		= null;
         Drag.obj.root.onDragEnd(	parseInt(Drag.obj.root.style[Drag.obj.hmode ? "left" : "right"]), 
             parseInt(Drag.obj.root.style[Drag.obj.vmode ? "top" : "bottom"]));
         Drag.obj = null;
