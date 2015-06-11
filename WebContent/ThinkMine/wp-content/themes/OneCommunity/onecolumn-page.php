@@ -68,19 +68,73 @@ Template Name: Full Width
 .maxbutton-1.maxbutton:hover .mb-text {
 	color : #fff; 
 }  
+
+.resizing_div_anim {
+    transition: background-color 1s ease, width 1s, height 1s transform 2s; /* Animation time */
+    -webkit-transition: background-color 1s ease, width 1s, height 1s transform 2s; /* For Safari */	
+	-webkit-transform: scale(0.395); /* Safari */
+    transform: scale(0.395);
+}
+
+
+.shrink {
+-webkit-animation: cssShrinkAnimation 1s ;
+-moz-animation: cssShrinkAnimation 1s ;
+-o-animation: cssShrinkAnimation 1s ;
+}
+@-webkit-keyframes cssShrinkAnimation {
+from { -webkit-transform:scale(1) ; }
+to { -webkit-transform:scale(0.395) ; }
+}
+@-moz-keyframes cssShrinkAnimation {
+from { -moz-transform:scale(1); }
+to { -moz-transform:  scale(0.395) ; }
+}
+@-o-keyframes cssShrinkAnimation {
+from { -o-transform:scale(1); }
+to { -o-transform:scale(0.395); }
+}
+
+.expand {
+-webkit-animation: cssExpandAnimation 1s ;
+-moz-animation: cssExpandAnimation 1s ;
+-o-animation: cssExpandAnimation 1s ;
+}
+@-webkit-keyframes cssExpandAnimation {
+from { -webkit-transform:scale(0.395) ; }
+to { -webkit-transform:scale(1) ; }
+}
+@-moz-keyframes cssExpandAnimation {
+from { -moz-transform:scale(0.395); }
+to { -moz-transform:  scale(1) ; }
+}
+@-o-keyframes cssExpandAnimation {
+from { -o-transform:scale(0.395); }
+to { -o-transform:scale(1); }
+}
+
+
+
+
+
   </style>
-	<div id="group_div_cp" draggable="false" 
-			onmousedown="ElementDragAndMoveEventHandler.dragstart(this, event)" 
-			onmousemove = "ElementDragAndMoveEventHandler.drag(this, event);" 
-			onmouseup="ElementDragAndMoveEventHandler.dragend(this, event);" 
-			ontouchstart="ElementDragAndMoveEventHandler.touchDragstart(this, event);" 
-			ontouchmove="ElementDragAndMoveEventHandler.touchDrag(this, event);" 
-			ontouchend="ElementDragAndMoveEventHandler.touchDragend(this, event);" 
-			style="border:1px solid #000000; position:absolute; top:0px; left:0px; "> 
-			
-		<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 
-		<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>
+	<div id="group_div_toolbar" style="border:1px solid #000000; position:absolute; top:0px; left:0px; "
+				onmousedown="ElementDragAndMoveEventHandler.dragstart(this, event)" 
+				onmousemove = "ElementDragAndMoveEventHandler.drag(this, event);" 
+				onmouseup="ElementDragAndMoveEventHandler.dragend(this, event);" 
+				ontouchstart="ElementDragAndMoveEventHandler.touchDragstart(this, event);" 
+				ontouchmove="ElementDragAndMoveEventHandler.touchDrag(this, event);" 
+				ontouchend="ElementDragAndMoveEventHandler.touchDragend(this, event);" 
+				style="border:1px solid #000000; position:absolute; top:0px; left:0px; ">
 		
+		<div id="group_div_cp" draggable="false" style='display: inline-block;' > 				
+			<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 
+			<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>						
+		</div>
+		<div style='display: inline-block;' align="top">
+				<button id="test_btn" style="border:1px solid #000000; position:absolute;">
+		</div>
+				
 	</div>
 
 <?php get_header(); ?>
@@ -226,6 +280,34 @@ Template Name: Full Width
 				
 				gdcp.style.width = group_div_cp_child_maxW + "px";
 				gdcp.style.height = group_div_cp_child_maxH + "px";
+				
+				//$('#group_div_cp').addClass('shrink');
+				
+				var testBtn = document.getElementById("test_btn");
+				testBtn.addEventListener("mousedown",function(event){
+					var btnObj = event.target;
+					if(btnObj.isExpanded == undefined)
+						btnObj.isExpanded = true;
+					
+					var targetObj = document.getElementById("group_div_cp");
+					
+					if(btnObj.isExpanded){
+						var a = $('#group_div_cp');
+				//		$('#group_div_cp').removeClass('resizing_div_anim');
+						$('#group_div_cp').addClass('resizing_div_anim');
+						//targetObj.style.width = "0px";
+						//targetObj.style.height = "0px";
+						//targetObj.style.background = "red";
+					}
+					else{
+						//targetObj.style.width = group_div_cp_child_maxW + "px";
+						//targetObj.style.height = group_div_cp_child_maxH + "px";				
+					//	//targetObj.style.background = "green";
+						$('#group_div_cp').removeClass('expand');
+						$('#group_div_cp').addClass('expand');
+					}	
+					btnObj.isExpanded = !btnObj.isExpanded;
+				});
 				
 				
 				var TMCanvas;

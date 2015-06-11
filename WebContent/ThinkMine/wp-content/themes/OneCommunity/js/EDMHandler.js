@@ -17,8 +17,7 @@ ElementDragAndMoveEventHandler = new function(undefined){
 		this.dragend = function(target,event) {    	
 			event.preventDefault();
 			delete target.relativeCoord;			
-		};
-		
+		};		
 		
 		this.touchDragstart = function(target, event) {		
 	//		event.preventDefault();
