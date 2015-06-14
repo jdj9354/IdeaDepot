@@ -69,73 +69,39 @@ Template Name: Full Width
 	color : #fff; 
 }  
 
-.resizing_div_anim {
-    transition: background-color 1s ease, width 1s, height 1s transform 2s; /* Animation time */
-    -webkit-transition: background-color 1s ease, width 1s, height 1s transform 2s; /* For Safari */	
-	-webkit-transform: scale(0.395); /* Safari */
-    transform: scale(0.395);
-}
+</style>
+<link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
-
-.shrink {
--webkit-animation: cssShrinkAnimation 1s ;
--moz-animation: cssShrinkAnimation 1s ;
--o-animation: cssShrinkAnimation 1s ;
-}
-@-webkit-keyframes cssShrinkAnimation {
-from { -webkit-transform:scale(1) ; }
-to { -webkit-transform:scale(0.395) ; }
-}
-@-moz-keyframes cssShrinkAnimation {
-from { -moz-transform:scale(1); }
-to { -moz-transform:  scale(0.395) ; }
-}
-@-o-keyframes cssShrinkAnimation {
-from { -o-transform:scale(1); }
-to { -o-transform:scale(0.395); }
-}
-
-.expand {
--webkit-animation: cssExpandAnimation 1s ;
--moz-animation: cssExpandAnimation 1s ;
--o-animation: cssExpandAnimation 1s ;
-}
-@-webkit-keyframes cssExpandAnimation {
-from { -webkit-transform:scale(0.395) ; }
-to { -webkit-transform:scale(1) ; }
-}
-@-moz-keyframes cssExpandAnimation {
-from { -moz-transform:scale(0.395); }
-to { -moz-transform:  scale(1) ; }
-}
-@-o-keyframes cssExpandAnimation {
-from { -o-transform:scale(0.395); }
-to { -o-transform:scale(1); }
-}
-
-
-
-
-
-  </style>
-	<div id="group_div_toolbar" style="border:1px solid #000000; position:absolute; top:0px; left:0px; "
-				onmousedown="ElementDragAndMoveEventHandler.dragstart(this, event)" 
-				onmousemove = "ElementDragAndMoveEventHandler.drag(this, event);" 
-				onmouseup="ElementDragAndMoveEventHandler.dragend(this, event);" 
-				ontouchstart="ElementDragAndMoveEventHandler.touchDragstart(this, event);" 
-				ontouchmove="ElementDragAndMoveEventHandler.touchDrag(this, event);" 
-				ontouchend="ElementDragAndMoveEventHandler.touchDragend(this, event);" 
-				style="border:1px solid #000000; position:absolute; top:0px; left:0px; ">
-		
-		<div id="group_div_cp" draggable="false" style='display: inline-block;' > 				
-			<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 
-			<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>						
+<div id="group_div_toolbar" style="border:1px solid #000000; position:absolute; top:0px; left:0px;"
+			onmousedown="ElementDragAndMoveEventHandler.dragstart(this, event)" 
+			onmousemove = "ElementDragAndMoveEventHandler.drag(this, event);" 
+			onmouseup="ElementDragAndMoveEventHandler.dragend(this, event);" 
+			ontouchstart="ElementDragAndMoveEventHandler.touchDragstart(this, event);" 
+			ontouchmove="ElementDragAndMoveEventHandler.touchDrag(this, event);" 
+			ontouchend="ElementDragAndMoveEventHandler.touchDragend(this, event);" 
+			style="border:1px solid #000000; position:absolute; top:0px; left:0px; ">
+	<div id ="group_div_toolbar_col" style='display: inline-block;  width:500px; height:250px;'>
+		<div style='position:absolute;'>
+			<div id="group_div_cp" draggable="false" style='top:0px; left:0px; border:1px solid #000000;' > 				
+				<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 
+				<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>						
+			</div>
+			<div style='width:100px; height:100px; bottom:0px; right:0px; position:absolute;'>
+				<button id="test_btn" style="border:1px solid #000000; position:absolute; width:100px; height:100px;">
+			</div>
 		</div>
-		<div style='display: inline-block;' align="top">
-				<button id="test_btn" style="border:1px solid #000000; position:absolute;">
-		</div>
-				
 	</div>
+	<div id ="group_div_toolbar_col2" style='display: inline-block; width:400px; height:300px; border:1px solid #000000;'>
+		<div style='position:absolute;'>
+			<div id="group_div_cp2" draggable="false" style='top:0px; left:0px; width:300px; height:200px; border:1px solid #000000;' > 									
+			</div>
+			<div style='width:100px; height:100px; bottom:0px; left:0px; position:absolute;'>
+				<button id="test_btn2" style="border:1px solid #000000; position:absolute; width:100px; height:100px;">
+			</div>
+		</div>
+	</div>
+			
+</div>
 
 <?php get_header(); ?>
 	<div id="content">
@@ -281,30 +247,81 @@ to { -o-transform:scale(1); }
 				gdcp.style.width = group_div_cp_child_maxW + "px";
 				gdcp.style.height = group_div_cp_child_maxH + "px";
 				
-				//$('#group_div_cp').addClass('shrink');
-				
+								
 				var testBtn = document.getElementById("test_btn");
+				
+				$('#group_div_cp').addClass('resizing_div_anim_expand_rb');
+				$('#group_div_cp2').addClass('resizing_div_anim_expand_lb');
+			//	$('#group_div_toolbar').addClass('auto_whfit_anim');
+				
 				testBtn.addEventListener("mousedown",function(event){
 					var btnObj = event.target;
 					if(btnObj.isExpanded == undefined)
 						btnObj.isExpanded = true;
 					
-					var targetObj = document.getElementById("group_div_cp");
-					
+					var targetObj = document.getElementById("group_div_cp");					
+
 					if(btnObj.isExpanded){
-						var a = $('#group_div_cp');
-				//		$('#group_div_cp').removeClass('resizing_div_anim');
-						$('#group_div_cp').addClass('resizing_div_anim');
-						//targetObj.style.width = "0px";
-						//targetObj.style.height = "0px";
-						//targetObj.style.background = "red";
+						var width_cp = $('#group_div_cp').width();
+						var height_cp = $('#group_div_cp').height();					
+
+						
+						
+
+						
+						$('#group_div_cp').toggleClass('resizing_div_anim_expand_rb');
+						$('#group_div_cp').toggleClass('resizing_div_anim_shrink_rb');
+						
+						//$('#group_div_toolbar').width($('#group_div_toolbar').width() - width_cp);
+						//$('#group_div_toolbar').height($('#group_div_toolbar').height() - height_cp);
+						
+						var offset = $("#group_div_toolbar").offset();
+					///	$("#group_div_toolbar").css("left", offset.left + width_cp);
+					//	$("#group_div_toolbar").css("top", offset.top + height_cp);
 					}
 					else{
-						//targetObj.style.width = group_div_cp_child_maxW + "px";
-						//targetObj.style.height = group_div_cp_child_maxH + "px";				
-					//	//targetObj.style.background = "green";
-						$('#group_div_cp').removeClass('expand');
-						$('#group_div_cp').addClass('expand');
+					//	$('#group_div_toolbar').width($('#group_div_toolbar').width() - $('#group_div_cp').width());
+						//$('#group_div_toolbar').height($('#group_div_toolbar').height() - $('#group_div_cp').height());
+						
+						$('#group_div_cp').removeClass('resizing_div_anim_shrink_rb');						
+						$('#group_div_cp').toggleClass('resizing_div_anim_expand_rb');	
+					}	
+					btnObj.isExpanded = !btnObj.isExpanded;
+				});
+				
+				var testBtn2 = document.getElementById("test_btn2");
+				
+				testBtn2.addEventListener("mousedown",function(event){
+					var btnObj = event.target;
+					if(btnObj.isExpanded == undefined)
+						btnObj.isExpanded = true;
+					
+					var targetObj = document.getElementById("group_div_cp2");					
+
+					if(btnObj.isExpanded){
+						var width_cp = $('#group_div_cp2').width();
+						var height_cp = $('#group_div_cp2').height();					
+
+						
+						
+
+						
+						$('#group_div_cp2').toggleClass('resizing_div_anim_expand_lb');
+						$('#group_div_cp2').toggleClass('resizing_div_anim_shrink_lb');
+						
+						//$('#group_div_toolbar').width($('#group_div_toolbar').width() - width_cp);
+						//$('#group_div_toolbar').height($('#group_div_toolbar').height() - height_cp);
+						
+						var offset = $("#group_div_toolbar").offset();
+					///	$("#group_div_toolbar").css("left", offset.left + width_cp);
+					//	$("#group_div_toolbar").css("top", offset.top + height_cp);
+					}
+					else{
+					//	$('#group_div_toolbar').width($('#group_div_toolbar').width() - $('#group_div_cp').width());
+						//$('#group_div_toolbar').height($('#group_div_toolbar').height() - $('#group_div_cp').height());
+						
+						$('#group_div_cp2').removeClass('resizing_div_anim_shrink_lb');						
+						$('#group_div_cp2').toggleClass('resizing_div_anim_expand_lb');	
 					}	
 					btnObj.isExpanded = !btnObj.isExpanded;
 				});

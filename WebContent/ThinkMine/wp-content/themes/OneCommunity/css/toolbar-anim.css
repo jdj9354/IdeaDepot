@@ -1,0 +1,75 @@
+.resizing_div_anim_shrink_rb {
+    transition: transform 1s; /* Animation time */
+    -webkit-transition: transform 1s; /* For Safari */	
+	-webkit-transform: scale(0); /* Safari */
+    transform: scale(0);
+	transform-origin: 100% 100%;
+}
+
+.resizing_div_anim_expand_rb {
+    transition: transform 1s; /* Animation time */
+    -webkit-transition: transform 1s; /* For Safari */	
+	-webkit-transform: scale(1); /* Safari */
+    transform: scale(1);
+	transform-origin: 100% 100%;
+}
+
+
+
+.resizing_div_anim_shrink_rt {
+    transition: transform 1s; /* Animation time */
+    -webkit-transition: transform 1s; /* For Safari */	
+	-webkit-transform: scale(0); /* Safari */
+    transform: scale(0);
+	transform-origin: 100% 0%;
+}
+
+.resizing_div_anim_expand_rt {
+    transition: transform 1s; /* Animation time */
+    -webkit-transition: transform 1s; /* For Safari */	
+	-webkit-transform: scale(1); /* Safari */
+    transform: scale(1);
+	transform-origin: 100% 0%;
+}
+
+
+
+.resizing_div_anim_shrink_lb {
+    transition: transform 1s; /* Animation time */
+    -webkit-transition: transform 1s; /* For Safari */	
+	-webkit-transform: scale(0); /* Safari */
+    transform: scale(0);
+	transform-origin: 0% 100%;
+}
+
+.resizing_div_anim_expand_lb {
+    transition: transform 1s; /* Animation time */
+    -webkit-transition: transform 1s; /* For Safari */	
+	-webkit-transform: scale(1); /* Safari */
+    transform: scale(1);
+	transform-origin: 0% 100%;
+}
+
+
+
+.resizing_div_anim_shrink_lt {
+    transition: transform 1s; /* Animation time */
+    -webkit-transition: transform 1s; /* For Safari */	
+	-webkit-transform: scale(0); /* Safari */
+    transform: scale(0);
+	transform-origin: 0% 0%;
+}
+
+.resizing_div_anim_expand_lt {
+    transition: transform 1s; /* Animation time */
+    -webkit-transition: transform 1s; /* For Safari */	
+	-webkit-transform: scale(1); /* Safari */
+    transform: scale(1);
+	transform-origin: 0% 0%;
+}
+
+
+.auto_whfit_anim{
+	transition : width 1s; height 1s, left 1s, top 1s;
+	-webkit-transition: width 1s; height 1s, left 1s, top 1s;
+}
