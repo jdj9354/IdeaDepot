@@ -72,34 +72,81 @@ Template Name: Full Width
 </style>
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
-<div id="group_div_toolbar" style="border:1px solid #000000; position:absolute; top:0px; left:0px;"
+<div class="group_div_toolbar" style="border:1px solid #000000; position:absolute; top:0px; left:0px;"
 			onmousedown="ElementDragAndMoveEventHandler.dragstart(this, event)" 
 			onmousemove = "ElementDragAndMoveEventHandler.drag(this, event);" 
 			onmouseup="ElementDragAndMoveEventHandler.dragend(this, event);" 
 			ontouchstart="ElementDragAndMoveEventHandler.touchDragstart(this, event);" 
 			ontouchmove="ElementDragAndMoveEventHandler.touchDrag(this, event);" 
-			ontouchend="ElementDragAndMoveEventHandler.touchDragend(this, event);" 
-			style="border:1px solid #000000; position:absolute; top:0px; left:0px; ">
-	<div id ="group_div_toolbar_col" style='display: inline-block;  width:500px; height:250px;'>
-		<div style='position:absolute;'>
-			<div id="group_div_cp" draggable="false" style='top:0px; left:0px; border:1px solid #000000;' > 				
-				<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 
-				<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>						
+			ontouchend="ElementDragAndMoveEventHandler.touchDragend(this, event);">
+	<div class ="group_div_toolbar_row" id="first_row" style='display:flex;'>
+		<div class="group_div_toolbar_col" id="first_row_first_col" >
+			<div style='position:absolute; '>
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000; position:absolute' > 				
+					<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 									
+				</div>			
+				<button class="adj_btn" style="border:1px solid #000000; position:absolute; overflow:hidden;">Color Picker</button>			
 			</div>
-			<div style='width:100px; height:100px; bottom:0px; right:0px; position:absolute;'>
-				<button id="test_btn" style="border:1px solid #000000; position:absolute; width:100px; height:100px;">
+		</div>
+		<div class="group_div_toolbar_col"  id="first_row_second_col">
+			<div style='position:absolute;'>
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000; position:absolute' > 
+					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>	
+				</div>			
+				<button class="adj_btn" style="border:1px solid #000000; position:absolute; overflow:hidden;">Gradient Color Picker</button>
 			</div>
 		</div>
 	</div>
-	<div id ="group_div_toolbar_col2" style='display: inline-block; width:400px; height:300px; border:1px solid #000000;'>
-		<div style='position:absolute;'>
-			<div id="group_div_cp2" draggable="false" style='top:0px; left:0px; width:300px; height:200px; border:1px solid #000000;' > 									
+	<div class ="group_div_toolbar_row" id="second_row" style='display:flex;'>
+		<div class="group_div_toolbar_col"  id="second_row_first_col">
+			<div style='position:absolute;'>
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000; position:absolute'  > 
+					<div id="group_div_shape" style="margin: 0 auto; width:200; height:200px"  >
+							<div id="div_circleshape" width='50' height='50'  style="float:left;">
+								<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
+							</div>
+							<div id="div_rectangleshape" width='50' height='50'  style="float:left;">
+								<img src="/ThinkMineCV/res/RectangleShape.png" id="RectangleShapeImage" width='50' height='50' />
+							</div>
+							<div id="div_starshape" width='50' height='50' style="float:left;">
+								<img src="/ThinkMineCV/res/StarShape.png" id="StarShapeImage" width='50' height='50' />
+							</div>
+							<div id="div_polygonshape" width='50' height='50'>
+								<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
+							</div>
+					</div>
+				</div>			
+				<button class="adj_btn" style="border:1px solid #000000; position:absolute; overflow:hidden;">Select Shape</button>
 			</div>
-			<div style='width:100px; height:100px; bottom:0px; left:0px; position:absolute;'>
-				<button id="test_btn2" style="border:1px solid #000000; position:absolute; width:100px; height:100px;">
+		</div>
+		<div class="group_div_toolbar_col"  id="second_row_second_col">
+			<div style='position:absolute;'>
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000; position:absolute'  > 
+					<div id="group_div_contents" style="margin: 0 auto; width:250; height:250px"  >
+							<div id="div_textcontents" width='50' height='50'  style="float:left;">
+								<img src="/ThinkMineCV/res/TextContents.png" id="TextContentsImage" width='50' height='50' />
+							</div>
+							<div id="div_imagecontents" width='50' height='50'  style="float:left;">
+								<img src="/ThinkMineCV/res/ImageContents.jpg" id="ImageContentsImage" width='50' height='50' />
+							</div>
+							<div id="moviecontents" width='50' height='50' style="float:left;">
+								<img src="/ThinkMineCV/res/MovieContents.png" id="MovieContentsImage" width='50' height='50' />
+							</div>
+							<div id="soundcontents" width='50' height='50'>
+								<img src="/ThinkMineCV/res/SoundContents.png" id="SoundContentsImage" width='50' height='50' />
+							</div>
+							<div id="webcontents" width='50' height='50'>
+								<img src="/ThinkMineCV/res/WebPreviewContents.png" id="WebPreviewContentsImage" width='50' height='50' />
+							</div>
+					</div>
+				</div>			
+				<button class="adj_btn" style="border:1px solid #000000; position:absolute; overflow:hidden;">Select Contents Type</button>
 			</div>
 		</div>
 	</div>
+
+	
+	
 			
 </div>
 
@@ -115,20 +162,7 @@ Template Name: Full Width
 				<a id="btn_add_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Add MindMap (id : test)</span></a>
 				<a id="btn_join_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Join MindMap (id : test)</span></a>			
 
-				<div id="group_div_shape" style="margin: 0 auto;">
-					<div id="div_circleshape" width='50' height='50'  style="float:left;">
-						<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
-					</div>
-					<div id="div_rectangleshape" width='50' height='50'  style="float:left;">
-						<img src="/ThinkMineCV/res/RectangleShape.png" id="RectangleShapeImage" width='50' height='50' />
-					</div>
-					<div id="div_starshape" width='50' height='50' style="float:left;">
-						<img src="/ThinkMineCV/res/StarShape.png" id="StarShapeImage" width='50' height='50' />
-					</div>
-					<div id="div_polygonshape" width='50' height='50'>
-						<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
-					</div>
-				</div>		
+				
 	
 				
 				<canvas id="tmCanvas" style="border:1px solid #000000;"></canvas>
@@ -224,108 +258,122 @@ Template Name: Full Width
 				inputElement.id="color_picker_alpha_input";
 				sppc.appendChild(inputElement);					
 				
-				gradX("#tm_gradient_cp");
+				gradX("#tm_gradient_cp");				
+
+
+				var maxWidth = -1;
+				var totalHeight = 0;
 				
-				//$("#tm_gradient_cp > .gradx_container")[0].addEventListener("mousedown",function(event){event.stopPropagation();});
-				//$("#tm_gradient_cp > .gradx_container")[0].addEventListener("touchstart",function(event){event.stopPropagation();});
-				//$("#tm_gradient_cp > .gradx_container")[0].addEventListener("mousemove",function(event){event.stopPropagation();});
-				//$("#tm_gradient_cp > .gradx_container")[0].addEventListener("touchmove",function(event){event.stopPropagation();});				
+				var toolBar = $('.group_div_toolbar');				
+
 				
-				var group_div_cp_child_maxW = -1;
-				var group_div_cp_child_maxH = -1;
+				var all_cols = $('.group_div_toolbar_col');
 				
-				var gdcp = $('#group_div_cp')[0];
-				
-				
-				for(var i=0; i<gdcp.childElementCount; i++){
-					if(gdcp.children[i].offsetWidth > group_div_cp_child_maxW)
-						group_div_cp_child_maxW = gdcp.children[i].offsetWidth;
-					if(gdcp.children[i].offsetHeight > group_div_cp_child_maxH)
-						group_div_cp_child_maxH = gdcp.children[i].offsetHeight;					
+				for(var i=0; i<all_cols.length; i++){					
+					
+					var group_div_cp_child_maxW = -1;
+					var group_div_cp_child_maxH = -1;
+					
+					var curRowElement = $('#'+all_cols[i].id+'.group_div_toolbar_col >> .element_div');
+					
+					for(var j=0; j<curRowElement[0].childElementCount; j++){
+						if(curRowElement[0].children[j].offsetWidth > group_div_cp_child_maxW)
+							group_div_cp_child_maxW = curRowElement[0].children[j].offsetWidth;
+						if(curRowElement[0].children[j].offsetHeight > group_div_cp_child_maxH)
+							group_div_cp_child_maxH = curRowElement[0].children[j].offsetHeight;	
+					}
+					
+					all_cols[i].style.width = '100px';
+					all_cols[i].style.height = '100px';
+					
+				//	curRowElement.addClass('resizing_div_anim_expand_lt');
+					$('#'+all_cols[i].id+'.group_div_toolbar_col').addClass('auto_whfit_anim');						
+					
+					var curAdjButton = $('#'+all_cols[i].id+'.group_div_toolbar_col>> .adj_btn');
+					curAdjButton.addClass('auto_whfit_anim');
+					curAdjButton.width('100px');
+					curAdjButton.height('100px');
+					
+					curAdjButton[0].rowContainerId = curAdjButton[0].parentElement.parentElement.id;
+					
+					curAdjButton[0].adjMaxWidth = group_div_cp_child_maxW + "px";
+					curAdjButton[0].adjMaxHeight = group_div_cp_child_maxH + "px";
+					
+					curAdjButton[0].addEventListener("mousedown",function(event){
+						
+						if(event.target.isExpanded == undefined)
+							event.target.isExpanded = false;
+						
+												
+						var scaleTargetObj = $(".group_div_toolbar >> #" + this.rowContainerId + " >> .element_div");
+						var resizeTargetObj = $(".group_div_toolbar >> #" + this.rowContainerId);
+
+						if(this.isExpanded){	
+						
+							toolBar[0].curWidth -= resizeTargetObj.width() - 100;
+							toolBar[0].curHeight -= resizeTargetObj.height() - 100;
+							
+							toolBar[0].style.width = toolBar[0].curWidth + "px";
+							toolBar[0].style.height = toolBar[0].curHeight + "px";	
+						
+							scaleTargetObj.toggleClass('resizing_div_anim_expand_lt');
+							scaleTargetObj.toggleClass('resizing_div_anim_shrink_lt');	
+							
+							if(this.originalW == undefined){
+								this.originalW = resizeTargetObj.width();
+								this.originalH = resizeTargetObj.height();								
+							}						
+							
+							if(this.originalBtnW == undefined){
+								this.originalBtnW = this.style.width;
+								this.originalBtnH = this.style.height;								
+							}									
+
+							
+							this.style.width = "100px";
+							this.style.height = "100px";								
+							
+							resizeTargetObj.width(this.style.width);
+							resizeTargetObj.height(this.style.height);
+							
+
+						}
+						else{
+							
+							var adjMaxWidthNumber = parseInt(this.adjMaxWidth);//this.adjMaxWidth.substring(0, this.adjMaxWidth.lastIndexOf("px")-1).Number();
+							var adjMaxHeightNumber =parseInt(this.adjMaxHeight); //this.adjMaxHeight.substring(0, this.adjMaxHeight.lastIndexOf("px")-1).Number();
+							
+							toolBar[0].curWidth += adjMaxWidthNumber - 100;
+							toolBar[0].curHeight += adjMaxHeightNumber - 100;
+							
+							toolBar[0].style.width = toolBar[0].curWidth + "px";
+							toolBar[0].style.height = toolBar[0].curHeight + "px";	
+							
+							scaleTargetObj.toggleClass('resizing_div_anim_shrink_lt');						
+							scaleTargetObj.toggleClass('resizing_div_anim_expand_lt');	
+							
+							resizeTargetObj.width(this.adjMaxWidth);
+							resizeTargetObj.height(this.adjMaxHeight);
+							
+							this.style.width = this.originalBtnW;
+							this.style.height = this.originalBtnH;							
+							
+						}	
+						this.isExpanded = !this.isExpanded;
+					});				
 				}
 				
-				gdcp.style.width = group_div_cp_child_maxW + "px";
-				gdcp.style.height = group_div_cp_child_maxH + "px";
-				
-								
-				var testBtn = document.getElementById("test_btn");
-				
-				$('#group_div_cp').addClass('resizing_div_anim_expand_rb');
-				$('#group_div_cp2').addClass('resizing_div_anim_expand_lb');
-			//	$('#group_div_toolbar').addClass('auto_whfit_anim');
-				
-				testBtn.addEventListener("mousedown",function(event){
-					var btnObj = event.target;
-					if(btnObj.isExpanded == undefined)
-						btnObj.isExpanded = true;
-					
-					var targetObj = document.getElementById("group_div_cp");					
+				for(var i=0; i<toolBar[0].childElementCount; i++){					
+					if(toolBar[0].children[i].offsetWidth > maxWidth)
+						maxWidth = toolBar[0].children[i].offsetWidth;	
+					totalHeight += toolBar[0].children[i].offsetHeight;
+				}	
 
-					if(btnObj.isExpanded){
-						var width_cp = $('#group_div_cp').width();
-						var height_cp = $('#group_div_cp').height();					
+				toolBar[0].style.width = maxWidth + "px";
+				toolBar[0].style.height = totalHeight + "px";	
 
-						
-						
-
-						
-						$('#group_div_cp').toggleClass('resizing_div_anim_expand_rb');
-						$('#group_div_cp').toggleClass('resizing_div_anim_shrink_rb');
-						
-						//$('#group_div_toolbar').width($('#group_div_toolbar').width() - width_cp);
-						//$('#group_div_toolbar').height($('#group_div_toolbar').height() - height_cp);
-						
-						var offset = $("#group_div_toolbar").offset();
-					///	$("#group_div_toolbar").css("left", offset.left + width_cp);
-					//	$("#group_div_toolbar").css("top", offset.top + height_cp);
-					}
-					else{
-					//	$('#group_div_toolbar').width($('#group_div_toolbar').width() - $('#group_div_cp').width());
-						//$('#group_div_toolbar').height($('#group_div_toolbar').height() - $('#group_div_cp').height());
-						
-						$('#group_div_cp').removeClass('resizing_div_anim_shrink_rb');						
-						$('#group_div_cp').toggleClass('resizing_div_anim_expand_rb');	
-					}	
-					btnObj.isExpanded = !btnObj.isExpanded;
-				});
-				
-				var testBtn2 = document.getElementById("test_btn2");
-				
-				testBtn2.addEventListener("mousedown",function(event){
-					var btnObj = event.target;
-					if(btnObj.isExpanded == undefined)
-						btnObj.isExpanded = true;
-					
-					var targetObj = document.getElementById("group_div_cp2");					
-
-					if(btnObj.isExpanded){
-						var width_cp = $('#group_div_cp2').width();
-						var height_cp = $('#group_div_cp2').height();					
-
-						
-						
-
-						
-						$('#group_div_cp2').toggleClass('resizing_div_anim_expand_lb');
-						$('#group_div_cp2').toggleClass('resizing_div_anim_shrink_lb');
-						
-						//$('#group_div_toolbar').width($('#group_div_toolbar').width() - width_cp);
-						//$('#group_div_toolbar').height($('#group_div_toolbar').height() - height_cp);
-						
-						var offset = $("#group_div_toolbar").offset();
-					///	$("#group_div_toolbar").css("left", offset.left + width_cp);
-					//	$("#group_div_toolbar").css("top", offset.top + height_cp);
-					}
-					else{
-					//	$('#group_div_toolbar').width($('#group_div_toolbar').width() - $('#group_div_cp').width());
-						//$('#group_div_toolbar').height($('#group_div_toolbar').height() - $('#group_div_cp').height());
-						
-						$('#group_div_cp2').removeClass('resizing_div_anim_shrink_lb');						
-						$('#group_div_cp2').toggleClass('resizing_div_anim_expand_lb');	
-					}	
-					btnObj.isExpanded = !btnObj.isExpanded;
-				});
-				
+				toolBar[0].curWidth = maxWidth;
+				toolBar[0].curHeight = totalHeight;
 				
 				var TMCanvas;
 				var wrappedEventHandler;
