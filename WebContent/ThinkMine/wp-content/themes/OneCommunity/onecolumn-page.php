@@ -72,7 +72,7 @@ Template Name: Full Width
 </style>
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
-<div class="group_div_toolbar" style="border:1px solid #000000; position:absolute; top:0px; left:0px;"
+<div class="group_div_toolbar" style="border:1px solid #000000; position:absolute; "
 			onmousedown="ElementDragAndMoveEventHandler.dragstart(this, event)" 
 			onmousemove = "ElementDragAndMoveEventHandler.drag(this, event);" 
 			onmouseup="ElementDragAndMoveEventHandler.dragend(this, event);" 
@@ -81,26 +81,27 @@ Template Name: Full Width
 			ontouchend="ElementDragAndMoveEventHandler.touchDragend(this, event);">
 	<div class ="group_div_toolbar_row" id="first_row" style='display:flex;'>
 		<div class="group_div_toolbar_col" id="first_row_first_col" >
-			<div style='position:absolute; '>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000; position:absolute' > 				
+			<div>
+				<button class="adj_btn" style="border:1px solid #000000;overflow:hidden;">Color Picker</button>
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'> 				
 					<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 									
-				</div>			
-				<button class="adj_btn" style="border:1px solid #000000; position:absolute; overflow:hidden;">Color Picker</button>			
+				</div>									
 			</div>
 		</div>
 		<div class="group_div_toolbar_col"  id="first_row_second_col">
-			<div style='position:absolute;'>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000; position:absolute' > 
+			<div>
+				<button class="adj_btn" style="border:1px solid #000000; overflow:hidden;">Gradient Color Picker</button>
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;' > 
 					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>	
-				</div>			
-				<button class="adj_btn" style="border:1px solid #000000; position:absolute; overflow:hidden;">Gradient Color Picker</button>
+				</div>					
 			</div>
 		</div>
 	</div>
 	<div class ="group_div_toolbar_row" id="second_row" style='display:flex;'>
 		<div class="group_div_toolbar_col"  id="second_row_first_col">
-			<div style='position:absolute;'>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000; position:absolute'  > 
+			<div>
+				<button class="adj_btn" style="border:1px solid #000000;overflow:hidden;">Select Shape</button>
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'> 
 					<div id="group_div_shape" style="margin: 0 auto; width:200; height:200px"  >
 							<div id="div_circleshape" width='50' height='50'  style="float:left;">
 								<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
@@ -115,13 +116,13 @@ Template Name: Full Width
 								<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
 							</div>
 					</div>
-				</div>			
-				<button class="adj_btn" style="border:1px solid #000000; position:absolute; overflow:hidden;">Select Shape</button>
+				</div>						
 			</div>
 		</div>
 		<div class="group_div_toolbar_col"  id="second_row_second_col">
-			<div style='position:absolute;'>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000; position:absolute'  > 
+			<div>
+				<button class="adj_btn" style="border:1px solid #000000;overflow:hidden;">Select Contents Type</button>
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'  > 
 					<div id="group_div_contents" style="margin: 0 auto; width:250; height:250px"  >
 							<div id="div_textcontents" width='50' height='50'  style="float:left;">
 								<img src="/ThinkMineCV/res/TextContents.png" id="TextContentsImage" width='50' height='50' />
@@ -139,8 +140,7 @@ Template Name: Full Width
 								<img src="/ThinkMineCV/res/WebPreviewContents.png" id="WebPreviewContentsImage" width='50' height='50' />
 							</div>
 					</div>
-				</div>			
-				<button class="adj_btn" style="border:1px solid #000000; position:absolute; overflow:hidden;">Select Contents Type</button>
+				</div>							
 			</div>
 		</div>
 	</div>
@@ -265,9 +265,13 @@ Template Name: Full Width
 				var totalHeight = 0;
 				
 				var toolBar = $('.group_div_toolbar');				
+				toolBar.addClass('auto_whfit_anim');
 
 				
 				var all_cols = $('.group_div_toolbar_col');
+				
+				var adjButtonWidth = 70;
+				var adjButtonHeight = 30;
 				
 				for(var i=0; i<all_cols.length; i++){					
 					
@@ -283,21 +287,20 @@ Template Name: Full Width
 							group_div_cp_child_maxH = curRowElement[0].children[j].offsetHeight;	
 					}
 					
-					all_cols[i].style.width = '100px';
-					all_cols[i].style.height = '100px';
-					
-				//	curRowElement.addClass('resizing_div_anim_expand_lt');
+					all_cols[i].style.width = adjButtonWidth + 'px';
+					all_cols[i].style.height = adjButtonHeight + 'px';					
+
 					$('#'+all_cols[i].id+'.group_div_toolbar_col').addClass('auto_whfit_anim');						
 					
 					var curAdjButton = $('#'+all_cols[i].id+'.group_div_toolbar_col>> .adj_btn');
 					curAdjButton.addClass('auto_whfit_anim');
-					curAdjButton.width('100px');
-					curAdjButton.height('100px');
+					curAdjButton.width(adjButtonWidth+'px');
+					curAdjButton.height(adjButtonHeight+'px');
 					
 					curAdjButton[0].rowContainerId = curAdjButton[0].parentElement.parentElement.id;
 					
-					curAdjButton[0].adjMaxWidth = group_div_cp_child_maxW + "px";
-					curAdjButton[0].adjMaxHeight = group_div_cp_child_maxH + "px";
+					curAdjButton[0].adjMaxWidth = (adjButtonWidth > group_div_cp_child_maxW ? adjButtonWidth : group_div_cp_child_maxW) + "px";
+					curAdjButton[0].adjMaxHeight = (adjButtonHeight + group_div_cp_child_maxH) + "px";
 					
 					curAdjButton[0].addEventListener("mousedown",function(event){
 						
@@ -308,56 +311,28 @@ Template Name: Full Width
 						var scaleTargetObj = $(".group_div_toolbar >> #" + this.rowContainerId + " >> .element_div");
 						var resizeTargetObj = $(".group_div_toolbar >> #" + this.rowContainerId);
 
-						if(this.isExpanded){	
-						
-							toolBar[0].curWidth -= resizeTargetObj.width() - 100;
-							toolBar[0].curHeight -= resizeTargetObj.height() - 100;
-							
-							toolBar[0].style.width = toolBar[0].curWidth + "px";
-							toolBar[0].style.height = toolBar[0].curHeight + "px";	
-						
+						if(this.isExpanded){							
 							scaleTargetObj.toggleClass('resizing_div_anim_expand_lt');
-							scaleTargetObj.toggleClass('resizing_div_anim_shrink_lt');	
-							
-							if(this.originalW == undefined){
-								this.originalW = resizeTargetObj.width();
-								this.originalH = resizeTargetObj.height();								
-							}						
-							
-							if(this.originalBtnW == undefined){
-								this.originalBtnW = this.style.width;
-								this.originalBtnH = this.style.height;								
-							}									
-
-							
-							this.style.width = "100px";
-							this.style.height = "100px";								
+							scaleTargetObj.toggleClass('resizing_div_anim_shrink_lt');						
 							
 							resizeTargetObj.width(this.style.width);
-							resizeTargetObj.height(this.style.height);
-							
+							resizeTargetObj.height(this.style.height);							
 
+							toolBar[0].style.width	 = 'auto';		
+							toolBar[0].style.height= 'auto';
 						}
-						else{
-							
-							var adjMaxWidthNumber = parseInt(this.adjMaxWidth);//this.adjMaxWidth.substring(0, this.adjMaxWidth.lastIndexOf("px")-1).Number();
-							var adjMaxHeightNumber =parseInt(this.adjMaxHeight); //this.adjMaxHeight.substring(0, this.adjMaxHeight.lastIndexOf("px")-1).Number();
-							
-							toolBar[0].curWidth += adjMaxWidthNumber - 100;
-							toolBar[0].curHeight += adjMaxHeightNumber - 100;
-							
-							toolBar[0].style.width = toolBar[0].curWidth + "px";
-							toolBar[0].style.height = toolBar[0].curHeight + "px";	
+						else{							
+							var adjMaxWidthNumber = parseInt(this.adjMaxWidth);
+							var adjMaxHeightNumber =parseInt(this.adjMaxHeight); 							
+
+							toolBar[0].style.width	 = 'auto';		
+							toolBar[0].style.height= 'auto';
 							
 							scaleTargetObj.toggleClass('resizing_div_anim_shrink_lt');						
 							scaleTargetObj.toggleClass('resizing_div_anim_expand_lt');	
 							
 							resizeTargetObj.width(this.adjMaxWidth);
-							resizeTargetObj.height(this.adjMaxHeight);
-							
-							this.style.width = this.originalBtnW;
-							this.style.height = this.originalBtnH;							
-							
+							resizeTargetObj.height(this.adjMaxHeight);							
 						}	
 						this.isExpanded = !this.isExpanded;
 					});				
@@ -369,11 +344,37 @@ Template Name: Full Width
 					totalHeight += toolBar[0].children[i].offsetHeight;
 				}	
 
-				toolBar[0].style.width = maxWidth + "px";
-				toolBar[0].style.height = totalHeight + "px";	
-
 				toolBar[0].curWidth = maxWidth;
 				toolBar[0].curHeight = totalHeight;
+				
+				var tmCanvas = $('#tmCanvas');
+				
+				toolBar.css({
+					"width" : maxWidth,
+					"height" : totalHeight,
+					"left" : tmCanvas.position().left,
+					"top" : $('#tmCanvas').offset().top
+				});
+				
+				toolBar[0].screenXOffset = tmCanvas.position().left;
+				toolBar[0].screenYOffset = toolBar.offset().top;
+				
+				var screenOffsetCalFunc = function(event){
+					toolBar[0].screenXOffset = toolBar.offset().left - $(window).scrollLeft();
+					toolBar[0].screenYOffset = toolBar.offset().top - $(window).scrollTop();
+				};
+				
+				toolBar[0].addEventListener('mousemove',screenOffsetCalFunc);
+				toolBar[0].addEventListener('touchmove',screenOffsetCalFunc);
+				
+				$(window).scroll(function(){
+					var newPositionX =  toolBar[0].screenXOffset + $(window).scrollLeft();
+					var newPositionY =  toolBar[0].screenYOffset + $(window).scrollTop();					
+					toolBar
+						.stop()
+						.animate({"top":  newPositionY, "left" : newPositionX}, "fastest" );
+
+				});
 				
 				var TMCanvas;
 				var wrappedEventHandler;
@@ -421,10 +422,8 @@ Template Name: Full Width
 					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input");
 					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.attach("color_picker_alpha_input");
 					
-					//var main_cp = $('#tm_main_cp .sp-input');
 					
 					var hiddenColorInput = $('#tm_main_cp').siblings('.sp-container').find('.sp-input');			
-				//	console.log(hiddenColorInput[0].value);
 
 					var colorTextInputChangeCallback = function (){
 						var color = {r : ThinkMine.Lib.ExternalUI.ColorPickerRedInput.getRedValue(),
