@@ -381,6 +381,61 @@ ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput = new function(undefined){
 	}
 }
 
+ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
+	var fGradXDivName = null;
+	var fGradXDiv = null;
+	var fTmCanvas = null;		
+	
+	var fAngle = 0;
+	var fStopInfo = [];
+	
+	this.attach = function(gradXDivName,tmCanvas) {
+		if(fGradXDivName != null){
+			console.log("GradXDiv was already attached");
+			return;		
+		}
+		
+		
+		fGradXDivName = gradXDivName;
+		fGradXDiv = document.getElementById(gradXDivName);
+		
+		fTmCanvas = tmCanvas;
+		
+		if(fGradXDiv == null || fGradXDiv == undefined){
+			console.log("There is no such gradX element " + gradXDivName);
+			return;
+		}		
+		
+		gradX("#"+fGradXDivName,{
+			change: onChangeCallBack
+		});	
+	};
+	
+	var onChangeCallBack = function(slider){
+		for(var i=0; i<slider.length; i++){
+			var rgbaArray = parseColor(slider[i][0]);
+			var rgbaObj = {r : parseInt(rgbaArray[0]),
+							g : parseInt(rgbaArray[1]),
+							b : parseInt(rgbaArray[2])
+							};
+			if(rgbaArray.length == 3)
+				rgbaObj.a = 1.0;
+			else
+				rgbaObj.a = parseFloat(rgbaArray[3]);
+			
+			var offset = slider[i][1]/100;
+			fStopInfo[i*2] = rgbaObj;
+			fStopInfo[i*2+1] = offset;
+		}
+		var passingInfo = {fAngle : fAngle,
+							fStopInfo : fStopInfo
+							};
+		fTmCanvas.setShapeFilling(passingInfo);
+	};
+	var parseColor = function (input) {
+		return input.split("(")[1].split(")")[0].split(",");
+	}
+}
 
 ThinkMine.Lib.ExternalUI.RecentColor = new function(undefined){
 	var fRecentColorDivName = null;

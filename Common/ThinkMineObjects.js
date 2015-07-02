@@ -4,14 +4,14 @@ const ShapeTypeEnum = {
 	Ellipse : "EllipseShape",
 	Rectangle : "RectangleShape",
 	Star : "StarShape",
-	Polygon : "PolygonShape",	
+	Polygon : "PolygonShape"
 };
 
 const FillingTypeEnum = {	
 	SimpleColor : "SimpleColorFill",
 	Gradient : "GradientFill",
 	LinearGradient : "LinearGradientFill",
-	RadialGradient : "RadialGradientFill",	
+	RadialGradient : "RadialGradientFill"	
 };
 
 const ContentsTypeEnum = {

@@ -273,7 +273,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	var fMenuAvailableShape = [ShapeTypeEnum.Circle,
 								ShapeTypeEnum.Rectangle,
 								ShapeTypeEnum.Star,
-								ShapeTypeEnum.Polygon];
+								ShapeTypeEnum.Polygon];	
 								
 	var fMenuSelectedShape = fMenuAvailableShape[0];								
 	var fMenuInsertedSDI = null;
@@ -286,6 +286,14 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 									
 	var fMenuSelectedContents = fMenuAvailableContents[0];									
 	var fMenuInsertedCDI = null;
+	
+	
+	var fMenuAvailableFilling = [FillingTypeEnum.SimpleColor,
+									FillingTypeEnum.Gradient,
+									FillingTypeEnum.LinearGradient ,
+									FillingTypeEnum.RadialGradient 
+								];
+	var fMenuSelectedFilling = fMenuAvailableFilling[3];	
 	//var fMenuInsertedCDI = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
 	
 	var fMenuInsertedCV = "";
@@ -375,20 +383,51 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	};
 	
 	
-	this.setShapeFilling = function(filling){
-		fShapeFilling = filling;
+	this.setShapeFilling = function(fillingInfo){
+		switch(fMenuSelectedFilling){
+		case fMenuAvailableFilling[0]:
+			break;
+		case fMenuAvailableFilling[1]:
+			break;
+		case fMenuAvailableFilling[2]:
+			var stops = fillingInfo.fStopInfo;
+			var angle = fillingInfo.fAngle;
+			
+			//need to implement angle related Code ( Angle will be related with StartPoint,EndPoint,etc...)
+			var insertStops = [];
+			
+			for(var i=0; i<stops.length; i+=2){
+				insertStops.push(new SimpleColorFilling({fRed:stops[i].r,fGreen:stops[i].g,fBlue:stops[i].b,fOpacity:stops[i].a}));
+				insertStops.push(stops[i+1]);
+			}
+			fShapeFilling =  new LinearGradientFilling(0,0,0,0,0,0,insertStops);
+			break;
+		case fMenuAvailableFilling[3]:
+			var stops = fillingInfo.fStopInfo;
+			var angle = fillingInfo.fAngle;
+			
+			//need to implement angle related Code ( Angle will be related with StartPoint,EndPoint,etc...)
+			var insertStops = [];
+			
+			for(var i=0; i<stops.length; i+=2){
+				insertStops.push(new SimpleColorFilling({fRed:stops[i].r,fGreen:stops[i].g,fBlue:stops[i].b,fOpacity:stops[i].a}));
+				insertStops.push(stops[i+1]);
+			}
+			fShapeFilling =  new RadialGradientFilling(0,0,0,0,0,0,insertStops);
+			break;
+		}
 	};
 	
 	this.getShapeFilling = function(){
 		//return fShapeFilling;
-		
+		return fShapeFilling;
 		//test CODE
-		return new RadialGradientFilling(0,0,0,5,5,5,
+		/*return new RadialGradientFilling(0,0,0,5,5,5,
 										[new SimpleColorFilling({fRed:32,fGreen:42,fBlue:255,fOpacity:1.0})	,0.2,
 										new SimpleColorFilling({fRed:77,fGreen:66,fBlue:33,fOpacity:1.0})	,0.4,
 										new SimpleColorFilling({fRed:99,fGreen:100,fBlue:34,fOpacity:1.0})	,0.6,
 										new SimpleColorFilling({fRed:76,fGreen:232,fBlue:255,fOpacity:1.0})	,0.8,
-										new SimpleColorFilling({fRed:78,fGreen:23,fBlue:7,fOpacity:1.0})	,1]);
+										new SimpleColorFilling({fRed:78,fGreen:23,fBlue:7,fOpacity:1.0})	,1]);*/
 		//return new LinearGradientFilling(-5,-5,-5,5,5,5,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
 		
 	};
@@ -421,6 +460,14 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	this.setMenuInsertedCV = function(contentsValue){
 		fMenuInsertedCV = contentsValue;
+	};
+	
+	this.setMenuSelectedFilling = function(fillingIndex){
+		fMenuSelectedFilling = fMenuAvailableFilling[fillingIndex];
+	};
+	
+	this.getMenuSelectedFilling = function(){
+		return fMenuAvailableFilling;
 	};
 	
 	//Event Listener Interface

@@ -94,9 +94,12 @@
 
         <script>
 
-            gradX("#gradX", {
+            var a = gradX("#gradX", {
                 targets: [".target"]
             });
+			a.change = function(){
+				console.log("change");
+			};
 
         </script>
 

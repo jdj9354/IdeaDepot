@@ -79,7 +79,7 @@ Template Name: Full Width
 			ontouchstart="ElementDragAndMoveEventHandler.touchDragstart(this, event);" 
 			ontouchmove="ElementDragAndMoveEventHandler.touchDrag(this, event);" 
 			ontouchend="ElementDragAndMoveEventHandler.touchDragend(this, event);">
-	<div class ="group_div_toolbar_row" id="first_row" style='display:flex;'>
+	<div class ="group_div_toolbar_row" id="first_row" style='display:flex; display:-webkit-flex;'>
 		<div class="group_div_toolbar_col" id="first_row_first_col" >
 			<div>
 				<button class="adj_btn" style="border:1px solid #000000;overflow:hidden;">Color Picker</button>
@@ -97,7 +97,7 @@ Template Name: Full Width
 			</div>
 		</div>
 	</div>
-	<div class ="group_div_toolbar_row" id="second_row" style='display:flex;'>
+	<div class ="group_div_toolbar_row" id="second_row" style='display:flex; display:-webkit-flex;'>
 		<div class="group_div_toolbar_col"  id="second_row_first_col">
 			<div>
 				<button class="adj_btn" style="border:1px solid #000000;overflow:hidden;">Select Shape</button>
@@ -198,8 +198,7 @@ Template Name: Full Width
 						ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(rgb.b);
 						ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.setAlphaValue(rgb.a);
 					},
-					change: function() {
-						var a = 3;
+					change: function() {						
 					},
 					flat: true,
 					showAlpha: true,
@@ -258,7 +257,8 @@ Template Name: Full Width
 				inputElement.id="color_picker_alpha_input";
 				sppc.appendChild(inputElement);					
 				
-				gradX("#tm_gradient_cp");				
+				//attach 
+				
 
 
 				var maxWidth = -1;
@@ -323,7 +323,7 @@ Template Name: Full Width
 						}
 						else{							
 							var adjMaxWidthNumber = parseInt(this.adjMaxWidth);
-							var adjMaxHeightNumber =parseInt(this.adjMaxHeight); 							
+							var adjMaxHeightNumber = parseInt(this.adjMaxHeight); 							
 
 							toolBar[0].style.width	 = 'auto';		
 							toolBar[0].style.height= 'auto';
@@ -369,7 +369,8 @@ Template Name: Full Width
 				
 				$(window).scroll(function(){
 					var newPositionX =  toolBar[0].screenXOffset + $(window).scrollLeft();
-					var newPositionY =  toolBar[0].screenYOffset + $(window).scrollTop();					
+					var newPositionY =  toolBar[0].screenYOffset + $(window).scrollTop();		
+					//toolBar.css({"top":  newPositionY, "left" : newPositionX});
 					toolBar
 						.stop()
 						.animate({"top":  newPositionY, "left" : newPositionX}, "fastest" );
@@ -447,6 +448,8 @@ Template Name: Full Width
 					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.valueChangedCallback = colorTextInputChangeCallback;
 					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.valueChangedCallback = colorTextInputChangeCallback;
 					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.valueChangedCallback = colorTextInputChangeCallback;
+					
+					ThinkMine.Lib.ExternalUI.GradientColorPicker.attach("tm_gradient_cp",TMCanvas);
 					
 					ThinkMine.Lib.ExternalUI.CircleImageButton.attach("CircleShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.RectangleImageButton.attach("RectangleShapeImage",TMCanvas);

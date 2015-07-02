@@ -54,18 +54,20 @@
 
 .resizing_div_anim_shrink_lt {
     transition: transform 1s; /* Animation time */
-    -webkit-transition: transform 1s; /* For Safari */	
-	-webkit-transform: scale(0); /* Safari */
     transform: scale(0);
 	transform-origin: 0% 0%;
+	-webkit-transition: -webkit-transform 1s; /* For Safari */	
+	-webkit-transform: scale(0); /* Safari */
+	-webkit-transform-origin: 0% 0%; /* Safari */
 }
 
 .resizing_div_anim_expand_lt {
     transition: transform 1s; /* Animation time */
-    -webkit-transition: transform 1s; /* For Safari */	
-	-webkit-transform: scale(1); /* Safari */
     transform: scale(1);
 	transform-origin: 0% 0%;
+	-webkit-transition: -webkit-transform 1s; /* For Safari */	
+	-webkit-transform: scale(1); /* Safari */
+	-webkit-transform-origin: 0% 0%; /* Safari */
 }
 
 .auto_whfit_anim{
