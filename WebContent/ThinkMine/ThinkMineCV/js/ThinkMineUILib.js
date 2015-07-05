@@ -404,11 +404,8 @@ ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
 		if(fGradXDiv == null || fGradXDiv == undefined){
 			console.log("There is no such gradX element " + gradXDivName);
 			return;
-		}		
-		
-		gradX("#"+fGradXDivName,{
-			change: onChangeCallBack
-		});	
+		}			
+		gradx.gx("#"+fGradXDivName).change = onChangeCallBack;	
 	};
 	
 	var onChangeCallBack = function(slider){

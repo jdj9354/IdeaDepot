@@ -2,8 +2,8 @@
 #mytabs, #mytabs2, .comment-count-child { background-image: url( "../images/bg-tabs_a.png" ); border:1px solid #00a9cf; box-shadow: inset 0px 0px 0px 1px #5ee3ff; }
 #ajaxsearchpro1 .probox { background:url( "../images/search_a.png" ) no-repeat; }
 .item-list-tabs .customStyleSelectBoxInner { background:url( "../images/select2_a.png" ) no-repeat right center; }
-header .tile { background-color:#01d0ff; }
-header .tile2, #front-login-submit { background-color:#01d0ff; }
+header .tile { background-color:#D6E6F5; }
+header .tile2, #front-login-submit { background-color:#D6E6F5; }
 #object-nav ul li, #object-nav2 ul li { background-image: url( "../images/spacer-tab_a.png" ); }
 #object-nav ul li:hover, #object-nav2 ul li:hover { background:#00c0ea; background-image: url( "../images/spacer-tab-selected_a.gif" ); background-repeat: repeat-y; background-position:right top; }
 #object-nav ul li a, #object-nav2 ul li a, #subnav ul li a, .comment-count-child, #metro .tile-title a { text-shadow: 1px 1px 0px #00a6cb; }
@@ -28,5 +28,5 @@ span.activity:hover { background:#00c5c7; }
 .comment-options .comment-reply-link, .comment-options .comment-edit-link { background:#00d7da; }
 .icon-share { background-image: url( ../images/icon-share_a.png ); }
 .buttonCon .theButton { background: url("../slider/circlebutton_a.png") no-repeat; }
-.slider-more { background-color:#01d0ff; }
+.slider-more { background-color:#D6E6F5; }
 #metro .tile-title span { background-image: url( "../images/transparent_a.png" ); }

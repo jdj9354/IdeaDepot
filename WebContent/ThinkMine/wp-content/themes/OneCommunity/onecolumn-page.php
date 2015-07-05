@@ -14,61 +14,55 @@ Template Name: Full Width
 
 <style type='text/css'>
 .maxbutton-1.maxbutton {
-	position : relative;
-	text-decoration : none;
-	display : inline-block;
-	cursor : default;
-	width : 158px;
-	border-color : #eb0316;
-	border-top-left-radius : 4px;
-	border-top-right-radius : 4px;
-	border-bottom-left-radius : 4px;
-	border-bottom-right-radius : 4px;
-	border-style : double;
-	border-width : 1px;
-	background: #f70000;
-	-pie-background: linear-gradient(#f70000 45%, #b01515);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(45%, #f70000), color-stop(1, #b01515));
-	background: -moz-linear-gradient(#f70000 45%, #b01515);
-	background: -o-linear-gradient(#f70000 45%, #b01515);
-	background: linear-gradient(#f70000 45%, #b01515);
-	-webkit-box-shadow: 0px 0px 2px #333;
-	-moz-box-shadow: 0px 0px 2px #333;
-	box-shadow: 0px 0px 2px #333; 
-}
+  position : relative;
+  text-decoration : none;
+  display : inline-block;
+  cursor : default;
+  border-color : #0f2557;
+  border-top-left-radius : 4px;
+  border-top-right-radius : 4px;
+  border-bottom-left-radius : 4px;
+  border-bottom-right-radius : 4px;
+  border-style : solid;
+  border-width : 1px;
+  background: #d6e6f5;
+  -pie-background: linear-gradient(#d6e6f5 45%, #fff);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(45%, #d6e6f5), color-stop(1, #fff));
+  background: -moz-linear-gradient(#d6e6f5 45%, #fff);
+  background: -o-linear-gradient(#d6e6f5 45%, #fff);
+  background: linear-gradient(#d6e6f5 45%, #fff);
+  -webkit-box-shadow: 0px 0px 2px #333;
+  -moz-box-shadow: 0px 0px 2px #333;
+  box-shadow: 0px 0px 2px #333; }
 
 .maxbutton-1.maxbutton:hover {
-	border-color : #eb0316;
-	background: #b01515;
-	-pie-background: linear-gradient(#b01515 45%, #f70000);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(45%, #b01515), color-stop(1, #f70000));
-	background: -moz-linear-gradient(#b01515 45%, #f70000);
-	background: -o-linear-gradient(#b01515 45%, #f70000);
-	background: linear-gradient(#b01515 45%, #f70000);
-	-webkit-box-shadow: 0px 0px 2px #333;
-	-moz-box-shadow: 0px 0px 2px #333;
-	box-shadow: 0px 0px 2px #333; 
-}
+  border-color : #0f2557;
+  background: #9fcaf2;
+  -pie-background: linear-gradient(#9fcaf2 45%, #fff);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(45%, #9fcaf2), color-stop(1, #fff));
+  background: -moz-linear-gradient(#9fcaf2 45%, #fff);
+  background: -o-linear-gradient(#9fcaf2 45%, #fff);
+  background: linear-gradient(#9fcaf2 45%, #fff);
+  -webkit-box-shadow: 0px 0px 2px #333;
+  -moz-box-shadow: 0px 0px 2px #333;
+  box-shadow: 0px 0px 2px #333; }
 
 .maxbutton-1.maxbutton .mb-text {
-	font-family : Verdana;
-	font-size : 16px;
-	font-style : normal;
-	font-weight : normal;
-	padding-top : 15px;
-	padding-right : 25px;
-	padding-bottom : 15px;
-	padding-left : 25px;
-	line-height : 1em;
-	box-sizing : border-box;
-	display : block;
-	color : #fff; 
-}
+  font-family : Arial;
+  font-size : 16px;
+  font-style : normal;
+  font-weight : normal;
+  padding-top : 15px;
+  padding-right : 25px;
+  padding-bottom : 15px;
+  padding-left : 25px;
+  line-height : 1em;
+  box-sizing : border-box;
+  display : block;
+  color : #3a6163; }
 
 .maxbutton-1.maxbutton:hover .mb-text {
-	color : #fff; 
-}  
-
+  color : #3a6163; }
 </style>
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
@@ -82,7 +76,7 @@ Template Name: Full Width
 	<div class ="group_div_toolbar_row" id="first_row" style='display:flex; display:-webkit-flex;'>
 		<div class="group_div_toolbar_col" id="first_row_first_col" >
 			<div>
-				<button class="adj_btn" style="border:1px solid #000000;overflow:hidden;">Color Picker</button>
+				<button class="adj_btn maxbutton-1 maxbutton" style="border:1px solid #000000;overflow:hidden;">Color Picker</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'> 				
 					<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 									
 				</div>									
@@ -90,7 +84,7 @@ Template Name: Full Width
 		</div>
 		<div class="group_div_toolbar_col"  id="first_row_second_col">
 			<div>
-				<button class="adj_btn" style="border:1px solid #000000; overflow:hidden;">Gradient Color Picker</button>
+				<button class="adj_btn maxbutton-1 maxbutton" style="border:1px solid #000000; overflow:hidden;">Gradient Color Picker</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;' > 
 					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>	
 				</div>					
@@ -100,7 +94,7 @@ Template Name: Full Width
 	<div class ="group_div_toolbar_row" id="second_row" style='display:flex; display:-webkit-flex;'>
 		<div class="group_div_toolbar_col"  id="second_row_first_col">
 			<div>
-				<button class="adj_btn" style="border:1px solid #000000;overflow:hidden;">Select Shape</button>
+				<button class="adj_btn maxbutton-1 maxbutton" style="border:1px solid #000000;overflow:hidden;">Select Shape</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'> 
 					<div id="group_div_shape" style="margin: 0 auto; width:200; height:200px"  >
 							<div id="div_circleshape" width='50' height='50'  style="float:left;">
@@ -121,7 +115,7 @@ Template Name: Full Width
 		</div>
 		<div class="group_div_toolbar_col"  id="second_row_second_col">
 			<div>
-				<button class="adj_btn" style="border:1px solid #000000;overflow:hidden;">Select Contents Type</button>
+				<button class="adj_btn maxbutton-1 maxbutton" style="border:1px solid #000000;overflow:hidden;">Select Contents Type</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'  > 
 					<div id="group_div_contents" style="margin: 0 auto; width:250; height:250px"  >
 							<div id="div_textcontents" width='50' height='50'  style="float:left;">
@@ -257,8 +251,7 @@ Template Name: Full Width
 				inputElement.id="color_picker_alpha_input";
 				sppc.appendChild(inputElement);					
 				
-				//attach 
-				
+				gradX("#tm_gradient_cp");
 
 
 				var maxWidth = -1;
@@ -448,6 +441,7 @@ Template Name: Full Width
 					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.valueChangedCallback = colorTextInputChangeCallback;
 					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.valueChangedCallback = colorTextInputChangeCallback;
 					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.valueChangedCallback = colorTextInputChangeCallback;
+					
 					
 					ThinkMine.Lib.ExternalUI.GradientColorPicker.attach("tm_gradient_cp",TMCanvas);
 					
