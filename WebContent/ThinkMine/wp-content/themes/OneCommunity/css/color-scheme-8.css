@@ -1,5 +1,5 @@
-#wp-submit, #signup_submit, .wpcf7-submit, #post-topic-reply #submit, #new-topic-post #submit, .my-account #submit, #new-topic-button, .page-template-search-page-php #search-submit, #comment-submit { background-color:#e6d973; background-image: url( "../images/bg-button_a.png" ); text-shadow: 1px 1px 0px #ffffff; border:1px solid #39bbff;}
-#mytabs, #mytabs2, .comment-count-child { background-image: url( "../images/bg-tabs_a.png" ); border:1px solid #00a9cf; box-shadow: inset 0px 0px 0px 1px #5ee3ff; }
+#wp-submit, #signup_submit, .wpcf7-submit, #post-topic-reply #submit, #new-topic-post #submit, .my-account #submit, #new-topic-button, .page-template-search-page-php #search-submit, #comment-submit { background-color:#e6d973; background-image: url( "../images/bg-button_main.png" ); text-shadow: 1px 1px 0px #ffffff; border:1px solid #39bbff;}
+#mytabs, #mytabs2, .comment-count-child { background-image: url( "../images/bg-tabs_main.png" ); border:1px solid #00a9cf; box-shadow: inset 0px 0px 0px 1px #5ee3ff; }
 #ajaxsearchpro1 .probox { background:url( "../images/search_a.png" ) no-repeat; }
 .item-list-tabs .customStyleSelectBoxInner { background:url( "../images/select2_a.png" ) no-repeat right center; }
 header .tile { background-color:#D6E6F5; }
@@ -12,7 +12,7 @@ div.item-list-tabs ul li a span { background: #00c0ea; border:1px solid #00b5dd;
 div.item-list-tabs ul li.selected a span, div.item-list-tabs ul li.current a span, div.item-list-tabs ul li a:hover span { background-color: #1bd5ff; }
 #subnav { background-image: url( "../images/spacer-subnav_a.png" ); }
 #subnav ul li a { text-shadow:#00a6cb 1px 1px 0px; }
-.page-title { text-shadow:#7b7b7b 1px 1px 0px; background:#08e1ff; background: linear-gradient(to bottom, #0ce3ff 0%,#00e1ff 100%); border:1px solid #00c3dd; box-shadow: inset 0px 0px 0px 1px #5ee3ff; }
+.page-title {text-shadow:#7b7b7b 1px 1px 0px; background:#08e1ff; background: linear-gradient(to bottom, #D6E6F5 0%,#D6E6F5 100%); border:1px solid #D6E6F5; box-shadow: inset 0px 0px 0px 1px #D6E6F5; }
 .post-title { box-shadow: inset 0px 0px 0px 1px #5ee3ff; text-shadow:#7b7b7b 1px 1px 0px; background:#08e1ff; background: linear-gradient(to bottom, #0ce3ff 0%,#00e1ff 100%); border:1px solid #00c3dd; }
 div#bbpress-forums h3 { text-shadow:#7b7b7b 1px 1px 0px; background:#08e1ff; background: linear-gradient(to bottom, #0ce3ff 0%,#00e1ff 100%); border:1px solid #00a9cf; box-shadow: none; border-top:none; }
 .blog-bottom { background-image: url( "../images/spacer-blog-bottom_a.gif" ); }

@@ -434,6 +434,35 @@ ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
 	}
 }
 
+ThinkMine.Lib.ExternalUI.AnglePicker = new function(undefined){
+	var fAngleCanvasName = null;
+	var fAngleCanvas = null;
+	var fTmCanvas = null;		
+	
+	var fAngle = 0;
+	
+	this.attach = function(angleCanvasName,tmCanvas) {
+		if(fAngleCanvasName != null){
+			console.log("fAngleCanvas was already attached");
+			return;		
+		}
+		
+		
+		fAngleCanvasName = angleCanvasName;
+		fAngleCanvas = document.getElementById(fAngleCanvasName);
+		
+		fTmCanvas = tmCanvas;
+		
+		if(fAngleCanvas == null || fAngleCanvas == undefined){
+			console.log("There is no such angle Canvas element " + fAngleCanvas);
+			return;
+		}			
+	};
+}
+
+
+
+
 ThinkMine.Lib.ExternalUI.RecentColor = new function(undefined){
 	var fRecentColorDivName = null;
 	var fRecentColorDivElement = null;

@@ -96,6 +96,60 @@ ev.target.appendChild(document.getElementById(data));
 </head>
 
 <body onLoad="on();">	
+<canvas width=100 height=100 id="RotationUiCanvas"></canvas>
+<script>
+	var canvas = document.getElementById("RotationUiCanvas");
+	var ctx = canvas.getContext("2d");
+	var imageObj = new Image();
+	imageObj.onload = function() {
+		ctx.drawImage(imageObj, 0, 0);
+	};
+	imageObj.src = "angle.png";
+	canvas.radian = (Math.PI / 180);
+	canvas.addEventListener("mousedown",function(ev){
+		this.isDown = true;
+		this.angle =0;
+	});
+	canvas.addEventListener("mouseup",function(ev){
+		this.isDown = false;
+		
+	});
+	canvas.addEventListener("mousemove",function(ev){
+		if(this.isDown == undefined)
+			return;
+		if(!this.isDown)
+			return;
+			this.angle +=5;
+			this.angle = this.angle%360;			
+
+	var angle = Math.atan2(ev.y-50,ev.x-50)+Math.PI/2;
+	drawRotatedImage(imageObj,50,50,angle);
+
+		
+
+	});	
+
+function drawRotatedImage(image, x, y, angle)
+{ 
+    // save the current co-ordinate system 
+    // before we screw with it
+    ctx.save(); 
+
+    // move to the middle of where we want to draw our image
+    ctx.translate(x, y);
+
+    // rotate around that point, converting our 
+    // angle from degrees to radians 
+    ctx.rotate(angle);
+
+    // draw it up and to the left by half the width
+    // and height of the image 
+    ctx.drawImage(image, -(image.width/2), -(image.height/2));
+
+    // and restore the co-ords to how they were when we began
+ ctx.restore(); 
+}
+</script>
 			<div class="TransformDemoDiv TransformDemoDivOriginal TransformDemoDivFadeOut" aria-haspopup="true">
 			Hover over or tap to trigger animation.</div>
 </div>
