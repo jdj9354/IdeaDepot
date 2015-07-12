@@ -478,7 +478,7 @@ color : #3a6163; }
 													this.save(); 
 													this.translate(x, y);
 													this.rotate(angle);
-													this.drawImage(image, -(image.width/4), -(image.height/4),50,50);   
+													this.drawImage(image,-25, -25,50,50);   
 													this.restore(); 
 												};
 					
