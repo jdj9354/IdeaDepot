@@ -450,6 +450,10 @@ ThinkMine.Lib.ExternalUI.AnglePicker = new function(undefined){
 		
 		fAngleCanvasName = angleCanvasName;
 		fAngleCanvas = document.getElementById(fAngleCanvasName);
+		fAngleCanvas.notifyAngleChange = function(angle){
+			fAngle = angle;
+			tmCanvas.setAngle(fAngle);
+		};
 		
 		fTmCanvas = tmCanvas;
 		
@@ -457,6 +461,10 @@ ThinkMine.Lib.ExternalUI.AnglePicker = new function(undefined){
 			console.log("There is no such angle Canvas element " + fAngleCanvas);
 			return;
 		}			
+	};	
+
+	this.getAngle = function(){
+		return fAngle;
 	};
 }
 

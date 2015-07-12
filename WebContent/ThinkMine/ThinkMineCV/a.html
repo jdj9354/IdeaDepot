@@ -122,11 +122,8 @@ ev.target.appendChild(document.getElementById(data));
 			this.angle +=5;
 			this.angle = this.angle%360;			
 
-	var angle = Math.atan2(ev.y-50,ev.x-50)+Math.PI/2;
-	drawRotatedImage(imageObj,50,50,angle);
-
-		
-
+		var angle = Math.atan2(ev.y-50,ev.x-50)+Math.PI/2;
+		drawRotatedImage(imageObj,50,50,angle);
 	});	
 
 function drawRotatedImage(image, x, y, angle)

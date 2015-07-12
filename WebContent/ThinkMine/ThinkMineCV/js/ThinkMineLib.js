@@ -302,6 +302,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	var fObjectAddMode = false;
 	
 	var fShapeFilling = new SimpleColorFilling("#FFFFFF");
+	var fAngle = 0;
 	
 	//fObjectAddMode = true;
 	var fVirtualMindObject = null;
@@ -380,6 +381,13 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			return fShapeFilling.fColor;
 		else
 			return null;
+	};
+	
+	this.setAngle = function(angle){
+		fAngle = angle;
+	};
+	this.getAngle = function(){
+		return fAngle;
 	};
 	
 	

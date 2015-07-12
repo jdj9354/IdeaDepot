@@ -87,6 +87,7 @@ Template Name: Full Width
 				<button class="adj_btn maxbutton-1 maxbutton" style="border:1px solid #000000; overflow:hidden;">Gradient Color Picker</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;' > 
 					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>	
+					<canvas id="tm_angle_picker" width=50 height=50 style='position:absolute; top:0px; right:0px; z-index:1;'></canvas>
 				</div>					
 			</div>
 		</div>
@@ -150,8 +151,7 @@ Template Name: Full Width
 	<div class="page-title"><?php the_title(); ?></div>
 		<?php do_action( 'bp_before_blog_page' );  ?>
 		
-		<div class="page" id="blog-page" role="main">
-			
+		<div class="page" id="blog-page" role="main">			
 			<div id="tmWorkingArea">
 				<a id="btn_add_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Add MindMap (id : test)</span></a>
 				<a id="btn_join_mindmap" class="maxbutton-1 maxbutton" ><span class='mb-text'>Join MindMap (id : test)</span></a>			
@@ -181,7 +181,6 @@ Template Name: Full Width
 					width: 100%; 
 				}
 			</style>
-
 			
 			<script>							
 				$('#tm_main_cp').spectrum({
@@ -368,10 +367,11 @@ Template Name: Full Width
 						.stop()
 						.animate({"top":  newPositionY, "left" : newPositionX}, "fastest" );
 
-				});
+				});				
 				
 				var TMCanvas;
-				var wrappedEventHandler;
+				var wrappedEventHandler;			
+
 				
 				
 				window.onload = function() {		
@@ -445,10 +445,63 @@ Template Name: Full Width
 					
 					ThinkMine.Lib.ExternalUI.GradientColorPicker.attach("tm_gradient_cp",TMCanvas);
 					
+					var tmap = document.getElementById("tm_angle_picker");
+					ThinkMine.Lib.ExternalUI.AnglePicker.attach("tm_angle_picker",TMCanvas);
+					
+					var tmapCtx = tmap.getContext("2d");
+					var angleImageObj = new Image();
+					angleImageObj.onload = function() {
+						tmapCtx.drawImage(angleImageObj, 0, 0,50,50);
+					};
+					angleImageObj.src = "/ThinkMineCV/res/angle.png";
+					tmap.addEventListener("mousedown",function(ev){
+						this.isDown = true;
+						this.angle =0;
+						ev.stopPropagation();
+					});
+					tmap.addEventListener("mouseup",function(ev){
+						this.isDown = false;
+						ev.stopPropagation();
+					});
+					tmap.addEventListener("mouseout",function(ev){
+						this.isDown = false;
+					});
+					tmap.addEventListener("mousemove",function(ev){
+						if(this.isDown == undefined)
+							return;
+						if(!this.isDown)
+							return;		
+
+						var angle = Math.atan2(ev.offsetY-25,ev.offsetX-25)+Math.PI/2;
+						var notiAngle = angle*(180/Math.PI);
+						notiAngle = notiAngle < 0? notiAngle+360:notiAngle;
+						tmap.notifyAngleChange(notiAngle);
+						
+						tmapCtx.drawRotatedImage(angleImageObj,25,25,angle);
+						ev.stopPropagation();
+						console.log(ThinkMine.Lib.ExternalUI.AnglePicker.getAngle());
+					});	
+					tmapCtx.drawRotatedImage = function(image, x, y, angle)
+												{ 
+													this.save(); 
+													this.translate(x, y);
+													this.rotate(angle);
+													this.drawImage(image, -(image.width/4), -(image.height/4),50,50);   
+													this.restore(); 
+												};
+					
+					
+					
 					ThinkMine.Lib.ExternalUI.CircleImageButton.attach("CircleShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.RectangleImageButton.attach("RectangleShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.StarImageButton.attach("StarShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.PolygonImageButton.attach("PolygonShapeImage",TMCanvas);
+					
+
+					
+					
+					
+					
 					
 					initPaperJSMindMap(1000,600,wrappedEventHandler);
 					
