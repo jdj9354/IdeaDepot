@@ -59,7 +59,7 @@ color : #3a6163; }
 </style>
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
-<div class="group_div_toolbar" style="border:1px solid #000000; position:absolute; "
+<div class="group_div_toolbar" style="background:#d6e6f5; position:absolute; "
 			onmousedown="ElementDragAndMoveEventHandler.dragstart(this, event)" 
 			onmousemove = "ElementDragAndMoveEventHandler.drag(this, event);" 
 			onmouseup="ElementDragAndMoveEventHandler.dragend(this, event);" 
@@ -70,7 +70,7 @@ color : #3a6163; }
 		<div class="group_div_toolbar_col" id="first_row_first_col" >
 			<div>
 				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Picker</button>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'> 				
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
 					<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 									
 				</div>									
 			</div>
@@ -78,7 +78,7 @@ color : #3a6163; }
 		<div class="group_div_toolbar_col"  id="first_row_second_col">
 			<div>
 				<button class="adj_btn maxbutton-1 maxbutton" style=" overflow:hidden;">Gradient Color Picker</button>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;' > 
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px' > 
 					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>	
 					<canvas id="tm_angle_picker" width=50 height=50 style='position:absolute; top:0px; right:0px; z-index:1;'></canvas>
 				</div>					
@@ -89,7 +89,7 @@ color : #3a6163; }
 		<div class="group_div_toolbar_col"  id="second_row_first_col">
 			<div>
 				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Shape</button>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'> 
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
 					<div id="group_div_shape" style="margin: 0 auto; width:200; height:200px"  >
 							<div id="div_circleshape" width='50' height='50'  style="float:left;">
 								<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
@@ -110,7 +110,7 @@ color : #3a6163; }
 		<div class="group_div_toolbar_col"  id="second_row_second_col">
 			<div>
 				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Contents Type</button>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'  > 
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'  > 
 					<div id="group_div_contents" style="margin: 0 auto; width:250; height:250px"  >
 							<div id="div_textcontents" width='50' height='50'  style="float:left;">
 								<img src="/ThinkMineCV/res/TextContents.png" id="TextContentsImage" width='50' height='50' />
@@ -482,14 +482,18 @@ color : #3a6163; }
 													this.restore(); 
 												};
 					
-					
-					
+												
+							
 					ThinkMine.Lib.ExternalUI.CircleImageButton.attach("CircleShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.RectangleImageButton.attach("RectangleShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.StarImageButton.attach("StarShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.PolygonImageButton.attach("PolygonShapeImage",TMCanvas);
 					
-
+					ThinkMine.Lib.ExternalUI.TextContentsImageButton.attach("div_textcontents",TMCanvas);
+					ThinkMine.Lib.ExternalUI.ImageContentsImageButton.attach("div_imagecontents",TMCanvas);
+					ThinkMine.Lib.ExternalUI.MovieContentsImageButton.attach("moviecontents",TMCanvas);
+					ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("soundcontents",TMCanvas);
+					ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("webcontents",TMCanvas);
 					
 					
 					

@@ -282,6 +282,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	var fMenuAvailableContents = [ContentsTypeEnum.Text,
 									ContentsTypeEnum.Image,
 									ContentsTypeEnum.Movie,
+									ContentsTypeEnum.Sound,
 									ContentsTypeEnum.WebPreview];
 									
 	var fMenuSelectedContents = fMenuAvailableContents[0];									
@@ -460,6 +461,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	this.setMenuSelectedContents = function(contentsIndex){
 		fMenuSelectedContents = fMenuAvailableContents[contentsIndex];
+	};
+	
+	this.getMenuSelectedContents = function(){
+		return fMenuSelectedContents;
 	};
 		
 	this.setMenuInsertedCDI = function(contentsDependentInfo){

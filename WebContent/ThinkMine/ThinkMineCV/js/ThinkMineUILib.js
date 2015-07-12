@@ -749,3 +749,140 @@ ThinkMine.Lib.ExternalUI.PolygonImageButton = new function(undefined){
 		
 	};
 }
+
+
+ThinkMine.Lib.ExternalUI.TextContentsImageButton = new function(undefined){
+	var fImageButtonName = null;
+	var fImageButtonElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(imageButtonName, tmCanvas) {
+		if(fImageButtonName != null){
+			fImageButtonElement.onclick = null;
+		}
+		
+		fImageButtonName = imageButtonName;		
+		fImageButtonElement = document.getElementById(fImageButtonName);
+		fTmCanvas = tmCanvas;
+		
+		if(fImageButtonElement == null || fImageButtonElement == undefined){
+			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			return;
+		}
+		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
+		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		fTmCanvas.setMenuSelectedContents(0);		
+	};
+}
+
+ThinkMine.Lib.ExternalUI.ImageContentsImageButton = new function(undefined){
+	var fImageButtonName = null;
+	var fImageButtonElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(imageButtonName, tmCanvas) {
+		if(fImageButtonName != null){
+			fImageButtonElement.onclick = null;
+		}
+		
+		fImageButtonName = imageButtonName;		
+		fImageButtonElement = document.getElementById(fImageButtonName);
+		fTmCanvas = tmCanvas;
+		
+		if(fImageButtonElement == null || fImageButtonElement == undefined){
+			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			return;
+		}
+		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
+		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		fTmCanvas.setMenuSelectedContents(1);		
+	};
+}
+
+ThinkMine.Lib.ExternalUI.MovieContentsImageButton = new function(undefined){
+	var fImageButtonName = null;
+	var fImageButtonElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(imageButtonName, tmCanvas) {
+		if(fImageButtonName != null){
+			fImageButtonElement.onclick = null;
+		}
+		
+		fImageButtonName = imageButtonName;		
+		fImageButtonElement = document.getElementById(fImageButtonName);
+		fTmCanvas = tmCanvas;
+		
+		if(fImageButtonElement == null || fImageButtonElement == undefined){
+			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			return;
+		}
+		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
+		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		fTmCanvas.setMenuSelectedContents(2);		
+	};
+}
+
+
+ThinkMine.Lib.ExternalUI.SoundContentsImageButton = new function(undefined){
+	var fImageButtonName = null;
+	var fImageButtonElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(imageButtonName, tmCanvas) {
+		if(fImageButtonName != null){
+			fImageButtonElement.onclick = null;
+		}
+		
+		fImageButtonName = imageButtonName;		
+		fImageButtonElement = document.getElementById(fImageButtonName);
+		fTmCanvas = tmCanvas;
+		
+		if(fImageButtonElement == null || fImageButtonElement == undefined){
+			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			return;
+		}
+		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
+		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		fTmCanvas.setMenuSelectedContents(3);		
+	};
+}
+
+ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton = new function(undefined){
+	var fImageButtonName = null;
+	var fImageButtonElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(imageButtonName, tmCanvas) {
+		if(fImageButtonName != null){
+			fImageButtonElement.onclick = null;
+		}
+		
+		fImageButtonName = imageButtonName;		
+		fImageButtonElement = document.getElementById(fImageButtonName);
+		fTmCanvas = tmCanvas;
+		
+		if(fImageButtonElement == null || fImageButtonElement == undefined){
+			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			return;
+		}
+		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
+		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		fTmCanvas.setMenuSelectedContents(4);		
+	};
+}

@@ -18,6 +18,7 @@ const ContentsTypeEnum = {
 	Text : "TextContents",
 	Image : "ImageContents",
 	Movie : "MovieContents",
+	Sound : "SoundContents",
 	WebPreview : "WebPreviewContents"	
 };
 
@@ -88,7 +89,7 @@ function Encoder(){
 		case ContentsTypeEnum.Image :
 			ret = 33554432;
 			break;
-		case "SoundContents" :
+		case ContentsTypeEnum.Sound :
 			ret = 50331648;
 			break;
 		case ContentsTypeEnum.Movie :
@@ -176,7 +177,7 @@ function Decoder(){
 			ret = ContentsTypeEnum.Image;
 			break;
 		case 50331648 :
-			ret = "SoundContents";
+			ret = ContentsTypeEnum.Sound;
 			break;
 		case 67108864 :
 			ret = ContentsTypeEnum.Movie;
