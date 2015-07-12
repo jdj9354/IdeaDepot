@@ -14,55 +14,48 @@ Template Name: Full Width
 
 <style type='text/css'>
 .maxbutton-1.maxbutton {
-  position : relative;
-  text-decoration : none;
-  display : inline-block;
-  cursor : default;
-  border-color : #0f2557;
-  border-top-left-radius : 4px;
-  border-top-right-radius : 4px;
-  border-bottom-left-radius : 4px;
-  border-bottom-right-radius : 4px;
-  border-style : solid;
-  border-width : 1px;
-  background: #d6e6f5;
-  -pie-background: linear-gradient(#d6e6f5 45%, #fff);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(45%, #d6e6f5), color-stop(1, #fff));
-  background: -moz-linear-gradient(#d6e6f5 45%, #fff);
-  background: -o-linear-gradient(#d6e6f5 45%, #fff);
-  background: linear-gradient(#d6e6f5 45%, #fff);
-  -webkit-box-shadow: 0px 0px 2px #333;
-  -moz-box-shadow: 0px 0px 2px #333;
-  box-shadow: 0px 0px 2px #333; }
+position : relative;
+text-decoration : none;
+display : inline-block;
+cursor : default;
+border-color : #0f2557;
+border-top-left-radius : 0px;
+border-top-right-radius : 0px;
+border-bottom-left-radius : 0px;
+border-bottom-right-radius : 0px;
+border-width : 0px;
+background: #d6e6f5;
+-pie-background: linear-gradient(#d6e6f5 99%, #fff);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(99%, #d6e6f5), color-stop(1, #fff));
+background: -moz-linear-gradient(#d6e6f5 99%, #fff);
+background: -o-linear-gradient(#d6e6f5 99%, #fff);
+background: linear-gradient(#d6e6f5 99%, #fff); }
 
 .maxbutton-1.maxbutton:hover {
-  border-color : #0f2557;
-  background: #9fcaf2;
-  -pie-background: linear-gradient(#9fcaf2 45%, #fff);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(45%, #9fcaf2), color-stop(1, #fff));
-  background: -moz-linear-gradient(#9fcaf2 45%, #fff);
-  background: -o-linear-gradient(#9fcaf2 45%, #fff);
-  background: linear-gradient(#9fcaf2 45%, #fff);
-  -webkit-box-shadow: 0px 0px 2px #333;
-  -moz-box-shadow: 0px 0px 2px #333;
-  box-shadow: 0px 0px 2px #333; }
+border-color : #0f2557;
+background: #9fcaf2;
+-pie-background: linear-gradient(#9fcaf2 99%, #fff);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(99%, #9fcaf2), color-stop(1, #fff));
+background: -moz-linear-gradient(#9fcaf2 99%, #fff);
+background: -o-linear-gradient(#9fcaf2 99%, #fff);
+background: linear-gradient(#9fcaf2 99%, #fff); }
 
 .maxbutton-1.maxbutton .mb-text {
-  font-family : Arial;
-  font-size : 16px;
-  font-style : normal;
-  font-weight : normal;
-  padding-top : 15px;
-  padding-right : 25px;
-  padding-bottom : 15px;
-  padding-left : 25px;
-  line-height : 1em;
-  box-sizing : border-box;
-  display : block;
-  color : #3a6163; }
+font-family : Arial;
+font-size : 16px;
+font-style : normal;
+font-weight : normal;
+padding-top : 15px;
+padding-right : 25px;
+padding-bottom : 15px;
+padding-left : 25px;
+line-height : 1em;
+box-sizing : border-box;
+display : block;
+color : #3a6163; }
 
 .maxbutton-1.maxbutton:hover .mb-text {
-  color : #3a6163; }
+color : #3a6163; }
 </style>
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
@@ -76,7 +69,7 @@ Template Name: Full Width
 	<div class ="group_div_toolbar_row" id="first_row" style='display:flex; display:-webkit-flex;'>
 		<div class="group_div_toolbar_col" id="first_row_first_col" >
 			<div>
-				<button class="adj_btn maxbutton-1 maxbutton" style="border:1px solid #000000;overflow:hidden;">Color Picker</button>
+				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Picker</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'> 				
 					<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 									
 				</div>									
@@ -84,7 +77,7 @@ Template Name: Full Width
 		</div>
 		<div class="group_div_toolbar_col"  id="first_row_second_col">
 			<div>
-				<button class="adj_btn maxbutton-1 maxbutton" style="border:1px solid #000000; overflow:hidden;">Gradient Color Picker</button>
+				<button class="adj_btn maxbutton-1 maxbutton" style=" overflow:hidden;">Gradient Color Picker</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;' > 
 					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>	
 					<canvas id="tm_angle_picker" width=50 height=50 style='position:absolute; top:0px; right:0px; z-index:1;'></canvas>
@@ -95,7 +88,7 @@ Template Name: Full Width
 	<div class ="group_div_toolbar_row" id="second_row" style='display:flex; display:-webkit-flex;'>
 		<div class="group_div_toolbar_col"  id="second_row_first_col">
 			<div>
-				<button class="adj_btn maxbutton-1 maxbutton" style="border:1px solid #000000;overflow:hidden;">Select Shape</button>
+				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Shape</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'> 
 					<div id="group_div_shape" style="margin: 0 auto; width:200; height:200px"  >
 							<div id="div_circleshape" width='50' height='50'  style="float:left;">
@@ -116,7 +109,7 @@ Template Name: Full Width
 		</div>
 		<div class="group_div_toolbar_col"  id="second_row_second_col">
 			<div>
-				<button class="adj_btn maxbutton-1 maxbutton" style="border:1px solid #000000;overflow:hidden;">Select Contents Type</button>
+				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Contents Type</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px; border:1px solid #000000;'  > 
 					<div id="group_div_contents" style="margin: 0 auto; width:250; height:250px"  >
 							<div id="div_textcontents" width='50' height='50'  style="float:left;">
@@ -479,7 +472,6 @@ Template Name: Full Width
 						
 						tmapCtx.drawRotatedImage(angleImageObj,25,25,angle);
 						ev.stopPropagation();
-						console.log(ThinkMine.Lib.ExternalUI.AnglePicker.getAngle());
 					});	
 					tmapCtx.drawRotatedImage = function(image, x, y, angle)
 												{ 
