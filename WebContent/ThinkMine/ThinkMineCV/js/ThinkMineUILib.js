@@ -386,7 +386,7 @@ ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
 	var fGradXDiv = null;
 	var fTmCanvas = null;		
 	
-	var fAngle = 0;
+	var fAngle = 90;
 	var fStopInfo = [];
 	
 	this.attach = function(gradXDivName,tmCanvas) {
@@ -406,6 +406,12 @@ ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
 			return;
 		}			
 		gradx.gx("#"+fGradXDivName).change = onChangeCallBack;	
+	};
+	
+	this.setAngle = function(angle){
+		fAngle = angle;
+		gradx.direction=fAngle+90;
+		gradx.apply_style(gradx.panel, gradx.get_style_value());
 	};
 	
 	var onChangeCallBack = function(slider){
@@ -439,7 +445,7 @@ ThinkMine.Lib.ExternalUI.AnglePicker = new function(undefined){
 	var fAngleCanvas = null;
 	var fTmCanvas = null;		
 	
-	var fAngle = 0;
+	var fAngle = 90;
 	
 	this.attach = function(angleCanvasName,tmCanvas) {
 		if(fAngleCanvasName != null){
@@ -453,6 +459,7 @@ ThinkMine.Lib.ExternalUI.AnglePicker = new function(undefined){
 		fAngleCanvas.notifyAngleChange = function(angle){
 			fAngle = angle;
 			tmCanvas.setAngle(fAngle);
+			ThinkMine.Lib.ExternalUI.GradientColorPicker.setAngle(fAngle);
 		};
 		
 		fTmCanvas = tmCanvas;

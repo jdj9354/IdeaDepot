@@ -46,7 +46,7 @@ var gradX = function(id, _options) {
     var options = {
         targets: [], //[element selector] -> array
         sliders: [],
-        direction: 'left',
+        direction: 0,
         //if linear left | top | right | bottom
         //if radial left | center | right , top | center | bottom 
         type: 'linear', //linear | circle | ellipse
@@ -64,7 +64,7 @@ var gradX = function(id, _options) {
         slider_ids: [],
         slider_index: 0, //global index for sliders
         sliders: [], //contains styles of each slider
-        direction: "left", //direction of gradient or position of centre in case of radial gradients
+        direction: 0, //direction of gradient or position of centre in case of radial gradients
         type: "linear", //linear or radial
         shape: "cover", //radial gradient size
         slider_hovered: [],
@@ -103,6 +103,23 @@ var gradX = function(id, _options) {
                 color = "rgb(" + R + ", " + G + ", " + B + ")";
             }
             while (this.rand_RGB.indexOf(color) > -1);
+
+            this.rand_RGB.push(color);
+            return color;
+
+        },
+		get_default_rgb: function() {
+
+            var R, G, B, color;
+
+
+			R = 214;
+			G = 230;
+			B = 245;
+
+			color = "rgb(" + R + ", " + G + ", " + B + ")";
+
+           // while (this.rand_RGB.indexOf(color) > -1);
 
             this.rand_RGB.push(color);
             return color;
@@ -223,10 +240,10 @@ var gradX = function(id, _options) {
 
                 if (this.type == 'linear') {
                     //direction, [color stoppers]
-                    style_str = this.direction + " , " + style_str; //add direction for gradient
+                    style_str = this.direction + "deg , " + style_str; //add direction for gradient
                 } else {
                     //position, type size, [color stoppers]
-                    style_str = this.direction + " , " + this.type + " " + this.shape + " , " + style_str;
+                    style_str = this.direction + "deg , " + this.type + " " + this.shape + " , " + style_str;
                 }
             }
 
@@ -269,7 +286,6 @@ var gradX = function(id, _options) {
                 } 
                 
                 this.set_colorpicker(rgb);
-                console.log(rgb);
             }
 
         },
@@ -283,11 +299,11 @@ var gradX = function(id, _options) {
             if (sliders.length === 0) {
                 sliders = [//default sliders
                     {
-                        color: gradx.get_random_rgb(),
+                        color: gradx.get_default_rgb(),
                         position: gradx.get_random_position() //x percent of gradient panel(400px)
                     },
                     {
-                        color: gradx.get_random_rgb(),
+                        color: gradx.get_default_rgb(),
                         position: gradx.get_random_position()
                     }
                 ];
@@ -442,7 +458,7 @@ var gradX = function(id, _options) {
             var options = {
                 targets: [], //[element selector] -> array
                 sliders: [],
-                direction: 'left',
+                direction: 0,
                 //if linear left | top | right | bottom
                 //if radial left | center | right , top | center | bottom 
                 type: 'linear', //linear | circle | ellipse
@@ -463,24 +479,6 @@ var gradX = function(id, _options) {
             this.current_slider_id = false;
             var html = "<div class='gradx'>\n\
                         <div id='gradx_add_slider' class='gradx_add_slider gradx_btn'><i class='icon icon-add'></i>add</div>\n\
-                        <div class='gradx_slectboxes'>\n\
-                        <select id='gradx_gradient_type' class='gradx_gradient_type'>\n\
-                            <option value='linear'>Linear</option>\n\
-                            <option value='circle'>Radial - Circle</option>\n\
-                            <option value='ellipse'>Radial - Ellipse</option>\n\
-                        </select>\n\
-                        <select id='gradx_gradient_subtype' class='gradx_gradient_type'>\n\
-                            <option id='gradx_gradient_subtype_desc' value='gradient-direction' disabled>gradient direction</option>\n\
-                            <option value='left' selected>Left</option>\n\
-                            <option value='right'>Right</option>\n\
-                            <option value='top'>Top</option>\n\
-                            <option value='bottom'>Bottom</option>\n\
-                        </select>\n\
-                        <select id='gradx_gradient_subtype2' class='gradx_gradient_type gradx_hide'>\n\
-                        </select>\n\
-                        <select id='gradx_radial_gradient_size' class='gradx_gradient_type gradx_hide'>\n\
-                        </select>\n\
-                        </div>\n\
                         <div class='gradx_container' id='gradx_" + id + "'>\n\
                             <div id='gradx_stop_sliders_" + id + "'></div>\n\
                             <div class='gradx_panel' id='gradx_panel_" + id + "'></div>\n\
@@ -534,7 +532,7 @@ var gradX = function(id, _options) {
             gradx.gx('#gradx_add_slider').click(function() {
                 gradx.add_slider([
                     {
-                        color: gradx.get_random_rgb(),
+                        color: gradx.get_default_rgb(),
                         position: gradx.get_random_position() //no % symbol
                     }
                 ]);
