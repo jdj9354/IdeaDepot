@@ -386,7 +386,7 @@ ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
 	var fGradXDiv = null;
 	var fTmCanvas = null;		
 	
-	var fAngle = 90;
+	var fAngle = 0;
 	var fStopInfo = [];
 	
 	this.attach = function(gradXDivName,tmCanvas) {
@@ -406,11 +406,13 @@ ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
 			return;
 		}			
 		gradx.gx("#"+fGradXDivName).change = onChangeCallBack;	
+		gradx.direction=90-fAngle;
+		gradx.apply_style(gradx.panel, gradx.get_style_value());
 	};
 	
 	this.setAngle = function(angle){
 		fAngle = angle;
-		gradx.direction=fAngle+90;
+		gradx.direction=90-fAngle;
 		gradx.apply_style(gradx.panel, gradx.get_style_value());
 	};
 	
