@@ -393,7 +393,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	
 	
 	this.setShapeFilling = function(fillingInfo){
-		switch(fMenuSelectedFilling){
+		switch(fillingInfo.fFillType){
 		case fMenuAvailableFilling[0]:
 			break;
 		case fMenuAvailableFilling[1]:
@@ -401,28 +401,66 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 		case fMenuAvailableFilling[2]:
 			var stops = fillingInfo.fStopInfo;
 			var angle = fillingInfo.fAngle;
+						
+			var startX = 0;
+			var startY = 0; 
+			var startZ = 0;
+			var endX = 0;
+			var endY = 0;
+			var endZ = 0;
+			if(angle >= 315 || angle <= 45){
+				startX = -5;
+				startY = Math.tan((angle*(180/Math.PI)))*startX;		
+				endX = 5;
+				endY = Math.tan((angle*(180/Math.PI)))*endX;
+			}
+			else if(angle > 45 && angle <= 135){
+				startX = startY/Math.tan((angle*(180/Math.PI)));
+				startY = -5;
+				
+				endX = endY/Math.tan((angle*(180/Math.PI)));
+				endY = 5;			
+			}
+			else if(angle > 135 && angle <= 225){
+				startX = 5;
+				startY = Math.tan((angle*(180/Math.PI)))*startX;		
+				endX = -5;
+				endY = Math.tan((angle*(180/Math.PI)))*endX;				
+			}
+			else if(angle > 225 && angle <= 315){
+				startX = startY/Math.tan((angle*(180/Math.PI)));
+				startY = 5;
+				
+				endX = endY/Math.tan((angle*(180/Math.PI)));
+				endY = - 5;					
+			}
 			
-			//need to implement angle related Code ( Angle will be related with StartPoint,EndPoint,etc...)
 			var insertStops = [];
 			
 			for(var i=0; i<stops.length; i+=2){
 				insertStops.push(new SimpleColorFilling({fRed:stops[i].r,fGreen:stops[i].g,fBlue:stops[i].b,fOpacity:stops[i].a}));
 				insertStops.push(stops[i+1]);
 			}
-			fShapeFilling =  new LinearGradientFilling(0,0,0,0,0,0,insertStops);
+			fShapeFilling =  new LinearGradientFilling(startX,startY,startX,endX,endY,endZ,insertStops);
 			break;
 		case fMenuAvailableFilling[3]:
 			var stops = fillingInfo.fStopInfo;
-			var angle = fillingInfo.fAngle;
+			var angle = fillingInfo.fAngle;			
 			
-			//need to implement angle related Code ( Angle will be related with StartPoint,EndPoint,etc...)
+			var originX = 0;
+			var originY = 0; 
+			var originZ = 0;
+			var radiusX = 5;
+			var radiusY = 5;
+			var radiusZ = 5;
+
 			var insertStops = [];
 			
 			for(var i=0; i<stops.length; i+=2){
 				insertStops.push(new SimpleColorFilling({fRed:stops[i].r,fGreen:stops[i].g,fBlue:stops[i].b,fOpacity:stops[i].a}));
 				insertStops.push(stops[i+1]);
 			}
-			fShapeFilling =  new RadialGradientFilling(0,0,0,0,0,0,insertStops);
+			fShapeFilling =  new RadialGradientFilling(originX,originY,originZ,radiusX,radiusY,radiusZ,insertStops);
 			break;
 		}
 	};
