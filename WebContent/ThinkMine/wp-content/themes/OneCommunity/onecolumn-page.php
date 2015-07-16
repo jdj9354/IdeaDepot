@@ -175,25 +175,19 @@ color : #3a6163; }
 				}
 			</style>
 			
-			<script>							
+			<script>					
 				$('#tm_main_cp').spectrum({
-					move: function(color) {
-						var rgb = color.toRgb();
-						ThinkMine.Lib.ExternalUI.ColorPickerRedInput.setRedValue(rgb.r);
-						ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.setGreenValue(rgb.g);
-						ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(rgb.b);
-						ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.setAlphaValue(rgb.a);
-					},
-					change: function() {						
-					},
-					flat: true,
-					showAlpha: true,
-					color: "#ffffff",
-					clickoutFiresChange: true,
-					showInput: false,
-					showButtons: false
-				});
-
+										move: function(color) {
+										},
+										change: function() {						
+										},
+										flat: true,
+										showAlpha: true,
+										color: "#ffffff",
+										clickoutFiresChange: true,
+										showInput: false,
+										showButtons: false
+								});										
 				
 				
 				$('#tmCanvas')[0].height = $('#tmCanvas')[0].offsetWidth * 0.8;				
@@ -401,39 +395,14 @@ color : #3a6163; }
 															
 														});
 					
-					ThinkMine.Lib.ExternalUI.ColorPickerCanvas.attach("color_picker_canvas",TMCanvas);
+					ThinkMine.Lib.ExternalUI.SpectrumColorPicker.attach('tm_main_cp',TMCanvas);
+					//ThinkMine.Lib.ExternalUI.ColorPickerCanvas.attach("color_picker_canvas",TMCanvas);
 					ThinkMine.Lib.ExternalUI.RecentColor.attach("group_id_recent_color",TMCanvas);
 					
-					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.attach("color_picker_red_input");
-					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.attach("color_picker_green_input");
-					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input");
-					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.attach("color_picker_alpha_input");
-					
-					
-					var hiddenColorInput = $('#tm_main_cp').siblings('.sp-container').find('.sp-input');			
-
-					var colorTextInputChangeCallback = function (){
-						var color = {r : ThinkMine.Lib.ExternalUI.ColorPickerRedInput.getRedValue(),
-									 g : ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.getGreenValue(),
-									 b : ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.getBlueValue(),
-									 a : ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.getAlphaValue()
-						};
-						var colorString;
-						if (color.a == 1.0){
-							colorString = "rgb(" + color.r+ "," + color.g + "," + color.b + ")";
-						}
-						else{							
-							colorString = "rgba(" + color.r+ "," + color.g + "," + color.b + "," + color.a + ")";
-						}
-						hiddenColorInput[0].value = colorString;
-						
-						var changeEvent = jQuery.Event('change');						
-						hiddenColorInput.trigger('change');
-					}
-					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.valueChangedCallback = colorTextInputChangeCallback;
-					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.valueChangedCallback = colorTextInputChangeCallback;
-					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.valueChangedCallback = colorTextInputChangeCallback;
-					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.valueChangedCallback = colorTextInputChangeCallback;
+					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.attach("color_picker_red_input",'tm_main_cp');
+					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.attach("color_picker_green_input",'tm_main_cp');
+					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input",'tm_main_cp');
+					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.attach("color_picker_alpha_input",'tm_main_cp');					
 					
 					
 					ThinkMine.Lib.ExternalUI.GradientColorPicker.attach("tm_gradient_cp",TMCanvas);

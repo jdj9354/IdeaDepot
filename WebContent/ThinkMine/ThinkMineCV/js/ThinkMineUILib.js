@@ -7,117 +7,48 @@ if(!ThinkMine.Lib.ExternalUI)
 	
 
 	
-ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
-	var fCanvasName = null;
-	var fTmCanvas = null;
+ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
+	var fSpectrumDivName = null;
+	var fSpectrumDiv = null;		
 	
-	var fMousedown = null;
-	var fMousemove = null;
-	var fMouseup = null;
+	var fTmCanvas = null;
 	
 	var fRed = 0;
 	var fGreen = 0;
 	var fBlue = 0;
+	var fAlpha = 0;
 	
-	this.attach = function(canvasName,tmCanvas) {
-		if(fCanvasName != null){
-			console.log("ColorPickerCanvas was already attached");
-			return;
-			/*var prevCanvas = document.getElementById(fCanvasName);
-			prevCanvas.removeEventListener('mousedown',mousedown);
-			prevCanvas.removeEventListener('mouseup',mouseup);
-			prevCanvas.removeEventListener('mousemove',mousemove);*/
-			
+	this.attach = function(spectrumDivName,tmCanvas) {
+		if(fSpectrumDivName != null){
+			console.log("SpectrumDivName was already attached");
+			return;			
 		}
 		
 		
-		fCanvasName = canvasName;
+		fSpectrumDivName = spectrumDivName;
+		fSpectrumDiv = document.getElementById(fSpectrumDivName);
+		
 		fTmCanvas = tmCanvas;
-		
-		var padding = 10;
-		var canvas = document.getElementById(fCanvasName);
-		if(canvas == null || canvas == undefined){
-			console.log("There is no such canvas element " + fCanvasName);
-			return;
-		}
-			
-		var context = canvas.getContext('2d');
-		var mouseDown = false;
-		
-		var imageObj = new Image();
-		imageObj.onload = function() {
-			context.strokeStyle = '#444';
-			context.lineWidth = 2;
-			
-			fMousedown = function(evt) {
-				mouseDown = true;
-				
-				fMousemove(evt);
-			};
 
-			canvas.addEventListener('mousedown', fMousedown, false);
-			
-			fMouseup = function() {
-				mouseDown = false;
-			};
-			
-			canvas.addEventListener('mouseup', fMouseup, false);
-			
-			fMousemove = function(evt) {
-				var mousePos = getMousePos(canvas, evt);
-				var color = undefined;
-
-				if(mouseDown && mousePos !== null && mousePos.x > padding && mousePos.x < padding + imageObj.width && mousePos.y > padding && mousePos.y < padding + imageObj.height) {
-
-					// color picker image is 256x256 and is offset by 10px
-					// from top and bottom
-					var imageData = context.getImageData(padding, padding, imageObj.width, imageObj.width);
-					var data = imageData.data;
-					var x = Math.floor(mousePos.x - padding);
-					var y = Math.floor(mousePos.y - padding);
-					fRed = data[((imageObj.width * y) + x) * 4];
-					fGreen = data[((imageObj.width * y) + x) * 4 + 1];
-					fBlue = data[((imageObj.width * y) + x) * 4 + 2];
-					var color = 'rgb(' + fRed + ',' + fGreen + ',' + fBlue + ')';
-					
-					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.setRedValue(fRed);
-					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.setGreenValue(fGreen);
-					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(fBlue);
-					
-					var fRedString  = fRed.toString(16);
-					var fGreenString  = fGreen.toString(16);
-					var fBlueString  = fBlue.toString(16);					
-					
-					fTmCanvas.setShapeColor("#"+(fRedString.length == 1? "0"+fRedString : fRedString)
-										+(fGreenString.length == 1? "0"+fGreenString : fGreenString)
-										+(fBlueString.length == 1? "0"+fBlueString : fBlueString));				
-					
-					
-					//console.log(color);
-					context.clearRect(0,0,canvas.width,canvas.height);
-					
-					context.drawImage(imageObj, padding, padding);
-					drawColorSquare(canvas, color, imageObj);
-					
-					context.beginPath();
-					context.arc(x + padding, y + padding, 5, 0, 2 * Math.PI, false);
-					context.lineWidth = 3;
-					context.strokeStyle = '#000000';
-					context.stroke();
-				}
-			};
-			
-			canvas.addEventListener('mousemove', fMousemove, false);
-
-			context.drawImage(imageObj, padding, padding);
-			drawColorSquare(canvas, 'white', imageObj);
-		};		
-		imageObj.src = '/ThinkMineCV/res/color-picker.png'			
-
-
-		
-		
-		
+		$("#"+fSpectrumDivName).on('move.spectrum', function(e,color) {
+									var rgb = color.toRgb();
+									ThinkMine.Lib.ExternalUI.ColorPickerRedInput.setRedValue(rgb.r);
+									ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.setGreenValue(rgb.g);
+									ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(rgb.b);
+									ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.setAlphaValue(rgb.a);
+									
+									fRed = rgb.r;
+									fGreen = rgb.g;
+									fBlue = rgb.b;
+									fAlpha = rgb.a;
+									
+									fTmCanvas.setShapeFilling({
+														fFillType:FillingTypeEnum.SimpleColor,
+														r:rgb.r,
+														g:rgb.g,
+														b:rgb.b;
+														a:rgb.a});									
+								});						
 	};
 	this.getRedValue = function(){
 		return fRed;
@@ -128,31 +59,19 @@ ThinkMine.Lib.ExternalUI.ColorPickerCanvas = new function(undefined){
 	this.getBlueValue = function(){
 		return fBlue;
 	};
-	function getMousePos(canvas, evt) {
-		var rect = canvas.getBoundingClientRect();
-		return {
-		  x: evt.clientX - rect.left,
-		  y: evt.clientY - rect.top
-		};
-	}
-	function drawColorSquare(canvas, color, imageObj) {
-		var colorSquareSize = 100;
-		var padding = 10;
-		var context = canvas.getContext('2d');
-		var squareX = (canvas.width - colorSquareSize + imageObj.width) / 2;
-		var squareY = (canvas.height - colorSquareSize) / 2;
-
-		context.beginPath();
-		context.fillStyle = color;
-		context.fillRect(squareX, squareY, colorSquareSize, colorSquareSize);
-		context.strokeRect(squareX, squareY, colorSquareSize, colorSquareSize);
-	}		
+	this.getAlphaValue = function(){
+		return fAlpha;
+	};
 }
 ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 	var fInputTextName = null;
-	var fInputElement = null;
+	var fInputElement = null;	
 	var self = this;
-	this.attach = function(inputTextName) {
+	
+	var fColorPickerName = null;
+	var hiddenColorInput = null;
+	
+	this.attach = function(inputTextName, colorPickerName) {
 		if(fInputTextName != null){
 			fInputElement.onkeypress = null;
 			fInputElement.onkeyup = null;
@@ -165,10 +84,12 @@ ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 		if(fInputElement == null || fInputElement == undefined){
 			console.log("There is no such fInputElement element " + fInputTextName);
 			return;
-		}
+		}		
 		fInputElement.onkeypress = validateNumber;
 		fInputElement.onkeyup = onKeyUp;
 		
+		fColorPickerName = colorPickerName;
+		hiddenColorInput = $('#'+fColorPickerName).siblings('.sp-container').find('.sp-input');		
 	};
 	this.setRedValue = function(value){
 		if(fInputElement == null || fInputElement == undefined)
@@ -185,8 +106,21 @@ ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 		return fInputElement.value;
 
 	};
-	this.valueChangedCallback = function(){
-		
+	var onValueChanged = function(){
+		var color = {r : ThinkMine.Lib.ExternalUI.ColorPickerRedInput.getRedValue(),
+					 g : ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.getGreenValue(),
+					 b : ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.getBlueValue(),
+					 a : ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.getAlphaValue()
+		};
+		var colorString;
+		if (color.a == 1.0){
+			colorString = "rgb(" + color.r+ "," + color.g + "," + color.b + ")";
+		}
+		else{							
+			colorString = "rgba(" + color.r+ "," + color.g + "," + color.b + "," + color.a + ")";
+		}
+		hiddenColorInput[0].value = colorString;			
+		hiddenColorInput.trigger('change');		
 	};
 	function validateNumber(evt){
 		var charCode = (evt.which) ? evt.which : evt.keyCode
@@ -202,7 +136,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 	}	
 	function onKeyUp(){
 		preventLargerThan255();
-		self.valueChangedCallback();
+		onValueChanged();
 	}	
 }
 
@@ -210,7 +144,11 @@ ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 	var fInputTextName = null;
 	var fInputElement = null;
 	var self = this;
-	this.attach = function(inputTextName) {
+	
+	var fColorPickerName = null;
+	var fColorPickerJQObj = null;
+	
+	this.attach = function(inputTextName, colorPickerName) {
 		if(fInputTextName != null){
 			fInputElement.onkeypress = null;
 			fInputElement.onkeyup = null;
@@ -223,10 +161,12 @@ ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 		if(fInputElement == null || fInputElement == undefined){
 			console.log("There is no such fInputElement element " + fInputTextName);
 			return;
-		}
+		}		
 		fInputElement.onkeypress = validateNumber;
 		fInputElement.onkeyup = onKeyUp;
 		
+		fColorPickerName = colorPickerName;
+		hiddenColorInput = $('#'+fColorPickerName).siblings('.sp-container').find('.sp-input');		
 	};
 	this.setGreenValue = function(value){
 		if(fInputElement == null || fInputElement == undefined)
@@ -243,8 +183,21 @@ ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 		return fInputElement.value;
 
 	};
-	this.valueChangedCallback = function(){
-		
+	var onValueChanged = function(){
+		var color = {r : ThinkMine.Lib.ExternalUI.ColorPickerRedInput.getRedValue(),
+					 g : ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.getGreenValue(),
+					 b : ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.getBlueValue(),
+					 a : ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.getAlphaValue()
+		};
+		var colorString;
+		if (color.a == 1.0){
+			colorString = "rgb(" + color.r+ "," + color.g + "," + color.b + ")";
+		}
+		else{							
+			colorString = "rgba(" + color.r+ "," + color.g + "," + color.b + "," + color.a + ")";
+		}
+		hiddenColorInput[0].value = colorString;			
+		hiddenColorInput.trigger('change');		
 	};
 	function validateNumber(evt){
 		var charCode = (evt.which) ? evt.which : evt.keyCode
@@ -260,7 +213,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 	}	
 	function onKeyUp(){
 		preventLargerThan255();
-		self.valueChangedCallback();
+		onValueChanged();
 	}	
 }
 
@@ -268,7 +221,11 @@ ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 	var fInputTextName = null;
 	var fInputElement = null;
 	var self = this;
-	this.attach = function(inputTextName) {
+	
+	var fColorPickerName = null;
+	var fColorPickerJQObj = null;
+	
+	this.attach = function(inputTextName, colorPickerName) {
 		if(fInputTextName != null){
 			fInputElement.onkeypress = null;
 			fInputElement.onkeyup = null;
@@ -281,10 +238,12 @@ ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 		if(fInputElement == null || fInputElement == undefined){
 			console.log("There is no such fInputElement element " + fInputTextName);
 			return;
-		}
+		}		
 		fInputElement.onkeypress = validateNumber;
 		fInputElement.onkeyup = onKeyUp;
 		
+		fColorPickerName = colorPickerName;
+		hiddenColorInput = $('#'+fColorPickerName).siblings('.sp-container').find('.sp-input');		
 	};
 	this.setBlueValue = function(value){
 		if(fInputElement == null || fInputElement == undefined)
@@ -300,8 +259,21 @@ ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 	this.getBlueValue = function(){
 		return fInputElement.value;
 	};
-	this.valueChangedCallback = function(){
-		
+	var onValueChanged = function(){
+		var color = {r : ThinkMine.Lib.ExternalUI.ColorPickerRedInput.getRedValue(),
+					 g : ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.getGreenValue(),
+					 b : ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.getBlueValue(),
+					 a : ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.getAlphaValue()
+		};
+		var colorString;
+		if (color.a == 1.0){
+			colorString = "rgb(" + color.r+ "," + color.g + "," + color.b + ")";
+		}
+		else{							
+			colorString = "rgba(" + color.r+ "," + color.g + "," + color.b + "," + color.a + ")";
+		}
+		hiddenColorInput[0].value = colorString;			
+		hiddenColorInput.trigger('change');		
 	};
 	function validateNumber(evt){
 		var charCode = (evt.which) ? evt.which : evt.keyCode
@@ -317,7 +289,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 	}	
 	function onKeyUp(){
 		preventLargerThan255();
-		self.valueChangedCallback();
+		onValueChanged();
 	}
 }
 
@@ -325,7 +297,11 @@ ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput = new function(undefined){
 	var fInputTextName = null;
 	var fInputElement = null;
 	var self = this;
-	this.attach = function(inputTextName) {
+	
+	var fColorPickerName = null;
+	var fColorPickerJQObj = null;
+	
+	this.attach = function(inputTextName, colorPickerName) {
 		if(fInputTextName != null){
 			fInputElement.onkeypress = null;
 			fInputElement.onkeyup = null;
@@ -338,10 +314,12 @@ ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput = new function(undefined){
 		if(fInputElement == null || fInputElement == undefined){
 			console.log("There is no such fInputElement element " + fInputTextName);
 			return;
-		}
+		}		
 		fInputElement.onkeypress = validateNumber;
 		fInputElement.onkeyup = onKeyUp;
 		
+		fColorPickerName = colorPickerName;
+		hiddenColorInput = $('#'+fColorPickerName).siblings('.sp-container').find('.sp-input');		
 	};
 	this.setAlphaValue = function(value){
 		if(fInputElement == null || fInputElement == undefined)
@@ -358,8 +336,21 @@ ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput = new function(undefined){
 		return fInputElement.value;
 
 	};
-	this.valueChangedCallback = function(){
-		
+	var onValueChanged = function(){
+		var color = {r : ThinkMine.Lib.ExternalUI.ColorPickerRedInput.getRedValue(),
+					 g : ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.getGreenValue(),
+					 b : ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.getBlueValue(),
+					 a : ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.getAlphaValue()
+		};
+		var colorString;
+		if (color.a == 1.0){
+			colorString = "rgb(" + color.r+ "," + color.g + "," + color.b + ")";
+		}
+		else{							
+			colorString = "rgba(" + color.r+ "," + color.g + "," + color.b + "," + color.a + ")";
+		}
+		hiddenColorInput[0].value = colorString;			
+		hiddenColorInput.trigger('change');		
 	};
 	function validateNumber(evt){
 		var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -377,7 +368,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput = new function(undefined){
 	}	
 	function onKeyUp(){
 		preventLargerThanOne();
-		self.valueChangedCallback();
+		onValueChanged();
 	}
 }
 

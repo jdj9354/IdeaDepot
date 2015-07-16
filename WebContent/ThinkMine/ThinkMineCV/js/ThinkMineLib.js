@@ -303,7 +303,6 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	var fObjectAddMode = false;
 	
 	var fShapeFilling = new SimpleColorFilling("#FFFFFF");
-	var fAngle = 0;
 	
 	//fObjectAddMode = true;
 	var fVirtualMindObject = null;
@@ -382,19 +381,15 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 			return fShapeFilling.fColor;
 		else
 			return null;
-	};
-	
-	this.setAngle = function(angle){
-		fAngle = angle;
-	};
-	this.getAngle = function(){
-		return fAngle;
-	};
-	
+	};		
 	
 	this.setShapeFilling = function(fillingInfo){
 		switch(fillingInfo.fFillType){
 		case fMenuAvailableFilling[0]:
+			fShapeFilling = new SimpleColorFilling({fRed : fFillType.r,						//0 ~ 255
+													fGreen : fFillType.g,					//0 ~ 255
+													fBlue : fFillType.b,					//0 ~ 255
+													fOpacity : fFillType.a});
 			break;
 		case fMenuAvailableFilling[1]:
 			break;
