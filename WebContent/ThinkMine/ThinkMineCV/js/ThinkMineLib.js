@@ -386,10 +386,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	this.setShapeFilling = function(fillingInfo){
 		switch(fillingInfo.fFillType){
 		case fMenuAvailableFilling[0]:
-			fShapeFilling = new SimpleColorFilling({fRed : fFillType.r,						//0 ~ 255
-													fGreen : fFillType.g,					//0 ~ 255
-													fBlue : fFillType.b,					//0 ~ 255
-													fOpacity : fFillType.a});
+			fShapeFilling = new SimpleColorFilling({fRed : fillingInfo.r,						//0 ~ 255
+													fGreen : fillingInfo.g,					//0 ~ 255
+													fBlue : fillingInfo.b,					//0 ~ 255
+													fOpacity : fillingInfo.a});
 			break;
 		case fMenuAvailableFilling[1]:
 			break;
