@@ -198,7 +198,6 @@ color : #3a6163; }
 				var sppc = $('.sp-picker-container')[0];
 				
 				var inputElement = document.createElement('input');
-				inputElement.value = 255;
 				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
 				inputElement.addEventListener("touchstart",function(event){event.stopPropagation();});
 				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});
@@ -209,7 +208,6 @@ color : #3a6163; }
 				sppc.appendChild(br);
 				
 				inputElement = document.createElement('input');	
-				inputElement.value = 255;			
 				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
 				inputElement.addEventListener("touchstart",function(event){event.stopPropagation();});				
 				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});
@@ -220,7 +218,6 @@ color : #3a6163; }
 				sppc.appendChild(br);
 				
 				inputElement = document.createElement('input');
-				inputElement.value = 255;
 				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
 				inputElement.addEventListener("touchstart",function(event){event.stopPropagation();});
 				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});
@@ -229,7 +226,6 @@ color : #3a6163; }
 				sppc.appendChild(inputElement);	
 
 				inputElement = document.createElement('input');
-				inputElement.value = 1.0;
 				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
 				inputElement.addEventListener("touchstart",function(event){event.stopPropagation();});
 				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});

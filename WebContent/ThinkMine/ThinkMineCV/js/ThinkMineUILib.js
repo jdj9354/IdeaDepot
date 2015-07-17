@@ -28,6 +28,17 @@ ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
 		fSpectrumDivName = spectrumDivName;
 		fSpectrumDiv = document.getElementById(fSpectrumDivName);
 		
+		var curColorVal = $("#"+fSpectrumDivName).spectrum("get").toRgb();
+		fRed = curColorVal.r;
+		fGreen = curColorVal.g;
+		fBlue = curColorVal.b;
+		fAlpha = curColorVal.a;
+		
+		ThinkMine.Lib.ExternalUI.ColorPickerRedInput.setRedValue(fRed);
+		ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.setGreenValue(fGreen);
+		ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(fBlue);
+		ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.setAlphaValue(fAlpha);
+		
 		fTmCanvas = tmCanvas;
 
 		$("#"+fSpectrumDivName).on('move.spectrum', function(e,color) {
@@ -46,7 +57,7 @@ ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
 														fFillType:FillingTypeEnum.SimpleColor,
 														r:rgb.r,
 														g:rgb.g,
-														b:rgb.b;
+														b:rgb.b,
 														a:rgb.a});									
 								});						
 	};
@@ -87,6 +98,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 		}		
 		fInputElement.onkeypress = validateNumber;
 		fInputElement.onkeyup = onKeyUp;
+		fInputElement.value = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getRedValue();
 		
 		fColorPickerName = colorPickerName;
 		hiddenColorInput = $('#'+fColorPickerName).siblings('.sp-container').find('.sp-input');		
@@ -164,6 +176,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerGreenInput = new function(undefined){
 		}		
 		fInputElement.onkeypress = validateNumber;
 		fInputElement.onkeyup = onKeyUp;
+		fInputElement.value = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getGreenValue();
 		
 		fColorPickerName = colorPickerName;
 		hiddenColorInput = $('#'+fColorPickerName).siblings('.sp-container').find('.sp-input');		
@@ -241,6 +254,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerBlueInput = new function(undefined){
 		}		
 		fInputElement.onkeypress = validateNumber;
 		fInputElement.onkeyup = onKeyUp;
+		fInputElement.value = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getBlueValue();
 		
 		fColorPickerName = colorPickerName;
 		hiddenColorInput = $('#'+fColorPickerName).siblings('.sp-container').find('.sp-input');		
@@ -317,6 +331,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput = new function(undefined){
 		}		
 		fInputElement.onkeypress = validateNumber;
 		fInputElement.onkeyup = onKeyUp;
+		fInputElement.value = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getAlphaValue();
 		
 		fColorPickerName = colorPickerName;
 		hiddenColorInput = $('#'+fColorPickerName).siblings('.sp-container').find('.sp-input');		
