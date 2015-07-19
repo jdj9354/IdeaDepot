@@ -204,15 +204,35 @@ color : #3a6163; }
 				
 				var sppc = $('.sp-picker-container')[0];
 				
+				
+				var cpCanvasElement = document.createElement('canvas');
+				cpCanvasElement.id="color_picker_canvas_output";
+				cpCanvasElement.style.width = 25;
+				cpCanvasElement.style.height = 25;
+				cpCanvasElement.style.margin = 3;
+				cpCanvasElement.style.border = "1px solid #000000";
+				//cpCanvasElement.style.borderColor = "#000000";
+				
+				sppc.insertBefore(cpCanvasElement, sppc.childNodes[0]);		
+
+				var br = document.createElement('br');
+				sppc.appendChild(br);					
+				
+				var cpCanvasCtx = cpCanvasElement.getContext("2d");
+				var colorObj =  $("#tm_main_cp").spectrum("get").toRgb();				
+				cpCanvasCtx.fillStyle = "rgba("+colorObj.r+","+colorObj.g+","+colorObj.b+","+colorObj.a+")"; 
+				cpCanvasCtx.fillRect(0,0,cpCanvasElement.width,cpCanvasElement.height);		
+				
+				
 				var inputElement = document.createElement('input');
 				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
 				inputElement.addEventListener("touchstart",function(event){event.stopPropagation();});
 				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});
 				inputElement.addEventListener("touchmove",function(event){event.stopPropagation();});
 				inputElement.id="color_picker_red_input";
-				sppc.appendChild(inputElement);				
-				var br = document.createElement('br');
-				sppc.appendChild(br);
+				sppc.appendChild(inputElement);								
+				br = document.createElement('br');
+				sppc.appendChild(br);				
 				
 				inputElement = document.createElement('input');	
 				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
@@ -231,6 +251,8 @@ color : #3a6163; }
 				inputElement.addEventListener("touchmove",function(event){event.stopPropagation();});
 				inputElement.id="color_picker_blue_input";
 				sppc.appendChild(inputElement);	
+				br = document.createElement('br');
+				sppc.appendChild(br);
 
 				inputElement = document.createElement('input');
 				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
@@ -238,19 +260,8 @@ color : #3a6163; }
 				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});
 				inputElement.addEventListener("touchmove",function(event){event.stopPropagation();});
 				inputElement.id="color_picker_alpha_input";
-				sppc.appendChild(inputElement);			
-
-
-				var cpCanvasElement = document.createElement('canvas');
-				cpCanvasElement.id="color_picker_canvas_output";
-				cpCanvasElement.style.width = '30';
-				cpCanvasElement.style.height = '30';
-				sppc.appendChild(cpCanvasElement);				
-				
-				var cpCanvasCtx = cpCanvasElement.getContext("2d");
-				var colorObj =  $("#tm_main_cp").spectrum("get").toRgb();				
-				cpCanvasCtx.fillStyle = "rgba("+colorObj.r+","+colorObj.g+","+colorObj.b+","+colorObj.a+")"; 
-				cpCanvasCtx.fillRect(0,0,cpCanvasElement.width,cpCanvasElement.height);
+				sppc.appendChild(inputElement);		
+				br = document.createElement('br');				
 				
 				gradX("#tm_gradient_cp");
 
