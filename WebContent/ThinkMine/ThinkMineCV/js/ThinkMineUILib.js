@@ -465,8 +465,7 @@ ThinkMine.Lib.ExternalUI.AnglePicker = new function(undefined){
 		fAngleCanvasName = angleCanvasName;
 		fAngleCanvas = document.getElementById(fAngleCanvasName);
 		fAngleCanvas.notifyAngleChange = function(angle){
-			fAngle = angle;
-			tmCanvas.setAngle(fAngle);
+			fAngle = angle;			
 			ThinkMine.Lib.ExternalUI.GradientColorPicker.setAngle(fAngle);
 		};
 		
