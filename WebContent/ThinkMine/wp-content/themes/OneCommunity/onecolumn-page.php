@@ -8,7 +8,7 @@ Template Name: Full Width
 <script src="/ThinkMineCV/js/ThinkMineUILib.js"></script>
 
 <script src="/thidparty/gradx-master/lib/js/jquery.js"></script>
-<script src="/thidparty/gradx-master/colorpicker/js/colorpicker.js"></script>
+<script src="/thidparty/gradx-master/colorpicker/spectrum.js"></script>
 
 <script src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/js/EDMHandler.js"></script>
 
@@ -71,7 +71,7 @@ color : #3a6163; }
 			<div>
 				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Picker</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
-					<div id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></div> 									
+					<input type='text' id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></input> 									
 				</div>									
 			</div>
 		</div>
@@ -118,13 +118,13 @@ color : #3a6163; }
 							<div id="div_imagecontents" width='50' height='50'  style="float:left;">
 								<img src="/ThinkMineCV/res/ImageContents.jpg" id="ImageContentsImage" width='50' height='50' />
 							</div>
-							<div id="moviecontents" width='50' height='50' style="float:left;">
+							<div id="div_moviecontents" width='50' height='50' style="float:left;">
 								<img src="/ThinkMineCV/res/MovieContents.png" id="MovieContentsImage" width='50' height='50' />
 							</div>
-							<div id="soundcontents" width='50' height='50'>
+							<div id="div_soundcontents" width='50' height='50'>
 								<img src="/ThinkMineCV/res/SoundContents.png" id="SoundContentsImage" width='50' height='50' />
 							</div>
-							<div id="webcontents" width='50' height='50'>
+							<div id="div_webcontents" width='50' height='50'>
 								<img src="/ThinkMineCV/res/WebPreviewContents.png" id="WebPreviewContentsImage" width='50' height='50' />
 							</div>
 					</div>
@@ -158,11 +158,11 @@ color : #3a6163; }
 			</div>			
 
 			<link type="text/css" rel="stylesheet" href="/thidparty/gradx-master/gradX.css" />
-			<link type="text/css" rel="stylesheet" href="/thidparty/gradx-master/colorpicker/css/colorpicker.css" />
+			<link type="text/css" rel="stylesheet" href="/thidparty/gradx-master/colorpicker/spectrum.css" />
 
 
 			<script src="/thidparty/gradx-master/dom-drag.js"></script>
-			<script src="/thidparty/gradx-master/colorpicker/js/colorpicker.js"></script>
+			<script src="/thidparty/gradx-master/colorpicker/spectrum.js"></script>
 			
 			<script src="/thidparty/gradx-master/gradX.js"></script>
 			
@@ -177,18 +177,25 @@ color : #3a6163; }
 			
 			<script>					
 				$('#tm_main_cp').spectrum({
-										move: function(color) {
+										move: function(color) {		
+											var canvas = document.getElementById("color_picker_canvas_output");
+											var ctx = canvas.getContext("2d");
+											var colorObj = color.toRgb();
+											var colorString = "rgba("+colorObj.r+","+colorObj.g+","+colorObj.b+","+colorObj.a+")"; 
+											ctx.fillStyle = colorString;
+											ctx.clearRect(0, 0, canvas.width, canvas.height);
+											ctx.fillRect(0,0,canvas.width,canvas.height);
 										},
-										change: function() {						
+										change: function() {											
 										},
 										flat: true,
 										showAlpha: true,
 										color: "#ffffff",
 										clickoutFiresChange: true,
 										showInput: false,
-										showButtons: false
-								});										
-				
+										showButtons: false,
+								});	
+								$("#tm_main_cp").spectrum("disable");
 				
 				$('#tmCanvas')[0].height = $('#tmCanvas')[0].offsetWidth * 0.8;				
 
@@ -231,7 +238,19 @@ color : #3a6163; }
 				inputElement.addEventListener("mousemove",function(event){event.stopPropagation();});
 				inputElement.addEventListener("touchmove",function(event){event.stopPropagation();});
 				inputElement.id="color_picker_alpha_input";
-				sppc.appendChild(inputElement);					
+				sppc.appendChild(inputElement);			
+
+
+				var cpCanvasElement = document.createElement('canvas');
+				cpCanvasElement.id="color_picker_canvas_output";
+				cpCanvasElement.style.width = '30';
+				cpCanvasElement.style.height = '30';
+				sppc.appendChild(cpCanvasElement);				
+				
+				var cpCanvasCtx = cpCanvasElement.getContext("2d");
+				var colorObj =  $("#tm_main_cp").spectrum("get").toRgb();				
+				cpCanvasCtx.fillStyle = "rgba("+colorObj.r+","+colorObj.g+","+colorObj.b+","+colorObj.a+")"; 
+				cpCanvasCtx.fillRect(0,0,cpCanvasElement.width,cpCanvasElement.height);
 				
 				gradX("#tm_gradient_cp");
 
@@ -456,9 +475,9 @@ color : #3a6163; }
 					
 					ThinkMine.Lib.ExternalUI.TextContentsImageButton.attach("div_textcontents",TMCanvas);
 					ThinkMine.Lib.ExternalUI.ImageContentsImageButton.attach("div_imagecontents",TMCanvas);
-					ThinkMine.Lib.ExternalUI.MovieContentsImageButton.attach("moviecontents",TMCanvas);
-					ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("soundcontents",TMCanvas);
-					ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("webcontents",TMCanvas);
+					ThinkMine.Lib.ExternalUI.MovieContentsImageButton.attach("div_moviecontents",TMCanvas);
+					ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("div_soundcontents",TMCanvas);
+					ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("div_webcontents",TMCanvas);
 					
 					
 					
