@@ -60,12 +60,9 @@ color : #3a6163; }
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
 <div class="group_div_toolbar" style="background:#d6e6f5; position:absolute; "
-			onmousedown="ElementDragAndMoveEventHandler.dragstart(this, event)" 
-			onmousemove = "ElementDragAndMoveEventHandler.drag(this, event);" 
-			onmouseup="ElementDragAndMoveEventHandler.dragend(this, event);" 
-			ontouchstart="ElementDragAndMoveEventHandler.touchDragstart(this, event);" 
-			ontouchmove="ElementDragAndMoveEventHandler.touchDrag(this, event);" 
-			ontouchend="ElementDragAndMoveEventHandler.touchDragend(this, event);">
+			onmousedown="ElementDragAndMoveEventHandler.setDragElement(this);" 			
+			ontouchstart="ElementDragAndMoveEventHandler.setDragElement(this);" >
+	<div id="upper_bar" style="font-family: Arial Black; font-size: 18px; color: white">Tool Bar</div>
 	<div class ="group_div_toolbar_row" id="first_row" style='display:flex; display:-webkit-flex;'>
 		<div class="group_div_toolbar_col" id="first_row_first_col" >
 			<div>
@@ -175,7 +172,16 @@ color : #3a6163; }
 				}
 			</style>
 			
-			<script>					
+			<script>		
+			
+				document.addEventListener("mousedown",ElementDragAndMoveEventHandler.dragstart);
+				document.addEventListener("mousemove",ElementDragAndMoveEventHandler.drag);
+				document.addEventListener("mouseup",ElementDragAndMoveEventHandler.dragend);
+				//document.addEventListener("mouseout",ElementDragAndMoveEventHandler.dragend);
+				document.addEventListener("touchstart",ElementDragAndMoveEventHandler.touchDragstart);
+				document.addEventListener("touchmove",ElementDragAndMoveEventHandler.touchDrag);
+				document.addEventListener("touchend",ElementDragAndMoveEventHandler.touchDragend);
+				
 				$('#tm_main_cp').spectrum({
 										move: function(color) {		
 											var canvas = document.getElementById("color_picker_canvas_output");
@@ -340,9 +346,8 @@ color : #3a6163; }
 							resizeTargetObj.height(this.adjMaxHeight);							
 						}	
 						this.isExpanded = !this.isExpanded;
-					});				
-				}
-				
+					});							
+				}				
 				for(var i=0; i<toolBar[0].childElementCount; i++){					
 					if(toolBar[0].children[i].offsetWidth > maxWidth)
 						maxWidth = toolBar[0].children[i].offsetWidth;	
