@@ -192,7 +192,14 @@ color : #3a6163; }
 											ctx.clearRect(0, 0, canvas.width, canvas.height);
 											ctx.fillRect(0,0,canvas.width,canvas.height);
 										},
-										change: function() {											
+										change: function(color) {											
+											var canvas = document.getElementById("color_picker_canvas_output");
+											var ctx = canvas.getContext("2d");
+											var colorObj = color.toRgb();
+											var colorString = "rgba("+colorObj.r+","+colorObj.g+","+colorObj.b+","+colorObj.a+")"; 
+											ctx.fillStyle = colorString;
+											ctx.clearRect(0, 0, canvas.width, canvas.height);
+											ctx.fillRect(0,0,canvas.width,canvas.height);
 										},
 										flat: true,
 										showAlpha: true,
