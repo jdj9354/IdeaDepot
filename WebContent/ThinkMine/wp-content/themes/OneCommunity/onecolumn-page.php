@@ -66,13 +66,32 @@ color : #3a6163; }
 	<div class ="group_div_toolbar_row" id="first_row" style='display:flex; display:-webkit-flex;'>
 		<div class="group_div_toolbar_col" id="first_row_first_col" >
 			<div>
+				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Settings</button>
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 			
+					<div> Shape Color
+						<div style='display:flex; display:-webkit-flex;'>
+							<div><canvas id='canvas_shapecolor' width=100 height=100></canvas></div>
+							<div><button class="maxbutton-1 maxbutton" style="overflow:hidden;">Apply<br> ColorPicker</button><br>
+							<button class="maxbutton-1 maxbutton" style="overflow:hidden;">Apply<br> Gradient </button></div>
+						</div>
+						Text Color
+						<div style='display:flex; display:-webkit-flex;'>
+							<div><canvas id='canvas_textcolor' width=100 height=100></canvas></div>
+							<div><button class="maxbutton-1 maxbutton" style="overflow:hidden;">Apply<br> ColorPicker</button></div>
+						</div>
+					</div>
+				</div>									
+			</div>
+		</div>
+		<div class="group_div_toolbar_col" id="first_row_second_col" >
+			<div>
 				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Picker</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
 					<input type='text' id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></input> 									
 				</div>									
 			</div>
 		</div>
-		<div class="group_div_toolbar_col"  id="first_row_second_col">
+		<div class="group_div_toolbar_col"  id="first_row_third_col">
 			<div>
 				<button class="adj_btn maxbutton-1 maxbutton" style=" overflow:hidden;">Gradient Color Picker</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px' > 

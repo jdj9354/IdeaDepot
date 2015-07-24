@@ -588,7 +588,7 @@ ThinkMine.Lib.ExternalUI.CircleImageButton = new function(undefined){
 		fTmCanvas = tmCanvas;
 		
 		if(fImageButtonElement == null || fImageButtonElement == undefined){
-			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			console.log("There is no such fImageButtonElement element " + fImageButtonName);
 			return;
 		}
 		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
@@ -636,7 +636,7 @@ ThinkMine.Lib.ExternalUI.RectangleImageButton = new function(undefined){
 		fTmCanvas = tmCanvas;
 		
 		if(fImageButtonElement == null || fImageButtonElement == undefined){
-			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			console.log("There is no such fImageButtonElement element " + fImageButtonName);
 			return;
 		}
 		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
@@ -684,7 +684,7 @@ ThinkMine.Lib.ExternalUI.StarImageButton = new function(undefined){
 		fTmCanvas = tmCanvas;
 		
 		if(fImageButtonElement == null || fImageButtonElement == undefined){
-			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			console.log("There is no such fImageButtonElement element " + fImageButtonName);
 			return;
 		}
 		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
@@ -732,7 +732,7 @@ ThinkMine.Lib.ExternalUI.PolygonImageButton = new function(undefined){
 		fTmCanvas = tmCanvas;
 		
 		if(fImageButtonElement == null || fImageButtonElement == undefined){
-			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			console.log("There is no such fImageButtonElement element " + fImageButtonName);
 			return;
 		}
 		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
@@ -780,7 +780,7 @@ ThinkMine.Lib.ExternalUI.TextContentsImageButton = new function(undefined){
 		fTmCanvas = tmCanvas;
 		
 		if(fImageButtonElement == null || fImageButtonElement == undefined){
-			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			console.log("There is no such fImageButtonElement element " + fImageButtonName);
 			return;
 		}
 		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
@@ -807,7 +807,7 @@ ThinkMine.Lib.ExternalUI.ImageContentsImageButton = new function(undefined){
 		fTmCanvas = tmCanvas;
 		
 		if(fImageButtonElement == null || fImageButtonElement == undefined){
-			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			console.log("There is no such fImageButtonElement element " + fImageButtonName);
 			return;
 		}
 		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
@@ -834,7 +834,7 @@ ThinkMine.Lib.ExternalUI.MovieContentsImageButton = new function(undefined){
 		fTmCanvas = tmCanvas;
 		
 		if(fImageButtonElement == null || fImageButtonElement == undefined){
-			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			console.log("There is no such fImageButtonElement element " + fImageButtonName);
 			return;
 		}
 		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
@@ -862,7 +862,7 @@ ThinkMine.Lib.ExternalUI.SoundContentsImageButton = new function(undefined){
 		fTmCanvas = tmCanvas;
 		
 		if(fImageButtonElement == null || fImageButtonElement == undefined){
-			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			console.log("There is no such fImageButtonElement element " + fImageButtonName);
 			return;
 		}
 		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
@@ -889,7 +889,7 @@ ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton = new function(undefined)
 		fTmCanvas = tmCanvas;
 		
 		if(fImageButtonElement == null || fImageButtonElement == undefined){
-			console.log("There is no such fImageButtonElement element " + fInputTextName);
+			console.log("There is no such fImageButtonElement element " + fImageButtonName);
 			return;
 		}
 		fImageButtonElement.onclick = this.sendInfoToTmCanvas;
@@ -899,4 +899,24 @@ ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton = new function(undefined)
 	this.sendInfoToTmCanvas = function(){		
 		fTmCanvas.setMenuSelectedContents(4);		
 	};
+}
+
+
+ThinkMine.Lib.ExternalUI.ShapeColorSettingDiv = new function(undefined){
+		
+		var fTmCanvas = null;
+		var fSettingDivName = null;
+		var fSettingDivElement = null;
+		
+		this.attach = function(settingDivName, tmCanvas) {			
+			fSettingDivName = settingDivName;
+			fSettingDivElement = document.getElementById(fSettingDivName);
+			fTmCanvas = tmCanvas;
+			
+		if(fSettingDivElement == null || fSettingDivElement == undefined){
+			console.log("There is no such fSettingDivElement element " + fSettingDivElement);
+			return;
+		}			
+			
+		};
 }
