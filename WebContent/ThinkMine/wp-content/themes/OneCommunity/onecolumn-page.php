@@ -71,13 +71,13 @@ color : #3a6163; }
 					<div> Shape Color
 						<div style='display:flex; display:-webkit-flex;'>
 							<div><canvas id='canvas_shapecolor' width=100 height=100></canvas></div>
-							<div><button class="maxbutton-1 maxbutton" style="overflow:hidden;">Apply<br> ColorPicker</button><br>
-							<button class="maxbutton-1 maxbutton" style="overflow:hidden;">Apply<br> Gradient </button></div>
+							<div><canvas id='canvas_shapecolor_colorpickerbtn' width=25 height=25></canvas><br>
+							<canvas id='canvas_shapecolor_gradientbtn' width=25 height=25></canvas></div>
 						</div>
 						Text Color
 						<div style='display:flex; display:-webkit-flex;'>
 							<div><canvas id='canvas_textcolor' width=100 height=100></canvas></div>
-							<div><button class="maxbutton-1 maxbutton" style="overflow:hidden;">Apply<br> ColorPicker</button></div>
+							<div><canvas id='canvas_textcolor_colorpickerbtn' width=25 height=25></canvas></div>
 						</div>
 					</div>
 				</div>									

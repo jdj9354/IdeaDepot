@@ -18,6 +18,8 @@ ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
 	var fBlue = 0;
 	var fAlpha = 0;
 	
+	var fFillingInfo = {};
+	
 	this.attach = function(spectrumDivName,tmCanvas) {
 		if(fSpectrumDivName != null){
 			console.log("SpectrumDivName was already attached");
@@ -39,6 +41,13 @@ ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
 		ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.setBlueValue(fBlue);
 		ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.setAlphaValue(fAlpha);
 		
+		fFillingInfo = {
+						fFillType:FillingTypeEnum.SimpleColor,
+						r:fRed,
+						g:fGreen,
+						b:fBlue,
+						a:fAlpha};
+		
 		fTmCanvas = tmCanvas;
 
 		$("#"+fSpectrumDivName).on('move.spectrum', function(e,color) {
@@ -53,12 +62,12 @@ ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
 									fBlue = rgb.b;
 									fAlpha = rgb.a;
 									
-									fTmCanvas.setShapeFilling({
-														fFillType:FillingTypeEnum.SimpleColor,
-														r:rgb.r,
-														g:rgb.g,
-														b:rgb.b,
-														a:rgb.a});									
+									fFillingInfo = {
+													fFillType:FillingTypeEnum.SimpleColor,
+													r:rgb.r,
+													g:rgb.g,
+													b:rgb.b,
+													a:rgb.a};							
 								});						
 	};
 	this.getRedValue = function(){
@@ -72,6 +81,9 @@ ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
 	};
 	this.getAlphaValue = function(){
 		return fAlpha;
+	};
+	this.getFillingInfo = function(){
+		return fFillingInfo;
 	};
 }
 ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
@@ -392,8 +404,11 @@ ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
 	var fGradXDiv = null;
 	var fTmCanvas = null;		
 	
+	var fFillType;
 	var fAngle = 0;
 	var fStopInfo = [];
+	
+	var fFillingInfo = {};
 	
 	this.attach = function(gradXDivName,tmCanvas) {
 		if(fGradXDivName != null){
@@ -410,8 +425,9 @@ ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
 		if(fGradXDiv == null || fGradXDiv == undefined){
 			console.log("There is no such gradX element " + gradXDivName);
 			return;
-		}			
-		gradx.gx("#"+fGradXDivName).change = onChangeCallBack;	
+		}		
+
+		gradx.change  = onChangeCallBack;	
 		gradx.direction=90-fAngle;
 		gradx.apply_style(gradx.panel, gradx.get_style_value());
 	};
@@ -438,10 +454,11 @@ ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
 			fStopInfo[i*2] = rgbaObj;
 			fStopInfo[i*2+1] = offset;
 		}
-		var passingInfo = {fAngle : fAngle,
+		fFillType = gradx.type == "linear" ? FillingTypeEnum.LinearGradient : FillingTypeEnum.RadialGradient;
+		fFillingInfo = {fFillType : fFillType,
+							fAngle : fAngle,
 							fStopInfo : fStopInfo
 							};
-		fTmCanvas.setShapeFilling(passingInfo);
 	};
 	var parseColor = function (input) {
 		return input.split("(")[1].split(")")[0].split(",");
@@ -899,6 +916,28 @@ ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton = new function(undefined)
 	this.sendInfoToTmCanvas = function(){		
 		fTmCanvas.setMenuSelectedContents(4);		
 	};
+}
+
+
+ThinkMine.Lib.ExternalUI.ShapeColorCPBtn = new function(undefined){
+		
+		var fTmCanvas = null;
+		var fCPBtnName = null;
+		var fCPBtnElement = null;
+		
+		this.attach = function(settingDivName, tmCanvas) {			
+			fCPBtnName = settingDivName;
+			fCPBtnElement = document.getElementById(fCPBtnName);
+			fTmCanvas = tmCanvas;
+			
+			if(fCPBtnElement == null || fCPBtnElement == undefined){
+				console.log("There is no such fCPBtnElement element " + fCPBtnName);
+				return;
+			}			
+			fCPBtnElement.onclick = function(){
+				fTmCanvas
+			};
+		};
 }
 
 
