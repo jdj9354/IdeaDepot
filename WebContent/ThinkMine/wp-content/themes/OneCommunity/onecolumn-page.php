@@ -72,7 +72,7 @@ color : #3a6163; }
 						<div style='display:flex; display:-webkit-flex;'>
 							<div><canvas id='canvas_shapecolor' width=100 height=100></canvas></div>
 							<div><canvas id='canvas_shapecolor_colorpickerbtn' width=25 height=25></canvas><br>
-							<canvas id='canvas_shapecolor_gradientbtn' width=25 height=25></canvas></div>
+							<canvas id='canvas_shapecolor_gradientpickerbtn' width=25 height=25></canvas></div>
 						</div>
 						Text Color
 						<div style='display:flex; display:-webkit-flex;'>
@@ -462,7 +462,13 @@ color : #3a6163; }
 					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.attach("color_picker_alpha_input",'tm_main_cp');					
 					
 					
-					ThinkMine.Lib.ExternalUI.GradientColorPicker.attach("tm_gradient_cp",TMCanvas);
+					ThinkMine.Lib.ExternalUI.GradientPicker.attach("tm_gradient_cp",TMCanvas);
+					
+					ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas.attach("canvas_shapecolor_colorpickerbtn",TMCanvas);
+					ThinkMine.Lib.ExternalUI.ShapeGradientCanvas.attach("canvas_shapecolor_gradientpickerbtn",TMCanvas);					
+					ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.attach("canvas_shapecolor",TMCanvas);
+					
+
 					
 					var tmap = document.getElementById("tm_angle_picker");
 					ThinkMine.Lib.ExternalUI.AnglePicker.attach("tm_angle_picker",TMCanvas);

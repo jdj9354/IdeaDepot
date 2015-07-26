@@ -46,7 +46,7 @@ ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
 						r:fRed,
 						g:fGreen,
 						b:fBlue,
-						a:fAlpha};
+						a:fAlpha};		
 		
 		fTmCanvas = tmCanvas;
 
@@ -67,7 +67,9 @@ ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
 													r:rgb.r,
 													g:rgb.g,
 													b:rgb.b,
-													a:rgb.a};							
+													a:rgb.a};				
+									
+									ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas.changeCanvasColor(rgb.r,rgb.g,rgb.b,rgb.a);						
 								});						
 	};
 	this.getRedValue = function(){
@@ -399,7 +401,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput = new function(undefined){
 	}
 }
 
-ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
+ThinkMine.Lib.ExternalUI.GradientPicker = new function(undefined){
 	var fGradXDivName = null;
 	var fGradXDiv = null;
 	var fTmCanvas = null;		
@@ -436,6 +438,10 @@ ThinkMine.Lib.ExternalUI.GradientColorPicker = new function(undefined){
 		fAngle = angle;
 		gradx.direction=90-fAngle;
 		gradx.apply_style(gradx.panel, gradx.get_style_value());
+	};
+	
+	this.getFillingInfo = function(){
+		return fFillingInfo;
 	};
 	
 	var onChangeCallBack = function(slider){
@@ -483,7 +489,7 @@ ThinkMine.Lib.ExternalUI.AnglePicker = new function(undefined){
 		fAngleCanvas = document.getElementById(fAngleCanvasName);
 		fAngleCanvas.notifyAngleChange = function(angle){
 			fAngle = angle;			
-			ThinkMine.Lib.ExternalUI.GradientColorPicker.setAngle(fAngle);
+			ThinkMine.Lib.ExternalUI.GradientPicker.setAngle(fAngle);
 		};
 		
 		fTmCanvas = tmCanvas;
@@ -919,43 +925,87 @@ ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton = new function(undefined)
 }
 
 
-ThinkMine.Lib.ExternalUI.ShapeColorCPBtn = new function(undefined){
+ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas = new function(undefined){
 		
 		var fTmCanvas = null;
-		var fCPBtnName = null;
-		var fCPBtnElement = null;
+		var fCPCanvasName = null;
+		var fCPCanvasElement = null;
 		
-		this.attach = function(settingDivName, tmCanvas) {			
-			fCPBtnName = settingDivName;
-			fCPBtnElement = document.getElementById(fCPBtnName);
+		this.attach = function(cpCanvasName, tmCanvas) {			
+			fCPCanvasName = cpCanvasName;
+			fCPCanvasElement = document.getElementById(fCPCanvasName);
 			fTmCanvas = tmCanvas;
 			
-			if(fCPBtnElement == null || fCPBtnElement == undefined){
-				console.log("There is no such fCPBtnElement element " + fCPBtnName);
+			if(fCPCanvasElement == null || fCPCanvasElement == undefined){
+				console.log("There is no such fCPCanvasElement element " + fCPCanvasName);
 				return;
 			}			
-			fCPBtnElement.onclick = function(){
-				fTmCanvas
+			fCPCanvasElement.onclick = function(){
+				var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo()
+				fTmCanvas.setShapeFilling(fillInfo);
+				ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.changeCanvasColor(fillInfo.r,fillInfo.g,fillInfo.b,fillInfo.a);																
 			};
+			var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo(); 
+			this.changeCanvasColor(fillInfo.r,fillInfo.g,fillInfo.b,fillInfo.a);
+			
+		};
+		this.changeCanvasColor = function(r,g,b,a){
+			var canvas = fCPCanvasElement;
+			var ctx = canvas.getContext("2d");			
+			var colorString = "rgba("+r+","+g+","+b+","+a+")"; 
+			ctx.fillStyle = colorString;
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillRect(0,0,canvas.width,canvas.height);				
 		};
 }
 
 
-ThinkMine.Lib.ExternalUI.ShapeColorSettingDiv = new function(undefined){
+ThinkMine.Lib.ExternalUI.ShapeGradientCanvas = new function(undefined){
 		
 		var fTmCanvas = null;
-		var fSettingDivName = null;
-		var fSettingDivElement = null;
+		var fGradientCanvasName = null;
+		var fGradientCanvasElement = null;
 		
-		this.attach = function(settingDivName, tmCanvas) {			
-			fSettingDivName = settingDivName;
-			fSettingDivElement = document.getElementById(fSettingDivName);
+		this.attach = function(gradientCanvasName, tmCanvas) {			
+			fGradientCanvasName = gradientCanvasName;
+			fGradientCanvasElement = document.getElementById(fGradientCanvasName);
 			fTmCanvas = tmCanvas;
 			
-		if(fSettingDivElement == null || fSettingDivElement == undefined){
-			console.log("There is no such fSettingDivElement element " + fSettingDivElement);
-			return;
-		}			
+			if(fGradientCanvasElement == null || fGradientCanvasElement == undefined){
+				console.log("There is no such fGradientCanvasElement element " + fGradientCanvasName);
+				return;
+			}			
+			fGradientCanvasElement.onclick = function(){
+				fTmCanvas.setShapeFilling(ThinkMine.Lib.ExternalUI.GradientPicker.getFillingInfo());
+			};
+		};
+}
+
+ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas = new function(undefined){
+		
+		var fTmCanvas = null;
+		var fFillingOutCanvasName = null;
+		var fFillingOutCanvasElement = null;
+		
+		this.attach = function(fillingOutCanvasName, tmCanvas) {			
+			fFillingOutCanvasName = fillingOutCanvasName;
+			fFillingOutCanvasElement = document.getElementById(fFillingOutCanvasName);
+			fTmCanvas = tmCanvas;
 			
+			if(fFillingOutCanvasElement == null || fFillingOutCanvasElement == undefined){
+				console.log("There is no such fFillingOutCanvasElement element " + fFillingOutCanvasName);
+				return;
+			}		
+			var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo(); 
+			this.changeCanvasColor(fillInfo.r,fillInfo.g,fillInfo.b,fillInfo.a);
+			
+		};
+		this.changeCanvasColor = function(r,g,b,a){
+			var canvas = fFillingOutCanvasElement;
+			var ctx = canvas.getContext("2d");			
+			var colorString = "rgba("+r+","+g+","+b+","+a+")"; 
+			ctx.fillStyle = colorString;
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillRect(0,0,canvas.width,canvas.height);				
 		};
 }
