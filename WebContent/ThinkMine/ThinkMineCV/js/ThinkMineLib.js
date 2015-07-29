@@ -303,6 +303,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	var fObjectAddMode = false;
 	
 	var fShapeFilling = new SimpleColorFilling("#FFFFFF");
+	var fTextFilling;
 	
 	//fObjectAddMode = true;
 	var fVirtualMindObject = null;
@@ -472,6 +473,16 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 										new SimpleColorFilling({fRed:78,fGreen:23,fBlue:7,fOpacity:1.0})	,1]);*/
 		//return new LinearGradientFilling(-5,-5,-5,5,5,5,["#00ff00",0.4,"#0000ff",0.7,"#ff0000",1.0]);
 		
+	};
+	
+	this.setTextFilling = function(fillingInfo){
+		fTextFilling = new SimpleColorFilling({fRed : fillingInfo.r,						//0 ~ 255
+													fGreen : fillingInfo.g,					//0 ~ 255
+													fBlue : fillingInfo.b,					//0 ~ 255
+													fOpacity : fillingInfo.a});
+	};
+	this.getTextFilling = function(){
+		return fTextFilling;
 	};
 	
 	this.setMenuSelectedShape = function(shapeIndex){

@@ -295,7 +295,12 @@ color : #3a6163; }
 				sppc.appendChild(inputElement);		
 				br = document.createElement('br');				
 				
-				gradX("#tm_gradient_cp");
+				gradX("#tm_gradient_cp",{
+					sliders : [{color: "#358CDE",
+								position: 50},
+								{color: "#D6E6F5",
+								position: 100}]
+				});
 
 
 				var maxWidth = -1;
@@ -452,22 +457,22 @@ color : #3a6163; }
 															
 														});
 					
-					ThinkMine.Lib.ExternalUI.SpectrumColorPicker.attach('tm_main_cp',TMCanvas);
-					//ThinkMine.Lib.ExternalUI.ColorPickerCanvas.attach("color_picker_canvas",TMCanvas);
-					ThinkMine.Lib.ExternalUI.RecentColor.attach("group_id_recent_color",TMCanvas);
+					ThinkMine.Lib.ExternalUI.SpectrumColorPicker.attach('tm_main_cp',TMCanvas);					
+					ThinkMine.Lib.ExternalUI.RecentColor.attach("group_id_recent_color",TMCanvas);					
 					
 					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.attach("color_picker_red_input",'tm_main_cp');
 					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.attach("color_picker_green_input",'tm_main_cp');
 					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input",'tm_main_cp');
 					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.attach("color_picker_alpha_input",'tm_main_cp');					
 					
-					
-					ThinkMine.Lib.ExternalUI.GradientPicker.attach("tm_gradient_cp",TMCanvas);
-					
-					ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas.attach("canvas_shapecolor_colorpickerbtn",TMCanvas);
+					ThinkMine.Lib.ExternalUI.GradientPicker.attach("tm_gradient_cp",TMCanvas);									
+							
 					ThinkMine.Lib.ExternalUI.ShapeGradientCanvas.attach("canvas_shapecolor_gradientpickerbtn",TMCanvas);					
-					ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.attach("canvas_shapecolor",TMCanvas);
+					ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas.attach("canvas_shapecolor_colorpickerbtn",TMCanvas);											
+					ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.attach("canvas_shapecolor",TMCanvas);			
 					
+					ThinkMine.Lib.ExternalUI.TextColorCPCanvas.attach("canvas_textcolor_colorpickerbtn",TMCanvas);					
+					ThinkMine.Lib.ExternalUI.TextFillingOutCanvas.attach("canvas_textcolor",TMCanvas);
 
 					
 					var tmap = document.getElementById("tm_angle_picker");

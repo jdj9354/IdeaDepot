@@ -70,6 +70,7 @@ ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
 													a:rgb.a};				
 									
 									ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas.changeCanvasColor(rgb.r,rgb.g,rgb.b,rgb.a);						
+									ThinkMine.Lib.ExternalUI.TextColorCPCanvas.changeCanvasColor(rgb.r,rgb.g,rgb.b,rgb.a);						
 								});						
 	};
 	this.getRedValue = function(){
@@ -430,13 +431,13 @@ ThinkMine.Lib.ExternalUI.GradientPicker = new function(undefined){
 		}		
 
 		gradx.change  = onChangeCallBack;	
-		gradx.direction=90-fAngle;
+		gradx.direction=fAngle;
 		gradx.apply_style(gradx.panel, gradx.get_style_value());
 	};
 	
 	this.setAngle = function(angle){
 		fAngle = angle;
-		gradx.direction=90-fAngle;
+		gradx.direction=fAngle;
 		gradx.apply_style(gradx.panel, gradx.get_style_value());
 	};
 	
@@ -465,6 +466,7 @@ ThinkMine.Lib.ExternalUI.GradientPicker = new function(undefined){
 							fAngle : fAngle,
 							fStopInfo : fStopInfo
 							};
+		ThinkMine.Lib.ExternalUI.ShapeGradientCanvas.changeCanvasColor(fFillingInfo);
 	};
 	var parseColor = function (input) {
 		return input.split("(")[1].split(")")[0].split(",");
@@ -941,9 +943,9 @@ ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas = new function(undefined){
 				return;
 			}			
 			fCPCanvasElement.onclick = function(){
-				var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo()
+				var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo();
 				fTmCanvas.setShapeFilling(fillInfo);
-				ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.changeCanvasColor(fillInfo.r,fillInfo.g,fillInfo.b,fillInfo.a);																
+				ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.changeCanvasColor(fillInfo);																
 			};
 			var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo(); 
 			this.changeCanvasColor(fillInfo.r,fillInfo.g,fillInfo.b,fillInfo.a);
@@ -951,6 +953,8 @@ ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas = new function(undefined){
 		};
 		this.changeCanvasColor = function(r,g,b,a){
 			var canvas = fCPCanvasElement;
+			if(canvas == null || canvas == undefined)
+				return;
 			var ctx = canvas.getContext("2d");			
 			var colorString = "rgba("+r+","+g+","+b+","+a+")"; 
 			ctx.fillStyle = colorString;
@@ -974,10 +978,26 @@ ThinkMine.Lib.ExternalUI.ShapeGradientCanvas = new function(undefined){
 			if(fGradientCanvasElement == null || fGradientCanvasElement == undefined){
 				console.log("There is no such fGradientCanvasElement element " + fGradientCanvasName);
 				return;
-			}			
+			}	
+
 			fGradientCanvasElement.onclick = function(){
-				fTmCanvas.setShapeFilling(ThinkMine.Lib.ExternalUI.GradientPicker.getFillingInfo());
+				var fillInfo = ThinkMine.Lib.ExternalUI.GradientPicker.getFillingInfo();
+				fTmCanvas.setShapeFilling(fillInfo);
+				ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.changeCanvasColor(fillInfo);
 			};
+			var fillInfo = ThinkMine.Lib.ExternalUI.GradientPicker.getFillingInfo();
+			this.changeCanvasColor(fillInfo);
+		};
+		this.changeCanvasColor = function(fillInfo){
+			var canvas = fGradientCanvasElement;
+			var bgColorString = "linear-gradient(" + fillInfo.fAngle +"deg";
+			for(var i=0; i<fillInfo.fStopInfo.length; i+=2){
+				bgColorString += ",rgba("+fillInfo.fStopInfo[i].r+","+fillInfo.fStopInfo[i].g+","+fillInfo.fStopInfo[i].b+","+fillInfo.fStopInfo[i].a+")";
+				bgColorString += " "+ (fillInfo.fStopInfo[i+1]*100) + "%"
+			}
+			bgColorString += ")";		
+			if(canvas != null)
+				canvas.style.background = bgColorString;			
 		};
 }
 
@@ -997,15 +1017,138 @@ ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas = new function(undefined){
 				return;
 			}		
 			var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo(); 
+			this.changeCanvasColor(fillInfo);
+			
+		};
+		this.changeCanvasColor = function(fillInfo){
+			if(fillInfo.fFillType == FillingTypeEnum.SimpleColor){
+				var canvas = fFillingOutCanvasElement;
+				canvas.style.background = "";
+				var ctx = canvas.getContext("2d");			
+				var colorString = "rgba("+fillInfo.r+","+fillInfo.g+","+fillInfo.b+","+fillInfo.a+")"; 
+				ctx.fillStyle = colorString;
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.fillRect(0,0,canvas.width,canvas.height);			
+			}
+			else if(fillInfo.fFillType == FillingTypeEnum.LinearGradient || 
+						fillInfo.fFillType == FillingTypeEnum.RadialGradient){				
+						
+						
+				var canvas = fFillingOutCanvasElement;
+				var ctx = canvas.getContext("2d");			
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				var bgColorString = "linear-gradient(" + fillInfo.fAngle +"deg";
+				for(var i=0; i<fillInfo.fStopInfo.length; i+=2){
+					bgColorString += ",rgba("+fillInfo.fStopInfo[i].r+","+fillInfo.fStopInfo[i].g+","+fillInfo.fStopInfo[i].b+","+fillInfo.fStopInfo[i].a+")";
+					bgColorString += " "+ (fillInfo.fStopInfo[i+1]*100) + "%"
+				}
+				bgColorString += ")";				
+				canvas.style.background = bgColorString;			
+			}
+		};
+}
+
+
+ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas = new function(undefined){
+		
+		var fTmCanvas = null;
+		var fCPCanvasName = null;
+		var fCPCanvasElement = null;
+		
+		this.attach = function(cpCanvasName, tmCanvas) {			
+			fCPCanvasName = cpCanvasName;
+			fCPCanvasElement = document.getElementById(fCPCanvasName);
+			fTmCanvas = tmCanvas;
+			
+			if(fCPCanvasElement == null || fCPCanvasElement == undefined){
+				console.log("There is no such fCPCanvasElement element " + fCPCanvasName);
+				return;
+			}			
+			fCPCanvasElement.onclick = function(){
+				var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo();
+				fTmCanvas.setShapeFilling(fillInfo);
+				ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.changeCanvasColor(fillInfo);																
+			};
+			var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo(); 
 			this.changeCanvasColor(fillInfo.r,fillInfo.g,fillInfo.b,fillInfo.a);
 			
 		};
 		this.changeCanvasColor = function(r,g,b,a){
-			var canvas = fFillingOutCanvasElement;
+			var canvas = fCPCanvasElement;
+			if(canvas == null || canvas == undefined)
+				return;
 			var ctx = canvas.getContext("2d");			
 			var colorString = "rgba("+r+","+g+","+b+","+a+")"; 
 			ctx.fillStyle = colorString;
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.fillRect(0,0,canvas.width,canvas.height);				
 		};
+}
+
+
+ThinkMine.Lib.ExternalUI.TextColorCPCanvas = new function(undefined){
+		
+		var fTmCanvas = null;
+		var fCPCanvasName = null;
+		var fCPCanvasElement = null;
+		
+		this.attach = function(cpCanvasName, tmCanvas) {			
+			fCPCanvasName = cpCanvasName;
+			fCPCanvasElement = document.getElementById(fCPCanvasName);
+			fTmCanvas = tmCanvas;
+			
+			if(fCPCanvasElement == null || fCPCanvasElement == undefined){
+				console.log("There is no such fCPCanvasElement element " + fCPCanvasName);
+				return;
+			}			
+			fCPCanvasElement.onclick = function(){
+				var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo();
+				fTmCanvas.setTextFilling(fillInfo);
+				ThinkMine.Lib.ExternalUI.TextFillingOutCanvas.changeCanvasColor(fillInfo);																
+			};
+			var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo(); 
+			this.changeCanvasColor(fillInfo.r,fillInfo.g,fillInfo.b,fillInfo.a);
+			
+		};
+		this.changeCanvasColor = function(r,g,b,a){
+			var canvas = fCPCanvasElement;
+			if(canvas == null || canvas == undefined)
+				return;
+			var ctx = canvas.getContext("2d");			
+			var colorString = "rgba("+r+","+g+","+b+","+a+")"; 
+			ctx.fillStyle = colorString;
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillRect(0,0,canvas.width,canvas.height);				
+		};
+}
+
+ThinkMine.Lib.ExternalUI.TextFillingOutCanvas = new function(undefined){
+		
+		var fTmCanvas = null;
+		var fFillingOutCanvasName = null;
+		var fFillingOutCanvasElement = null;
+		
+		this.attach = function(fillingOutCanvasName, tmCanvas) {			
+			fFillingOutCanvasName = fillingOutCanvasName;
+			fFillingOutCanvasElement = document.getElementById(fFillingOutCanvasName);
+			fTmCanvas = tmCanvas;
+			
+			if(fFillingOutCanvasElement == null || fFillingOutCanvasElement == undefined){
+				console.log("There is no such fFillingOutCanvasElement element " + fFillingOutCanvasName);
+				return;
+			}		
+			var fillInfo = ThinkMine.Lib.ExternalUI.SpectrumColorPicker.getFillingInfo(); 
+			this.changeCanvasColor(fillInfo);
+			
+		};
+		this.changeCanvasColor = function(fillInfo){			
+			var canvas = fFillingOutCanvasElement;
+			canvas.style.background = "";
+			var ctx = canvas.getContext("2d");			
+			var colorString = "rgba("+fillInfo.r+","+fillInfo.g+","+fillInfo.b+","+fillInfo.a+")"; 
+			ctx.fillStyle = colorString;
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillRect(0,0,canvas.width,canvas.height);						
+		};
+
 }
