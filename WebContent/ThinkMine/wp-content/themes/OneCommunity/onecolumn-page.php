@@ -59,9 +59,10 @@ color : #3a6163; }
 </style>
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
-<div class="group_div_toolbar" style="background:#d6e6f5; position:absolute; "
+<div class="group_div_toolbar" style="background:#d6e6f5; position:absolute; z-index:999999999999;"
 			onmousedown="ElementDragAndMoveEventHandler.setDragElement(this);" 			
-			ontouchstart="ElementDragAndMoveEventHandler.setDragElement(this);" >
+			ontouchstart="ElementDragAndMoveEventHandler.setDragElement(this);"
+			>
 	<div id="upper_bar" style="font-family: Arial Black; font-size: 18px; color: white">Tool Bar</div>
 	<div class ="group_div_toolbar_row" id="first_row" style='display:flex; display:-webkit-flex;'>
 		<div class="group_div_toolbar_col" id="first_row_first_col" >
