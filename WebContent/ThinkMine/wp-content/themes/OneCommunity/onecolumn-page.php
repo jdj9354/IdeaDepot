@@ -69,16 +69,17 @@ color : #3a6163; }
 			<div>
 				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Settings</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 			
-					<div> Shape Color
-						<div style='display:flex; display:-webkit-flex;'>
-							<div><canvas id='canvas_shapecolor' width=100 height=100></canvas></div>
-							<div><canvas id='canvas_shapecolor_colorpickerbtn' width=25 height=25></canvas><br>
-							<canvas id='canvas_shapecolor_gradientpickerbtn' width=25 height=25></canvas></div>
-						</div>
-						Text Color
-						<div style='display:flex; display:-webkit-flex;'>
-							<div><canvas id='canvas_textcolor' width=100 height=100></canvas></div>
-							<div><canvas id='canvas_textcolor_colorpickerbtn' width=25 height=25></canvas></div>
+					<div> 
+						<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Shape Color</button>
+						<div style='display:flex; display:-webkit-flex;'>							
+							<div><canvas id='canvas_shapecolor' width=100 height=100 style="border:1px solid #000000;"></canvas></div>
+							<div><canvas id='canvas_shapecolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas><br>
+							<canvas id='canvas_shapecolor_gradientpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
+						</div>						
+						<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Text Color</button>
+						<div style='display:flex; display:-webkit-flex;'>							
+							<div><canvas id='canvas_textcolor' width=100 height=100 style="border:1px solid #000000;"></canvas></div>
+							<div><canvas id='canvas_textcolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
 						</div>
 					</div>
 				</div>									
