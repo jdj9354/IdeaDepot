@@ -71,7 +71,12 @@ ThinkMine.Lib.ExternalUI.SpectrumColorPicker = new function(undefined){
 									
 									ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas.changeCanvasColor(rgb.r,rgb.g,rgb.b,rgb.a);						
 									ThinkMine.Lib.ExternalUI.TextColorCPCanvas.changeCanvasColor(rgb.r,rgb.g,rgb.b,rgb.a);						
-								});						
+								});				
+									
+		$("#"+fSpectrumDivName).on('dragstop.spectrum', function(e,color) {
+			var rgb = color.toRgb();
+			ThinkMine.Lib.ExternalUI.CPRecentColor.updateRecentColor(rgb.r,rgb.g,rgb.b,rgb.a);
+		});
 	};
 	this.getRedValue = function(){
 		return fRed;
@@ -147,7 +152,7 @@ ThinkMine.Lib.ExternalUI.ColorPickerRedInput = new function(undefined){
 			colorString = "rgba(" + color.r+ "," + color.g + "," + color.b + "," + color.a + ")";
 		}
 		hiddenColorInput[0].value = colorString;			
-		hiddenColorInput.trigger('change');		
+		hiddenColorInput.trigger('change');			
 	};
 	function validateNumber(evt){
 		var charCode = (evt.which) ? evt.which : evt.keyCode
@@ -510,7 +515,7 @@ ThinkMine.Lib.ExternalUI.AnglePicker = new function(undefined){
 
 
 
-ThinkMine.Lib.ExternalUI.RecentColor = new function(undefined){
+ThinkMine.Lib.ExternalUI.CPRecentColor = new function(undefined){
 	var fRecentColorDivName = null;
 	var fRecentColorDivElement = null;
 	var numRecentColors = 0;
@@ -518,13 +523,13 @@ ThinkMine.Lib.ExternalUI.RecentColor = new function(undefined){
 	
 	var recentCanvasArray = null;
 	
-	var fTmCanvas = null;
+	var fColorPickerName = null;
+	var hiddenColorInput = null;
 	
 	
-	this.attach = function(recentColorDivName, tmCanvas) {		
+	this.attach = function(recentColorDivName, colorPickerName) {		
 		
-		fRecentColorDivName = recentColorDivName;
-		
+		fRecentColorDivName = recentColorDivName;		
 		fRecentColorDivElement = document.getElementById(fRecentColorDivName);
 		
 		if(fRecentColorDivName == null || fRecentColorDivElement == undefined){
@@ -535,34 +540,35 @@ ThinkMine.Lib.ExternalUI.RecentColor = new function(undefined){
 		recentCanvasArray = fRecentColorDivElement.getElementsByTagName("canvas");
 		numRecentColors = recentCanvasArray.length;		
 		
-		fTmCanvas = tmCanvas;
-		
+		fColorPickerName = colorPickerName;		
+		hiddenColorInput = $('#'+fColorPickerName).siblings('.sp-container').find('.sp-input');		
 		
 		for(var i=0; i<numRecentColors; i++){	
 			
 			var fMouseUP = function(){
-				var tempColorInfo = this.colorInfo;						
+				var tempColorInfo = this.colorInfo;				
+				colorString = "rgba(" + tempColorInfo.r+ "," + tempColorInfo.g + "," + tempColorInfo.b + "," + tempColorInfo.a + ")";
 				
-				var fRedString  = tempColorInfo.r.toString(16);
-				var fGreenString  = tempColorInfo.g.toString(16);
-				var fBlueString  = tempColorInfo.b.toString(16);					
-				
-				fTmCanvas.setShapeColor("#"+(fRedString.length == 1? "0"+fRedString : fRedString)
-									+(fGreenString.length == 1? "0"+fGreenString : fGreenString)
-									+(fBlueString.length == 1? "0"+fBlueString : fBlueString));	
+				hiddenColorInput[0].value = colorString;			
+				hiddenColorInput.trigger('change');					
+				$('#'+fColorPickerName).trigger('move',new tinycolor({r:tempColorInfo.r,
+																	  g:tempColorInfo.g,
+																	  b:tempColorInfo.b,
+																	  a:tempColorInfo.a}));			
 			};			
 			
 			recentCanvasArray[i].addEventListener('mouseup', fMouseUP, false);
-			recentCanvasArray[i].colorInfo = {color : 'rgb(255,255,255)',
+			recentCanvasArray[i].colorInfo = {color : 'rgba(255,255,255,1.0)',
 												r : 255,
 												g : 255,
-												b : 255};
+												b : 255,
+												a: 1.0};
 		}
 				
 	};
 
-	this.updateRecentColor = function(usedR, usedG, usedB){
-		var color = 'rgb(' + usedR + ',' + usedG + ',' + usedB + ')';
+	this.updateRecentColor = function(usedR, usedG, usedB, usedA){
+		var color = 'rgba(' + usedR + ',' + usedG + ',' + usedB + ',' + usedA + ')';
 		
 		var colorIdx = countRecentColors;
 		
@@ -570,17 +576,19 @@ ThinkMine.Lib.ExternalUI.RecentColor = new function(undefined){
 			recentCanvasArray[countRecentColors].colorInfo = {color : color,
 															r : usedR,
 															g : usedG,
-															b : usedB};
+															b : usedB,
+															a : usedA};
 			countRecentColors ++;
 		}
 		else{
-			for(var i=0; i<recentCanvasArray.length-1; i++){
-				recentCanvasArray[i].colorInfo = recentCanvasArray[i+1].colorInfo;
+			for(var i=recentCanvasArray.length-1; i>0; i--){
+				recentCanvasArray[i].colorInfo = recentCanvasArray[i-1].colorInfo;
 			}
-			recentCanvasArray[countRecentColors-1].colorInfo = {color : color,
-															r : usedR,
-															g : usedG,
-															b : usedB};
+			recentCanvasArray[0].colorInfo = {color : color,
+												r : usedR,
+												g : usedG,
+												b : usedB,
+												a : usedA};
 		}
 		
 		for(var i=0; i<countRecentColors; i++){			

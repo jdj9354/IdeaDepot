@@ -248,9 +248,28 @@ color : #3a6163; }
 				//cpCanvasElement.style.borderColor = "#000000";
 				
 				sppc.insertBefore(cpCanvasElement, sppc.childNodes[0]);		
-
-				var br = document.createElement('br');
-				sppc.appendChild(br);					
+				sppc.insertBefore(document.createElement('br'), sppc.childNodes[0]);	
+				
+				var textBtn = document.createElement('button');
+				textBtn.innerText = "Recent Colors";
+				textBtn.style.background="#d6e6f5"; 
+				textBtn.style.border="border-width : 0px";
+				textBtn.style.cursor="default";
+				sppc.insertBefore(textBtn,sppc.childNodes[1]);
+				
+				
+				var recentColorDivElement = document.createElement('div');
+				recentColorDivElement.id = "recent_color_div";
+				for(var i=0; i<5; i++){
+					var recentCanvasElement = document.createElement('canvas');
+					recentCanvasElement.style.width = 25;
+					recentCanvasElement.style.height = 25;
+					recentCanvasElement.style.border = "1px solid #000000";
+					recentColorDivElement.appendChild(recentCanvasElement);
+				}
+				sppc.insertBefore(recentColorDivElement,sppc.childNodes[3]);
+				
+			//	sppc.appendChild();					
 				
 				var cpCanvasCtx = cpCanvasElement.getContext("2d");
 				var colorObj =  $("#tm_main_cp").spectrum("get").toRgb();				
@@ -459,13 +478,15 @@ color : #3a6163; }
 															
 														});
 					
-					ThinkMine.Lib.ExternalUI.SpectrumColorPicker.attach('tm_main_cp',TMCanvas);					
-					ThinkMine.Lib.ExternalUI.RecentColor.attach("group_id_recent_color",TMCanvas);					
+					ThinkMine.Lib.ExternalUI.SpectrumColorPicker.attach('tm_main_cp',TMCanvas);												
+					ThinkMine.Lib.ExternalUI.CPRecentColor.attach("recent_color_div","tm_main_cp");
 					
 					ThinkMine.Lib.ExternalUI.ColorPickerRedInput.attach("color_picker_red_input",'tm_main_cp');
 					ThinkMine.Lib.ExternalUI.ColorPickerGreenInput.attach("color_picker_green_input",'tm_main_cp');
 					ThinkMine.Lib.ExternalUI.ColorPickerBlueInput.attach("color_picker_blue_input",'tm_main_cp');
 					ThinkMine.Lib.ExternalUI.ColorPickerAlphaInput.attach("color_picker_alpha_input",'tm_main_cp');					
+					
+					
 					
 					ThinkMine.Lib.ExternalUI.GradientPicker.attach("tm_gradient_cp",TMCanvas);									
 							
