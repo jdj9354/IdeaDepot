@@ -64,109 +64,115 @@ color : #3a6163; }
 			ontouchstart="ElementDragAndMoveEventHandler.setDragElement(this);"
 			>
 	<div id="upper_bar" style="font-family: Arial Black; font-size: 18px; color: white">Tool Bar</div>
-	<div class ="group_div_toolbar_row" id="first_row" style='display:flex; display:-webkit-flex;'>
-		<div class="group_div_toolbar_col" id="first_row_first_col" >
-			<div>
-				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Settings</button>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 			
-					<div> 
-						<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Shape Color</button>
-						<div style='display:flex; display:-webkit-flex;'>							
-							<div><canvas id='canvas_shapecolor' width=100 height=100 style="border:1px solid #000000;"></canvas></div>
-							<div><canvas id='canvas_shapecolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas><br>
-							<canvas id='canvas_shapecolor_gradientpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
-						</div>						
-						<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Text Color</button>
-						<div style='display:flex; display:-webkit-flex;'>							
-							<div><canvas id='canvas_textcolor' width=100 height=100 style="border:1px solid #000000;"></canvas></div>
-							<div><canvas id='canvas_textcolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
+		<div class ="group_div_toolbar_row" id="first_row" style='display:flex; display:-webkit-flex;'>			
+			<div class="group_div_toolbar_col"  id="first_row_first_col">
+				<div>
+					<button class="adj_btn maxbutton-1 maxbutton" style=" overflow:hidden;">Gradient Color Picker</button>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px' > 
+						<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>	
+						<canvas id="tm_angle_picker" width=50 height=50 style='position:absolute; top:0px; right:0px; z-index:1;'></canvas>
+					</div>					
+				</div>
+			</div>
+		</div>
+		<div class ="group_div_toolbar_row" id="second_row" style='display:flex; display:-webkit-flex;'>
+			<div class="group_div_toolbar_col" id="second_row_first_col" >
+				<div>
+					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Settings</button>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 			
+						<div> 
+							<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Shape Color</button>
+							<div style='display:flex; display:-webkit-flex;'>							
+								<div><canvas id='canvas_shapecolor' width=100 height=100 style="border:1px solid #000000;"></canvas></div>
+								<div><canvas id='canvas_shapecolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas><br>
+								<canvas id='canvas_shapecolor_gradientpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
+							</div>						
+							<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Text Color</button>
+							<div style='display:flex; display:-webkit-flex;'>							
+								<div><canvas id='canvas_textcolor' width=100 height=100 style="border:1px solid #000000;"></canvas></div>
+								<div><canvas id='canvas_textcolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
+							</div>
 						</div>
-					</div>
-				</div>									
+					</div>									
+				</div>
+			</div>
+			<div class="group_div_toolbar_col" id="second_row_second_col" >
+				<div>
+					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Picker</button>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
+						<input type='text' id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></input> 								
+					</div>									
+				</div>
+			</div>			
+		</div>
+		<div class ="group_div_toolbar_row" id="thirdrow" style='display:flex; display:-webkit-flex;'>
+			<div class="group_div_toolbar_col"  id="third_row_first_col">
+				<div>
+					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Shape</button>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
+						<div id="group_div_shape" style="margin: 0 auto; width:225; height:60px"  >
+								<div id="div_circleshape" width='50' height='50'  style="float:left;">
+									<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
+								</div>
+								<div id="div_rectangleshape" width='50' height='50'  style="float:left;">
+									<img src="/ThinkMineCV/res/RectangleShape.png" id="RectangleShapeImage" width='50' height='50' />
+								</div>
+								<div id="div_starshape" width='50' height='50' style="float:left;">
+									<img src="/ThinkMineCV/res/StarShape.png" id="StarShapeImage" width='50' height='50' />
+								</div>
+								<div id="div_polygonshape" width='50' height='50'>
+									<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
+								</div>
+						</div>
+					</div>						
+				</div>
+			</div>
+			<div class="group_div_toolbar_col"  id="third_row_second_col">
+				<div>
+					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Contents Type</button>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'  > 
+						<div id="group_div_contents" style="margin: 0 auto; width:275; height:60px"  >
+								<div id="div_textcontents" width='50' height='50'  style="float:left;">
+									<img src="/ThinkMineCV/res/TextContents.png" id="TextContentsImage" width='50' height='50' />
+								</div>
+								<div id="div_imagecontents" width='50' height='50'  style="float:left;">
+									<img src="/ThinkMineCV/res/ImageContents.jpg" id="ImageContentsImage" width='50' height='50' />
+								</div>
+								<div id="div_moviecontents" width='50' height='50' style="float:left;">
+									<img src="/ThinkMineCV/res/MovieContents.png" id="MovieContentsImage" width='50' height='50' />
+								</div>
+								<div id="div_soundcontents" width='50' height='50' style="float:left;">
+									<img src="/ThinkMineCV/res/SoundContents.png" id="SoundContentsImage" width='50' height='50' />
+								</div>
+								<div id="div_webcontents" width='50' height='50'>
+									<img src="/ThinkMineCV/res/WebPreviewContents.png" id="WebPreviewContentsImage" width='50' height='50' />
+								</div>
+						</div>
+					</div>							
+				</div>
 			</div>
 		</div>
-		<div class="group_div_toolbar_col" id="first_row_second_col" >
-			<div>
-				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Picker</button>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
-					<input type='text' id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></input> 								
-				</div>									
-			</div>
+		
+		<div class ="group_div_toolbar_row" id="fourth_row" style='display:flex; display:-webkit-flex;'>
+			<div class="group_div_toolbar_col"  id="fourth_row_first_col">
+				<div>
+					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Font Settings</button>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
+						<div id="group_div_font_setting" style="margin: 0 auto; width:250; height:75px">
+							<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Font Size : </button>
+							<input type="number" id="font-size" value=10></input>
+							<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Font Face : </button>
+							<select id="font-face">
+								<option value="san-serif">san-serif</option>
+								<option value="cursive">cursive</option>
+							</select><br>
+							<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Font Weight : </button>
+							<input type="number" id="font-weight" value=10></input>
+						</div>
+					</div>						
+				</div>
+			</div>		
 		</div>
-		<div class="group_div_toolbar_col"  id="first_row_third_col">
-			<div>
-				<button class="adj_btn maxbutton-1 maxbutton" style=" overflow:hidden;">Gradient Color Picker</button>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px' > 
-					<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>	
-					<canvas id="tm_angle_picker" width=50 height=50 style='position:absolute; top:0px; right:0px; z-index:1;'></canvas>
-				</div>					
-			</div>
-		</div>
-	</div>
-	<div class ="group_div_toolbar_row" id="second_row" style='display:flex; display:-webkit-flex;'>
-		<div class="group_div_toolbar_col"  id="second_row_first_col">
-			<div>
-				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Shape</button>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
-					<div id="group_div_shape" style="margin: 0 auto; width:200; height:200px"  >
-							<div id="div_circleshape" width='50' height='50'  style="float:left;">
-								<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
-							</div>
-							<div id="div_rectangleshape" width='50' height='50'  style="float:left;">
-								<img src="/ThinkMineCV/res/RectangleShape.png" id="RectangleShapeImage" width='50' height='50' />
-							</div>
-							<div id="div_starshape" width='50' height='50' style="float:left;">
-								<img src="/ThinkMineCV/res/StarShape.png" id="StarShapeImage" width='50' height='50' />
-							</div>
-							<div id="div_polygonshape" width='50' height='50'>
-								<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
-							</div>
-					</div>
-				</div>						
-			</div>
-		</div>
-		<div class="group_div_toolbar_col"  id="second_row_second_col">
-			<div>
-				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Contents Type</button>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'  > 
-					<div id="group_div_contents" style="margin: 0 auto; width:250; height:250px"  >
-							<div id="div_textcontents" width='50' height='50'  style="float:left;">
-								<img src="/ThinkMineCV/res/TextContents.png" id="TextContentsImage" width='50' height='50' />
-							</div>
-							<div id="div_imagecontents" width='50' height='50'  style="float:left;">
-								<img src="/ThinkMineCV/res/ImageContents.jpg" id="ImageContentsImage" width='50' height='50' />
-							</div>
-							<div id="div_moviecontents" width='50' height='50' style="float:left;">
-								<img src="/ThinkMineCV/res/MovieContents.png" id="MovieContentsImage" width='50' height='50' />
-							</div>
-							<div id="div_soundcontents" width='50' height='50'>
-								<img src="/ThinkMineCV/res/SoundContents.png" id="SoundContentsImage" width='50' height='50' />
-							</div>
-							<div id="div_webcontents" width='50' height='50'>
-								<img src="/ThinkMineCV/res/WebPreviewContents.png" id="WebPreviewContentsImage" width='50' height='50' />
-							</div>
-					</div>
-				</div>							
-			</div>
-		</div>
-	</div>
-	
-	<div class ="group_div_toolbar_row" id="third_row" style='display:flex; display:-webkit-flex;'>
-		<div class="group_div_toolbar_col"  id="third_row_first_col">
-			<div>
-				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Font Settings</button>
-				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
-					<div id="group_font_setting" style="margin: 0 auto; width:200; height:200px">
-						Font Size : <input type="number" id="font-size"></input>
-						Font Face : <select id="font-face">
-											<option value="san-serif">san-serif</option>
-											<option value="cursive">cursive</option>
-										</select>
-					</div>
-				</div>						
-			</div>
-		</div>		
-	</div>
 
 	
 	
@@ -255,7 +261,7 @@ color : #3a6163; }
 				
 				var sppc = $('.sp-picker-container')[0];
 				sppc.style.background="#d6e6f5"; 
-				sppc.parentElement.style.border = "1px solid #000000";
+				sppc.parentElement.style.border = "1px solid #d6e6f5";
 				
 				var cpCanvasElement = document.createElement('canvas');
 				cpCanvasElement.id="color_picker_canvas_output";
@@ -334,11 +340,13 @@ color : #3a6163; }
 				sppc.appendChild(inputElement);		
 				br = document.createElement('br');			
 
-				var gfs = document.getElementById("group_font_setting");
-				gfs.addEventListener("mousedown",function(event){event.stopPropagation();});
-				gfs.addEventListener("touchstart",function(event){event.stopPropagation();});
-				gfs.addEventListener("mousemove",function(event){event.stopPropagation();});
-				gfs.addEventListener("touchmove",function(event){event.stopPropagation();});
+				var gfs = document.getElementById("group_div_font_setting");
+				for(var i=0; i<gfs.childElementCount; i++){
+					gfs.children[i].addEventListener("mousedown",function(event){event.stopPropagation();});
+					gfs.children[i].addEventListener("touchstart",function(event){event.stopPropagation();});
+					gfs.children[i].addEventListener("mousemove",function(event){event.stopPropagation();});
+					gfs.children[i].addEventListener("touchmove",function(event){event.stopPropagation();});
+				}
 				
 				gradX("#tm_gradient_cp",{
 					sliders : [{color: "#358CDE",
