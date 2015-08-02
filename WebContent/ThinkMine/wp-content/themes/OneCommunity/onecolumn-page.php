@@ -237,7 +237,8 @@ color : #3a6163; }
 				spc.style.position="absolute";
 				
 				var sppc = $('.sp-picker-container')[0];
-				
+				sppc.style.background="#d6e6f5"; 
+				sppc.parentElement.style.border = "1px solid #000000";
 				
 				var cpCanvasElement = document.createElement('canvas');
 				cpCanvasElement.id="color_picker_canvas_output";
@@ -248,14 +249,14 @@ color : #3a6163; }
 				//cpCanvasElement.style.borderColor = "#000000";
 				
 				sppc.insertBefore(cpCanvasElement, sppc.childNodes[0]);		
-				sppc.insertBefore(document.createElement('br'), sppc.childNodes[0]);	
+				sppc.insertBefore(document.createElement('br'), sppc.childNodes[1]);	
 				
 				var textBtn = document.createElement('button');
 				textBtn.innerText = "Recent Colors";
 				textBtn.style.background="#d6e6f5"; 
 				textBtn.style.border="border-width : 0px";
 				textBtn.style.cursor="default";
-				sppc.insertBefore(textBtn,sppc.childNodes[1]);
+				sppc.insertBefore(textBtn,sppc.childNodes[2]);
 				
 				
 				var recentColorDivElement = document.createElement('div');
