@@ -491,13 +491,24 @@ color : #3a6163; }
 					
 					ThinkMine.Lib.ExternalUI.GradientPicker.attach("tm_gradient_cp",TMCanvas);									
 							
-					ThinkMine.Lib.ExternalUI.ShapeGradientCanvas.attach("canvas_shapecolor_gradientpickerbtn",TMCanvas);					
-					ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas.attach("canvas_shapecolor_colorpickerbtn",TMCanvas);											
-					ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.attach("canvas_shapecolor",TMCanvas);			
+					ThinkMine.Lib.ExternalUI.ShapeGradientCanvas.attach("canvas_shapecolor_gradientpickerbtn");					
+					ThinkMine.Lib.ExternalUI.ShapeColorCPCanvas.attach("canvas_shapecolor_colorpickerbtn");											
+					ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.attach("canvas_shapecolor",TMCanvas);		
+					ThinkMine.Lib.ExternalUI.ShapeFillingOutCanvas.changeCanvasColor({fFillType : FillingTypeEnum.SimpleColor,
+																							r   : 159,
+																							g 	: 202,
+																							b	: 242,
+																							a	: 1
+																						});
 					
-					ThinkMine.Lib.ExternalUI.TextColorCPCanvas.attach("canvas_textcolor_colorpickerbtn",TMCanvas);					
+					ThinkMine.Lib.ExternalUI.TextColorCPCanvas.attach("canvas_textcolor_colorpickerbtn");					
 					ThinkMine.Lib.ExternalUI.TextFillingOutCanvas.attach("canvas_textcolor",TMCanvas);
-
+					ThinkMine.Lib.ExternalUI.TextFillingOutCanvas.changeCanvasColor({fFillType : FillingTypeEnum.SimpleColor,
+																		r   : 0,
+																		g 	: 0,
+																		b	: 0,
+																		a	: 1
+																	});
 					
 					var tmap = document.getElementById("tm_angle_picker");
 					ThinkMine.Lib.ExternalUI.AnglePicker.attach("tm_angle_picker",TMCanvas);
