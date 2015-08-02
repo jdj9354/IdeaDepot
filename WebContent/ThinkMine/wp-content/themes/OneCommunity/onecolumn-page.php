@@ -89,7 +89,7 @@ color : #3a6163; }
 			<div>
 				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Picker</button>
 				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
-					<input type='text' id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></input> 									
+					<input type='text' id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></input> 								
 				</div>									
 			</div>
 		</div>
@@ -149,6 +149,23 @@ color : #3a6163; }
 				</div>							
 			</div>
 		</div>
+	</div>
+	
+	<div class ="group_div_toolbar_row" id="third_row" style='display:flex; display:-webkit-flex;'>
+		<div class="group_div_toolbar_col"  id="third_row_first_col">
+			<div>
+				<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Font Settings</button>
+				<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
+					<div id="group_font_setting" style="margin: 0 auto; width:200; height:200px">
+						Font Size : <input type="number" id="font-size"></input>
+						Font Face : <select id="font-face">
+											<option value="san-serif">san-serif</option>
+											<option value="cursive">cursive</option>
+										</select>
+					</div>
+				</div>						
+			</div>
+		</div>		
 	</div>
 
 	
@@ -315,7 +332,13 @@ color : #3a6163; }
 				inputElement.addEventListener("touchmove",function(event){event.stopPropagation();});
 				inputElement.id="color_picker_alpha_input";
 				sppc.appendChild(inputElement);		
-				br = document.createElement('br');				
+				br = document.createElement('br');			
+
+				var gfs = document.getElementById("group_font_setting");
+				gfs.addEventListener("mousedown",function(event){event.stopPropagation();});
+				gfs.addEventListener("touchstart",function(event){event.stopPropagation();});
+				gfs.addEventListener("mousemove",function(event){event.stopPropagation();});
+				gfs.addEventListener("touchmove",function(event){event.stopPropagation();});
 				
 				gradX("#tm_gradient_cp",{
 					sliders : [{color: "#358CDE",
