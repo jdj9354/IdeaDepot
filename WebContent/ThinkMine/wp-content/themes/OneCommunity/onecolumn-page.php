@@ -159,14 +159,14 @@ color : #3a6163; }
 					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Font Settings</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
 						<div id="group_div_font_setting" style="margin: 0 auto; width:250; height:75px">
-							<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Font Size : </button>
+							<button style="background: #d6e6f5; border-width : 0px; cursor : default; width:100;">Font Size : </button>
 							<input type="number" id="font-size" value=10></input>
-							<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Font Face : </button>
+							<button style="background: #d6e6f5; border-width : 0px; cursor : default; width:100;">Font Face : </button>
 							<select id="font-face">
 								<option value="san-serif">san-serif</option>
 								<option value="cursive">cursive</option>
 							</select><br>
-							<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Font Weight : </button>
+							<button style="background: #d6e6f5; border-width : 0px; cursor : default; width:100;">Font Weight : </button>
 							<input type="number" id="font-weight" value=10></input>
 						</div>
 					</div>						
@@ -258,10 +258,12 @@ color : #3a6163; }
 
 				var spc = $('.sp-container')[0];
 				spc.style.position="absolute";
+								
 				
 				var sppc = $('.sp-picker-container')[0];
 				sppc.style.background="#d6e6f5"; 
-				sppc.parentElement.style.border = "1px solid #d6e6f5";
+				sppc.style.borderLeft="0px solid #d6e6f5";
+				sppc.parentElement.style.border = "0px solid #d6e6f5";
 				
 				var cpCanvasElement = document.createElement('canvas');
 				cpCanvasElement.id="color_picker_canvas_output";
