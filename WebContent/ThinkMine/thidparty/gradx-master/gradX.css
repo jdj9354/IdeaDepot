@@ -13,7 +13,7 @@
     background: -ms-linear-gradient(top, #FAFAFA 0%,#DFDFDF 100%);
     background: linear-gradient(top, #FAFAFA 0%,#DFDFDF 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#dfdfdf',GradientType=0 );    
-    border: 4px solid #dfdfdf;
+    border: 0px solid #dfdfdf;
     padding: 10px;
     font-weight: normal;
     width: 444px;
@@ -28,7 +28,7 @@
     padding: 10px;
     background: white;
     padding-left: 16px;
-    border: 5px solid #e5e5e5;
+    border: 5px solid #9fcaf2;
     border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;

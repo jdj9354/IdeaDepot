@@ -355,6 +355,16 @@ color : #3a6163; }
 								position: 100}]
 				});
 				
+				var a = $('.gradx')[0];
+				$('.gradx').css("background","#D6E6F5");
+				a.style.border="#0px solid #FFFFFF";
+				
+				
+				$('.gradx_container').css("background","#D6E6F5");
+				$('.gradx_container')[0].style.border="#1px solid #FFFFFF";
+				
+				$('#gradx_add_slider').css("background","#9fcaf2");
+				
 				var topZIndex = $('.group_div_toolbar').css("zIndex");
 				topZIndex++;
 				$('.cp-default').css("zIndex",topZIndex);
