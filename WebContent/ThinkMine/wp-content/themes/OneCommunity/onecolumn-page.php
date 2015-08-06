@@ -59,54 +59,13 @@ color : #3a6163; }
 </style>
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
-<div class="group_div_toolbar" style="background:#d6e6f5; position:absolute; z-index:999999999999;"
+<div class="group_div_toolbar" style="background:#d6e6f5; position:absolute; z-index:999999999;"
 			onmousedown="ElementDragAndMoveEventHandler.setDragElement(this);" 			
 			ontouchstart="ElementDragAndMoveEventHandler.setDragElement(this);"
 			>
-	<div id="upper_bar" style="font-family: Arial Black; font-size: 18px; color: white">Tool Bar</div>
-		<div class ="group_div_toolbar_row" id="first_row" style='display:flex; display:-webkit-flex;'>			
+	<div id="upper_bar" style="font-family: Arial Black; font-size: 18px; color: white">Tool Bar</div>		
+		<div class ="group_div_toolbar_row" id="firstrow" style='display:flex; display:-webkit-flex;'>
 			<div class="group_div_toolbar_col"  id="first_row_first_col">
-				<div>
-					<button class="adj_btn maxbutton-1 maxbutton" style=" overflow:hidden;">Gradient Color Picker</button>
-					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px' > 
-						<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>	
-						<canvas id="tm_angle_picker" width=50 height=50 style='position:absolute; top:0px; right:0px; z-index:1;'></canvas>
-					</div>					
-				</div>
-			</div>
-		</div>
-		<div class ="group_div_toolbar_row" id="second_row" style='display:flex; display:-webkit-flex;'>
-			<div class="group_div_toolbar_col" id="second_row_first_col" >
-				<div>
-					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Settings</button>
-					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 			
-						<div> 
-							<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Shape Color</button>
-							<div style='display:flex; display:-webkit-flex;'>							
-								<div><canvas id='canvas_shapecolor' width=100 height=100 style="border:1px solid #000000;"></canvas></div>
-								<div><canvas id='canvas_shapecolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas><br>
-								<canvas id='canvas_shapecolor_gradientpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
-							</div>						
-							<button style="background: #d6e6f5; border-width : 0px; cursor : default;">Text Color</button>
-							<div style='display:flex; display:-webkit-flex;'>							
-								<div><canvas id='canvas_textcolor' width=100 height=100 style="border:1px solid #000000;"></canvas></div>
-								<div><canvas id='canvas_textcolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
-							</div>
-						</div>
-					</div>									
-				</div>
-			</div>
-			<div class="group_div_toolbar_col" id="second_row_second_col" >
-				<div>
-					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Picker</button>
-					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
-						<input type='text' id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></input> 								
-					</div>									
-				</div>
-			</div>			
-		</div>
-		<div class ="group_div_toolbar_row" id="thirdrow" style='display:flex; display:-webkit-flex;'>
-			<div class="group_div_toolbar_col"  id="third_row_first_col">
 				<div>
 					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Shape</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
@@ -127,7 +86,7 @@ color : #3a6163; }
 					</div>						
 				</div>
 			</div>
-			<div class="group_div_toolbar_col"  id="third_row_second_col">
+			<div class="group_div_toolbar_col"  id="first_row_second_col">
 				<div>
 					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Contents Type</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'  > 
@@ -153,8 +112,8 @@ color : #3a6163; }
 			</div>
 		</div>
 		
-		<div class ="group_div_toolbar_row" id="fourth_row" style='display:flex; display:-webkit-flex;'>
-			<div class="group_div_toolbar_col"  id="fourth_row_first_col">
+		<div class ="group_div_toolbar_row" id="second_row" style='display:flex; display:-webkit-flex;'>
+			<div class="group_div_toolbar_col"  id="second_row_first_col">
 				<div>
 					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Font Settings</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
@@ -173,8 +132,47 @@ color : #3a6163; }
 				</div>
 			</div>		
 		</div>
-
-	
+		<div class ="group_div_toolbar_row" id="third_row" style='display:flex; display:-webkit-flex;'>
+			<div class="group_div_toolbar_col" id="third_row_first_col" >
+				<div>
+					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Settings</button>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 			
+						<div style=" display:flex; display:-webkit-flex;"> 
+							<button style=" display:flex; display:-webkit-flex;background: #d6e6f5; border-width : 0px; cursor : default;">Shape<br>Color</button>
+							<div style='display:flex; display:-webkit-flex;'>							
+								<div><canvas id='canvas_shapecolor' width=100 height=100 style="border:1px solid #000000;"></canvas></div>
+								<div><canvas id='canvas_shapecolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas><br>
+								<canvas id='canvas_shapecolor_gradientpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
+							</div>						
+							<button style="display:flex; display:-webkit-flex; background: #d6e6f5; border-width : 0px; cursor : default;">Text<br>Color</button>
+							<div style='display:flex; display:-webkit-flex;'>							
+								<div><canvas id='canvas_textcolor' width=100 height=100 style="border:1px solid #000000;"></canvas></div>
+								<div><canvas id='canvas_textcolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
+							</div>
+						</div>
+					</div>									
+				</div>
+			</div>			
+		</div>
+		<div class ="group_div_toolbar_row" id="fourth_row" style='display:flex; display:-webkit-flex;'>			
+			<div class="group_div_toolbar_col" id="fourth_row_first_col" >
+				<div>
+					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Picker</button>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
+						<input type='text' id="tm_main_cp" style='position:absolute; top:0px; left:0px; z-index:2;'></input> 								
+					</div>									
+				</div>
+			</div>			
+			<div class="group_div_toolbar_col"  id="fourth_row_second_col">
+				<div>
+					<button class="adj_btn maxbutton-1 maxbutton" style=" overflow:hidden;">Gradient Color Picker</button>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px' > 
+						<div id="tm_gradient_cp" style='position:absolute; top:0px; left:0px; z-index:1;'></div>	
+						<canvas id="tm_angle_picker" width=50 height=50 style='position:absolute; top:0px; right:0px; z-index:1;'></canvas>
+					</div>					
+				</div>
+			</div>
+		</div>
 	
 			
 </div>
@@ -356,6 +354,11 @@ color : #3a6163; }
 								{color: "#D6E6F5",
 								position: 100}]
 				});
+				
+				var topZIndex = $('.group_div_toolbar').css("zIndex");
+				topZIndex++;
+				$('.cp-default').css("zIndex",topZIndex);
+				$('.cp-default').css("position","absolute");
 
 
 				var maxWidth = -1;
