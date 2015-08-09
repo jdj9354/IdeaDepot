@@ -59,10 +59,23 @@ color : #3a6163; }
 </style>
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
+<script>var stopPropagationFunc = function(event){event.stopPropagation();};
+		var urlLinkFunc = function(event){var url = document.getElementById("url_input").value;
+											window.open(url);};</script>
+
 <div class="group_div_toolbar" style="background:#d6e6f5; position:absolute; z-index:999999999;"
 			onmousedown="ElementDragAndMoveEventHandler.setDragElement(this);" 			
 			ontouchstart="ElementDragAndMoveEventHandler.setDragElement(this);"
 			>
+	<form onmousedown="stopPropagationFunc(event);"
+			onmousemove="stopPropagationFunc(event);"
+			ontouchstart="stopPropagationFunc(event);"
+			ontouchmove="stopPropagationFunc(event);" 
+			target="_blank"
+			id="url_form">
+		<input id="url_input" type=url required=""/  onchange="document.getElementById('url_form').action=this.value;"> 
+		<button type="submit"></button>
+	</form>
 	<div id="upper_bar" style="font-family: Arial Black; font-size: 18px; color: white">Tool Bar</div>		
 		<div class ="group_div_toolbar_row" id="firstrow" style='display:flex; display:-webkit-flex;'>
 			<div class="group_div_toolbar_col"  id="first_row_first_col">
@@ -299,7 +312,6 @@ color : #3a6163; }
 				var colorObj =  $("#tm_main_cp").spectrum("get").toRgb();				
 				cpCanvasCtx.fillStyle = "rgba("+colorObj.r+","+colorObj.g+","+colorObj.b+","+colorObj.a+")"; 
 				cpCanvasCtx.fillRect(0,0,cpCanvasElement.width,cpCanvasElement.height);		
-				
 				
 				var inputElement = document.createElement('input');
 				inputElement.addEventListener("mousedown",function(event){event.stopPropagation();});
