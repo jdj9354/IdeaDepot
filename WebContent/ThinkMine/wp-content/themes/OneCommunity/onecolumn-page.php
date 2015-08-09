@@ -59,9 +59,15 @@ color : #3a6163; }
 </style>
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
-<script>var stopPropagationFunc = function(event){event.stopPropagation();};
-		var urlLinkFunc = function(event){var url = document.getElementById("url_input").value;
-											window.open(url);};</script>
+<script>
+	var stopPropagationFunc = function(event){event.stopPropagation();};		
+	function target_popup(form) {
+		var width = screen.width;
+		var height = screen.height;
+		window.open('', 'formpopup', 'width='+width/2+',height='+height+',resizeable,toolbar,scrollbars,,left='+width/2);
+		form.target = 'formpopup';
+	}
+</script>
 
 <div class="group_div_toolbar" style="background:#d6e6f5; position:absolute; z-index:999999999;"
 			onmousedown="ElementDragAndMoveEventHandler.setDragElement(this);" 			
@@ -72,7 +78,7 @@ color : #3a6163; }
 			ontouchstart="stopPropagationFunc(event);"
 			ontouchmove="stopPropagationFunc(event);" 
 			target="_blank"
-			id="url_form">
+			id="url_form" onsubmit="target_popup(this)">
 		<input id="url_input" type=url required=""/  onchange="document.getElementById('url_form').action=this.value;"> 
 		<button type="submit"></button>
 	</form>
