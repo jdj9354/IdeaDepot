@@ -64,8 +64,14 @@ color : #3a6163; }
 	function target_popup(form) {
 		var width = screen.width;
 		var height = screen.height;
-		window.open('', 'formpopup', 'width='+width/2+',height='+height+',resizeable,toolbar,scrollbars,,left='+width/2);
+		var createdWiwndow = window.open('', 'formpopup', 'width='+width/2+',height='+height+',resizeable,toolbar,scrollbars,,left='+width/2);
 		form.target = 'formpopup';
+	}
+	function on_fileupload(form){
+		//need to use Contstants From ThinkMineConstants and ContentsConstants (Need to be modulized"
+		form.action="http://127.0.0.1:53374/upload";
+		form.setAttribute("UI","jdj9354");
+		form.setAttribute("CT","ImageContents");
 	}
 </script>
 
@@ -81,6 +87,14 @@ color : #3a6163; }
 			id="url_form" onsubmit="target_popup(this)">
 		<input id="url_input" type=url required=""/  onchange="document.getElementById('url_form').action=this.value;"> 
 		<button type="submit"></button>
+	</form>
+	<form onmousedown="stopPropagationFunc(event);"
+			onmousemove="stopPropagationFunc(event);"
+			ontouchstart="stopPropagationFunc(event);"
+			ontouchmove="stopPropagationFunc(event);" 
+			method="post", enctype="multipart/form-data" onsubmit="on_fileupload(this)">
+		<input type="file" name="contentsFile" />
+		<input type="submit" name="btn_upload"/>
 	</form>
 	<div id="upper_bar" style="font-family: Arial Black; font-size: 18px; color: white">Tool Bar</div>		
 		<div class ="group_div_toolbar_row" id="firstrow" style='display:flex; display:-webkit-flex;'>
