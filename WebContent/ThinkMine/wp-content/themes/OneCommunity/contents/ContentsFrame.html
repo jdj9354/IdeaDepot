@@ -1,0 +1,90 @@
+<html>
+<head>
+	<script>
+		if(!window.ContentsModule)
+			ContentsModule = {};
+		if(!ContentsModule.Interface)
+			ContentsModule.Interface = {};
+			
+		function addJavascript(jsname) {
+			var th = document.getElementsByTagName('head')[0];
+			var s = document.createElement('script');
+			s.setAttribute('type','text/javascript');
+			s.setAttribute('src',jsname);
+			th.appendChild(s);
+		}
+
+		addJavascript("/Common/Constants/ContentsConstants.js");
+		addJavascript("/Common/Constants/ThinkMineConstants.js");
+	</script>
+</head>
+<body>
+	<script>
+		var stopPropagationFunc = function(event){event.stopPropagation();};		
+
+		function on_fileupload(form){
+			if((!ContentsModule.Interface.getLogInStatus()))
+				return;
+			var width = screen.width;
+			var height = screen.height;
+			form.action="https://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/upload";
+			form.target="formpopup"
+			document.getElementById("ui_val").setAttribute("value",ContentsModule.Interface.Val_UI);
+			document.getElementById("ct_val").setAttribute("value",ContentsModule.Interface.Val_CT); 
+			var createdWiwndow = window.open('', 'formpopup', 'width='+width/4+',height='+height/4+',resizeable,toolbar,scrollbars,,left='+width/2);
+		}
+		
+		function on_reqFileList(form){
+			if((!ContentsModule.Interface.getLogInStatus()))
+				return;
+			var width = screen.width;
+			var height = screen.height;
+			form.action="http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/list";
+			form.target="formpopup"
+			document.getElementById("req_list_ui_val").setAttribute("value",ContentsModule.Interface.Val_UI);
+			document.getElementById("req_list_ct_val").setAttribute("value",ContentsModule.Interface.Val_CT); 
+			var createdWiwndow = window.open('', 'formpopup', 'width='+width/4+',height='+height/4+',resizeable,toolbar,scrollbars,left='+width/2);
+		}
+		
+		window.onload = function(){
+			ContentsModule.Interface = new function(undefined){
+				this.Val_UI = "NA";
+				this.Val_CT = CONTENTS_TYPE_ENUM.Image;
+				var isLogOn = false;
+				
+				this.notifyLogInStatus = function(userId,argIsLogOn){
+					this.Val_UI = userId;
+					isLogOn = argIsLogOn;
+				};
+				
+				this.notifyContentsType = function(contentsType){
+					this.Val_CT = contentsType;		
+				};
+				this.getLogInStatus = function(){
+					return isLogOn;
+				};
+			};
+			ContentsModule.Interface.notifyLogInStatus("jdj9354",true);
+		};
+	</script>
+	<form onmousedown="stopPropagationFunc(event);"
+			onmousemove="stopPropagationFunc(event);"
+			ontouchstart="stopPropagationFunc(event);"
+			ontouchmove="stopPropagationFunc(event);" 
+			method="post" enctype="multipart/form-data" onsubmit="on_fileupload(this)">
+		<input type="hidden" id="ui_val" name="UI" value=""/>
+		<input type="hidden" id="ct_val" name="CT" value=""/>
+		<input type="file" name="contentsFile" />
+		<input type="submit" name="btn_upload"/>
+	</form>
+	<form onmousedown="stopPropagationFunc(event);"
+			onmousemove="stopPropagationFunc(event);"
+			ontouchstart="stopPropagationFunc(event);"
+			ontouchmove="stopPropagationFunc(event);" 			
+			method="post" onsubmit="on_reqFileList(this)">
+		<input type="hidden" id="req_list_ui_val" name="UI" value=""/>
+		<input type="hidden" id="req_list_ct_val" name="CT" value=""/>
+		<input type="submit" name="btn_req_file_list"/>
+	</form>
+</body>
+</html>

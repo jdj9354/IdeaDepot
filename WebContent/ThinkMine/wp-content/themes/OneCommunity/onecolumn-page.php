@@ -67,12 +67,6 @@ color : #3a6163; }
 		var createdWiwndow = window.open('', 'formpopup', 'width='+width/2+',height='+height+',resizeable,toolbar,scrollbars,,left='+width/2);
 		form.target = 'formpopup';
 	}
-	function on_fileupload(form){
-		//need to use Contstants From ThinkMineConstants and ContentsConstants (Need to be modulized"
-		form.action="http://127.0.0.1:53374/upload";
-		form.setAttribute("UI","jdj9354");
-		form.setAttribute("CT","ImageContents");
-	}
 </script>
 
 <div class="group_div_toolbar" style="background:#d6e6f5; position:absolute; z-index:999999999;"
@@ -87,14 +81,6 @@ color : #3a6163; }
 			id="url_form" onsubmit="target_popup(this)">
 		<input id="url_input" type=url required=""/  onchange="document.getElementById('url_form').action=this.value;"> 
 		<button type="submit"></button>
-	</form>
-	<form onmousedown="stopPropagationFunc(event);"
-			onmousemove="stopPropagationFunc(event);"
-			ontouchstart="stopPropagationFunc(event);"
-			ontouchmove="stopPropagationFunc(event);" 
-			method="post", enctype="multipart/form-data" onsubmit="on_fileupload(this)">
-		<input type="file" name="contentsFile" />
-		<input type="submit" name="btn_upload"/>
 	</form>
 	<div id="upper_bar" style="font-family: Arial Black; font-size: 18px; color: white">Tool Bar</div>		
 		<div class ="group_div_toolbar_row" id="firstrow" style='display:flex; display:-webkit-flex;'>
@@ -205,6 +191,16 @@ color : #3a6163; }
 					</div>					
 				</div>
 			</div>
+		</div>
+		<div class ="group_div_toolbar_row" id="fifth_row" style='display:flex; display:-webkit-flex;'>			
+			<div class="group_div_toolbar_col" id="fifth_row_first_col" >
+				<div>
+					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Contents Uploader</button>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
+						<iframe src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
+					</div>									
+				</div>
+			</div>			
 		</div>
 	
 			
