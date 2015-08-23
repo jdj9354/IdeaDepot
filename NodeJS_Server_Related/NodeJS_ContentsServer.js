@@ -121,6 +121,9 @@ app.use('/list',function(request, response,next) {
 	case CC.CONTENTS_TYPE_ENUM.Sound:
 		contentsFolder = "snd";
 		break;
+	case CC.CONTENTS_TYPE_ENUM.WebPreview:
+		return;
+		break;
 	}	
 	var dirPath = __dirname+"/"+contentsRootFolder+"/"+userId+"/"+contentsFolder+"/";	
 	var fileList = getListOfFiles(dirPath);		

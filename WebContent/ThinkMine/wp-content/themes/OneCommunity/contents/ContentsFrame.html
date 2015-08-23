@@ -1,5 +1,6 @@
 <html>
 <head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script>
 		if(!window.ContentsModule)
 			ContentsModule = {};
@@ -17,8 +18,50 @@
 		addJavascript("/Common/Constants/ContentsConstants.js");
 		addJavascript("/Common/Constants/ThinkMineConstants.js");
 	</script>
+	<style type='text/css'>
+	body {
+	  font-family: sans-serif;
+	}
+	.wrapper {
+	  background: #D6E6F5;
+	  width: 100%;
+	}
+	h1 {
+	  text-align: center;
+	}
+	ul.tabs {
+	  list-style-type: none;
+	  margin: 0;
+	  padding: 0;
+	}
+	ul.tabs li {
+	  border-bottom: none;
+	  float: left;
+	  margin: 0 .25em 0 0;
+	  padding: .25em .5em;
+	}
+	ul.tabs li a {
+	  color: gray;
+	  font-weight: bold;
+	  text-decoration: none;
+	}
+	ul.tabs li.active {
+	  background: #9fcaf2;
+	}
+	ul.tabs li.active a {
+	  color: white;
+	}
+	.clr {
+	  clear: both;
+	}
+	article {
+	  border-top: gray solid 1px;
+	  padding: 0 1em;
+	}
+	</style>
 </head>
-<body>
+<body>	
+	
 	<script>
 		var stopPropagationFunc = function(event){event.stopPropagation();};		
 
@@ -27,7 +70,7 @@
 				return;
 			var width = screen.width;
 			var height = screen.height;
-			form.action="https://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/upload";
+			form.action="http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/upload";
 			form.target="formpopup"
 			document.getElementById("ui_val").setAttribute("value",ContentsModule.Interface.Val_UI);
 			document.getElementById("ct_val").setAttribute("value",ContentsModule.Interface.Val_CT); 
@@ -47,6 +90,30 @@
 		}
 		
 		window.onload = function(){
+			$(function(){
+				$('ul.tabs li:first').addClass('active');
+				$('.block div').hide();
+				$('.block div:first').show();
+				var innerDivs = $(this).find('a');
+				var contentsKeys = Object.keys(CONTENTS_TYPE_ENUM);
+				for(var i=0; i<innerDivs.length; i++)
+					innerDivs[i].setAttribute("href","#"+CONTENTS_TYPE_ENUM[contentsKeys[i+1]]);	
+				innerDivs = $('section > section.block > div');
+				for(var i=0; i<innerDivs.length; i++)
+					innerDivs[i].setAttribute("id",CONTENTS_TYPE_ENUM[contentsKeys[i+1]]);	
+				$('ul.tabs li').on('click',function(){
+					$('ul.tabs li').removeClass('active');
+					$(this).addClass('active')
+					$('.block div').hide();
+					var activeTab = $(this).find('a').attr('href');
+					$(activeTab).show();
+					
+					var reqContentsType = $(this).find('a').attr('href').substring(1);
+					ContentsModule.Interface.notifyContentsType(reqContentsType);
+					//alert(reqContentsType);
+					return false;
+				});
+			})
 			ContentsModule.Interface = new function(undefined){
 				this.Val_UI = "NA";
 				this.Val_CT = CONTENTS_TYPE_ENUM.Image;
@@ -67,6 +134,30 @@
 			ContentsModule.Interface.notifyLogInStatus("jdj9354",true);
 		};
 	</script>
+	<section class="wrapper">
+		<ul class="tabs">
+			<li><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></li>
+			<li><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></li>
+			<li><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></li>
+			<li><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></li>
+		</ul>
+		<div class="clr"></div>
+		<section class="block">
+			<div>
+				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Nullam mollis. Ut justo. Suspendisse potenti. Pellentesque fermentum dolor. Aliquam quam lectus, facilisis auctor, ultrices ut, elementum vulputate, nunc.</p>
+			</div>
+			<div>
+				<p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.</p>
+			</div>
+			<div>
+				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
+			</div>
+			<div>
+				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
+			</div>
+		</section>
+	</section>
+
 	<form onmousedown="stopPropagationFunc(event);"
 			onmousemove="stopPropagationFunc(event);"
 			ontouchstart="stopPropagationFunc(event);"
@@ -81,7 +172,7 @@
 			onmousemove="stopPropagationFunc(event);"
 			ontouchstart="stopPropagationFunc(event);"
 			ontouchmove="stopPropagationFunc(event);" 			
-			method="post" onsubmit="on_reqFileList(this)">
+			method="post" onsubmit="on_reqFileList(this)" id="form_contents_list_req">
 		<input type="hidden" id="req_list_ui_val" name="UI" value=""/>
 		<input type="hidden" id="req_list_ct_val" name="CT" value=""/>
 		<input type="submit" name="btn_req_file_list"/>

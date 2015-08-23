@@ -195,9 +195,9 @@ color : #3a6163; }
 		<div class ="group_div_toolbar_row" id="fifth_row" style='display:flex; display:-webkit-flex;'>			
 			<div class="group_div_toolbar_col" id="fifth_row_first_col" >
 				<div>
-					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Contents Uploader</button>
+					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Contents Manager</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
-						<iframe src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
+						<iframe width='700px' height='350px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
 					</div>									
 				</div>
 			</div>			
