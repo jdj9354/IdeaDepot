@@ -107,9 +107,10 @@ app.use('/upload',function(request, response,next) {
 		
 	});
 });
-app.use('/list',function(request, response,next) {	
-	var userId = request.param(CC.REQ_PARAM_ENUM.UI);
-	var contentsType  = request.param(CC.REQ_PARAM_ENUM.CT);
+app.use('/list',function(request, response,next) {		
+	var userId = request.body.UI;
+	var contentsType  = request.body.CT;
+	
 	var contentsFolder = "im";
 	switch(contentsType){
 	case CC.CONTENTS_TYPE_ENUM.Image:
@@ -126,11 +127,15 @@ app.use('/list',function(request, response,next) {
 		break;
 	}	
 	var dirPath = __dirname+"/"+contentsRootFolder+"/"+userId+"/"+contentsFolder+"/";	
-	var fileList = getListOfFiles(dirPath);		
-	var reponseString = "";
-	for(var i=0; i<fileList.length; i++)
-		reponseString += (fileList[i] + "\n");
-	response.send(reponseString);
+	try{
+		var fileList = getListOfFiles(dirPath);		
+	}catch (e){
+		fileList = [];
+	}
+	finally {
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send(JSON.stringify(fileList));
+	}	
 });
 
 http.createServer(app).listen(TMC.CONTENTS_SERVER_PORT,function() {

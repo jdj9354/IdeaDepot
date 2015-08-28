@@ -1,6 +1,9 @@
 <html>
 <head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="/thidparty/freewall-master/freewall-master/freewall.js"></script>
+	
+	
 	<script>
 		if(!window.ContentsModule)
 			ContentsModule = {};
@@ -57,11 +60,11 @@
 	article {
 	  border-top: gray solid 1px;
 	  padding: 0 1em;
-	}
+	}	
 	</style>
 </head>
 <body>	
-	
+
 	<script>
 		var stopPropagationFunc = function(event){event.stopPropagation();};		
 
@@ -87,6 +90,20 @@
 			document.getElementById("req_list_ui_val").setAttribute("value",ContentsModule.Interface.Val_UI);
 			document.getElementById("req_list_ct_val").setAttribute("value",ContentsModule.Interface.Val_CT); 
 			var createdWiwndow = window.open('', 'formpopup', 'width='+width/4+',height='+height/4+',resizeable,toolbar,scrollbars,left='+width/2);
+			//var xhr = ("XMLHttpRequest" in window) ? new XMLHttpRequest() : new ActiveXObject("Msxml3.XMLHTTP");
+			//xhr.open("GET",'http://www.example.net/abc.aspx', true);
+			//xhr.send(""); 
+		}
+		
+		function test(){
+			var url = "http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/list";
+			var params = "CT="+ContentsModule.Interface.Val_CT+"&UI="+ContentsModule.Interface.Val_UI;	
+			var data = { CT : ContentsModule.Interface.Val_CT,
+						 UI : ContentsModule.Interface.Val_UI
+						};			
+			$.post(url,data, function(response){
+               alert("The server says: " + response);              
+			});
 		}
 		
 		window.onload = function(){
@@ -94,6 +111,7 @@
 				$('ul.tabs li:first').addClass('active');
 				$('.block div').hide();
 				$('.block div:first').show();
+				$('.block div:first').find('*').show();
 				var innerDivs = $(this).find('a');
 				var contentsKeys = Object.keys(CONTENTS_TYPE_ENUM);
 				for(var i=0; i<innerDivs.length; i++)
@@ -107,10 +125,10 @@
 					$('.block div').hide();
 					var activeTab = $(this).find('a').attr('href');
 					$(activeTab).show();
+					$(activeTab).find('*').show();
 					
 					var reqContentsType = $(this).find('a').attr('href').substring(1);
-					ContentsModule.Interface.notifyContentsType(reqContentsType);
-					//alert(reqContentsType);
+					ContentsModule.Interface.notifyContentsType(reqContentsType);					
 					return false;
 				});
 			})
@@ -134,30 +152,7 @@
 			ContentsModule.Interface.notifyLogInStatus("jdj9354",true);
 		};
 	</script>
-	<section class="wrapper">
-		<ul class="tabs">
-			<li><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></li>
-			<li><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></li>
-			<li><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></li>
-			<li><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></li>
-		</ul>
-		<div class="clr"></div>
-		<section class="block">
-			<div>
-				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Nullam mollis. Ut justo. Suspendisse potenti. Pellentesque fermentum dolor. Aliquam quam lectus, facilisis auctor, ultrices ut, elementum vulputate, nunc.</p>
-			</div>
-			<div>
-				<p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.</p>
-			</div>
-			<div>
-				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
-			</div>
-			<div>
-				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
-			</div>
-		</section>
-	</section>
-
+		
 	<form onmousedown="stopPropagationFunc(event);"
 			onmousemove="stopPropagationFunc(event);"
 			ontouchstart="stopPropagationFunc(event);"
@@ -175,7 +170,91 @@
 			method="post" onsubmit="on_reqFileList(this)" id="form_contents_list_req">
 		<input type="hidden" id="req_list_ui_val" name="UI" value=""/>
 		<input type="hidden" id="req_list_ct_val" name="CT" value=""/>
-		<input type="submit" name="btn_req_file_list"/>
+		
 	</form>
+	<input type="submit" name="btn_req_file_list"  onclick="test()"/>
+	<section class="wrapper">
+		<ul class="tabs" height='50'>
+			<li><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></li>
+			<li><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></li>
+			<li><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></li>
+			<li><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></li>
+		</ul>		
+		<section class="block" height='1000'>
+			<div>
+				<div class="layout" style="position:absolute;">
+					<div id="freewall" class="free-wall" style="position:absolute;">
+						<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
+							<div class='cover'>
+								<div class='handle'>Drag item handle</div>
+							</div>
+						</div>
+						<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
+							<div class='cover'>
+								<div class='handle'>Drag item handle</div>
+							</div>
+						</div>
+						<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
+							<div class='cover'>
+								<div class='handle'>Drag item handle</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script type="text/javascript">
+				
+				var temp = "<div class='cell' style='width:{width}px; height: {height}px; background-color: {color}'><div class='cover'>Demo draggable</div></div>";
+				var colour = [
+					"rgb(243, 156, 18)",
+					"rgb(211, 84, 0)",
+					"rgb(0, 106, 63)",
+					"rgb(41, 128, 185)",
+					"rgb(192, 57, 43)",
+					"rgb(135, 0, 0)",
+					"rgb(39, 174, 96)"
+				];
+
+				var w = 1, h = 1,  color = '', limitItem = 10;
+				for (var i = 0; i < limitItem; ++i) {
+					h = 4 ;//+ 3 * Math.random() << 0;
+					w = 4;// + 3 * Math.random() << 0;
+					color = colour[colour.length * Math.random() << 0];
+					html = temp.replace(/\{height\}/g, h*150).replace(/\{width\}/g, w*150).replace("{color}", color);
+					$("#freewall").append(html);
+				}
+				
+				
+				var wall = new freewall("#freewall");
+				wall.reset({
+					draggable: true,
+					selector: '.cell',
+					animate: true,
+					cellW: 150,
+					cellH: 150,
+					onResize: function() {
+						wall.refresh();
+					},
+					onBlockMove: function() {
+						console.log(this);
+					}
+				});
+				wall.fitWidth();
+				// for scroll bar appear;
+				$(window).trigger("resize");
+			</script>
+			<div>
+				<p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.</p>
+			</div>
+			<div>
+				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
+			</div>
+			<div>
+				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
+			</div>
+		</section>
+	</section>
+
+
 </body>
 </html>
