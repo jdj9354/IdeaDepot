@@ -23,3 +23,13 @@ How to use
 1. Set up APM (Apache,PHP,MySQL) environment
 2. Set WebContent\ThinkMine directory as root path and Common directory as Common alias on the Apache2 set up
    (/etc/apache2/sites-available/default)
+
+   
+-------------------- WordPress Settings -------------------------------------
+1. Set basic mysql database environment for WordPress
+2. Set OneCommunity as main theme
+3. Activate wordpress Plugins
+   (bbpress, BuddyPress, CKEditor for WordPress, MaxButtons, NextGen Gallery, WooCommerce,WPtouch Mobile Plugin)
+4. Enable all of options of the BuddyPress except for 'Site Tracking'
+5. Set permalink as Post name
+   
