@@ -39,7 +39,6 @@
 	}
 	ul.tabs li {
 	  border-bottom: none;
-	  float: left;
 	  margin: 0 .25em 0 0;
 	  padding: .25em .5em;
 	}
@@ -116,7 +115,7 @@
 				var contentsKeys = Object.keys(CONTENTS_TYPE_ENUM);
 				for(var i=0; i<innerDivs.length; i++)
 					innerDivs[i].setAttribute("href","#"+CONTENTS_TYPE_ENUM[contentsKeys[i+1]]);	
-				innerDivs = $('section > section.block > div');
+				innerDivs = $('section.block > div');
 				for(var i=0; i<innerDivs.length; i++)
 					innerDivs[i].setAttribute("id",CONTENTS_TYPE_ENUM[contentsKeys[i+1]]);	
 				$('ul.tabs li').on('click',function(){
@@ -174,85 +173,85 @@
 	</form>
 	<input type="submit" name="btn_req_file_list"  onclick="test()"/>
 	<section class="wrapper">
-		<ul class="tabs" height='50'>
-			<li><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></li>
-			<li><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></li>
-			<li><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></li>
-			<li><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></li>
-		</ul>		
-		<section class="block" height='1000'>
-			<div>
-				<div class="layout" style="position:absolute;">
-					<div id="freewall" class="free-wall" style="position:absolute;">
-						<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
-							<div class='cover'>
-								<div class='handle'>Drag item handle</div>
-							</div>
+		<ul class="tabs" height='500'>
+			<li style="float:left"><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></li>
+			<li style="float:left"><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></li>
+			<li style="float:left"><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></li>
+			<li style="float:left"><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></li>
+		</ul>				
+	</section>
+	<section class="block" height='1000' style="clear:left">
+		<div>
+			<div class="layout" style="position:absolute;">
+				<div id="freewall" class="free-wall" style="position:absolute;">
+					<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
+						<div class='cover'>
+							<div class='handle'>Drag item handle</div>
 						</div>
-						<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
-							<div class='cover'>
-								<div class='handle'>Drag item handle</div>
-							</div>
+					</div>
+					<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
+						<div class='cover'>
+							<div class='handle'>Drag item handle</div>
 						</div>
-						<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
-							<div class='cover'>
-								<div class='handle'>Drag item handle</div>
-							</div>
+					</div>
+					<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
+						<div class='cover'>
+							<div class='handle'>Drag item handle</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<script type="text/javascript">
-				
-				var temp = "<div class='cell' style='width:{width}px; height: {height}px; background-color: {color}'><div class='cover'>Demo draggable</div></div>";
-				var colour = [
-					"rgb(243, 156, 18)",
-					"rgb(211, 84, 0)",
-					"rgb(0, 106, 63)",
-					"rgb(41, 128, 185)",
-					"rgb(192, 57, 43)",
-					"rgb(135, 0, 0)",
-					"rgb(39, 174, 96)"
-				];
+		</div>
+		<script type="text/javascript">
+			
+			var temp = "<div class='cell' style='width:{width}px; height: {height}px; background-color: {color}'><div class='cover'>Demo draggable</div></div>";
+			var colour = [
+				"rgb(243, 156, 18)",
+				"rgb(211, 84, 0)",
+				"rgb(0, 106, 63)",
+				"rgb(41, 128, 185)",
+				"rgb(192, 57, 43)",
+				"rgb(135, 0, 0)",
+				"rgb(39, 174, 96)"
+			];
 
-				var w = 1, h = 1,  color = '', limitItem = 10;
-				for (var i = 0; i < limitItem; ++i) {
-					h = 4 ;//+ 3 * Math.random() << 0;
-					w = 4;// + 3 * Math.random() << 0;
-					color = colour[colour.length * Math.random() << 0];
-					html = temp.replace(/\{height\}/g, h*150).replace(/\{width\}/g, w*150).replace("{color}", color);
-					$("#freewall").append(html);
+			var w = 1, h = 1,  color = '', limitItem = 10;
+			for (var i = 0; i < limitItem; ++i) {
+				h = 4 ;//+ 3 * Math.random() << 0;
+				w = 4;// + 3 * Math.random() << 0;
+				color = colour[colour.length * Math.random() << 0];
+				html = temp.replace(/\{height\}/g, h*150).replace(/\{width\}/g, w*150).replace("{color}", color);
+				$("#freewall").append(html);
+			}
+			
+			
+			var wall = new freewall("#freewall");
+			wall.reset({
+				draggable: true,
+				selector: '.cell',
+				animate: true,
+				cellW: 150,
+				cellH: 150,
+				onResize: function() {
+					wall.refresh();
+				},
+				onBlockMove: function() {
+					console.log(this);
 				}
-				
-				
-				var wall = new freewall("#freewall");
-				wall.reset({
-					draggable: true,
-					selector: '.cell',
-					animate: true,
-					cellW: 150,
-					cellH: 150,
-					onResize: function() {
-						wall.refresh();
-					},
-					onBlockMove: function() {
-						console.log(this);
-					}
-				});
-				wall.fitWidth();
-				// for scroll bar appear;
-				$(window).trigger("resize");
-			</script>
-			<div>
-				<p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.</p>
-			</div>
-			<div>
-				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
-			</div>
-			<div>
-				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
-			</div>
-		</section>
+			});
+			wall.fitWidth();
+			// for scroll bar appear;
+			$(window).trigger("resize");
+		</script>
+		<div>
+			<p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.</p>
+		</div>
+		<div>
+			<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
+		</div>
+		<div>
+			<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
+		</div>
 	</section>
 
 
