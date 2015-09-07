@@ -197,7 +197,7 @@ color : #3a6163; }
 				<div>
 					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Contents Manager</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
-						<iframe width='2000px' height='1000px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
+						<iframe width='600px' height='400px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
 					</div>									
 				</div>
 			</div>			

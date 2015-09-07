@@ -125,7 +125,7 @@ app.use('/list',function(request, response,next) {
 	case CC.CONTENTS_TYPE_ENUM.WebPreview:
 		return;
 		break;
-	}	
+	}		
 	var dirPath = __dirname+"/"+contentsRootFolder+"/"+userId+"/"+contentsFolder+"/";	
 	try{
 		var fileList = getListOfFiles(dirPath);		
@@ -134,13 +134,21 @@ app.use('/list',function(request, response,next) {
 	}
 	finally {
 		response.setHeader('Access-Control-Allow-Origin', '*');
-		response.send(JSON.stringify(fileList));
-	}	
+		var resObj = {FL : fileList,
+						UF : userId,
+						CF : contentsFolder			
+						};
+		response.send(JSON.stringify(resObj));
+	}
 });
 
 http.createServer(app).listen(TMC.CONTENTS_SERVER_PORT,function() {
 	console.log('Contents Server is Running at http://127.0.0.1:53374');
 });
+
+var fileAccessApp = express();
+fileAccessApp.use(express.static(__dirname + "/"+contentsRootFolder));
+fileAccessApp.listen(TMC.CONTENTS_SERVER_FILE_ACCESS_PORT);
 
 function runPageRessAndReply(url, resolution, userId,responseObj){	
 	var pageres = new Pageres({delay:2})

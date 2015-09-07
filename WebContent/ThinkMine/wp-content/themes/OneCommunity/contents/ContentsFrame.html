@@ -1,9 +1,7 @@
 <html>
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script type="text/javascript" src="/thidparty/freewall-master/freewall-master/freewall.js"></script>
-	
-	
+
 	<script>
 		if(!window.ContentsModule)
 			ContentsModule = {};
@@ -27,7 +25,7 @@
 	}
 	.wrapper {
 	  background: #D6E6F5;
-	  width: 100%;
+
 	}
 	h1 {
 	  text-align: center;
@@ -79,7 +77,7 @@
 			var createdWiwndow = window.open('', 'formpopup', 'width='+width/4+',height='+height/4+',resizeable,toolbar,scrollbars,,left='+width/2);
 		}
 		
-		function on_reqFileList(form){
+		/*function on_reqFileList(form){
 			if((!ContentsModule.Interface.getLogInStatus()))
 				return;
 			var width = screen.width;
@@ -92,19 +90,7 @@
 			//var xhr = ("XMLHttpRequest" in window) ? new XMLHttpRequest() : new ActiveXObject("Msxml3.XMLHTTP");
 			//xhr.open("GET",'http://www.example.net/abc.aspx', true);
 			//xhr.send(""); 
-		}
-		
-		function test(){
-			var url = "http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/list";
-			var params = "CT="+ContentsModule.Interface.Val_CT+"&UI="+ContentsModule.Interface.Val_UI;	
-			var data = { CT : ContentsModule.Interface.Val_CT,
-						 UI : ContentsModule.Interface.Val_UI
-						};			
-			$.post(url,data, function(response){
-               alert("The server says: " + response);              
-			});
-		}
-		
+		}*/	
 		window.onload = function(){
 			$(function(){
 				$('ul.tabs li:first').addClass('active');
@@ -166,82 +152,70 @@
 			onmousemove="stopPropagationFunc(event);"
 			ontouchstart="stopPropagationFunc(event);"
 			ontouchmove="stopPropagationFunc(event);" 			
-			method="post" onsubmit="on_reqFileList(this)" id="form_contents_list_req">
+			method="post" id="form_contents_list_req">
 		<input type="hidden" id="req_list_ui_val" name="UI" value=""/>
 		<input type="hidden" id="req_list_ct_val" name="CT" value=""/>
 		
 	</form>
-	<input type="submit" name="btn_req_file_list"  onclick="test()"/>
+	<input type="submit" name="btn_req_file_list"  onclick="on_reqImgFileList()"/>
+	<div style='display:flex; display:-webkit-flex;'>
 	<section class="wrapper">
-		<ul class="tabs" height='500'>
-			<li style="float:left"><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></li>
-			<li style="float:left"><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></li>
-			<li style="float:left"><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></li>
-			<li style="float:left"><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></li>
+		<ul class="tabs" height='200' width='50'>
+			<li width='50' height='50'><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></li>
+			<li width='50' height='50'><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></li>
+			<li width='50' height='50'><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></li>
+			<li width='50' height='50'><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></li>
 		</ul>				
 	</section>
 	<section class="block" height='1000' style="clear:left">
 		<div>
-			<div class="layout" style="position:absolute;">
-				<div id="freewall" class="free-wall" style="position:absolute;">
-					<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
-						<div class='cover'>
-							<div class='handle'>Drag item handle</div>
-						</div>
-					</div>
-					<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
-						<div class='cover'>
-							<div class='handle'>Drag item handle</div>
-						</div>
-					</div>
-					<div class='cell' style='width:150px; height: 150px; background-color:rgb(142, 68, 173)' data-handle=".handle">
-						<div class='cover'>
-							<div class='handle'>Drag item handle</div>
-						</div>
-					</div>
+			<div class="layout" height='370px' style="position:absolute;  overflow:scroll">
+				<div id="storedImgs" height='auto' style="position:relative;">					
 				</div>
 			</div>
 		</div>
-		<script type="text/javascript">
-			
-			var temp = "<div class='cell' style='width:{width}px; height: {height}px; background-color: {color}'><div class='cover'>Demo draggable</div></div>";
-			var colour = [
-				"rgb(243, 156, 18)",
-				"rgb(211, 84, 0)",
-				"rgb(0, 106, 63)",
-				"rgb(41, 128, 185)",
-				"rgb(192, 57, 43)",
-				"rgb(135, 0, 0)",
-				"rgb(39, 174, 96)"
-			];
-
-			var w = 1, h = 1,  color = '', limitItem = 10;
-			for (var i = 0; i < limitItem; ++i) {
-				h = 4 ;//+ 3 * Math.random() << 0;
-				w = 4;// + 3 * Math.random() << 0;
-				color = colour[colour.length * Math.random() << 0];
-				html = temp.replace(/\{height\}/g, h*150).replace(/\{width\}/g, w*150).replace("{color}", color);
-				$("#freewall").append(html);
+		<script type="text/javascript">			
+			function on_reqImgFileList(){
+				var url = "http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/list";
+				var params = "CT="+ContentsModule.Interface.Val_CT+"&UI="+ContentsModule.Interface.Val_UI;	
+				var data = { CT : ContentsModule.Interface.Val_CT,
+							 UI : ContentsModule.Interface.Val_UI
+							};			
+				$.post(url,data, function(response){					
+					var resObj = JSON.parse(response);
+					var CF = resObj.CF;
+					var UF  = resObj.UF;
+					var fileList = resObj.FL;
+					
+					var containerObj = $('#storedImgs')[0];
+					
+					while (containerObj.firstChild) {
+						containerObj.removeChild(containerObj.firstChild);
+					}
+					
+					var numCol = 6;
+					var numRows = fileList.length / numCol;
+					var html = "";
+					
+					for (var i = 0; i < fileList.length; i++) {
+						if(i%numCol == 0){
+							if(i!=0){
+								html+="</div>";
+							}
+							html+= "<div id='r"+ parseInt(i/numCol) +"' style='display:flex; display:-webkit-flex;'>";
+						}
+						else{
+							html+="<div id='r"+ parseInt(i/numCol)+"c"+i%numCol+"'>";
+							html+= "<img id=img"+i+" src=http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+fileList[i]+" width='100px' height='100px'><br><div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + fileList[i] + "</div></div>";							
+							if(i == fileList.length-1)
+								html+="</div>";
+						}
+					}					
+					$("#storedImgs").html(html);	
+				});
 			}
 			
 			
-			var wall = new freewall("#freewall");
-			wall.reset({
-				draggable: true,
-				selector: '.cell',
-				animate: true,
-				cellW: 150,
-				cellH: 150,
-				onResize: function() {
-					wall.refresh();
-				},
-				onBlockMove: function() {
-					console.log(this);
-				}
-			});
-			wall.fitWidth();
-			// for scroll bar appear;
-			$(window).trigger("resize");
 		</script>
 		<div>
 			<p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.</p>
@@ -253,7 +227,7 @@
 			<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
 		</div>
 	</section>
-
+	</div>
 
 </body>
 </html>
