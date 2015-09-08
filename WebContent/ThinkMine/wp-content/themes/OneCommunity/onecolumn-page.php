@@ -82,57 +82,9 @@ color : #3a6163; }
 		<input id="url_input" type=url required=""/  onchange="document.getElementById('url_form').action=this.value;"> 
 		<button type="submit"></button>
 	</form>
-	<div id="upper_bar" style="font-family: Arial Black; font-size: 18px; color: white">Tool Bar</div>		
-		<div class ="group_div_toolbar_row" id="firstrow" style='display:flex; display:-webkit-flex;'>
+	<div id="upper_bar" style="font-family: Arial Black; font-size: 18px; color: white">Tool Bar</div>				
+		<div class ="group_div_toolbar_row" id="first_row" style='display:flex; display:-webkit-flex;'>
 			<div class="group_div_toolbar_col"  id="first_row_first_col">
-				<div>
-					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Shape</button>
-					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
-						<div id="group_div_shape" style="margin: 0 auto; width:225; height:60px"  >
-								<div id="div_circleshape" width='50' height='50'  style="float:left;">
-									<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
-								</div>
-								<div id="div_rectangleshape" width='50' height='50'  style="float:left;">
-									<img src="/ThinkMineCV/res/RectangleShape.png" id="RectangleShapeImage" width='50' height='50' />
-								</div>
-								<div id="div_starshape" width='50' height='50' style="float:left;">
-									<img src="/ThinkMineCV/res/StarShape.png" id="StarShapeImage" width='50' height='50' />
-								</div>
-								<div id="div_polygonshape" width='50' height='50'>
-									<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
-								</div>
-						</div>
-					</div>						
-				</div>
-			</div>
-			<div class="group_div_toolbar_col"  id="first_row_second_col">
-				<div>
-					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Select Contents Type</button>
-					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'  > 
-						<div id="group_div_contents" style="margin: 0 auto; width:275; height:60px"  >
-								<div id="div_textcontents" width='50' height='50'  style="float:left;">
-									<img src="/ThinkMineCV/res/TextContents.png" id="TextContentsImage" width='50' height='50' />
-								</div>
-								<div id="div_imagecontents" width='50' height='50'  style="float:left;">
-									<img src="/ThinkMineCV/res/ImageContents.jpg" id="ImageContentsImage" width='50' height='50' />
-								</div>
-								<div id="div_moviecontents" width='50' height='50' style="float:left;">
-									<img src="/ThinkMineCV/res/MovieContents.png" id="MovieContentsImage" width='50' height='50' />
-								</div>
-								<div id="div_soundcontents" width='50' height='50' style="float:left;">
-									<img src="/ThinkMineCV/res/SoundContents.png" id="SoundContentsImage" width='50' height='50' />
-								</div>
-								<div id="div_webcontents" width='50' height='50'>
-									<img src="/ThinkMineCV/res/WebPreviewContents.png" id="WebPreviewContentsImage" width='50' height='50' />
-								</div>
-						</div>
-					</div>							
-				</div>
-			</div>
-		</div>
-		
-		<div class ="group_div_toolbar_row" id="second_row" style='display:flex; display:-webkit-flex;'>
-			<div class="group_div_toolbar_col"  id="second_row_first_col">
 				<div>
 					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Font Settings</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 
@@ -150,9 +102,7 @@ color : #3a6163; }
 					</div>						
 				</div>
 			</div>		
-		</div>
-		<div class ="group_div_toolbar_row" id="third_row" style='display:flex; display:-webkit-flex;'>
-			<div class="group_div_toolbar_col" id="third_row_first_col" >
+			<div class="group_div_toolbar_col"  id="first_row_second_col">
 				<div>
 					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Settings</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 			
@@ -169,12 +119,12 @@ color : #3a6163; }
 								<div><canvas id='canvas_textcolor_colorpickerbtn' width=25 height=25 style="border:1px solid #000000;"></canvas></div>
 							</div>
 						</div>
-					</div>									
+					</div>
 				</div>
 			</div>			
-		</div>
-		<div class ="group_div_toolbar_row" id="fourth_row" style='display:flex; display:-webkit-flex;'>			
-			<div class="group_div_toolbar_col" id="fourth_row_first_col" >
+		</div>		
+		<div class ="group_div_toolbar_row" id="second_row" style='display:flex; display:-webkit-flex;'>			
+			<div class="group_div_toolbar_col" id="second_row_first_col" >
 				<div>
 					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Color Picker</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
@@ -182,7 +132,7 @@ color : #3a6163; }
 					</div>									
 				</div>
 			</div>			
-			<div class="group_div_toolbar_col"  id="fourth_row_second_col">
+			<div class="group_div_toolbar_col"  id="second_row_second_col">
 				<div>
 					<button class="adj_btn maxbutton-1 maxbutton" style=" overflow:hidden;">Gradient Color Picker</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px' > 
@@ -191,19 +141,29 @@ color : #3a6163; }
 					</div>					
 				</div>
 			</div>
-		</div>
-		<div class ="group_div_toolbar_row" id="fifth_row" style='display:flex; display:-webkit-flex;'>			
-			<div class="group_div_toolbar_col" id="fifth_row_first_col" >
+			<div class="group_div_toolbar_col"  id="second_row_third_col">
 				<div>
-					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Contents Manager</button>
+					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Set MindObject</button>
 					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
-						<iframe width='600px' height='400px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
+						<div id="group_div_shape" style="margin: 0 auto; width:225; height:60px"  >
+								<div id="div_circleshape" width='50' height='50'  style="float:left;">
+									<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
+								</div>
+								<div id="div_rectangleshape" width='50' height='50'  style="float:left;">
+									<img src="/ThinkMineCV/res/RectangleShape.png" id="RectangleShapeImage" width='50' height='50' />
+								</div>
+								<div id="div_starshape" width='50' height='50' style="float:left;">
+									<img src="/ThinkMineCV/res/StarShape.png" id="StarShapeImage" width='50' height='50' />
+								</div>
+								<div id="div_polygonshape" width='50' height='50'>
+									<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
+								</div>
+						</div>
+						<iframe width='600px' height='1000px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
 					</div>									
 				</div>
-			</div>			
-		</div>
-	
-			
+			</div>
+		</div>		
 </div>
 
 <?php get_header(); ?>
@@ -633,16 +593,9 @@ color : #3a6163; }
 					ThinkMine.Lib.ExternalUI.CircleImageButton.attach("CircleShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.RectangleImageButton.attach("RectangleShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.StarImageButton.attach("StarShapeImage",TMCanvas);
-					ThinkMine.Lib.ExternalUI.PolygonImageButton.attach("PolygonShapeImage",TMCanvas);
-					
-					ThinkMine.Lib.ExternalUI.TextContentsImageButton.attach("div_textcontents",TMCanvas);
-					ThinkMine.Lib.ExternalUI.ImageContentsImageButton.attach("div_imagecontents",TMCanvas);
-					ThinkMine.Lib.ExternalUI.MovieContentsImageButton.attach("div_moviecontents",TMCanvas);
-					ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("div_soundcontents",TMCanvas);
-					ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("div_webcontents",TMCanvas);
-					
-					
-					
+					ThinkMine.Lib.ExternalUI.PolygonImageButton.attach("PolygonShapeImage",TMCanvas);			
+
+			
 					
 					
 					initPaperJSMindMap(1000,600,wrappedEventHandler);

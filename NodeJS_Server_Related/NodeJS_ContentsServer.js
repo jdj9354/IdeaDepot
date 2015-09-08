@@ -169,14 +169,6 @@ function runPageRessAndReply(url, resolution, userId,responseObj){
 			responseObj.end(data);
 		});
 	});
-	
-	/*pageres.on('warn',function(err){
-		fs.readFile(__dirname+"/"+webPreviewRootFolder+"/"+noImageFileName,function(err,data){
-			responseObj.writeHead(200, {'Content-Type' : 'image/png'});
-			responseObj.end(data);
-		});
-		throw err;	
-	});*/
 };
 
 

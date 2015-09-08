@@ -30,25 +30,25 @@
 	h1 {
 	  text-align: center;
 	}
-	ul.tabs {
+	div.tabs {
 	  list-style-type: none;
 	  margin: 0;
 	  padding: 0;
 	}
-	ul.tabs li {
+	div.tabs div {
 	  border-bottom: none;
 	  margin: 0 .25em 0 0;
 	  padding: .25em .5em;
 	}
-	ul.tabs li a {
+	div.tabs div a {
 	  color: gray;
 	  font-weight: bold;
 	  text-decoration: none;
 	}
-	ul.tabs li.active {
+	div.tabs div.active {
 	  background: #9fcaf2;
 	}
-	ul.tabs li.active a {
+	div.tabs div.active a {
 	  color: white;
 	}
 	.clr {
@@ -77,23 +77,9 @@
 			var createdWiwndow = window.open('', 'formpopup', 'width='+width/4+',height='+height/4+',resizeable,toolbar,scrollbars,,left='+width/2);
 		}
 		
-		/*function on_reqFileList(form){
-			if((!ContentsModule.Interface.getLogInStatus()))
-				return;
-			var width = screen.width;
-			var height = screen.height;
-			form.action="http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/list";
-			form.target="formpopup"
-			document.getElementById("req_list_ui_val").setAttribute("value",ContentsModule.Interface.Val_UI);
-			document.getElementById("req_list_ct_val").setAttribute("value",ContentsModule.Interface.Val_CT); 
-			var createdWiwndow = window.open('', 'formpopup', 'width='+width/4+',height='+height/4+',resizeable,toolbar,scrollbars,left='+width/2);
-			//var xhr = ("XMLHttpRequest" in window) ? new XMLHttpRequest() : new ActiveXObject("Msxml3.XMLHTTP");
-			//xhr.open("GET",'http://www.example.net/abc.aspx', true);
-			//xhr.send(""); 
-		}*/	
 		window.onload = function(){
 			$(function(){
-				$('ul.tabs li:first').addClass('active');
+				$('div.tabs div:first').addClass('active');
 				$('.block div').hide();
 				$('.block div:first').show();
 				$('.block div:first').find('*').show();
@@ -104,8 +90,8 @@
 				innerDivs = $('section.block > div');
 				for(var i=0; i<innerDivs.length; i++)
 					innerDivs[i].setAttribute("id",CONTENTS_TYPE_ENUM[contentsKeys[i+1]]);	
-				$('ul.tabs li').on('click',function(){
-					$('ul.tabs li').removeClass('active');
+				$('div.tabs div').on('click',function(){
+					$('div.tabs div').removeClass('active');
 					$(this).addClass('active')
 					$('.block div').hide();
 					var activeTab = $(this).find('a').attr('href');
@@ -134,7 +120,14 @@
 					return isLogOn;
 				};
 			};
-			ContentsModule.Interface.notifyLogInStatus("jdj9354",true);
+			ContentsModule.Interface.notifyLogInStatus("jdj9354",true);			
+			
+			parent.ThinkMine.Lib.ExternalUI.TextContentsImageButton.attach("div_textcontents",parent.TmCanvas);
+			parent.ThinkMine.Lib.ExternalUI.ImageContentsImageButton.attach("div_imagecontents",parent.TmCanvas);
+			parent.ThinkMine.Lib.ExternalUI.MovieContentsImageButton.attach("div_moviecontents",parent.TmCanvas);
+			parent.ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("div_soundcontents",parent.TmCanvas);
+			parent.ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("div_webcontents",parent.TmCanvas);
+			
 		};
 	</script>
 		
@@ -160,16 +153,17 @@
 	<input type="submit" name="btn_req_file_list"  onclick="on_reqImgFileList()"/>
 	<div style='display:flex; display:-webkit-flex;'>
 	<section class="wrapper">
-		<ul class="tabs" height='200' width='50'>
-			<li width='50' height='50'><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></li>
-			<li width='50' height='50'><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></li>
-			<li width='50' height='50'><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></li>
-			<li width='50' height='50'><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></li>
-		</ul>				
+		<div class="tabs" height='200' width='50'>
+			<div id="div_textcontents" width='50' height='50'><a><img src="/ThinkMineCV/res/TextContents.png" width='50' height='50' /></a></div>
+			<div id="div_imagecontents" width='50' height='50'><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></div>
+			<div id="div_moviecontents" width='50' height='50'><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></div>
+			<div id="div_soundcontents" width='50' height='50'><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></div>
+			<div id="div_webcontents" width='50' height='50'><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></div>
+		</div>				
 	</section>
 	<section class="block" height='1000' style="clear:left">
 		<div>
-			<div class="layout" height='370px' style="position:absolute;  overflow:scroll">
+			<div class="layout" height='370px' style="position:absolute;">
 				<div id="storedImgs" height='auto' style="position:relative;">					
 				</div>
 			</div>
@@ -194,6 +188,7 @@
 					}
 					
 					var numCol = 6;
+					var numRow = 5;
 					var numRows = fileList.length / numCol;
 					var html = "";
 					
@@ -207,8 +202,14 @@
 						else{
 							html+="<div id='r"+ parseInt(i/numCol)+"c"+i%numCol+"'>";
 							html+= "<img id=img"+i+" src=http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+fileList[i]+" width='100px' height='100px'><br><div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + fileList[i] + "</div></div>";							
-							if(i == fileList.length-1)
+							if(i == numCol-1)
 								html+="</div>";
+								html+="<div>"
+								var maxPage = fileList.length / (numCol * numRow);
+								for (var j=0; j< maxPage; j++){
+									html+="j ";
+								}
+								html+="</div>"
 						}
 					}					
 					$("#storedImgs").html(html);	
@@ -221,10 +222,13 @@
 			<p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.</p>
 		</div>
 		<div>
-			<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
+			<p>eeeeeeeeeeeee</p>
 		</div>
 		<div>
 			<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
+		</div>
+		<div>
+			<p>safdhbasdkjfbasdjk</p>
 		</div>
 	</section>
 	</div>
