@@ -18,6 +18,10 @@
 
 		addJavascript("/Common/Constants/ContentsConstants.js");
 		addJavascript("/Common/Constants/ThinkMineConstants.js");
+		addJavascript("ContentsFrameConstants.js");
+		
+		var imgFileList;
+		var imgCurrentPage = 0;
 	</script>
 	<style type='text/css'>
 	body {
@@ -58,24 +62,120 @@
 	  border-top: gray solid 1px;
 	  padding: 0 1em;
 	}	
+	#text {
+		width:500px;
+		overflow:hidden;
+		background-color:#FFF;
+		color:#222;
+		font-family:Courier, monospace;
+		font-weight:normal;
+		font-size:24px;
+		resize:none;
+		line-height:40px;
+		padding-left:100px;
+		padding-right:100px;
+		padding-top:45px;
+		padding-bottom:34px;
+		background-image:url(lines.png), url(paper.png);
+		background-repeat:repeat-y, repeat;
+		-webkit-border-radius:12px;
+		border-radius:12px;
+		-webkit-box-shadow: 0px 2px 14px #000;
+		box-shadow: 0px 2px 14px #000;
+		border-top:1px solid #FFF;
+		border-bottom:1px solid #FFF;
+	}
+	.empty_text {		
+		outline:none;
+		background-color:#D6E6F5;
+		border:none;
+		margin:0px;
+		padding:0px;		
+		color:#000;
+		font-size:13px;
+		font-family:Courier, monospace;
+		height:28px;
+		font-weight:bold;
+		width:400px;
+	}
 	</style>
 </head>
 <body>	
-
+	<form onmousedown="stopPropagationFunc(event);"
+			onmousemove="stopPropagationFunc(event);"
+			ontouchstart="stopPropagationFunc(event);"
+			ontouchmove="stopPropagationFunc(event);" 
+			id="fileUploadForm" method="post" enctype="multipart/form-data" onsubmit="on_fileupload(this)" target="dummyFrame" style="display:none">
+		<input type="hidden" id="ui_val" name="UI" value=""/>
+		<input type="hidden" id="ct_val" name="CT" value=""/>		
+		<div id="changableFileInput"><input type="file" name="contentsFile" onchange="handleFiles(this.files)" /></div>
+		<input type="submit" id="btn_upload"/>		
+		<iframe name="dummyFrame" style="display:none"></iframe>
+	</form>
+	<form onmousedown="stopPropagationFunc(event);"
+			onmousemove="stopPropagationFunc(event);"
+			ontouchstart="stopPropagationFunc(event);"
+			ontouchmove="stopPropagationFunc(event);" 			
+			method="post" id="form_contents_list_req">
+		<input type="hidden" id="req_list_ui_val" name="UI" value=""/>
+		<input type="hidden" id="req_list_ct_val" name="CT" value=""/>		
+	</form>
+	<input type="submit" name="btn_req_file_list"  onclick="on_reqImgFileList()"/>
+	<div style='display:flex; display:-webkit-flex;'>
+		<section class="wrapper">
+			<div class="tabs" height='200' width='50'>
+				<div id="div_textcontents" width='50' height='50'><a><img src="/ThinkMineCV/res/TextContents.png" width='50' height='50' /></a></div>
+				<div id="div_imagecontents" width='50' height='50'><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></div>
+				<div id="div_moviecontents" width='50' height='50'><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></div>
+				<div id="div_soundcontents" width='50' height='50'><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></div>
+				<div id="div_webcontents" width='50' height='50'><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></div>
+			</div>				
+		</section>
+		<section class="block" height='1000' style="clear:left">		
+			<div>
+				<div id="margin">Title: <input id="TextTitle" type="text" class="empty_text"></div>
+				<textarea placeholder="Enter something funny." id="text" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; "></textarea>  
+			</div>
+			<div style="overflow-y:scroll;">				
+				<div id="fixedDiv" style="position:absolute;">										
+					<input placeholder="Image URL" class="empty_text" type="text" id="ImageURL" onchange="loadImageUrlOn(this)">
+					<div class="ImageSelector" style="width:400px;height:160px;background-color:#D6E6F5;">
+						<img id="ThumbNailImg" width='150px' height='150px' style="position:absolute;"> </img>			
+						<div id="ThumbNailUploadProgress" style="position:absolute;"></div>							
+					</div>
+					<textarea placeholder="Image Explanation" class="empty_text" id="imgText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
+				</div>
+				<div id="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:238px">				
+				</div>
+				<div class="layout" style="border:1px solid #FFFFFF; height:370px; width:400px">					
+					<div id="storedImgs" height='auto'></div>							
+				</div>
+			</div>
+			<div>
+				<p>eeeeeeeeeeeee</p>
+			</div>
+			<div>
+				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
+			</div>
+			<div>
+				<p>safdhbasdkjfbasdjk</p>
+			</div>
+		</section>
+	</div>
 	<script>
 		var stopPropagationFunc = function(event){event.stopPropagation();};		
 
-		function on_fileupload(form){
+		/*function on_fileupload(form){
 			if((!ContentsModule.Interface.getLogInStatus()))
 				return;
 			var width = screen.width;
 			var height = screen.height;
 			form.action="http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/upload";
-			form.target="formpopup"
+			//form.target="formpopup"
 			document.getElementById("ui_val").setAttribute("value",ContentsModule.Interface.Val_UI);
 			document.getElementById("ct_val").setAttribute("value",ContentsModule.Interface.Val_CT); 
-			var createdWiwndow = window.open('', 'formpopup', 'width='+width/4+',height='+height/4+',resizeable,toolbar,scrollbars,,left='+width/2);
-		}
+			var createdWiwndow = window.open('', '', 'width='+width/4+',height='+height/4+',resizeable,toolbar,scrollbars,,left='+width/2);
+		}*/
 		
 		window.onload = function(){
 			$(function(){
@@ -119,80 +219,47 @@
 				this.getLogInStatus = function(){
 					return isLogOn;
 				};
-			};
-			ContentsModule.Interface.notifyLogInStatus("jdj9354",true);			
+			};		
 			
-			parent.ThinkMine.Lib.ExternalUI.TextContentsImageButton.attach("div_textcontents",parent.TmCanvas);
-			parent.ThinkMine.Lib.ExternalUI.ImageContentsImageButton.attach("div_imagecontents",parent.TmCanvas);
-			parent.ThinkMine.Lib.ExternalUI.MovieContentsImageButton.attach("div_moviecontents",parent.TmCanvas);
-			parent.ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("div_soundcontents",parent.TmCanvas);
-			parent.ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("div_webcontents",parent.TmCanvas);
-			
+			ContentsModule.Interface.notifyLogInStatus("jdj9354",true);		
+
+			if(parent.ThinkMine){			
+				parent.ThinkMine.Lib.ExternalUI.TextContentsImageButton.attach("div_textcontents",parent.TmCanvas);
+				parent.ThinkMine.Lib.ExternalUI.ImageContentsImageButton.attach("div_imagecontents",parent.TmCanvas);
+				parent.ThinkMine.Lib.ExternalUI.MovieContentsImageButton.attach("div_moviecontents",parent.TmCanvas);
+				parent.ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("div_soundcontents",parent.TmCanvas);
+				parent.ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("div_webcontents",parent.TmCanvas);
+			}			
 		};
-	</script>
-		
-	<form onmousedown="stopPropagationFunc(event);"
-			onmousemove="stopPropagationFunc(event);"
-			ontouchstart="stopPropagationFunc(event);"
-			ontouchmove="stopPropagationFunc(event);" 
-			method="post" enctype="multipart/form-data" onsubmit="on_fileupload(this)">
-		<input type="hidden" id="ui_val" name="UI" value=""/>
-		<input type="hidden" id="ct_val" name="CT" value=""/>
-		<input type="file" name="contentsFile" />
-		<input type="submit" name="btn_upload"/>
-	</form>
-	<form onmousedown="stopPropagationFunc(event);"
-			onmousemove="stopPropagationFunc(event);"
-			ontouchstart="stopPropagationFunc(event);"
-			ontouchmove="stopPropagationFunc(event);" 			
-			method="post" id="form_contents_list_req">
-		<input type="hidden" id="req_list_ui_val" name="UI" value=""/>
-		<input type="hidden" id="req_list_ct_val" name="CT" value=""/>
-		
-	</form>
-	<input type="submit" name="btn_req_file_list"  onclick="on_reqImgFileList()"/>
-	<div style='display:flex; display:-webkit-flex;'>
-	<section class="wrapper">
-		<div class="tabs" height='200' width='50'>
-			<div id="div_textcontents" width='50' height='50'><a><img src="/ThinkMineCV/res/TextContents.png" width='50' height='50' /></a></div>
-			<div id="div_imagecontents" width='50' height='50'><a><img src="/ThinkMineCV/res/ImageContents.jpg" width='50' height='50' /></a></div>
-			<div id="div_moviecontents" width='50' height='50'><a><img src="/ThinkMineCV/res/MovieContents.png" width='50' height='50' /></a></div>
-			<div id="div_soundcontents" width='50' height='50'><a><img src="/ThinkMineCV/res/SoundContents.png" width='50' height='50' /></a></div>
-			<div id="div_webcontents" width='50' height='50'><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></div>
-		</div>				
-	</section>
-	<section class="block" height='1000' style="clear:left">
-		<div>
-			<div class="layout" height='370px' style="position:absolute;">
-				<div id="storedImgs" height='auto' style="position:relative;">					
-				</div>
-			</div>
-		</div>
-		<script type="text/javascript">			
-			function on_reqImgFileList(){
-				var url = "http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/list";
-				var params = "CT="+ContentsModule.Interface.Val_CT+"&UI="+ContentsModule.Interface.Val_UI;	
-				var data = { CT : ContentsModule.Interface.Val_CT,
-							 UI : ContentsModule.Interface.Val_UI
-							};			
-				$.post(url,data, function(response){					
-					var resObj = JSON.parse(response);
-					var CF = resObj.CF;
-					var UF  = resObj.UF;
-					var fileList = resObj.FL;
-					
-					var containerObj = $('#storedImgs')[0];
-					
-					while (containerObj.firstChild) {
-						containerObj.removeChild(containerObj.firstChild);
-					}
-					
-					var numCol = 6;
-					var numRow = 5;
-					var numRows = fileList.length / numCol;
+		function on_reqImgFileList(){
+			var url = "http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/list";
+			var params = "CT="+ContentsModule.Interface.Val_CT+"&UI="+ContentsModule.Interface.Val_UI;	
+			var data = { CT : ContentsModule.Interface.Val_CT,
+						 UI : ContentsModule.Interface.Val_UI
+						};			
+			$.post(url,data, function(response){					
+				var resObj = JSON.parse(response);
+				var CF = resObj.CF;
+				var UF  = resObj.UF;
+				imgFileList = resObj.FL;
+				
+				var containerObj = $('#storedImgs')[0];
+				
+				while (containerObj.firstChild) {
+					containerObj.removeChild(containerObj.firstChild);
+				}
+				
+
+				
+				function imgListInnerHTMLGenerator(curPage){
+					var numCol = CONTENTS_FRAME_MAX_COL;
+					var numRow = CONTENTS_FRAME_MAX_ROW;				
+					//var numRows = imgFileList.length / numCol;
 					var html = "";
-					
-					for (var i = 0; i < fileList.length; i++) {
+					var startIdx = (curPage-1)*numCol*numRow;
+					for (var i = startIdx; i < startIdx+numCol*numRow; i++) {
+						if(i == imgFileList.length)
+							break;
 						if(i%numCol == 0){
 							if(i!=0){
 								html+="</div>";
@@ -201,37 +268,173 @@
 						}
 						else{
 							html+="<div id='r"+ parseInt(i/numCol)+"c"+i%numCol+"'>";
-							html+= "<img id=img"+i+" src=http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+fileList[i]+" width='100px' height='100px'><br><div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + fileList[i] + "</div></div>";							
+							html+= "<img id=img"+i+" src=http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+imgFileList[i]+" width='110px' height='110px'><br><div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + imgFileList[i] + "</div></div>";							
 							if(i == numCol-1)
 								html+="</div>";
-								html+="<div>"
-								var maxPage = fileList.length / (numCol * numRow);
-								for (var j=0; j< maxPage; j++){
-									html+="j ";
-								}
-								html+="</div>"
 						}
+					}
+					//IMAGE_CONTENTS_NUM_NEXT_PAGE
+					html+="</div>";
+					html+="<div style='display:flex; display:-webkit-flex;'>"
+					var maxPage = imgFileList.length / (numCol * numRow);
+					for (var i=0; i< maxPage; i++){
+						html+="<div id=imlp"+(i+1)+">"+(i+1)+"</div>&nbsp;";
 					}					
-					$("#storedImgs").html(html);	
-				});
+					return html;
+				}		
+				function imagePageOnClickHandler(){
+					var curPage = Number(this.id.substring(4));
+										
+					$("#storedImgs").html(imgListInnerHTMLGenerator(curPage));					
+					$("#storedImgs").parent().parent().scrollTop(0);
+					
+					for (var i = 0; i < (imgFileList.length / (CONTENTS_FRAME_MAX_COL * CONTENTS_FRAME_MAX_ROW)); i++) {
+						document.getElementById("imlp"+(i+1)).onclick = imagePageOnClickHandler;
+					}
+					
+				}				
+				
+				$("#storedImgs").html(imgListInnerHTMLGenerator(1));					
+				$("#storedImgs").parent().parent().scrollTop(0);										
+				
+				for (var i = 0; i < (imgFileList.length / (CONTENTS_FRAME_MAX_COL * CONTENTS_FRAME_MAX_ROW)); i++) {
+					document.getElementById("imlp"+(i+1)).onclick = imagePageOnClickHandler;
+				}										
+			});
+		}
+		function handleFiles(files){				
+			var imageThumbNailObj = document.getElementById('ThumbNailImg');
+			setImgSrcAndAdjust(imageThumbNailObj,window.URL.createObjectURL(files[0]),CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);			
+			fileUploadHandler(files);				
+			event.preventDefault && event.preventDefault();
+			return false;				
+		}
+		var curThumbNailImgObj = document.getElementById('ThumbNailImg');
+		curThumbNailImgObj.onclick = function () { 
+			var event = new Event('click');				
+			var fileInputBtn = document.getElementsByName('contentsFile');				
+			fileInputBtn[0].dispatchEvent(event);
+			return false; 
+		};
+		curThumbNailImgObj.ontouch = function () { this.className = 'hover'; return false; };
+		curThumbNailImgObj.ondragover = function () { this.className = 'hover'; return false; };
+		curThumbNailImgObj.ondragend = function () { this.className = ''; return false; };
+		curThumbNailImgObj.ondrop = function (event) {
+			if(event.dataTransfer.files.length != 0){
+				var files = event.dataTransfer.files;
+				setImgSrcAndAdjust(this,window.URL.createObjectURL(files[0]),CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);			
+				fileUploadHandler(files);				
 			}
+			else{				
+				if(event.dataTransfer.items){				
+					if(event.dataTransfer.items.length != 0){
+						var imgObj = this;
+						var inspectItem = event.dataTransfer.items[0];
+						for(var i=0; i<event.dataTransfer.items.length; i++){
+							if(event.dataTransfer.items[i].type == 'text/html'){
+								inspectItem = event.dataTransfer.items[i];
+								break;
+							}
+						}				
+						inspectItem.getAsString(function(res){
+							try{
+								res = res.slice(res.indexOf("<img"));	
+								res = res.slice(res.indexOf("src"));
+								res = res.slice(res.indexOf("\"")+1);
+								res = res.substr(0,res.indexOf("\""));
+								setImgSrcAndAdjust(imgObj,res,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);						
+								//fileUploadHandler(files);
+								document.getElementById('ImageURL').value=res;
+							}
+							catch (e){
+								return;
+							}
+						});				
+					}
+				}
+			}
+			event.preventDefault && event.preventDefault();
+			
+			return false;
+		};
+		function fileUploadHandler(files){				
+			var formData = new FormData();
+			for (var i = 0; i < files.length; i++) {
+				formData.append('file', files[i]);
+			}
+			formData.append('UI', ContentsModule.Interface.Val_UI);
+			formData.append('CT', ContentsModule.Interface.Val_CT);
 			
 			
-		</script>
-		<div>
-			<p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis. Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.</p>
-		</div>
-		<div>
-			<p>eeeeeeeeeeeee</p>
-		</div>
-		<div>
-			<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
-		</div>
-		<div>
-			<p>safdhbasdkjfbasdjk</p>
-		</div>
-	</section>
-	</div>
 
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', "http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/upload",true);				
+			xhr.upload.onprogress = function (event) {
+			if (event.lengthComputable) {
+					var complete = (event.loaded / event.total * 100 | 0);
+					var thumbnailImg = document.getElementById('ThumbNailImg');
+					var thumbnailImageSrcText = document.getElementById('ImageURL');
+					var progressDiv = document.getElementById('ThumbNailUploadProgress');
+					
+					var left = thumbnailImg.offsetWidth/2 - progressDiv.offsetWidth/2;
+					var top = thumbnailImg.offsetHeight/2 - progressDiv.offsetHeight/2;
+					
+					progressDiv.innerHTML = complete + "%";
+					progressDiv.style.left = left+"px";
+					progressDiv.style.top = top+"px";
+					
+					thumbnailImg.style.opacity = 0.5;
+					thumbnailImageSrcText.value = "Uploading...";
+					
+					if(complete == 100){
+						thumbnailImg.style.opacity = 1.0;
+						progressDiv.innerHTML = "";							
+					}
+				}
+			};
+
+			xhr.onload = function () {
+				if (xhr.status === 200) {
+						var thumbnailImageSrcText = document.getElementById('ImageURL');
+						thumbnailImageSrcText.value = this.responseText;
+						
+					} else {
+						console.log('Something went terribly wrong...');
+					}
+			};
+			xhr.send(formData);
+		}
+		function loadImageUrlOn(textObj){
+			var imageThumbNailObj = document.getElementById('ThumbNailImg');
+			setImgSrcAndAdjust(imageThumbNailObj,textObj.value,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
+		}
+		function setImgSrcAndAdjust(imgObj,srcURL,maxWidth,maxHeight){
+			imgObj.src = srcURL;
+			
+			imgObj.onload = function(){
+				var nh = imgObj.naturalHeight;
+				var nw = imgObj.naturalWidth;
+				
+				var resultWidth = (maxHeight*nw/nh);
+				var resultHeight = maxHeight;
+				
+				if(resultWidth > maxWidth){
+					resultWidth = maxWidth;
+					resultHeight = (maxWidth*nh/nw);
+				}
+			
+				imgObj.style.width = resultWidth+"px";
+				imgObj.style.height = resultHeight+'px';
+				imgObj.parentElement.style.height = (resultHeight+10)+'px';
+				
+				adjustDummyDivPos();
+			}
+		}
+		function adjustDummyDivPos()
+		{		
+			var setHeight = (document.getElementById('fixedDiv').clientHeight+10);
+			document.getElementById('dummyDiv').style.height = setHeight;
+		}
+	</script>		
 </body>
 </html>

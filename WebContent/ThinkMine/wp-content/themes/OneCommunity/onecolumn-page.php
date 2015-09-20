@@ -144,22 +144,23 @@ color : #3a6163; }
 			<div class="group_div_toolbar_col"  id="second_row_third_col">
 				<div>
 					<button class="adj_btn maxbutton-1 maxbutton" style="overflow:hidden;">Set MindObject</button>
-					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 				
-						<div id="group_div_shape" style="margin: 0 auto; width:225; height:60px"  >
-								<div id="div_circleshape" width='50' height='50'  style="float:left;">
-									<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
-								</div>
-								<div id="div_rectangleshape" width='50' height='50'  style="float:left;">
-									<img src="/ThinkMineCV/res/RectangleShape.png" id="RectangleShapeImage" width='50' height='50' />
-								</div>
-								<div id="div_starshape" width='50' height='50' style="float:left;">
-									<img src="/ThinkMineCV/res/StarShape.png" id="StarShapeImage" width='50' height='50' />
-								</div>
-								<div id="div_polygonshape" width='50' height='50'>
-									<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
-								</div>
+					<div class="element_div resizing_div_anim_shrink_lt" draggable="false" style='top:0px; left:0px;'> 	
+						<div style="float:right">0.0 MB / 10,000 MB</div>
+						<div id="group_div_shape" style="width:225; height:60px; top:0px; left:0px"  >
+							<div id="div_circleshape" width='50' height='50'  style="float:left;">
+								<img src="/ThinkMineCV/res/CircleShape.png" id="CircleShapeImage" width='50' height='50' />
+							</div>
+							<div id="div_rectangleshape" width='50' height='50'  style="float:left;">
+								<img src="/ThinkMineCV/res/RectangleShape.png" id="RectangleShapeImage" width='50' height='50' />
+							</div>
+							<div id="div_starshape" width='50' height='50' style="float:left;">
+								<img src="/ThinkMineCV/res/StarShape.png" id="StarShapeImage" width='50' height='50' />
+							</div>
+							<div id="div_polygonshape" width='50' height='50'>
+								<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
+							</div>
 						</div>
-						<iframe width='600px' height='1000px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
+						<iframe width='800px' height='800px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
 					</div>									
 				</div>
 			</div>
@@ -203,8 +204,7 @@ color : #3a6163; }
 				}
 			</style>
 			
-			<script>		
-			
+			<script>			
 				document.addEventListener("mousedown",ElementDragAndMoveEventHandler.dragstart);
 				document.addEventListener("mousemove",ElementDragAndMoveEventHandler.drag);
 				document.addEventListener("mouseup",ElementDragAndMoveEventHandler.dragend);

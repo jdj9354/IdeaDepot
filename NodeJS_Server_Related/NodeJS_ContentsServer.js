@@ -76,36 +76,43 @@ app.use('/webpreview',function(request, response,next) {
 
 });
 
-app.use('/upload',function(request, response,next) {
-	fs.readFile(request.files.contentsFile.path, function(error,data){
-		var userId = request.param(CC.REQ_PARAM_ENUM.UI);
-		var contentsType  = request.param(CC.REQ_PARAM_ENUM.CT);
-		var contentsFolder = "im";
-		switch(contentsType){
-		case CC.CONTENTS_TYPE_ENUM.Image:
-			contentsFolder = "im";
-			break;
-		case CC.CONTENTS_TYPE_ENUM.Movie:
-			contentsFolder = "mv";
-			break;
-		case CC.CONTENTS_TYPE_ENUM.Sound:
-			contentsFolder = "snd";
-			break;
-		}
-		console.log(request.files.contentsFile.name);
-		var dirPath = __dirname+"/"+contentsRootFolder+"/"+userId+"/"+contentsFolder;
-		var filePath = __dirname+"/"+contentsRootFolder+"/"+userId+"/"+contentsFolder+"/"+request.files.contentsFile.name;		
-		mkdir(dirPath);		
-		fs.writeFile(filePath, data,function(error){
-			if(error){
-				throw error;
+app.use('/upload',function(request, response,next) {	
+	response.setHeader('Access-Control-Allow-Origin', '*');
+	if(request.files.file){
+		fs.readFile(request.files.file.path, function(error,data){
+			var userId = request.param(CC.REQ_PARAM_ENUM.UI);
+			var contentsType  = request.param(CC.REQ_PARAM_ENUM.CT);
+			var contentsFolder = "im";
+			switch(contentsType){
+			case CC.CONTENTS_TYPE_ENUM.Image:
+				contentsFolder = "im";
+				break;
+			case CC.CONTENTS_TYPE_ENUM.Movie:
+				contentsFolder = "mv";
+				break;
+			case CC.CONTENTS_TYPE_ENUM.Sound:
+				contentsFolder = "snd";
+				break;
 			}
-			else {
-				response.send('File uploaded to: ' + filePath + ' - ' + request.files.contentsFile.size + ' bytes');
-			}			
+			console.log(request.files.file.originalFilename);
+			var dirPath = __dirname+"/"+contentsRootFolder+"/"+userId+"/"+contentsFolder;
+			var filePath = __dirname+"/"+contentsRootFolder+"/"+userId+"/"+contentsFolder+"/"+request.files.file.originalFilename;		
+			mkdir(dirPath);		
+			fs.writeFile(filePath, data,function(error){
+				if(error){
+					throw error;
+				}
+				else {				
+					var responString = "http://"+TMC.CONTENTS_SERVER_ADDR+":"+TMC.CONTENTS_SERVER_PORT+"/"+contentsRootFolder+"/"+userId+"/"+contentsFolder+"/"+request.files.file.originalFilename;
+					response.send(responString);
+				}			
+			});
+			
 		});
-		
-	});
+	}
+	else{
+		response.send();
+	}
 });
 app.use('/list',function(request, response,next) {		
 	var userId = request.body.UI;
