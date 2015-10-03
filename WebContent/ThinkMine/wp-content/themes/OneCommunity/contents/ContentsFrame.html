@@ -1,7 +1,6 @@
 <html>
 <head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>	
 	<script>
 		if(!window.ContentsModule)
 			ContentsModule = {};
@@ -19,9 +18,11 @@
 		addJavascript("/Common/Constants/ContentsConstants.js");
 		addJavascript("/Common/Constants/ThinkMineConstants.js");
 		addJavascript("ContentsFrameConstants.js");
+		addJavascript("GridGen.js");
 		
 		var imgFileList;
 		var imgCurrentPage = 0;
+		
 	</script>
 	<style type='text/css'>
 	body {
@@ -164,7 +165,7 @@
 	</div>
 	<script>
 		var stopPropagationFunc = function(event){event.stopPropagation();};		
-
+		var gridGenerator = null;
 		/*function on_fileupload(form){
 			if((!ContentsModule.Interface.getLogInStatus()))
 				return;
@@ -230,6 +231,9 @@
 				parent.ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("div_soundcontents",parent.TmCanvas);
 				parent.ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("div_webcontents",parent.TmCanvas);
 			}			
+			
+			gridGenerator = new GridPageGenerator(null,null);
+			
 		};
 		function on_reqImgFileList(){
 			var url = "http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/list";
@@ -292,14 +296,22 @@
 						document.getElementById("imlp"+(i+1)).onclick = imagePageOnClickHandler;
 					}
 					
-				}				
+				}								
+				gridGenerator.setTargetDivElement($("#storedImgs")[0]);
 				
-				$("#storedImgs").html(imgListInnerHTMLGenerator(1));					
-				$("#storedImgs").parent().parent().scrollTop(0);										
+				var templateArr = [];
+				for(var i=0; i<imgFileList.length; i++){
+					var template = "<img id=img"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+imgFileList[i]+"' width='110px' height='110px'><br><div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + imgFileList[i] + "</div>";
+					templateArr.push(template);
+				}
 				
-				for (var i = 0; i < (imgFileList.length / (CONTENTS_FRAME_MAX_COL * CONTENTS_FRAME_MAX_ROW)); i++) {
-					document.getElementById("imlp"+(i+1)).onclick = imagePageOnClickHandler;
-				}										
+				gridGenerator.setItemTemplateArr(templateArr);
+				gridGenerator.onPageChanged = function(){
+					gridGenerator.getTargetDivElement().parentElement.parentElement.scrollTop = 0;																				
+				};
+				//$("#storedImgs").html(imgListInnerHTMLGenerator(1));					
+				gridGenerator.generate();
+				$("#storedImgs").parent().parent().scrollTop(0);																				
 			});
 		}
 		function handleFiles(files){				
@@ -322,6 +334,7 @@
 		curThumbNailImgObj.ondrop = function (event) {
 			if(event.dataTransfer.files.length != 0){
 				var files = event.dataTransfer.files;
+				console.log(files);
 				setImgSrcAndAdjust(this,window.URL.createObjectURL(files[0]),CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);			
 				fileUploadHandler(files);				
 			}
