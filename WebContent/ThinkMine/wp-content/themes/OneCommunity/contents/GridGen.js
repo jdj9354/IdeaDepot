@@ -149,7 +149,7 @@ function GridPageGenerator(a_TargetDivElement,a_ItemTemplateArr){
 		m_CurMaxPage = m_CurMinPage+9 < maxPage ? m_CurMinPage+9 : maxPage;
 		
 		if(m_CurMaxPage == maxPage)
-			m_CurMinPage = m_CurMaxPage - 9;
+			m_CurMinPage = m_CurMaxPage - 9 > 1 ? m_CurMaxPage - 9 : 1;
 							
 		m_TargetDivElement.innerHTML  = InnerHTMLGenerator(m_CurPage);
 		

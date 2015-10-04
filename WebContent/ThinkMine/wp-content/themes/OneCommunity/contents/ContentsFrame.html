@@ -133,12 +133,12 @@
 			</div>				
 		</section>
 		<section class="block" height='1000' style="clear:left">		
-			<div>
+			<div id="textContentsManager">
 				<div id="margin">Title: <input id="TextTitle" type="text" class="empty_text"></div>
 				<textarea placeholder="Enter something funny." id="text" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; "></textarea>  
 			</div>
-			<div style="overflow-y:scroll;">				
-				<div id="fixedDiv" style="position:absolute;">										
+			<div id="imageContentsManager" style="overflow-y:scroll;">				
+				<div class="fixedDiv" style="position:absolute;">										
 					<input placeholder="Image URL" class="empty_text" type="text" id="ImageURL" onchange="loadImageUrlOn(this)">
 					<div class="ImageSelector" style="width:400px;height:160px;background-color:#D6E6F5;">
 						<img id="ThumbNailImg" width='150px' height='150px' style="position:absolute;"> </img>			
@@ -146,14 +146,26 @@
 					</div>
 					<textarea placeholder="Image Explanation" class="empty_text" id="imgText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
 				</div>
-				<div id="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:238px">				
+				<div class="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:238px">				
 				</div>
 				<div class="layout" style="border:1px solid #FFFFFF; height:370px; width:400px">					
 					<div id="storedImgs" height='auto'></div>							
 				</div>
 			</div>
-			<div>
-				<p>eeeeeeeeeeeee</p>
+			<div id="videoContentsManager">
+				<div class="fixedDiv" style="position:absolute;">										
+					<input placeholder="Video URL" class="empty_text" type="text" id="VideoURL" onchange="loadVideoUrlOn(this)">
+					<div class="VideoSelector" style="width:400px;height:160px;background-color:#D6E6F5;">
+						<img id="ThumbNailImg" width='150px' height='150px' style="position:absolute;"> </img>			
+						<div id="ThumbNailUploadProgress" style="position:absolute;"></div>							
+					</div>
+					<textarea placeholder="Video Explanation" class="empty_text" id="imgText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
+				</div>
+				<div class="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:238px">				
+				</div>
+				<div class="layout" style="border:1px solid #FFFFFF; height:370px; width:400px">					
+					<div id="storedVds" height='auto'></div>							
+				</div>
 			</div>
 			<div>
 				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
@@ -440,13 +452,13 @@
 				imgObj.style.height = resultHeight+'px';
 				imgObj.parentElement.style.height = (resultHeight+10)+'px';
 				
-				adjustDummyDivPos();
+				adjustDummyDivPos(documnt.getElementById('imageContentsManager'));
 			}
 		}
-		function adjustDummyDivPos()
+		function adjustDummyDivPos(managerElem)
 		{		
-			var setHeight = (document.getElementById('fixedDiv').clientHeight+10);
-			document.getElementById('dummyDiv').style.height = setHeight;
+			var setHeight = (managerElem.getElementByClassName('fixedDiv')[0].clientHeight+10);
+			managerElem.getElementsByClasssName('dummyDiv')[0].style.height = setHeight;
 		}
 	</script>		
 </body>
