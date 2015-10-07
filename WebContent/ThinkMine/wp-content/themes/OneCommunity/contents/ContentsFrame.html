@@ -156,8 +156,8 @@
 				<div class="fixedDiv" style="position:absolute;">										
 					<input placeholder="Video URL" class="empty_text" type="text" id="VideoURL" onchange="loadVideoUrlOn(this)">
 					<div class="VideoSelector" style="width:400px;height:160px;background-color:#D6E6F5;">
-						<img id="ThumbNailImg" width='150px' height='150px' style="position:absolute;"> </img>			
-						<div id="ThumbNailUploadProgress" style="position:absolute;"></div>							
+						<video id="videoObj" controls="controls" width='150px' height='150px' style="position:absolute;"> </video>			
+						<div id="VideoUploadProgress" style="position:absolute;"></div>							
 					</div>
 					<textarea placeholder="Video Explanation" class="empty_text" id="imgText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
 				</div>
@@ -199,10 +199,10 @@
 				var innerDivs = $(this).find('a');
 				var contentsKeys = Object.keys(CONTENTS_TYPE_ENUM);
 				for(var i=0; i<innerDivs.length; i++)
-					innerDivs[i].setAttribute("href","#"+CONTENTS_TYPE_ENUM[contentsKeys[i+1]]);	
+					innerDivs[i].setAttribute("href","#"+CONTENTS_TYPE_ENUM[contentsKeys[i]]);	
 				innerDivs = $('section.block > div');
 				for(var i=0; i<innerDivs.length; i++)
-					innerDivs[i].setAttribute("id",CONTENTS_TYPE_ENUM[contentsKeys[i+1]]);	
+					innerDivs[i].setAttribute("id",CONTENTS_TYPE_ENUM[contentsKeys[i]]);	
 				$('div.tabs div').on('click',function(){
 					$('div.tabs div').removeClass('active');
 					$(this).addClass('active')
@@ -382,6 +382,60 @@
 			
 			return false;
 		};
+		
+		
+		
+		var videoObj = document.getElementById('videoObj');
+		videoObj.onclick = function () { 
+			var event = new Event('click');				
+			var fileInputBtn = document.getElementsByName('contentsFile');				
+			fileInputBtn[0].dispatchEvent(event);
+			return false; 
+		};
+		videoObj.ontouch = function () { this.className = 'hover'; return false; };
+		videoObj.ondragover = function () { this.className = 'hover'; return false; };
+		videoObj.ondragend = function () { this.className = ''; return false; };
+		videoObj.ondrop = function (event) {
+			if(event.dataTransfer.files.length != 0){
+				var files = event.dataTransfer.files;
+				console.log(files);
+				setVDSrcAndAdjust(this,window.URL.createObjectURL(files[0]),CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);			
+				fileUploadHandler(files);				
+			}
+			else{				
+				if(event.dataTransfer.items){				
+					if(event.dataTransfer.items.length != 0){
+						var videoObj = this;
+						var inspectItem = event.dataTransfer.items[0];
+						for(var i=0; i<event.dataTransfer.items.length; i++){
+							if(event.dataTransfer.items[i].type == 'text/html'){
+								inspectItem = event.dataTransfer.items[i];
+								break;
+							}
+						}				
+						inspectItem.getAsString(function(res){
+							try{
+								res = res.slice(res.indexOf("<img"));	
+								res = res.slice(res.indexOf("src"));
+								res = res.slice(res.indexOf("\"")+1);
+								res = res.substr(0,res.indexOf("\""));
+								setVDSrcAndAdjust(videoObj,res,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);						
+								//fileUploadHandler(files);
+								document.getElementById('VideoURL').value=res;
+							}
+							catch (e){
+								return;
+							}
+						});				
+					}
+				}
+			}
+			event.preventDefault && event.preventDefault();
+			
+			return false;
+		};
+		
+		
 		function fileUploadHandler(files){				
 			var formData = new FormData();
 			for (var i = 0; i < files.length; i++) {
@@ -450,15 +504,39 @@
 			
 				imgObj.style.width = resultWidth+"px";
 				imgObj.style.height = resultHeight+'px';
-				imgObj.parentElement.style.height = (resultHeight+10)+'px';
-				
-				adjustDummyDivPos(documnt.getElementById('imageContentsManager'));
+				imgObj.parentElement.style.height = (resultHeight+10)+'px';						
+
+				adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Image));
 			}
 		}
+		
+		function setVDSrcAndAdjust(vdObj,srcURL,maxWidth,maxHeight){
+			vdObj.src = srcURL;
+			
+			vdObj.onload = function(){
+				var nh = vdObj.naturalHeight;
+				var nw = vdObj.naturalWidth;
+				
+				var resultWidth = (maxHeight*nw/nh);
+				var resultHeight = maxHeight;
+				
+				if(resultWidth > maxWidth){
+					resultWidth = maxWidth;
+					resultHeight = (maxWidth*nh/nw);
+				}
+			
+				vdObj.style.width = resultWidth+"px";
+				vdObj.style.height = resultHeight+'px';
+				vdObj.parentElement.style.height = (resultHeight+10)+'px';							
+			
+				adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Video));
+			}
+		}
+		
 		function adjustDummyDivPos(managerElem)
 		{		
-			var setHeight = (managerElem.getElementByClassName('fixedDiv')[0].clientHeight+10);
-			managerElem.getElementsByClasssName('dummyDiv')[0].style.height = setHeight;
+			var setHeight = ((managerElem.getElementsByClassName('fixedDiv')[0]).clientHeight+10);
+			managerElem.getElementsByClassName('dummyDiv')[0].style.height = setHeight;
 		}
 	</script>		
 </body>
