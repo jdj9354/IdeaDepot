@@ -99,9 +99,67 @@
 		font-weight:bold;
 		width:400px;
 	}
+	.vdModalDialog {
+		position: fixed;
+		font-family: Arial, Helvetica, sans-serif;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: rgba(0,0,0,0.0);
+		z-index: 99999;
+		opacity:0;
+		-webkit-transition: opacity 400ms ease-in;
+		-moz-transition: opacity 400ms ease-in;
+		transition: opacity 400ms ease-in;
+		pointer-events: none;
+	}
+	.vdModalDialog:target {
+		opacity:1;
+		pointer-events: auto;
+	}
+
+	.vdModalDialog > div {
+		width: 400px;
+		position: relative;
+		margin: 10% auto;
+		padding: 5px 20px 13px 20px;
+		border-radius: 10px;
+		background: #fff;
+		background: -moz-linear-gradient(#fff, #999);
+		background: -webkit-linear-gradient(#fff, #999);
+		background: -o-linear-gradient(#fff, #999);
+	}
+	.vdModalDialogClose{
+		background: #606061;
+		color: #FFFFFF;
+		line-height: 25px;
+		position: absolute;
+		right: -12px;
+		text-align: center;
+		top: -10px;
+		width: 24px;
+		text-decoration: none;
+		font-weight: bold;
+		-webkit-border-radius: 12px;
+		-moz-border-radius: 12px;
+		border-radius: 12px;
+		-moz-box-shadow: 1px 1px 3px #000;
+		-webkit-box-shadow: 1px 1px 3px #000;
+		box-shadow: 1px 1px 3px #000;
+	}
+
+	.vdModalDialogClose:hover { background: #00d9ff; }
 	</style>
 </head>
 <body>	
+	<div id="openVDModal" class="vdModalDialog" onmousedown="window.location='#close';" ontouchstart="window.location='#close';">
+		<div onmousedown="stopPropagationFunc(event);" ontouchstart="stopPropagationFunc(event);">
+			<a href="#close" title="Close" class="vdModalDialogClose">X</a>
+			<h2 id="vdName"></h2>
+			<video id="popUpVideoObj" width='400px' height='250px' controls='controls';> </video>
+		</div>
+	</div>
 	<form onmousedown="stopPropagationFunc(event);"
 			onmousemove="stopPropagationFunc(event);"
 			ontouchstart="stopPropagationFunc(event);"
@@ -156,7 +214,7 @@
 				<div class="fixedDiv" style="position:absolute;">										
 					<input placeholder="Video URL" class="empty_text" type="text" id="VideoURL" onchange="loadVideoUrlOn(this)">
 					<div class="VideoSelector" style="width:400px;height:160px;background-color:#D6E6F5;">
-						<video id="videoObj" controls="controls" width='150px' height='150px' style="position:absolute;"> </video>			
+						<video id="videoObj" width='150px' height='150px' style="position:absolute;" ontouchstart="videoPopUp(this)" onclick="videoPopUp(this)" onmouseover="this.play();" onmouseout="this.pause();"> </video>			
 						<div id="VideoUploadProgress" style="position:absolute;"></div>							
 					</div>
 					<textarea placeholder="Video Explanation" class="empty_text" id="imgText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
@@ -178,17 +236,7 @@
 	<script>
 		var stopPropagationFunc = function(event){event.stopPropagation();};		
 		var gridGenerator = null;
-		/*function on_fileupload(form){
-			if((!ContentsModule.Interface.getLogInStatus()))
-				return;
-			var width = screen.width;
-			var height = screen.height;
-			form.action="http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/upload";
-			//form.target="formpopup"
-			document.getElementById("ui_val").setAttribute("value",ContentsModule.Interface.Val_UI);
-			document.getElementById("ct_val").setAttribute("value",ContentsModule.Interface.Val_CT); 
-			var createdWiwndow = window.open('', '', 'width='+width/4+',height='+height/4+',resizeable,toolbar,scrollbars,,left='+width/2);
-		}*/
+
 		
 		window.onload = function(){
 			$(function(){
@@ -196,7 +244,7 @@
 				$('.block div').hide();
 				$('.block div:first').show();
 				$('.block div:first').find('*').show();
-				var innerDivs = $(this).find('a');
+				var innerDivs = $('.tabs').find('a');
 				var contentsKeys = Object.keys(CONTENTS_TYPE_ENUM);
 				for(var i=0; i<innerDivs.length; i++)
 					innerDivs[i].setAttribute("href","#"+CONTENTS_TYPE_ENUM[contentsKeys[i]]);	
@@ -257,73 +305,51 @@
 				var resObj = JSON.parse(response);
 				var CF = resObj.CF;
 				var UF  = resObj.UF;
-				imgFileList = resObj.FL;
+				var CT = resObj.CT;
+				contentsFileList = resObj.FL;
 				
-				var containerObj = $('#storedImgs')[0];
-				
-				while (containerObj.firstChild) {
-					containerObj.removeChild(containerObj.firstChild);
-				}
-				
-
-				
-				function imgListInnerHTMLGenerator(curPage){
-					var numCol = CONTENTS_FRAME_MAX_COL;
-					var numRow = CONTENTS_FRAME_MAX_ROW;				
-					//var numRows = imgFileList.length / numCol;
-					var html = "";
-					var startIdx = (curPage-1)*numCol*numRow;
-					for (var i = startIdx; i < startIdx+numCol*numRow; i++) {
-						if(i == imgFileList.length)
-							break;
-						if(i%numCol == 0){
-							if(i!=0){
-								html+="</div>";
-							}
-							html+= "<div id='r"+ parseInt(i/numCol) +"' style='display:flex; display:-webkit-flex;'>";
-						}
-						else{
-							html+="<div id='r"+ parseInt(i/numCol)+"c"+i%numCol+"'>";
-							html+= "<img id=img"+i+" src=http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+imgFileList[i]+" width='110px' height='110px'><br><div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + imgFileList[i] + "</div></div>";							
-							if(i == numCol-1)
-								html+="</div>";
-						}
-					}
-					//IMAGE_CONTENTS_NUM_NEXT_PAGE
-					html+="</div>";
-					html+="<div style='display:flex; display:-webkit-flex;'>"
-					var maxPage = imgFileList.length / (numCol * numRow);
-					for (var i=0; i< maxPage; i++){
-						html+="<div id=imlp"+(i+1)+">"+(i+1)+"</div>&nbsp;";
-					}					
-					return html;
-				}		
-				function imagePageOnClickHandler(){
-					var curPage = Number(this.id.substring(4));
-										
-					$("#storedImgs").html(imgListInnerHTMLGenerator(curPage));					
-					$("#storedImgs").parent().parent().scrollTop(0);
-					
-					for (var i = 0; i < (imgFileList.length / (CONTENTS_FRAME_MAX_COL * CONTENTS_FRAME_MAX_ROW)); i++) {
-						document.getElementById("imlp"+(i+1)).onclick = imagePageOnClickHandler;
-					}
-					
-				}								
-				gridGenerator.setTargetDivElement($("#storedImgs")[0]);
-				
+				var containerObj;
 				var templateArr = [];
-				for(var i=0; i<imgFileList.length; i++){
-					var template = "<img id=img"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+imgFileList[i]+"' width='110px' height='110px'><br><div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + imgFileList[i] + "</div>";
-					templateArr.push(template);
+				
+				switch(CT){
+				case CONTENTS_TYPE_ENUM["Text"] :
+					break;
+				case CONTENTS_TYPE_ENUM["Image"] :
+					containerObj = $('#storedImgs');
+					for(var i=0; i<contentsFileList.length; i++){
+						var template = "<img id=img"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='110px'>"
+										+"<br>"
+										+"<div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + contentsFileList[i] + "</div>";
+						templateArr.push(template);
+					}
+					break;
+				case CONTENTS_TYPE_ENUM["Movie"] :
+					containerObj = $('#storedVds');
+					for(var i=0; i<contentsFileList.length; i++){
+						var template = "<video id=vd"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='110px' ontouchstart='videoPopUp(this)' onclick='videoPopUp(this)' draggable='true' ondragstart='onVideoDragStart(event)'>"
+										+"<br>"
+										+"<div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + contentsFileList[i] + "</div>";
+						templateArr.push(template);
+					}
+					break;
+				case CONTENTS_TYPE_ENUM["Sound"] :
+					break;
+				case CONTENTS_TYPE_ENUM["WebPreview"] :
+					break;
 				}
+				
+				while (containerObj[0].firstChild) {
+					containerObj[0].removeChild(containerObj[0].firstChild);
+				}				
+										
+				gridGenerator.setTargetDivElement(containerObj[0]);
 				
 				gridGenerator.setItemTemplateArr(templateArr);
 				gridGenerator.onPageChanged = function(){
 					gridGenerator.getTargetDivElement().parentElement.parentElement.scrollTop = 0;																				
-				};
-				//$("#storedImgs").html(imgListInnerHTMLGenerator(1));					
+				};			
 				gridGenerator.generate();
-				$("#storedImgs").parent().parent().scrollTop(0);																				
+				containerObj.parent().parent().scrollTop(0);																				
 			});
 		}
 		function handleFiles(files){				
@@ -346,9 +372,13 @@
 		curThumbNailImgObj.ondrop = function (event) {
 			if(event.dataTransfer.files.length != 0){
 				var files = event.dataTransfer.files;
+				var updateElementInfo = {mainElemId : "ThumbNailImg",
+										urlElemId : "ImageURL",
+										progressElemId : "ThumbNailUploadProgress"
+										}	
 				console.log(files);
 				setImgSrcAndAdjust(this,window.URL.createObjectURL(files[0]),CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);			
-				fileUploadHandler(files);				
+				fileUploadHandler(files,updateElementInfo);				
 			}
 			else{				
 				if(event.dataTransfer.items){				
@@ -386,23 +416,35 @@
 		
 		
 		var videoObj = document.getElementById('videoObj');
-		videoObj.onclick = function () { 
+		/*videoObj.onclick = function () { 
 			var event = new Event('click');				
 			var fileInputBtn = document.getElementsByName('contentsFile');				
 			fileInputBtn[0].dispatchEvent(event);
 			return false; 
-		};
+		};*/
 		videoObj.ontouch = function () { this.className = 'hover'; return false; };
 		videoObj.ondragover = function () { this.className = 'hover'; return false; };
 		videoObj.ondragend = function () { this.className = ''; return false; };
 		videoObj.ondrop = function (event) {
+			if(!this.isClickable && this.isClickable != undefined)
+				return;
+			var srcFromVDList = event.dataTransfer.getData("srcFromVDList");
+			if(srcFromVDList != null && srcFromVDList != undefined && srcFromVDList != ""){
+				setVDSrcAndAdjust(this,srcFromVDList,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
+				document.getElementById('VideoURL').value=srcFromVDList;
+				return;
+			}
 			if(event.dataTransfer.files.length != 0){
 				var files = event.dataTransfer.files;
+				var updateElementInfo = {mainElemId : "videoObj",
+										urlElemId : "VideoURL",
+										progressElemId : "VideoUploadProgress"
+										}
 				console.log(files);
 				setVDSrcAndAdjust(this,window.URL.createObjectURL(files[0]),CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);			
-				fileUploadHandler(files);				
+				fileUploadHandler(files,updateElementInfo);				
 			}
-			else{				
+			else{
 				if(event.dataTransfer.items){				
 					if(event.dataTransfer.items.length != 0){
 						var videoObj = this;
@@ -436,7 +478,7 @@
 		};
 		
 		
-		function fileUploadHandler(files){				
+		function fileUploadHandler(files,updateElementInfo){				
 			var formData = new FormData();
 			for (var i = 0; i < files.length; i++) {
 				formData.append('file', files[i]);
@@ -444,39 +486,40 @@
 			formData.append('UI', ContentsModule.Interface.Val_UI);
 			formData.append('CT', ContentsModule.Interface.Val_CT);
 			
-			
+			var mainElem = document.getElementById(updateElementInfo.mainElemId);
+			var urlElem = document.getElementById(updateElementInfo.urlElemId);
+			var progressElem = document.getElementById(updateElementInfo.progressElemId);
 
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', "http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/upload",true);				
 			xhr.upload.onprogress = function (event) {
+			mainElem.isClickable = false;
 			if (event.lengthComputable) {
 					var complete = (event.loaded / event.total * 100 | 0);
-					var thumbnailImg = document.getElementById('ThumbNailImg');
-					var thumbnailImageSrcText = document.getElementById('ImageURL');
-					var progressDiv = document.getElementById('ThumbNailUploadProgress');
 					
-					var left = thumbnailImg.offsetWidth/2 - progressDiv.offsetWidth/2;
-					var top = thumbnailImg.offsetHeight/2 - progressDiv.offsetHeight/2;
 					
-					progressDiv.innerHTML = complete + "%";
-					progressDiv.style.left = left+"px";
-					progressDiv.style.top = top+"px";
+					var left = mainElem.offsetWidth/2 - progressElem.offsetWidth/2;
+					var top = mainElem.offsetHeight/2 - progressElem.offsetHeight/2;
 					
-					thumbnailImg.style.opacity = 0.5;
-					thumbnailImageSrcText.value = "Uploading...";
+					progressElem.innerHTML = complete + "%";
+					progressElem.style.left = left+"px";
+					progressElem.style.top = top+"px";
+					
+					mainElem.style.opacity = 0.5;
+					urlElem.value = "Uploading...";
 					
 					if(complete == 100){
-						thumbnailImg.style.opacity = 1.0;
-						progressDiv.innerHTML = "";							
+						mainElem.style.opacity = 1.0;
+						progressElem.innerHTML = "";							
 					}
 				}
 			};
 
 			xhr.onload = function () {
-				if (xhr.status === 200) {
-						var thumbnailImageSrcText = document.getElementById('ImageURL');
-						thumbnailImageSrcText.value = this.responseText;
-						
+				mainElem.isClickable = true;
+				if (xhr.status === 200) {						
+						urlElem.value = this.responseText;					
+						mainElem.src = this.responseText;
 					} else {
 						console.log('Something went terribly wrong...');
 					}
@@ -538,6 +581,20 @@
 			var setHeight = ((managerElem.getElementsByClassName('fixedDiv')[0]).clientHeight+10);
 			managerElem.getElementsByClassName('dummyDiv')[0].style.height = setHeight;
 		}
+		
+		function videoPopUp(elementObj){
+			if(!elementObj.isClickable && elementObj.isClickable != undefined)
+				return;
+			location.href='#openVDModal';
+			var vdObj = document.getElementById('popUpVideoObj');
+			vdObj.src = elementObj.src;
+			vdObj.play();
+			document.getElementById('vdName').innerHTML = elementObj.src;
+		}
+		function onVideoDragStart(event){
+			event.dataTransfer.setData("srcFromVDList", event.target.src);
+		}
+		
 	</script>		
 </body>
 </html>

@@ -56,6 +56,10 @@ color : #3a6163; }
 
 .maxbutton-1.maxbutton:hover .mb-text {
 color : #3a6163; }
+
+
+
+
 </style>
 <link type="text/css" rel="stylesheet" href="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/css/toolbar-anim.css"/>
 
@@ -463,6 +467,7 @@ color : #3a6163; }
 				
 				toolBar[0].addEventListener('mousemove',screenOffsetCalFunc);
 				toolBar[0].addEventListener('touchmove',screenOffsetCalFunc);
+							
 				
 				$(window).scroll(function(){
 					var newPositionX =  toolBar[0].screenXOffset + $(window).scrollLeft();

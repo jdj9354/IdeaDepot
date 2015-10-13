@@ -73,7 +73,6 @@ app.use('/webpreview',function(request, response,next) {
 		runPageRessAndReply(url,resolution,userId,response);
 		break;
 	}
-
 });
 
 app.use('/upload',function(request, response,next) {	
@@ -143,7 +142,8 @@ app.use('/list',function(request, response,next) {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		var resObj = {FL : fileList,
 						UF : userId,
-						CF : contentsFolder			
+						CF : contentsFolder,
+						CT : contentsType
 						};
 		response.send(JSON.stringify(resObj));
 	}

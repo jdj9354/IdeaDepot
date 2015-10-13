@@ -74,3 +74,15 @@
 	transition : width 1s, height 1s;
 	-webkit-transition: width 1s, height 1s;
 }
+
+.fadeout_anim{
+	opacity:0;
+    transform: opacity 400ms ease-in; 
+	-webkit-transition: opacity 400ms ease-in; /* For Safari */	
+}
+
+.fadein_anim{
+	opacity:1.0;
+    transform: opacity 400ms ease-in; 
+	-webkit-transition: opacity 400ms ease-in; /* For Safari */	
+}
