@@ -499,7 +499,10 @@
 					
 					
 					var left = mainElem.offsetWidth/2 - progressElem.offsetWidth/2;
-					var top = mainElem.offsetHeight/2 - progressElem.offsetHeight/2;
+					var top = mainElem.offsetHeight/2 + progressElem.offsetHeight/2;
+					console.log(left);
+					console.log(top);
+					console.log(complete);
 					
 					progressElem.innerHTML = complete + "%";
 					progressElem.style.left = left+"px";
