@@ -19,9 +19,12 @@
 		addJavascript("/Common/Constants/ThinkMineConstants.js");
 		addJavascript("ContentsFrameConstants.js");
 		addJavascript("GridGen.js");
+		addJavascript("AdaptiveVideoPlayer/js/AdaptiveVideoPlayer.js");
 		
 		var imgFileList;
 		var imgCurrentPage = 0;
+		
+		var popupVDPlayer;
 		
 	</script>
 	<style type='text/css'>
@@ -99,36 +102,25 @@
 		font-weight:bold;
 		width:400px;
 	}
-	.vdModalDialog {
-		position: fixed;
+	.vdModalDialog {		
 		font-family: Arial, Helvetica, sans-serif;
 		top: 0;
 		right: 0;
 		bottom: 0;
 		left: 0;
-		background: rgba(0,0,0,0.0);
-		z-index: 99999;
-		opacity:0;
-		-webkit-transition: opacity 400ms ease-in;
-		-moz-transition: opacity 400ms ease-in;
-		transition: opacity 400ms ease-in;
-		pointer-events: none;
-	}
-	.vdModalDialog:target {
-		opacity:1;
-		pointer-events: auto;
+		background: rgba(0,0,0,0.0);		
 	}
 
+
 	.vdModalDialog > div {
-		width: 400px;
-		position: relative;
+		position: absolute;
 		margin: 10% auto;
 		padding: 5px 20px 13px 20px;
 		border-radius: 10px;
 		background: #fff;
-		background: -moz-linear-gradient(#fff, #999);
-		background: -webkit-linear-gradient(#fff, #999);
-		background: -o-linear-gradient(#fff, #999);
+		background: -moz-linear-gradient(#fff, #fff);
+		background: -webkit-linear-gradient(#fff, #fff);
+		background: -o-linear-gradient(#fff, #fff);
 	}
 	.vdModalDialogClose{
 		background: #606061;
@@ -149,17 +141,11 @@
 		box-shadow: 1px 1px 3px #000;
 	}
 
-	.vdModalDialogClose:hover { background: #00d9ff; }
+	.vdModalDialogClose:hover { background: #9fcaf2; }
 	</style>
 </head>
 <body>	
-	<div id="openVDModal" class="vdModalDialog" onmousedown="window.location='#close';" ontouchstart="window.location='#close';">
-		<div onmousedown="stopPropagationFunc(event);" ontouchstart="stopPropagationFunc(event);">
-			<a href="#close" title="Close" class="vdModalDialogClose">X</a>
-			<h2 id="vdName"></h2>
-			<video id="popUpVideoObj" width='400px' height='250px' controls='controls';> </video>
-		</div>
-	</div>
+	<link type="text/css" rel="stylesheet" href="../css/toolbar-anim.css"/>	
 	<form onmousedown="stopPropagationFunc(event);"
 			onmousemove="stopPropagationFunc(event);"
 			ontouchstart="stopPropagationFunc(event);"
@@ -212,12 +198,21 @@
 			</div>
 			<div id="videoContentsManager">
 				<div class="fixedDiv" style="position:absolute;">										
-					<input placeholder="Video URL" class="empty_text" type="text" id="VideoURL" onchange="loadVideoUrlOn(this)">
+					<input placeholder="Video URL" class="empty_text" type="text" id="VideoURL" onchange="loadVDUrlOn(this)">
 					<div class="VideoSelector" style="width:400px;height:160px;background-color:#D6E6F5;">
 						<video id="videoObj" width='150px' height='150px' style="position:absolute;" ontouchstart="videoPopUp(this)" onclick="videoPopUp(this)" onmouseover="this.play();" onmouseout="this.pause();"> </video>			
 						<div id="VideoUploadProgress" style="position:absolute;"></div>							
 					</div>
 					<textarea placeholder="Video Explanation" class="empty_text" id="imgText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
+				</div>
+				<div id="openVDModal" class="vdModalDialog fadeout_anim" onmousedown="window.location='#close';" ontouchstart="window.location='#close';">
+					<div style="z-index:9999;">
+						<div title="Close" class="vdModalDialogClose" ontouchstart="videoPopUpShadow(this)" onclick="videoPopUpShadow(this)">X</div>
+						<h2 id="vdName"></h2>
+						<div id="videoObjs">
+
+						</div>
+					</div>
 				</div>
 				<div class="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:238px">				
 				</div>
@@ -293,6 +288,9 @@
 			}			
 			
 			gridGenerator = new GridPageGenerator(null,null);
+			
+			AdaptiveVideoPlayer.init();
+			popupVDPlayer = new AdaptiveVideoPlayer.player(document.getElementById('videoObjs'),"");
 			
 		};
 		function on_reqImgFileList(){
@@ -500,9 +498,6 @@
 					
 					var left = mainElem.offsetWidth/2 - progressElem.offsetWidth/2;
 					var top = mainElem.offsetHeight/2 + progressElem.offsetHeight/2;
-					console.log(left);
-					console.log(top);
-					console.log(complete);
 					
 					progressElem.innerHTML = complete + "%";
 					progressElem.style.left = left+"px";
@@ -532,6 +527,10 @@
 		function loadImageUrlOn(textObj){
 			var imageThumbNailObj = document.getElementById('ThumbNailImg');
 			setImgSrcAndAdjust(imageThumbNailObj,textObj.value,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
+		}
+		function loadVDUrlOn(textObj){
+			var vdObj = document.getElementById('videoObj');
+			setVDSrcAndAdjust(vdObj,textObj.value,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
 		}
 		function setImgSrcAndAdjust(imgObj,srcURL,maxWidth,maxHeight){
 			imgObj.src = srcURL;
@@ -588,11 +587,70 @@
 		function videoPopUp(elementObj){
 			if(!elementObj.isClickable && elementObj.isClickable != undefined)
 				return;
-			location.href='#openVDModal';
-			var vdObj = document.getElementById('popUpVideoObj');
-			vdObj.src = elementObj.src;
-			vdObj.play();
-			document.getElementById('vdName').innerHTML = elementObj.src;
+			var vdmodalObj = $('#openVDModal');
+			
+			//location.href='#openVDModal';
+			//vdmodalObj[0].children[0].style.zIndex = "9999";
+			if(vdmodalObj[0].isPopped == undefined || vdmodalObj[0].isPopped == false){				
+				vdmodalObj.toggleClass('fadeout_anim');
+				vdmodalObj.toggleClass('fadein_anim');
+			}
+			if(elementObj.src == popupVDPlayer.getURL() && vdmodalObj[0].isPopped)
+				return;
+			
+			vdmodalObj[0].isPopped = true;
+		//	var videoObjsParent = document.getElementById('videoObjs');
+			var url = elementObj.src;
+			document.getElementById('vdName').innerHTML = url;
+			popupVDPlayer.setPlayerHeight(350);
+			popupVDPlayer.setPlayerWidth(600);
+			popupVDPlayer.setURL(url);
+			/*var html5VDObj = document.getElementById('popUpVideoObj');
+			var youtubeVDObj = document.getElementById('popUpYTBVideoObj');
+			if(url.startsWith("https://youtu.be")){
+				var youtubeId = url.substring(url.lastIndexOf("/")+1);
+				var youtubeSrc = "https://www.youtube.com/embed/"+youtubeId;
+				youtubeVDObj.src = youtubeSrc;
+				document.getElementById('vdName').innerHTML = youtubeSrc;
+			
+				html5VDObj.style.display = "none";
+			}
+			else{
+				html5VDObj.src = elementObj.src;
+				html5VDObj.play();
+				document.getElementById('vdName').innerHTML = elementObj.src;
+				
+				youtubeVDObj.style.display = "none";				
+			}*/
+		}
+		function videoPopUpShadow(elementObj){
+			if(!elementObj.isClickable && elementObj.isClickable != undefined)
+				return;
+			//location.href='#openVDModal';
+			var vdmodalObj = $('#openVDModal');
+			vdmodalObj[0].isPopped = false;			
+			vdmodalObj.toggleClass('fadeout_anim');
+			vdmodalObj.toggleClass('fadein_anim');
+			//vdmodalObj[0].style.zIndex = "1";
+		//	var videoObjsParent = document.getElementById('videoObjs');
+			popupVDPlayer.stopPlay();
+			/*var html5VDObj = document.getElementById('popUpVideoObj');
+			var youtubeVDObj = document.getElementById('popUpYTBVideoObj');
+			if(url.startsWith("https://youtu.be")){
+				var youtubeId = url.substring(url.lastIndexOf("/")+1);
+				var youtubeSrc = "https://www.youtube.com/embed/"+youtubeId;
+				youtubeVDObj.src = youtubeSrc;
+				document.getElementById('vdName').innerHTML = youtubeSrc;
+			
+				html5VDObj.style.display = "none";
+			}
+			else{
+				html5VDObj.src = elementObj.src;
+				html5VDObj.play();
+				document.getElementById('vdName').innerHTML = elementObj.src;
+				
+				youtubeVDObj.style.display = "none";				
+			}*/
 		}
 		function onVideoDragStart(event){
 			event.dataTransfer.setData("srcFromVDList", event.target.src);

@@ -76,13 +76,15 @@
 }
 
 .fadeout_anim{
+	visibility: hidden;
 	opacity:0;
-    transform: opacity 400ms ease-in; 
-	-webkit-transition: opacity 400ms ease-in; /* For Safari */	
+    transform: visibility 400ms opacity 400ms ease-in; 
+	-webkit-transform: visibility 400ms opacity 400ms ease-in; /* For Safari */	
 }
 
 .fadein_anim{
+	visibility: visible;
 	opacity:1.0;
     transform: opacity 400ms ease-in; 
-	-webkit-transition: opacity 400ms ease-in; /* For Safari */	
+	-webkit-transform: opacity 400ms ease-in; /* For Safari */	
 }
