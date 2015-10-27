@@ -1,7 +1,7 @@
 if(!window.AdaptiveVideoPlayer)
 	AdaptiveVideoPlayer = {};
 
-AdaptiveVideoPlayer = new function(undefined){
+AdaptiveVideoPlayer = new function(undefined){	
 	this.init = function (){
 		var tag = document.createElement('script');
 
@@ -14,10 +14,12 @@ AdaptiveVideoPlayer = new function(undefined){
 		var mSrcURL = srcURL;
 		var playerWidth = 400;
 		var playerHeight = 250;	
-		var vdType = "html5";
+		var self = this;
+		var vdType = "html5";		
 		
 		this.setPlayerWidth = function(aWidth){
 			playerWidth = aWidth;
+			setActualWH();
 		};
 		
 		this.getPlayerWidth = function(){
@@ -26,11 +28,24 @@ AdaptiveVideoPlayer = new function(undefined){
 		
 		this.setPlayerHeight = function(aHeight){
 			playerHeight = aHeight;
+			setActualWH();
 		};
 		
-		this.getPlayerWidth = function(){
+		this.getPlayerHeight = function(){
 			return playerHeight;
 		};
+		
+		var setActualWH = function(){
+			if(mDivElem.children[0] == undefined || mDivElem.children[0] == null)
+				return;
+			switch(vdType){
+			case "html5" :
+			case "youtube" : 
+				mDivElem.children[0].style.width = self.getPlayerWidth();
+				mDivElem.children[0].style.height = self.getPlayerHeight();
+				break;
+			}
+		}	
 		
 		this.setURL = function(url){
 			mSrcURL = url;
@@ -40,6 +55,7 @@ AdaptiveVideoPlayer = new function(undefined){
 			}
 			
 			function onPlayerReady(event) {
+				self.onVDLoad();
 				event.target.playVideo();					
 			}
 			function onPlayerStateChange(event) {
@@ -77,6 +93,10 @@ AdaptiveVideoPlayer = new function(undefined){
 				vdType = "html5";
 				var vdElemInnerHtml = "<video src='"+mSrcURL+"' width='"+playerWidth+"px' height='"+playerHeight+"px' controls='controls' autoplay='autoplay'> </video>";
 				mDivElem.innerHTML = vdElemInnerHtml;
+				/*mDivElem.children[0].onload = function(){
+					self.onVDLoad();
+				}*/
+				mDivElem.children[0].oncanplay  = self.onVDLoad;
 				/*activeObj = mDivElem.getElementsByClassName('defaultVideoPlayer')[0];
 				activeObj.src = elementObj.src;
 				activeObj.play();				
@@ -92,6 +112,16 @@ AdaptiveVideoPlayer = new function(undefined){
 		this.getURL = function(){
 			return mSrcURL;
 		};
+		this.play = function(){
+			switch(vdType){
+			case "youtube" :
+				mDivElem.playVideo();
+				break;
+			case "html5" :
+				mDivElem.play();
+				break;
+			}
+		};
 		this.stopPlay = function(){
 			switch(vdType){
 			case "youtube" :
@@ -102,6 +132,9 @@ AdaptiveVideoPlayer = new function(undefined){
 				break;
 			}
 		};
+		this.onVDLoad = function(){
+		};
+
 		this.setURL(mSrcURL);
 	}
 	function mediaParseIdFromUrl(provider, url) {

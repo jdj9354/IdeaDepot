@@ -164,7 +164,7 @@ color : #3a6163; }
 								<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
 							</div>
 						</div>
-						<iframe width='800px' height='800px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
+						<iframe width='800px' height='1000px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
 					</div>									
 				</div>
 			</div>

@@ -1,3 +1,4 @@
+
 <html>
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>	
@@ -24,6 +25,7 @@
 		var imgFileList;
 		var imgCurrentPage = 0;
 		
+		var mainVDPlayer
 		var popupVDPlayer;
 		
 	</script>
@@ -91,6 +93,7 @@
 	}
 	.empty_text {		
 		outline:none;
+		text-overflow: ellipsis;
 		background-color:#D6E6F5;
 		border:none;
 		margin:0px;
@@ -100,7 +103,7 @@
 		font-family:Courier, monospace;
 		height:28px;
 		font-weight:bold;
-		width:400px;
+		width:600px;
 	}
 	.vdModalDialog {		
 		font-family: Arial, Helvetica, sans-serif;
@@ -177,30 +180,30 @@
 			</div>				
 		</section>
 		<section class="block" height='1000' style="clear:left">		
-			<div id="textContentsManager">
+			<div id="TextContentsManager">
 				<div id="margin">Title: <input id="TextTitle" type="text" class="empty_text"></div>
 				<textarea placeholder="Enter something funny." id="text" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; "></textarea>  
 			</div>
-			<div id="imageContentsManager" style="overflow-y:scroll;">				
+			<div id="ImageContentsManager">				
 				<div class="fixedDiv" style="position:absolute;">										
 					<input placeholder="Image URL" class="empty_text" type="text" id="ImageURL" onchange="loadImageUrlOn(this)">
-					<div class="ImageSelector" style="width:400px;height:160px;background-color:#D6E6F5;">
-						<img id="ThumbNailImg" width='150px' height='150px' style="position:absolute;"> </img>			
+					<div class="ImageSelector" style="width:600px;height:347.5px;background-color:#D6E6F5;">
+						<img id="ThumbNailImg" width='600px' height='347.5px' style="position:absolute;"> </img>			
 						<div id="ThumbNailUploadProgress" style="position:absolute;"></div>							
 					</div>
 					<textarea placeholder="Image Explanation" class="empty_text" id="imgText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
 				</div>
-				<div class="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:238px">				
+				<div class="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:432.5px">				
 				</div>
-				<div class="layout" style="border:1px solid #FFFFFF; height:370px; width:400px">					
+				<div class="layout" style="border:1px solid #FFFFFF; height:370px; width:600px">					
 					<div id="storedImgs" height='auto'></div>							
 				</div>
 			</div>
-			<div id="videoContentsManager">
+			<div id="MovieContentsManager">
 				<div class="fixedDiv" style="position:absolute;">										
 					<input placeholder="Video URL" class="empty_text" type="text" id="VideoURL" onchange="loadVDUrlOn(this)">
-					<div class="VideoSelector" style="width:400px;height:160px;background-color:#D6E6F5;">
-						<video id="videoObj" width='150px' height='150px' style="position:absolute;" ontouchstart="videoPopUp(this)" onclick="videoPopUp(this)" onmouseover="this.play();" onmouseout="this.pause();"> </video>			
+					<div class="VideoSelector" style="width:600px;height:347.5px;background-color:#D6E6F5;">
+						<div id="mainVideoObj" width='150px' height='150px' style="position:absolute;"> </div>			
 						<div id="VideoUploadProgress" style="position:absolute;"></div>							
 					</div>
 					<textarea placeholder="Video Explanation" class="empty_text" id="imgText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
@@ -209,14 +212,14 @@
 					<div style="z-index:9999;">
 						<div title="Close" class="vdModalDialogClose" ontouchstart="videoPopUpShadow(this)" onclick="videoPopUpShadow(this)">X</div>
 						<h2 id="vdName"></h2>
-						<div id="videoObjs">
+						<div id="popupVideoObj">
 
 						</div>
 					</div>
 				</div>
-				<div class="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:238px">				
+				<div class="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:432.5px">				
 				</div>
-				<div class="layout" style="border:1px solid #FFFFFF; height:370px; width:400px">					
+				<div class="layout" style="border:1px solid #FFFFFF; height:370px; width:600px">					
 					<div id="storedVds" height='auto'></div>							
 				</div>
 			</div>
@@ -290,7 +293,12 @@
 			gridGenerator = new GridPageGenerator(null,null);
 			
 			AdaptiveVideoPlayer.init();
-			popupVDPlayer = new AdaptiveVideoPlayer.player(document.getElementById('videoObjs'),"");
+			var mainVDObj = document.getElementById('mainVideoObj');
+			mainVDPlayer = new AdaptiveVideoPlayer.player(mainVDObj,"");
+			mainVDPlayer.setPlayerHeight(CONTENTS_RECEIVER_MAX_HEIGHT_PX);
+			mainVDPlayer.setPlayerWidth(CONTENTS_RECEIVER_MAX_WIDTH_PX);
+			mainVDObj.adaptiveVdObj = mainVDPlayer;			
+			popupVDPlayer = new AdaptiveVideoPlayer.player(document.getElementById('popupVideoObj'),"");
 			
 		};
 		function on_reqImgFileList(){
@@ -413,7 +421,7 @@
 		
 		
 		
-		var videoObj = document.getElementById('videoObj');
+		var videoObj = document.getElementById('mainVideoObj');
 		/*videoObj.onclick = function () { 
 			var event = new Event('click');				
 			var fileInputBtn = document.getElementsByName('contentsFile');				
@@ -434,7 +442,7 @@
 			}
 			if(event.dataTransfer.files.length != 0){
 				var files = event.dataTransfer.files;
-				var updateElementInfo = {mainElemId : "videoObj",
+				var updateElementInfo = {mainElemId : "mainVideoObj",
 										urlElemId : "VideoURL",
 										progressElemId : "VideoUploadProgress"
 										}
@@ -529,7 +537,7 @@
 			setImgSrcAndAdjust(imageThumbNailObj,textObj.value,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
 		}
 		function loadVDUrlOn(textObj){
-			var vdObj = document.getElementById('videoObj');
+			var vdObj = document.getElementById('mainVideoObj');
 			setVDSrcAndAdjust(vdObj,textObj.value,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
 		}
 		function setImgSrcAndAdjust(imgObj,srcURL,maxWidth,maxHeight){
@@ -556,11 +564,18 @@
 		}
 		
 		function setVDSrcAndAdjust(vdObj,srcURL,maxWidth,maxHeight){
-			vdObj.src = srcURL;
-			
-			vdObj.onload = function(){
-				var nh = vdObj.naturalHeight;
-				var nw = vdObj.naturalWidth;
+			vdObj.adaptiveVdObj.onVDLoad = function(){
+				var nh;
+				var nw;
+				
+				if(vdObj.naturalHeight != undefined && vdObj.naturalHeight != null){
+					nh = vdObj.naturalHeight;
+					nw = vdObj.naturalWidth;
+				}
+				else{
+					nh = vdObj.adaptiveVdObj.getPlayerHeight();
+					nw = vdObj.adaptiveVdObj.getPlayerWidth();
+				}
 				
 				var resultWidth = (maxHeight*nw/nh);
 				var resultHeight = maxHeight;
@@ -569,13 +584,20 @@
 					resultWidth = maxWidth;
 					resultHeight = (maxWidth*nh/nw);
 				}
+				
+				/*if(resultHeight > maxHeight){
+					
+					resultWidth = (maxHeight*resultWidth/resultHeight);	
+					resultHeight = maxHeight;					
+				}*/
 			
-				vdObj.style.width = resultWidth+"px";
-				vdObj.style.height = resultHeight+'px';
+				vdObj.adaptiveVdObj.setPlayerHeight(resultHeight);
+				vdObj.adaptiveVdObj.setPlayerWidth(resultWidth);
 				vdObj.parentElement.style.height = (resultHeight+10)+'px';							
-			
-				adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Video));
-			}
+				var a = CONTENTS_TYPE_ENUM.Movie+"Manager";
+				adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Movie));
+			}			
+			vdObj.adaptiveVdObj.setURL(srcURL);
 		}
 		
 		function adjustDummyDivPos(managerElem)
