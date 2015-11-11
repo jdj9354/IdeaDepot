@@ -642,10 +642,10 @@
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', "http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/upload",true);				
 			xhr.upload.onprogress = function (event) {
-			mainElem.isClickable = false;
-			if (event.lengthComputable) {
-					var complete = (event.loaded / event.total * 100 | 0);
-					
+				mainElem.isClickable = false;
+				if (event.lengthComputable) {
+					var complete = (event.loaded / event.total * 100 | 0);				
+					progressElem.innerHTML = complete + "%";
 					
 					var left = mainElem.offsetWidth/2 - progressElem.offsetWidth/2;
 					if(ContentsModule.Interface.Val_CT != CONTENTS_TYPE_ENUM.Sound)
@@ -653,15 +653,27 @@
 					else
 						var top = mainElem.previousElementSibling.offsetHeight/2 + progressElem.offsetHeight/2;
 					
-					progressElem.innerHTML = complete + "%";
 					progressElem.style.left = left+"px";
 					progressElem.style.top = top+"px";
-					
-					mainElem.style.opacity = 0.5;
+					if(ContentsModule.Interface.Val_CT != CONTENTS_TYPE_ENUM.Sound)
+						mainElem.style.opacity = 0.5;
+					else
+						mainElem.previousElementSibling.style.opacity = 0.5;
 					urlElem.value = "Uploading...";
 					
 					if(complete == 100){
-						mainElem.style.opacity = 1.0;
+						if(ContentsModule.Interface.Val_CT != CONTENTS_TYPE_ENUM.Sound){
+							mainElem.style.opacity = 1.0;		
+							/*if(ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Movie){
+								mainElem.pause();
+								mainElem.play();
+							}*/							
+						}
+						else{
+							mainElem.previousElementSibling.style.opacity = 1.0;							
+							//mainElem.pause();
+							
+						}
 						progressElem.innerHTML = "";							
 					}
 				}
@@ -672,6 +684,10 @@
 				if (xhr.status === 200) {						
 						urlElem.value = this.responseText;					
 						mainElem.src = this.responseText;
+						
+						if(ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Sound 
+							|| ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Movie)
+							mainElem.play();
 						
 						if(ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Sound){
 							ID3.loadTags(mainElem.src, function() {

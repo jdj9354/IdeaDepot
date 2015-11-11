@@ -165,7 +165,13 @@ fileAccessApp.use(express.bodyParser());
 fileAccessApp.all("/*",function(request,response,next){
 	response.setHeader('Access-Control-Allow-Origin', 'http://'+TMC.THINK_MINE_WEB_SERVER_ADDR);	
 	response.setHeader('Access-Control-Allow-Headers',  "range,if-modified-since");
-	response.setHeader('Access-Control-Expose-Headers', "Accept-Ranges,Content-Encoding,Content-Length,Content-Range");
+	response.setHeader('Access-Control-Expose-Headers', "Accept-Ranges,Content-Encoding,Content-Length,Content-Range");	
+	//console.log(request.headers.referer);	
+	if(request.headers.referer == undefined || request.headers.referer == null)
+		return;
+	if(request.headers.referer.toString().indexOf("ContentsFrame.html") == -1)
+		return;
+	//return;
 	next();
 });
 fileAccessApp.use(express.static(__dirname + "/"+contentsRootFolder));
