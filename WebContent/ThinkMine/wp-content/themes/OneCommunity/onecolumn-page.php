@@ -7,8 +7,8 @@ Template Name: Full Width
 <script src="/ThinkMineCV/js/ThinkMineLib.js"></script>
 <script src="/ThinkMineCV/js/ThinkMineUILib.js"></script>
 
-<script src="/thidparty/gradx-master/lib/js/jquery.js"></script>
-<script src="/thidparty/gradx-master/colorpicker/spectrum.js"></script>
+<script src="/thirdparty/gradx-master/lib/js/jquery.js"></script>
+<script src="/thirdparty/gradx-master/colorpicker/spectrum.js"></script>
 
 <script src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/js/EDMHandler.js"></script>
 
@@ -190,14 +190,14 @@ color : #3a6163; }
 							
 			</div>			
 
-			<link type="text/css" rel="stylesheet" href="/thidparty/gradx-master/gradX.css" />
-			<link type="text/css" rel="stylesheet" href="/thidparty/gradx-master/colorpicker/spectrum.css" />
+			<link type="text/css" rel="stylesheet" href="/thirdparty/gradx-master/gradX.css" />
+			<link type="text/css" rel="stylesheet" href="/thirdparty/gradx-master/colorpicker/spectrum.css" />
 
 
-			<script src="/thidparty/gradx-master/dom-drag.js"></script>
-			<script src="/thidparty/gradx-master/colorpicker/spectrum.js"></script>
+			<script src="/thirdparty/gradx-master/dom-drag.js"></script>
+			<script src="/thirdparty/gradx-master/colorpicker/spectrum.js"></script>
 			
-			<script src="/thidparty/gradx-master/gradX.js"></script>
+			<script src="/thirdparty/gradx-master/gradX.js"></script>
 			
 			<style>
 				#tm_gradient_cp {

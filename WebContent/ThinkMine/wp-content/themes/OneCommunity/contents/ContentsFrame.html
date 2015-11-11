@@ -21,6 +21,7 @@
 		addJavascript("ContentsFrameConstants.js");
 		addJavascript("GridGen.js");
 		addJavascript("AdaptiveVideoPlayer/js/AdaptiveVideoPlayer.js");
+		addJavascript("/thirdparty/JavaScript-ID3-Reader/dist/id3-minimized.js");
 		
 		var imgFileList;
 		var imgCurrentPage = 0;
@@ -175,7 +176,7 @@
 			<div id="ImageContentsManager">				
 				<div class="fixedDiv" style="position:absolute;">										
 					<input placeholder="Image URL" class="empty_text" type="text" id="ImageURL" onchange="loadImageUrlOn(this)">
-					<div class="ImageSelector" style="width:600px;height:347.5px;background-color:#D6E6F5;">
+					<div class="ImageSelector" style="width:600px;height:357.5px;background-color:#D6E6F5;">
 						<img id="ThumbNailImg" width='600px' height='347.5px' style="position:absolute;"> </img>			
 						<div id="ThumbNailUploadProgress" style="position:absolute;"></div>							
 					</div>
@@ -194,7 +195,7 @@
 						<div id="mainVideoObj" width='150px' height='150px' style="position:absolute;"> </div>			
 						<div id="VideoUploadProgress" style="position:absolute;"></div>							
 					</div>
-					<textarea placeholder="Video Explanation" class="empty_text" id="imgText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
+					<textarea placeholder="Video Explanation" class="empty_text" id="mvText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
 				</div>
 				<div id="openVDModal" class="vdModalDialog fadeout_anim" onmousedown="window.location='#close';" ontouchstart="window.location='#close';">
 					<div style="z-index:9999;">
@@ -211,8 +212,21 @@
 					<div id="storedVds" height='auto'></div>							
 				</div>
 			</div>
-			<div>
-				<p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a ullamcorper laoreet, lectus arcu pulvinar risus, vitae facilisis libero dolor a purus. Sed vel lacus. Mauris nibh felis, adipiscing varius, adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque mauris ut lectus. Nunc tellus ante, mattis eget, gravida vitae, ultricies ac, leo. Integer leo pede, ornare a, lacinia eu, vulputate vel, nisl.</p>
+			<div id="SoundContentsManager">
+				<div class="fixedDiv" style="position:absolute;">										
+					<input placeholder="Sound URL" class="empty_text" type="text" id="SoundURL" onchange="loadSNDUrlOn(this)">
+					<div class="SoundSelector" style="width:600px;height:347.5px;background-color:#D6E6F5;">						
+						<img id="soundPictureObj" width='600px' height='300px' style="position:absolute;"> </img>			
+						<audio id="mainSoundObj" width='600px' height='47.5px'  style="position:absolute;" controls="controls"> </audio>	
+						<div id="SoundUploadProgress" style="position:absolute;"></div>							
+					</div>					
+					<textarea placeholder="Sound Explanation" class="empty_text" id="sndText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
+				</div>				
+				<div class="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:432.5px">				
+				</div>
+				<div class="layout" style="border:1px solid #FFFFFF; height:370px; width:600px">					
+					<div id="storedSnds" height='auto'></div>							
+				</div>
 			</div>
 			<div>
 				<p>safdhbasdkjfbasdjk</p>
@@ -320,13 +334,22 @@
 				case CONTENTS_TYPE_ENUM["Movie"] :
 					containerObj = $('#storedVds');
 					for(var i=0; i<contentsFileList.length; i++){
-						var template = "<video id=vd"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='110px' ontouchstart='videoPopUp(this)' onclick='videoPopUp(this)' draggable='true' ondragstart='onVideoDragStart(event)'>"
+						var template = "<video id=vd"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='110px' ontouchstart='videoPopUp(this)' onclick='videoPopUp(this)' draggable='true' ondragstart='onVideoDragStart(event)'></video>"
 										+"<br>"
 										+"<div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + contentsFileList[i] + "</div>";
 						templateArr.push(template);
 					}
 					break;
 				case CONTENTS_TYPE_ENUM["Sound"] :
+					containerObj = $('#storedSnds');
+					for(var i=0; i<contentsFileList.length; i++){
+						var template = "<img id=id3picture"+i+" width='110px' height='110px' ontouchstart='playOrStopAudio(this)' onclick='playOrStopAudio(this)' draggable='true'>"
+										+"<br>"
+										+"<audio id=ad"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='25px'></audio>"
+										+"<br>"
+										+"<div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + contentsFileList[i] + "</div>";
+						templateArr.push(template);
+					}
 					break;
 				case CONTENTS_TYPE_ENUM["WebPreview"] :
 					break;
@@ -334,14 +357,78 @@
 				
 				while (containerObj[0].firstChild) {
 					containerObj[0].removeChild(containerObj[0].firstChild);
-				}				
-										
-				gridGenerator.setTargetDivElement(containerObj[0]);
-				
+				}												
+
+				gridGenerator.onPageChanged = function(pageNum){
+					gridGenerator.getTargetDivElement().parentElement.parentElement.scrollTop = 0;		
+					if(CT == CONTENTS_TYPE_ENUM["Sound"]){
+						var numCol = gridGenerator.getMaxCol();
+						var numRow = gridGenerator.getMaxRow();
+						var startIdx = (pageNum-1)*numCol*numRow;
+						
+						var elemIdx = startIdx;
+						var curPictureElement = document.getElementById("id3picture"+elemIdx);
+						var curAudioElement = document.getElementById("ad"+elemIdx);
+
+						var recursiveCallback = function() {
+
+							var tags = ID3.getAllTags(curAudioElement.src);															
+							var image = tags.picture;
+							if (image) {
+								var base64String = "";
+								for (var i = 0; i < image.data.length; i++) {
+									base64String += String.fromCharCode(image.data[i]);
+								}
+								var base64 = "data:" + image.format + ";base64," +
+									window.btoa(base64String);
+									curPictureElement.setAttribute('src',base64);
+									
+								elemIdx++;
+								curPictureElement = document.getElementById("id3picture"+elemIdx);
+								curAudioElement = document.getElementById("ad"+elemIdx);
+								
+								if(curPictureElement == null)
+									return;
+								else
+									ID3.loadTags(curAudioElement.src, recursiveCallback,{tags: ["title","artist","album","picture"]});
+							} 
+							else {
+								curPictureElement.style.display = "none";
+							}
+						};
+						
+						ID3.loadTags(curAudioElement.src, recursiveCallback,{tags: ["title","artist","album","picture"]});
+						
+						/*for (var i = startIdx; i < startIdx+numCol*numRow; i++) {							
+							var curPictureElement = document.getElementById("id3picture"+i);
+							if(curPictureElement == null)
+								break;
+							var curAudioElement = document.getElementById("ad"+i);
+							
+							var result = ID3.loadTags(curAudioElement.src, function() {
+								var tags = ID3.getAllTags(curAudioElement.src);								
+								
+								var image = tags.picture;
+								if (image) {
+									var base64String = "";
+									for (var i = 0; i < image.data.length; i++) {
+										base64String += String.fromCharCode(image.data[i]);
+									}
+									var base64 = "data:" + image.format + ";base64," +
+										window.btoa(base64String);
+										curPictureElement.setAttribute('src',base64);
+								} 
+								else {
+									curPictureElement.style.display = "none";
+								}
+							});
+						}*/
+					}
+				};
+
+				gridGenerator.setTargetDivElement(containerObj[0]);			
 				gridGenerator.setItemTemplateArr(templateArr);
-				gridGenerator.onPageChanged = function(){
-					gridGenerator.getTargetDivElement().parentElement.parentElement.scrollTop = 0;																				
-				};			
+				
 				gridGenerator.generate();
 				containerObj.parent().parent().scrollTop(0);																				
 			});
@@ -470,8 +557,76 @@
 			
 			return false;
 		};
-		
-		
+
+		var soundObj = document.getElementById('mainSoundObj');
+		soundObj.style.top="328px";
+		soundObj.style.width="600px";
+		var soundPictureObj = document.getElementById('soundPictureObj');
+		/*videoObj.onclick = function () { 
+			var event = new Event('click');				
+			var fileInputBtn = document.getElementsByName('contentsFile');				
+			fileInputBtn[0].dispatchEvent(event);
+			return false; 
+		};*/
+		soundObj.ontouch = function () { this.className = 'hover'; return false; };
+		soundObj.ondragover = function () { this.className = 'hover'; return false; };
+		soundObj.ondragend = function () { this.className = ''; return false; };
+		soundObj.ondrop = function (event) {
+			if(!this.isClickable && this.isClickable != undefined)
+				return;
+			var srcFromADList = event.dataTransfer.getData("srcFromADList");
+			if(srcFromADList != null && srcFromADList != undefined && srcFromADList != ""){
+				setSNDSrcAndAdjust(this,this.previousSibling,srcFromADList,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
+				document.getElementById('SoundURL').value=srcFromADList;
+				return;
+			}
+			if(event.dataTransfer.files.length != 0){
+				var files = event.dataTransfer.files;
+				var updateElementInfo = {mainElemId : "mainSoundObj",
+										urlElemId : "SoundURL",
+										progressElemId : "SoundUploadProgress"
+										}
+				console.log(files);
+				//setSNDSrcAndAdjust(this,this.previousSibling,files[0],CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);			
+				fileUploadHandler(files,updateElementInfo);				
+			}
+			else{
+				if(event.dataTransfer.items){				
+					if(event.dataTransfer.items.length != 0){
+						var soundObj = this;
+						var inspectItem = event.dataTransfer.items[0];
+						for(var i=0; i<event.dataTransfer.items.length; i++){
+							if(event.dataTransfer.items[i].type == 'text/html'){
+								inspectItem = event.dataTransfer.items[i];
+								break;
+							}
+						}				
+						inspectItem.getAsString(function(res){
+							try{
+								res = res.slice(res.indexOf("<img"));	
+								res = res.slice(res.indexOf("src"));
+								res = res.slice(res.indexOf("\"")+1);
+								res = res.substr(0,res.indexOf("\""));
+								setSNDSrcAndAdjust(soundObj,soundObj.previousSibling,res,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);						
+								//fileUploadHandler(files);
+								document.getElementById('SoundURL').value=res;
+							}
+							catch (e){
+								return;
+							}
+						});				
+					}
+				}
+			}
+			event.preventDefault && event.preventDefault();
+			
+			return false;
+		};
+		soundPictureObj.ontouch = soundObj.ontouch;
+		soundPictureObj.ondragover = soundObj.ondragover;
+		soundPictureObj.ondragend = soundObj.ondragend;
+		soundPictureObj.ondrop = soundObj.ondrop;		
+	
 		function fileUploadHandler(files,updateElementInfo){				
 			var formData = new FormData();
 			for (var i = 0; i < files.length; i++) {
@@ -493,7 +648,10 @@
 					
 					
 					var left = mainElem.offsetWidth/2 - progressElem.offsetWidth/2;
-					var top = mainElem.offsetHeight/2 + progressElem.offsetHeight/2;
+					if(ContentsModule.Interface.Val_CT != CONTENTS_TYPE_ENUM.Sound)
+						var top = mainElem.offsetHeight/2 + progressElem.offsetHeight/2;
+					else
+						var top = mainElem.previousElementSibling.offsetHeight/2 + progressElem.offsetHeight/2;
 					
 					progressElem.innerHTML = complete + "%";
 					progressElem.style.left = left+"px";
@@ -514,6 +672,47 @@
 				if (xhr.status === 200) {						
 						urlElem.value = this.responseText;					
 						mainElem.src = this.responseText;
+						
+						if(ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Sound){
+							ID3.loadTags(mainElem.src, function() {
+								var tags = ID3.getAllTags(mainElem.src);
+								
+								var image = tags.picture;
+								if (image) {
+									var base64String = "";
+									for (var i = 0; i < image.data.length; i++) {
+										base64String += String.fromCharCode(image.data[i]);
+									}
+									var base64 = "data:" + image.format + ";base64," +
+										window.btoa(base64String);
+										mainElem.previousElementSibling.setAttribute('src',base64);
+								} 
+								else {
+									mainElem.previousElementSibling.style.display = "none";
+								}
+								mainElem.previousElementSibling.onload = function(){
+									var nh = mainElem.previousElementSibling.naturalHeight;
+									var nw = mainElem.previousElementSibling.naturalWidth;
+									
+									var resultWidth = (CONTENTS_RECEIVER_MAX_HEIGHT_PX*nw/nh);
+									var resultHeight = CONTENTS_RECEIVER_MAX_HEIGHT_PX;
+									
+									if(resultWidth > CONTENTS_RECEIVER_MAX_WIDTH_PX){
+										resultWidth = CONTENTS_RECEIVER_MAX_WIDTH_PX;
+										resultHeight = (CONTENTS_RECEIVER_MAX_WIDTH_PX*nh/nw);
+									}
+								
+									mainElem.previousElementSibling.style.width = resultWidth+"px";
+									mainElem.previousElementSibling.style.height = resultHeight+'px';
+									mainElem.previousElementSibling.parentElement.style.height = (resultHeight+32)+'px';						
+									mainElem.style.top = (resultHeight+28)+'px';
+									mainElem.style.width = resultWidth+"px";
+
+									adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Sound));
+								}
+							},{tags: ["title","artist","album","picture"]});		
+						}
+						
 					} else {
 						console.log('Something went terribly wrong...');
 					}
@@ -527,6 +726,10 @@
 		function loadVDUrlOn(textObj){
 			var vdObj = document.getElementById('mainVideoObj');
 			setVDSrcAndAdjust(vdObj,textObj.value,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
+		}
+		function loadSNDUrlOn(textObj){
+			var sndObj = document.getElementById('mainSoundObj');
+			setSNDSrcAndAdjust(sndObj,sndObj.previousSibling,textObj.value,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
 		}
 		function setImgSrcAndAdjust(imgObj,srcURL,maxWidth,maxHeight){
 			imgObj.src = srcURL;
@@ -582,10 +785,57 @@
 				vdObj.adaptiveVdObj.setPlayerHeight(resultHeight);
 				vdObj.adaptiveVdObj.setPlayerWidth(resultWidth);
 				vdObj.parentElement.style.height = (resultHeight+10)+'px';							
-				var a = CONTENTS_TYPE_ENUM.Movie+"Manager";
+
 				adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Movie));
 			}			
 			vdObj.adaptiveVdObj.setURL(srcURL);
+		}
+		
+		function setSNDSrcAndAdjust(sndObj,sndPictureObj,srcURL,maxWidth,maxHeight){
+			sndObj.src = srcURL;
+			ID3.loadTags(srcURL, function() {
+				var tags = ID3.getAllTags(srcURL);
+				
+				var image = tags.picture;
+				if (image) {
+					var base64String = "";
+					for (var i = 0; i < image.data.length; i++) {
+						base64String += String.fromCharCode(image.data[i]);
+					}
+					var base64 = "data:" + image.format + ";base64," +
+						window.btoa(base64String);
+						sndPictureObj.setAttribute('src',base64);
+				} 
+				else {
+					sndPictureObj.style.display = "none";
+				}
+				sndPictureObj.onload = function(){
+					var nh = sndPictureObj.naturalHeight;
+					var nw = sndPictureObj.naturalWidth;
+					
+					var resultWidth = (maxHeight*nw/nh);
+					var resultHeight = maxHeight;
+					
+					if(resultWidth > maxWidth){
+						resultWidth = maxWidth;
+						resultHeight = (maxWidth*nh/nw);
+					}
+				
+					sndPictureObj.style.width = resultWidth+"px";
+					sndPictureObj.style.height = resultHeight+'px';
+					sndPictureObj.parentElement.style.height = (resultHeight+57.5)+'px';						
+
+					adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Sound));
+				}
+			});		
+		}
+		function playOrStopAudio(target)
+		{
+			var audioObj = target.nextSibling.nextSibling;
+			if(audioObj.paused)
+				audioObj.play();
+			else
+				audioObj.pause();
 		}
 		
 		function adjustDummyDivPos(managerElem)

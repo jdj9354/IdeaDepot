@@ -44,6 +44,10 @@ function GridPageGenerator(a_TargetDivElement,a_ItemTemplateArr){
 		m_MaxCol = a_MaxCol;
 	};
 	
+	this.getMaxCol = function(){
+		return m_MaxCol;
+	};
+	
 	this.getPageLimit = function(){
 		return m_PageLimit;
 	};
@@ -173,7 +177,7 @@ function GridPageGenerator(a_TargetDivElement,a_ItemTemplateArr){
 			totalWidth += targetElem.offsetWidth;
 		}
 		m_TargetDivElement.getElementsByClassName('pageIndicator')[0].style.width = totalWidth + "px";
-		self.onPageChanged();	
+		self.onPageChanged(pageNum);	
 	};
 
 }

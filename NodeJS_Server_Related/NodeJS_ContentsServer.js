@@ -102,7 +102,7 @@ app.use('/upload',function(request, response,next) {
 					throw error;
 				}
 				else {				
-					var responString = "http://"+TMC.CONTENTS_SERVER_ADDR+":"+TMC.CONTENTS_SERVER_PORT+"/"+contentsRootFolder+"/"+userId+"/"+contentsFolder+"/"+request.files.file.originalFilename;
+					var responString = "http://"+TMC.CONTENTS_SERVER_ADDR+":"+TMC.CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+userId+"/"+contentsFolder+"/"+request.files.file.originalFilename;
 					response.send(responString);
 				}			
 			});
@@ -154,7 +154,32 @@ http.createServer(app).listen(TMC.CONTENTS_SERVER_PORT,function() {
 });
 
 var fileAccessApp = express();
+
+
+
+
+
+
+
+fileAccessApp.use(express.bodyParser());
+fileAccessApp.all("/*",function(request,response,next){
+	response.setHeader('Access-Control-Allow-Origin', 'http://'+TMC.THINK_MINE_WEB_SERVER_ADDR);	
+	response.setHeader('Access-Control-Allow-Headers',  "range,if-modified-since");
+	response.setHeader('Access-Control-Expose-Headers', "Accept-Ranges,Content-Encoding,Content-Length,Content-Range");
+	next();
+});
 fileAccessApp.use(express.static(__dirname + "/"+contentsRootFolder));
+//
+
+/*,function(request,response){
+/*,function(request,response){
+	response.sned("fuckyou");
+	console.log('aeasdf');
+}*/
+
+
+
+
 fileAccessApp.listen(TMC.CONTENTS_SERVER_FILE_ACCESS_PORT);
 
 function runPageRessAndReply(url, resolution, userId,responseObj){	
