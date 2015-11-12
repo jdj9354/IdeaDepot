@@ -216,7 +216,7 @@
 				<div class="fixedDiv" style="position:absolute;">										
 					<input placeholder="Sound URL" class="empty_text" type="text" id="SoundURL" onchange="loadSNDUrlOn(this)">
 					<div class="SoundSelector" style="width:600px;height:347.5px;background-color:#D6E6F5;">						
-						<img id="soundPictureObj" width='600px' height='300px' style="position:absolute;"> </img>			
+						<img id="soundPictureObj" width='600px' height='300px' style="position:absolute;" ontouchstart='playOrStopAudio(this)' onclick='playOrStopAudio(this)'> </img>			
 						<audio id="mainSoundObj" width='600px' height='47.5px'  style="position:absolute;" controls="controls"> </audio>	
 						<div id="SoundUploadProgress" style="position:absolute;"></div>							
 					</div>					
@@ -345,8 +345,7 @@
 					for(var i=0; i<contentsFileList.length; i++){
 						var template = "<img id=id3picture"+i+" width='110px' height='110px' ontouchstart='playOrStopAudio(this)' onclick='playOrStopAudio(this)' draggable='true'>"
 										+"<br>"
-										+"<audio id=ad"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='25px'></audio>"
-										+"<br>"
+										+"<audio id=ad"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='25px'></audio>"										
 										+"<div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + contentsFileList[i] + "</div>";
 						templateArr.push(template);
 					}
@@ -369,6 +368,7 @@
 						var elemIdx = startIdx;
 						var curPictureElement = document.getElementById("id3picture"+elemIdx);
 						var curAudioElement = document.getElementById("ad"+elemIdx);
+						curAudioElement.style.height='0px';
 
 						var recursiveCallback = function() {
 
@@ -663,16 +663,10 @@
 					
 					if(complete == 100){
 						if(ContentsModule.Interface.Val_CT != CONTENTS_TYPE_ENUM.Sound){
-							mainElem.style.opacity = 1.0;		
-							/*if(ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Movie){
-								mainElem.pause();
-								mainElem.play();
-							}*/							
+							mainElem.style.opacity = 1.0;								
 						}
 						else{
-							mainElem.previousElementSibling.style.opacity = 1.0;							
-							//mainElem.pause();
-							
+							mainElem.previousElementSibling.style.opacity = 1.0;						
 						}
 						progressElem.innerHTML = "";							
 					}
