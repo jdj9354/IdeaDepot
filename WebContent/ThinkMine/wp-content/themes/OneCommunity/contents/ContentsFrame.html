@@ -134,6 +134,15 @@
 	}
 
 	.vdModalDialogClose:hover { background: #9fcaf2; }
+	
+	.divTextOverFlowHide{
+		overflow : hidden; 
+		text-overflow: ellipsis; 
+		max-width: 100px; 
+		display: block;
+		white-space: nowrap;
+	}
+	
 	</style>
 </head>
 <body>	
@@ -327,7 +336,7 @@
 					for(var i=0; i<contentsFileList.length; i++){
 						var template = "<img id=img"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='110px'>"
 										+"<br>"
-										+"<div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + contentsFileList[i] + "</div>";
+										+"<div class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>";
 						templateArr.push(template);
 					}
 					break;
@@ -336,7 +345,7 @@
 					for(var i=0; i<contentsFileList.length; i++){
 						var template = "<video id=vd"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='110px' ontouchstart='videoPopUp(this)' onclick='videoPopUp(this)' draggable='true' ondragstart='onVideoDragStart(event)'></video>"
 										+"<br>"
-										+"<div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + contentsFileList[i] + "</div>";
+										+"<div class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>";
 						templateArr.push(template);
 					}
 					break;
@@ -346,7 +355,7 @@
 						var template = "<img id=id3picture"+i+" width='110px' height='110px' ontouchstart='playOrStopAudio(this)' onclick='playOrStopAudio(this)' draggable='true'>"
 										+"<br>"
 										+"<audio id=ad"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='25px'></audio>"										
-										+"<div style='overflow : hidden; text-overflow: ellipsis; max-width: 100px'>" + contentsFileList[i] + "</div>";
+										+"<div class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>";
 						templateArr.push(template);
 					}
 					break;
