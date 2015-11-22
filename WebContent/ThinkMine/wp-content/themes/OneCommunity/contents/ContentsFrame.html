@@ -338,7 +338,7 @@
 					for(var i=0; i<contentsFileList.length; i++){
 						var template = "<img id=img"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='110px'>"
 										+"<br>"
-										+"<div class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>";
+										+"<div onmouseenter='onShowTextExtend(event);' onmousemove='onMoveTextExtend(event);' onmouseout='onHideTextExtend(event);' class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>";
 						templateArr.push(template);
 					}
 					break;
@@ -347,7 +347,7 @@
 					for(var i=0; i<contentsFileList.length; i++){
 						var template = "<video id=vd"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='110px' ontouchstart='videoPopUp(this)' onclick='videoPopUp(this)' draggable='true' ondragstart='onVideoDragStart(event)'></video>"
 										+"<br>"
-										+"<div class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>";
+										+"<div onmouseenter='onShowTextExtend(event);' onmousemove='onMoveTextExtend(event);' onmouseout='onHideTextExtend(event);' class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>";
 						templateArr.push(template);
 					}
 					break;
