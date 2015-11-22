@@ -7,7 +7,7 @@ function GridPageGenerator(a_TargetDivElement,a_ItemTemplateArr){
 	var m_PageLimit = 10;
 	
 	var m_ElementWidth = 110;
-	var m_ElementHeight = 110;
+	var m_ElementHeight = 131;
 	
 	var m_CurPage = 1;
 	var m_CurMinPage = 1;

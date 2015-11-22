@@ -57,7 +57,7 @@ var Drag = {
 		//for TouchEvent
 		if(e.clientX == undefined){
 			e.clientX = e.touches.item(0).clientX.toFixed(0);
-			e.clientY = e.touches.item(0).clientY.toFixed(0)				
+			e.clientY = e.touches.item(0).clientY.toFixed(0);				
 		}
 			
         o.lastMouseX	= e.clientX;

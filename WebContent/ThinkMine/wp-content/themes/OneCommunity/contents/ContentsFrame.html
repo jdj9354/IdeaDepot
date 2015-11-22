@@ -137,15 +137,17 @@
 	
 	.divTextOverFlowHide{
 		overflow : hidden; 
-		text-overflow: ellipsis; 
-		max-width: 100px; 
+		text-overflow: ellipsis; 	
+		max-width: 100px;
 		display: block;
 		white-space: nowrap;
 	}
+
 	
 	</style>
 </head>
 <body>	
+	<div id="textShowingDiv" style="display:none; position:absolute; background: #ffffff;"></div>
 	<link type="text/css" rel="stylesheet" href="../css/toolbar-anim.css"/>	
 	<form onmousedown="stopPropagationFunc(event);"
 			onmousemove="stopPropagationFunc(event);"
@@ -177,7 +179,7 @@
 				<div id="div_webcontents" width='50' height='50'><a><img src="/ThinkMineCV/res/WebPreviewContents.png" width='50' height='50' /></a></div>
 			</div>				
 		</section>
-		<section class="block" height='1000' style="clear:left">		
+		<section class="block" height='1000' style="clear:left">					
 			<div id="TextContentsManager">
 				<div id="margin">Title: <input id="TextTitle" type="text" class="empty_text"></div>
 				<textarea placeholder="Any Text" id="text" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; "></textarea>  
@@ -352,10 +354,10 @@
 				case CONTENTS_TYPE_ENUM["Sound"] :
 					containerObj = $('#storedSnds');
 					for(var i=0; i<contentsFileList.length; i++){
-						var template = "<img id=id3picture"+i+" width='110px' height='110px' ontouchstart='playOrStopAudio(this)' onclick='playOrStopAudio(this)' draggable='true'>"
+						var template = "<img ondragstart='setSndDragData(event);' id=id3picture"+i+" width='110px' height='110px' ontouchstart='playOrStopAudio(this)' onclick='playOrStopAudio(this)' draggable='true'>"
 										+"<br>"
-										+"<audio id=ad"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='25px'></audio>"										
-										+"<div class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>";
+										+"<audio id=ad"+i+" src='http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_FILE_ACCESS_PORT+"/"+UF+"/"+CF+"/"+contentsFileList[i]+"' width='110px' height='25px'></audio>"					
+										+"<div onmouseenter='onShowTextExtend(event);' onmousemove='onMoveTextExtend(event);' onmouseout='onHideTextExtend(event);' class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>";
 						templateArr.push(template);
 					}
 					break;
@@ -600,7 +602,17 @@
 				fileUploadHandler(files,updateElementInfo);				
 			}
 			else{
-				if(event.dataTransfer.items){				
+				var src = event.dataTransfer.getData("src");
+				if(src!=""){
+					var soundObj = this;
+					if(soundObj.nextElementSibling == document.getElementById('mainSoundObj')){
+						soundObj = soundObj.nextElementSibling;
+					}
+					setSNDSrcAndAdjust(soundObj,soundObj.previousElementSibling,src,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);						
+					//fileUploadHandler(files);
+					document.getElementById('SoundURL').value=src;
+				}
+				/*if(event.dataTransfer.items){				
 					if(event.dataTransfer.items.length != 0){
 						var soundObj = this;
 						var inspectItem = event.dataTransfer.items[0];
@@ -625,7 +637,7 @@
 							}
 						});				
 					}
-				}
+				}*/
 			}
 			event.preventDefault && event.preventDefault();
 			
@@ -635,6 +647,12 @@
 		soundPictureObj.ondragover = soundObj.ondragover;
 		soundPictureObj.ondragend = soundObj.ondragend;
 		soundPictureObj.ondrop = soundObj.ondrop;		
+		
+		function setSndDragData(event){
+			var elem = event.target;
+			var src = elem.nextElementSibling.nextElementSibling.src;
+			event.dataTransfer.setData("src",src);
+		}
 	
 		function fileUploadHandler(files,updateElementInfo){				
 			var formData = new FormData();
@@ -685,56 +703,57 @@
 			xhr.onload = function () {
 				mainElem.isClickable = true;
 				if (xhr.status === 200) {						
-						urlElem.value = this.responseText;					
-						mainElem.src = this.responseText;
-						
-						if(ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Sound 
-							|| ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Movie)
-							mainElem.play();
-						
-						if(ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Sound){
-							ID3.loadTags(mainElem.src, function() {
-								var tags = ID3.getAllTags(mainElem.src);
-								
-								var image = tags.picture;
-								if (image) {
-									var base64String = "";
-									for (var i = 0; i < image.data.length; i++) {
-										base64String += String.fromCharCode(image.data[i]);
-									}
-									var base64 = "data:" + image.format + ";base64," +
-										window.btoa(base64String);
-										mainElem.previousElementSibling.setAttribute('src',base64);
-								} 
-								else {
-									mainElem.previousElementSibling.style.display = "none";
+					urlElem.value = this.responseText;					
+					mainElem.src = this.responseText;
+					
+					if(ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Sound 
+						|| ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Movie)
+						mainElem.play();
+					
+					if(ContentsModule.Interface.Val_CT == CONTENTS_TYPE_ENUM.Sound){
+						setSNDSrcAndAdjust(mainElem,mainElem.previousElementSibling,mainElem.src,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
+						/*ID3.loadTags(mainElem.src, function() {
+							var tags = ID3.getAllTags(mainElem.src);
+							
+							var image = tags.picture;
+							if (image) {
+								var base64String = "";
+								for (var i = 0; i < image.data.length; i++) {
+									base64String += String.fromCharCode(image.data[i]);
 								}
-								mainElem.previousElementSibling.onload = function(){
-									var nh = mainElem.previousElementSibling.naturalHeight;
-									var nw = mainElem.previousElementSibling.naturalWidth;
-									
-									var resultWidth = (CONTENTS_RECEIVER_MAX_HEIGHT_PX*nw/nh);
-									var resultHeight = CONTENTS_RECEIVER_MAX_HEIGHT_PX;
-									
-									if(resultWidth > CONTENTS_RECEIVER_MAX_WIDTH_PX){
-										resultWidth = CONTENTS_RECEIVER_MAX_WIDTH_PX;
-										resultHeight = (CONTENTS_RECEIVER_MAX_WIDTH_PX*nh/nw);
-									}
+								var base64 = "data:" + image.format + ";base64," +
+									window.btoa(base64String);
+									mainElem.previousElementSibling.setAttribute('src',base64);
+							} 
+							else {
+								mainElem.previousElementSibling.style.display = "none";
+							}
+							mainElem.previousElementSibling.onload = function(){
+								var nh = mainElem.previousElementSibling.naturalHeight;
+								var nw = mainElem.previousElementSibling.naturalWidth;
 								
-									mainElem.previousElementSibling.style.width = resultWidth+"px";
-									mainElem.previousElementSibling.style.height = resultHeight+'px';
-									mainElem.previousElementSibling.parentElement.style.height = (resultHeight+32)+'px';						
-									mainElem.style.top = (resultHeight+28)+'px';
-									mainElem.style.width = resultWidth+"px";
+								var resultWidth = (CONTENTS_RECEIVER_MAX_HEIGHT_PX*nw/nh);
+								var resultHeight = CONTENTS_RECEIVER_MAX_HEIGHT_PX;
+								
+								if(resultWidth > CONTENTS_RECEIVER_MAX_WIDTH_PX){
+									resultWidth = CONTENTS_RECEIVER_MAX_WIDTH_PX;
+									resultHeight = (CONTENTS_RECEIVER_MAX_WIDTH_PX*nh/nw);
+								}
+							
+								mainElem.previousElementSibling.style.width = resultWidth+"px";
+								mainElem.previousElementSibling.style.height = resultHeight+'px';
+								mainElem.previousElementSibling.parentElement.style.height = (resultHeight+32)+'px';						
+								mainElem.style.top = (resultHeight+28)+'px';
+								mainElem.style.width = resultWidth+"px";
 
-									adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Sound));
-								}
-							},{tags: ["title","artist","album","picture"]});		
-						}
-						
-					} else {
-						console.log('Something went terribly wrong...');
+								adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Sound));
+							}
+						},{tags: ["title","artist","album","picture"]});	*/	
 					}
+					
+				} else {
+					console.log('Something went terribly wrong...');
+				}
 			};
 			xhr.send(formData);
 		}
@@ -809,11 +828,10 @@
 			}			
 			vdObj.adaptiveVdObj.setURL(srcURL);
 		}
-		
 		function setSNDSrcAndAdjust(sndObj,sndPictureObj,srcURL,maxWidth,maxHeight){
-			sndObj.src = srcURL;
-			ID3.loadTags(srcURL, function() {
-				var tags = ID3.getAllTags(srcURL);
+			sndObj.src = srcURL;			
+			ID3.loadTags(sndObj.src, function() {
+				var tags = ID3.getAllTags(sndObj.src);
 				
 				var image = tags.picture;
 				if (image) {
@@ -832,21 +850,23 @@
 					var nh = sndPictureObj.naturalHeight;
 					var nw = sndPictureObj.naturalWidth;
 					
-					var resultWidth = (maxHeight*nw/nh);
-					var resultHeight = maxHeight;
+					var resultWidth = (CONTENTS_RECEIVER_MAX_HEIGHT_PX*nw/nh);
+					var resultHeight = CONTENTS_RECEIVER_MAX_HEIGHT_PX;
 					
-					if(resultWidth > maxWidth){
-						resultWidth = maxWidth;
-						resultHeight = (maxWidth*nh/nw);
+					if(resultWidth > CONTENTS_RECEIVER_MAX_WIDTH_PX){
+						resultWidth = CONTENTS_RECEIVER_MAX_WIDTH_PX;
+						resultHeight = (CONTENTS_RECEIVER_MAX_WIDTH_PX*nh/nw);
 					}
 				
 					sndPictureObj.style.width = resultWidth+"px";
 					sndPictureObj.style.height = resultHeight+'px';
-					sndPictureObj.parentElement.style.height = (resultHeight+57.5)+'px';						
+					sndPictureObj.parentElement.style.height = (resultHeight+32)+'px';						
+					sndObj.style.top = (resultHeight+28)+'px';
+					sndObj.style.width = resultWidth+"px";
 
 					adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Sound));
 				}
-			});		
+			},{tags: ["title","artist","album","picture"]});	
 		}
 		function playOrStopAudio(target)
 		{
@@ -933,6 +953,39 @@
 		}
 		function onVideoDragStart(event){
 			event.dataTransfer.setData("srcFromVDList", event.target.src);
+		}
+		
+		function onShowTextExtend(event){
+			var textExtendElem = document.getElementById('textShowingDiv');
+			textExtendElem.style.display = "inline";
+			textExtendElem.innerHTML = event.target.innerHTML;
+			var X;
+			var Y;
+			
+			if(event.clientX == undefined){
+				event.clientX = event.touches.item(0).clientX.toFixed(0);
+				event.clientY = event.touches.item(0).clientY.toFixed(0);
+			}
+			
+			textExtendElem.style.top = event.clientY +10;//- textExtendElem.offsetHeight/2;
+			textExtendElem.style.left = event.clientX +10;//- textExtendElem.offsetWidth/2;				
+		}
+		
+		function onMoveTextExtend(event){
+			var textExtendElem = document.getElementById('textShowingDiv');
+			
+			if(event.clientX == undefined){
+				event.clientX = event.touches.item(0).clientX.toFixed(0);
+				event.clientY = event.touches.item(0).clientY.toFixed(0);
+			}
+			
+			textExtendElem.style.top = event.clientY +10;//- textExtendElem.offsetHeight/2;
+			textExtendElem.style.left = event.clientX +10;//- textExtendElem.offsetWidth/2;	
+		}
+		
+		function onHideTextExtend(){
+			var textExtendElem = document.getElementById('textShowingDiv');
+			textExtendElem.style.display = "none";			
 		}
 		
 	</script>		
