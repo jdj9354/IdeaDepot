@@ -129,7 +129,7 @@ app.use('/list',function(request, response,next) {
 		contentsFolder = "snd";
 		break;
 	case CC.CONTENTS_TYPE_ENUM.WebPreview:
-		return;
+		//return;
 		break;
 	}		
 	var dirPath = __dirname+"/"+contentsRootFolder+"/"+userId+"/"+contentsFolder+"/";	

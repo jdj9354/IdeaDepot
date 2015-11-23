@@ -240,7 +240,18 @@
 				</div>
 			</div>
 			<div>
-				<p>safdhbasdkjfbasdjk</p>
+				<div class="fixedDiv" style="position:absolute;">										
+					<input placeholder="Web URL" class="empty_text" type="text" id="WebURL" onchange="loadWebUrlOn(this)">
+					<div class="WebSelector" style="width:600px;height:347.5px;background-color:#D6E6F5;">						
+						<img id="WebFaviconObj" width='600px' height='347.5px' style="position:absolute;" ontouchstart='visitWebPage(this)' onclick='visitWebPage(this)'> </img>			
+					</div>					
+					<textarea placeholder="Web Explanation" class="empty_text" id="sndText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
+				</div>				
+				<div class="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:432.5px">				
+				</div>
+				<div class="layout" style="border:1px solid #FFFFFF; height:370px; width:600px">					
+					<div id="visitedWebs" height='auto'></div>							
+				</div>
 			</div>
 		</section>
 	</div>
@@ -362,6 +373,20 @@
 					}
 					break;
 				case CONTENTS_TYPE_ENUM["WebPreview"] :
+					containerObj = $('#visitedWebs');
+					contentsFileList = [];
+					
+					for(var i=0; i<10; i++){
+						contentsFileList[i] = "http://www.github.com";
+					}
+					
+					for(var i=0; i<contentsFileList.length; i++){
+						var template =  "<div style='display:flex;'>"
+										+"<img src='http://www.google.com/s2/favicons?domain=" +contentsFileList[i]+"' ondragstart='setSndDragData(event);' id=webFavicon"+i+" width='16px' height='16px' ontouchstart='playOrStopAudio(this)' onclick='playOrStopAudio(this)' draggable='true'>"											
+										+"<div onmouseenter='onShowTextExtend(event);' onmousemove='onMoveTextExtend(event);' onmouseout='onHideTextExtend(event);' class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>"
+										+"</div>";
+						templateArr.push(template);
+					}
 					break;
 				}
 				
