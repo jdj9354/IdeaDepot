@@ -21,8 +21,7 @@
 		addJavascript("ContentsFrameConstants.js");
 		addJavascript("GridGen.js");
 		addJavascript("AdaptiveVideoPlayer/js/AdaptiveVideoPlayer.js");
-		addJavascript("/thirdparty/JavaScript-ID3-Reader/dist/id3-minimized.js");
-		addJavascript("/thirdparty/html2canvas-0.4.1/build/html2canvas.js");
+		addJavascript("/thirdparty/JavaScript-ID3-Reader/dist/id3-minimized.js");		
 		
 		var imgFileList;
 		var imgCurrentPage = 0;
@@ -240,19 +239,16 @@
 					<div id="storedSnds" height='auto'></div>							
 				</div>
 			</div>
-			<div>
+			<div id="WebContentsManager">
 				<div class="fixedDiv" style="position:absolute;">										
 					<input placeholder="Web URL" class="empty_text" type="text" id="WebURL" onchange="loadWebUrlOn(this)">
-					<div class="WebSelector" style="width:600px;height:347.5px;background-color:#D6E6F5;">						
-						<img id="WebFaviconObj" width='600px' height='347.5px' style="position:absolute;" ontouchstart='visitWebPage(this)' onclick='visitWebPage(this)'> </img>			
-					</div>					
-					<textarea placeholder="Web Explanation" class="empty_text" id="sndText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>  					
+					<div class="WebSelector" style="width:600px;height:717.5px;background-color:#D6E6F5;">		
+						<div id='WebPreviewContainer' style='  position:relative;overflow-y:scroll; overflow-x:hidden;  width:600px; height:717.5px;'> 
+						</div>
+					</div>				
+					<textarea placeholder="Web Explanation" class="empty_text" id="sndText" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 40px; width : 100%;"></textarea>				
 				</div>				
-				<div class="dummyDiv" style="overflow: hidden; word-wrap: break-word; resize: none; height:432.5px">				
-				</div>
-				<div class="layout" style="border:1px solid #FFFFFF; height:370px; width:600px">					
-					<div id="visitedWebs" height='auto'></div>							
-				</div>
+
 			</div>
 		</section>
 	</div>
@@ -374,6 +370,8 @@
 					}
 					break;
 				case CONTENTS_TYPE_ENUM["WebPreview"] :
+					return;
+					/*
 					containerObj = $('#visitedWebs');
 					contentsFileList = [];
 					
@@ -387,7 +385,7 @@
 										+"<div onmouseenter='onShowTextExtend(event);' onmousemove='onMoveTextExtend(event);' onmouseout='onHideTextExtend(event);' class='divTextOverFlowHide'>" + contentsFileList[i] + "</div>"
 										+"</div>";
 						templateArr.push(template);
-					}
+					}*/
 					break;
 				}
 				
@@ -794,6 +792,69 @@
 		function loadSNDUrlOn(textObj){
 			var sndObj = document.getElementById('mainSoundObj');
 			setSNDSrcAndAdjust(sndObj,sndObj.previousSibling,textObj.value,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
+		}
+		function loadWebUrlOn(textObj){
+		
+		//<img id="WebPreviewImgObj"  style="position:absolute;width:600px height:600px;" ontouchstart='visitWebPage(this)' onclick='visitWebPage(this)'> </img>		
+		
+			var WebPreviewContainer = document.getElementById('WebPreviewContainer');
+			
+			while (WebPreviewContainer.firstChild) {
+				WebPreviewContainer.removeChild(WebPreviewContainer.firstChild);
+			}	
+			
+			var srcString = //"http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/webpreview?"
+						"http://127.0.0.1:"+CONTENTS_SERVER_PORT+"/webpreview?"
+						+REQ_PARAM_ENUM.CT+"="+CONTENTS_TYPE_ENUM.WebPreview+"&"
+						+REQ_PARAM_ENUM.WP_URL+"="+textObj.value+"&"
+						+REQ_PARAM_ENUM.WP_RESOLUTION+"=1280X840&";
+						
+		//	WebSelector.innerHTML = "<img id='WebPreviewImgObj' src='"+srcString+"' ontouchstart='visitWebPage(this)' onclick='visitWebPage(this)'> </img>"
+									
+									
+			
+			var webPreviewImgObj = document.createElement('img');
+			webPreviewImgObj.src = srcString;
+		//	webPreviewImgObj.ontouchstart = visitWebPage;
+		//	webPreviewImgObj.onclick = visitWebPage;
+			//var dummyIframe = document.getElementById('WebPreviewDummyIframe');
+
+			webPreviewImgObj.onload = function(){
+				var maxWidth = CONTENTS_RECEIVER_MAX_WIDTH_PX-17.5;
+				var maxHeight = CONTENTS_RECEIVER_MAX_HEIGHT_PX;
+				var nh = webPreviewImgObj.naturalHeight;
+				var nw = webPreviewImgObj.naturalWidth;
+				
+				var resultWidth = (maxHeight*nw/nh);
+				var resultHeight = maxHeight;
+				
+				if(resultWidth > maxWidth){
+					resultWidth = maxWidth;
+					resultHeight = (maxWidth*nh/nw);
+				}
+			
+				webPreviewImgObj.style.width = maxWidth+"px";
+				//webPreviewImgObj.parentElement.style.overflow="hidden";
+				//webPreviewImgObj.parentElement.style.overflow="auto";
+				WebPreviewContainer.appendChild(webPreviewImgObj);
+				WebPreviewContainer.style.width = '600';
+				WebPreviewContainer.style.height = '717.5';
+				
+				//webPreviewImgObj.style.height = resultHeight+'px';
+				//webPreviewImgObj.parentElement.style.height = (resultHeight+10)+'px';						
+
+				//adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Image));
+			}
+			/*var iframeDocument = dummyIframe.contentDocument || dummyIframe.contentWindow.document;
+			html2canvas(iframeDocument, {
+				onrendered: function(canvas) {
+					webObj.removeChild(webObj.firstChild);
+					webObj.appendChild(canvas);
+				},
+				height : 347.5,
+				widht : 600
+			});*/
+			//setSNDSrcAndAdjust(sndObj,sndObj.previousSibling,textObj.value,CONTENTS_RECEIVER_MAX_WIDTH_PX,CONTENTS_RECEIVER_MAX_HEIGHT_PX);
 		}
 		function setImgSrcAndAdjust(imgObj,srcURL,maxWidth,maxHeight){
 			imgObj.src = srcURL;

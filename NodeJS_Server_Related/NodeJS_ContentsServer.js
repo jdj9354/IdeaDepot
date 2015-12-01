@@ -12,6 +12,7 @@ var fs = require('fs');
 var path = require('path');
 var app = express();
 
+
 fs.mkdirParent = function(dirPath, mode, callback) {
   //Call the standard fs.mkdir
   fs.mkdir(dirPath, mode, function(error) {
@@ -65,12 +66,11 @@ app.use('/webpreview',function(request, response,next) {
 		break;
 	case CC.CONTENTS_TYPE_ENUM.WebPreview :
 		var url = request.param(CC.REQ_PARAM_ENUM.WP_URL);
-		var resolution = request.param(CC.REQ_PARAM_ENUM.WP_RESOLUTION);
-		var userId = request.param(CC.REQ_PARAM_ENUM.UI);
+		var resolution = request.param(CC.REQ_PARAM_ENUM.WP_RESOLUTION);		
 		
 		console.log(url+resolution);
 		
-		runPageRessAndReply(url,resolution,userId,response);
+		runPageRessAndReply(url,resolution,response);
 		break;
 	}
 });
@@ -153,6 +153,7 @@ http.createServer(app).listen(TMC.CONTENTS_SERVER_PORT,function() {
 	console.log('Contents Server is Running at http://127.0.0.1:53374');
 });
 
+
 var fileAccessApp = express();
 
 
@@ -188,23 +189,28 @@ fileAccessApp.use(express.static(__dirname + "/"+contentsRootFolder));
 
 fileAccessApp.listen(TMC.CONTENTS_SERVER_FILE_ACCESS_PORT);
 
-function runPageRessAndReply(url, resolution, userId,responseObj){	
+
+function runPageRessAndReply(url, resolution,responseObj){			
 	var pageres = new Pageres({delay:2})
 					.src(url,[resolution],{crop:false})
-					.dest(__dirname+"/"+webPreviewRootFolder+"/"+userId);	
-
+					.dest(__dirname+"/"+webPreviewRootFolder);	
 	pageres.run(function(err,items){
 		if(err){
-			fs.readFile(__dirname+"/"+webPreviewRootFolder+"/"+userId+"/"+noImageFileName,function(err,data){
+			fs.readFile(__dirname+"/"+webPreviewRootFolder+"/"+noImageFileName,function(err,data){
 				responseObj.writeHead(200, {'Content-Type' : 'image/png'});
 				responseObj.end(data);
 			});
 			console.log("Error while loading Web Preview Image");
 			return;	
-		}				
-		fs.readFile(__dirname+"/"+webPreviewRootFolder+"/"+userId+"/"+items[0].filename,function(err,data){
+		}		
+		fs.readFile(__dirname+"/"+webPreviewRootFolder+"/"+items[0].filename,function(err,data){
 			responseObj.writeHead(200, {'Content-Type' : 'image/png'});
 			responseObj.end(data);
+			fs.unlink(__dirname+"/"+webPreviewRootFolder+"/"+items[0].filename,function(err){
+				if(err)
+					throw err;
+				console.log("removed temp file");
+			});
 		});
 	});
 };

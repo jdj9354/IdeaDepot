@@ -3,7 +3,7 @@ const REQ_PARAM_ENUM = {
 	CT : "CT",
 	UI : "UI",
 	WP_URL : "WP_URL",
-	WP_RESOLUTION : "WP_RESOLUTION"
+	WP_RESOLUTION : "WP_RESOLUTION",	
 };
 const CONTENTS_TYPE_ENUM = {
 	Text : "TextContents",
