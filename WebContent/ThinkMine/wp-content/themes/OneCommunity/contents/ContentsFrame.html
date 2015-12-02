@@ -149,6 +149,8 @@
 <body>	
 	<div id="textShowingDiv" style="display:none; position:absolute; background: #ffffff;"></div>
 	<link type="text/css" rel="stylesheet" href="../css/toolbar-anim.css"/>	
+	<link type="text/css" rel="stylesheet" href="/thirdparty/circle-preloader/css/reset.css"/>	
+	<link type="text/css" rel="stylesheet" href="/thirdparty/circle-preloader/css/style.css"/>	
 	<form onmousedown="stopPropagationFunc(event);"
 			onmousemove="stopPropagationFunc(event);"
 			ontouchstart="stopPropagationFunc(event);"
@@ -801,7 +803,31 @@
 			
 			while (WebPreviewContainer.firstChild) {
 				WebPreviewContainer.removeChild(WebPreviewContainer.firstChild);
-			}	
+			}
+
+			//Progress effect
+			var num = 7;
+			var ang = 360/num;
+			var rad = num*5;
+			
+			var progressContainer = document.createElement('div');
+			progressContainer.id = "hold";
+			WebPreviewContainer.appendChild(progressContainer);
+			
+			for(var i=0; i<num; i++){
+				var button = document.createElement('div');
+				button.className = "dot"+i+" dot";
+				button.style.top = rad*Math.cos(ang*i*Math.PI/180)-10+"px";
+				button.style.left = rad*Math.sin(ang*i*Math.PI/180)-10+"px";
+				button.style.backgroundColor = "hsla("+ang*i+", 50%, 50%, 1)";
+
+				button.style.webkitAnimation = 
+				  "osc 2s ease-in-out infinite "+i/(num/2)+"s, rainbow 8s infinite linear "+i/(num/2)+"s";
+				button.style.animation = 
+				  "osc 2s ease-in-out infinite "+i/(num/2)+"s, rainbow 8s infinite linear "+i/(num/2)+"s";				
+
+				progressContainer.appendChild(button);			
+			}
 			
 			var srcString = //"http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/webpreview?"
 						"http://127.0.0.1:"+CONTENTS_SERVER_PORT+"/webpreview?"
@@ -836,6 +862,7 @@
 				webPreviewImgObj.style.width = maxWidth+"px";
 				//webPreviewImgObj.parentElement.style.overflow="hidden";
 				//webPreviewImgObj.parentElement.style.overflow="auto";
+				WebPreviewContainer.removeChild(WebPreviewContainer.firstChild);
 				WebPreviewContainer.appendChild(webPreviewImgObj);
 				WebPreviewContainer.style.width = '600';
 				WebPreviewContainer.style.height = '717.5';
