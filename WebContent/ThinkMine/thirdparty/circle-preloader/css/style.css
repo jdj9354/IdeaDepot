@@ -74,35 +74,35 @@
 }
 @-webkit-keyframes rainbow {
   0% {
-    background: #df2020;
+    background: #9FCAF2;
   }
   25% {
-    background: #80df20;
+    background: #9FCAF2;
   }
   50% {
-    background: #20dfdf;
+    background: #9FCAF2;
   }
   75% {
-    background: #8020df;
+    background: #9FCAF2;
   }
   100% {
-    background: #df2020;
+    background: #9FCAF2;
   }
 }
 @keyframes rainbow {
   0% {
-    background: #df2020;
+    background: #9FCAF2;
   }
   25% {
-    background: #80df20;
+    background: #9FCAF2;
   }
   50% {
-    background: #20dfdf;
+    background: #9FCAF2;
   }
   75% {
-    background: #8020df;
+    background: #9FCAF2;
   }
   100% {
-    background: #df2020;
+    background: #9FCAF2;
   }
 }
