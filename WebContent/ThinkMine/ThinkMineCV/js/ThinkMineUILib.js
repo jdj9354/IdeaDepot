@@ -1121,3 +1121,134 @@ ThinkMine.Lib.ExternalUI.TextFillingOutCanvas = new function(undefined){
 		};
 
 }
+
+
+ThinkMine.Lib.ExternalUI.TextContentsValueInput = new function(undefined){
+	var fInputName = null;
+	var fInputElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(inputName, tmCanvas) {
+		if(fInputName != null){
+			fInputElement.onclick = null;
+		}
+		
+		fInputName = imageButtonName;		
+		fInputElement = document.getElementById(fInputName);
+		fTmCanvas = tmCanvas;
+		
+		if(fInputElement == null || fInputElement == undefined){
+			console.log("There is no such fInputElement element " + fInputName);
+			return;
+		}
+		fInputElement.addEventListener("change", sendInfoToTmCanvas);		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		fTmCanvas.setMenuInsertedCV(fInputElement.value);		
+	};
+}
+
+ThinkMine.Lib.ExternalUI.ImageContentsValueInput = new function(undefined){
+	var fInputName = null;
+	var fInputElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(inputName, tmCanvas) {
+		if(fInputName != null){
+			fInputElement.onclick = null;
+		}
+		
+		fInputName = imageButtonName;		
+		fInputElement = document.getElementById(fInputName);
+		fTmCanvas = tmCanvas;
+		
+		if(fInputElement == null || fInputElement == undefined){
+			console.log("There is no such fInputElement element " + fInputName);
+			return;
+		}
+		fInputElement.addEventListener("change", sendInfoToTmCanvas);		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		fTmCanvas.setMenuInsertedCV(fInputElement.value);		
+	};
+}
+
+ThinkMine.Lib.ExternalUI.MovieContentsValueInput = new function(undefined){
+	var fInputName = null;
+	var fInputElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(inputName, tmCanvas) {
+		if(fInputName != null){
+			fInputElement.onclick = null;
+		}
+		
+		fInputName = imageButtonName;		
+		fInputElement = document.getElementById(fInputName);
+		fTmCanvas = tmCanvas;
+		
+		if(fInputElement == null || fInputElement == undefined){
+			console.log("There is no such fInputElement element " + fInputName);
+			return;
+		}
+		fInputElement.addEventListener("change", sendInfoToTmCanvas);		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		fTmCanvas.setMenuInsertedCV(fInputElement.value);		
+	};
+}
+
+ThinkMine.Lib.ExternalUI.SoundContentsValueInput = new function(undefined){
+	var fInputName = null;
+	var fInputElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(inputName, tmCanvas) {
+		if(fInputName != null){
+			fInputElement.onclick = null;
+		}
+		
+		fInputName = imageButtonName;		
+		fInputElement = document.getElementById(fInputName);
+		fTmCanvas = tmCanvas;
+		
+		if(fInputElement == null || fInputElement == undefined){
+			console.log("There is no such fInputElement element " + fInputName);
+			return;
+		}
+		fInputElement.addEventListener("change", sendInfoToTmCanvas);		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		fTmCanvas.setMenuInsertedCV(fInputElement.value);		
+	};
+}
+
+ThinkMine.Lib.ExternalUI.WebPreviewContentsValueInput = new function(undefined){
+	var fInputName = null;
+	var fInputElement = null;
+	var fTmCanvas = null;
+
+	this.attach = function(inputName, tmCanvas) {
+		if(fInputName != null){
+			fInputElement.onclick = null;
+		}
+		
+		fInputName = imageButtonName;		
+		fInputElement = document.getElementById(fInputName);
+		fTmCanvas = tmCanvas;
+		
+		if(fInputElement == null || fInputElement == undefined){
+			console.log("There is no such fInputElement element " + fInputName);
+			return;
+		}
+		fInputElement.addEventListener("change", sendInfoToTmCanvas);		
+	};
+	
+	this.sendInfoToTmCanvas = function(){		
+		fTmCanvas.setMenuInsertedCV(fInputElement.value);		
+	};
+}

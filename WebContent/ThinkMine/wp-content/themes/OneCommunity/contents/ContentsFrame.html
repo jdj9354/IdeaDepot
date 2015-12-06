@@ -69,7 +69,7 @@
 	  border-top: gray solid 1px;
 	  padding: 0 1em;
 	}	
-	#text {
+	.text {
 		width:500px;
 		overflow:hidden;
 		background-color:#D6E6F5;
@@ -184,7 +184,7 @@
 		<section class="block" height='1000' style="clear:left">					
 			<div id="TextContentsManager">
 				<div id="margin">Title: <input id="TextTitle" type="text" class="empty_text"></div>
-				<textarea placeholder="Any Text" id="text" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; "></textarea>  
+				<textarea placeholder="Any Text" id="TextValue" class="text" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; "></textarea>  
 			</div>
 			<div id="ImageContentsManager">				
 				<div class="fixedDiv" style="position:absolute;">										
@@ -311,6 +311,12 @@
 				parent.ThinkMine.Lib.ExternalUI.MovieContentsImageButton.attach("div_moviecontents",parent.TmCanvas);
 				parent.ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("div_soundcontents",parent.TmCanvas);
 				parent.ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("div_webcontents",parent.TmCanvas);
+				
+				parent.ThinkMine.Lib.ExternalUI.TextContentsValueInput.attach("TextValue",parent.TmCanvas);
+				parent.ThinkMine.Lib.ExternalUI.ImageContentsValueInput.attach("ImageURL",parent.TmCanvas);
+				parent.ThinkMine.Lib.ExternalUI.MovieContentsValueInput.attach("VideoURL",parent.TmCanvas);
+				parent.ThinkMine.Lib.ExternalUI.SoundContentsValueInput.attach("SoundURL",parent.TmCanvas);
+				parent.ThinkMine.Lib.ExternalUI.WebPreviewContentsValueInput.attach("WebURL",parent.TmCanvas);
 			}			
 			
 			gridGenerator = new GridPageGenerator(null,null);
