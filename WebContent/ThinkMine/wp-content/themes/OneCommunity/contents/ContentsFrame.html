@@ -977,6 +977,8 @@
 					sndPictureObj.parentElement.style.height = (resultHeight+32)+'px';						
 					sndObj.style.top = (resultHeight+28)+'px';
 					sndObj.style.width = resultWidth+"px";
+					
+					sndObj.play();
 
 					adjustDummyDivPos(document.getElementById(CONTENTS_TYPE_ENUM.Sound));
 				}
