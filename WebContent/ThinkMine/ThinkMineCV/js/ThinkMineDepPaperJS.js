@@ -20,7 +20,7 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	
 	var verticesOnShape = null;
 	
-	
+	AdaptiveVideoPlayer.init();
 	
 	//Shape Section
 	this.drawCircleShape = function(x, y, z, info, mindObjectId){
@@ -475,6 +475,8 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 		contentsObject.content = value;
 		contentsObject.fontSize = info.fFontSize;
 		contentsObject.fillColor = generateFillingInfo(contentsObject,info.fFilling);
+		contentsObject.bounds = new paper.Rectangle(x,y,info.fWidth,info.fHeight);
+		
 		contentsObject.fMindObjectId = mindObjectId;
 		contentsObject.position = new paper.Point(x,y);
 		paper.view.draw();
@@ -518,6 +520,24 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				
 		}
 	};
+	this.resizeTextContents = function(info,mindObjectId){
+		for(var i=0; i<fContentsObjects.length;i++){
+			if(compareIdValue(fContentsObjects[i].fMindObjectId, mindObjectId)){
+				
+				var x = fContentsObjects[i].position.x;
+				var y = fContentsObjects[i].position.y;
+					
+				fContentsObjects[i].bounds = new paper.Rectangle(fContentsObjects[i].bounds.x,fContentsObjects[i].bounds.y,info.fWidth,info.fHeight);
+				
+				var prevPoint = new paper.Point(x,y);
+				fContentsObjects[i].position = prevPoint;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}
+	};
 	
 	this.changeOpacityOfTextContents = function(opacity, mindObjectId){
 		for(var i=0; i<fContentsObjects.length;i++){
@@ -535,10 +555,11 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 	this.drawImageContents = function(x, y, z, info, value, mindObjectId){
 		var contentsObject = new paper.Raster(value);
 		contentsObject.position = new paper.Point(x,y);
+		contentsObject.bounds = new paper.Rectangle(x-info.fWidth/2,y-info.fHeight/2,info.fWidth,info.fHeight);
 		//contentsObject.
 		//paper.view.draw();
 		//contentsObject.scale((info.fWidth/contentsObject.width),(info.fHeight/contentsObject.height));
-		contentsObject.scale(0.7);
+		//contentsObject.scale(0.7);
 		contentsObject.fMindObjectId = mindObjectId;
 		paper.view.draw();
 		
@@ -569,9 +590,32 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				
 		}
 	};
-	
+	this.resizeImageContents = function(info,mindObjectId){
+		for(var i=0; i<fContentsObjects.length;i++){
+			if(compareIdValue(fContentsObjects[i].fMindObjectId,mindObjectId)){
+				var originX = fContentsObjects[i].bounds.x + fContentsObjects[i].bounds.width/2;
+				var originY = fContentsObjects[i].bounds.y + fContentsObjects[i].bounds.height/2;
+				fContentsObjects[i].bounds = new paper.Rectangle(fContentsObjects[i].bounds.x,fContentsObjects[i].bounds.y,info.fWidth,info.fHeight);	
+				
+				var originPoint = new paper.Point(originX,originY);
+				fContentsObjects[i].position = originPoint;
+				
+				paper.view.draw();
+				break;
+			}			
+		}		
+	};
 	this.changeOpacityOfImageContents = function(opacity, mindObjectId){
-		
+		for(var i=0; i<fContentsObjects.length;i++){
+			if(compareIdValue(fContentsObjects[i].fMindObjectId, mindObjectId)){
+
+				fContentsObjects[i].opacity = opacity;
+				
+				paper.view.draw();
+				break;
+			}
+				
+		}			
 	};
 	
 	this.drawMovieContents = function(x, y, z, info, value, mindObjectId){
@@ -678,10 +722,29 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 				
 		}
 	};
-	
+	this.resizeMovieContents = function(info,mindObjectId){
+		
+	};
 	this.changeOpacityOfMovieContents = function(opacity, mindObjectId){
 		
 	};
+	
+	
+	this.drawSoundContents = function(x, y, z, info, value, mindObjectId){
+		
+	};
+	this.eraseSoundContents = function(mindObjectId){
+		
+	};
+	this.moveSoundContents = function(x, y, z, mindObjectId){
+		
+	};
+	this.resizeSoundContents = function(info,mindObjectId){
+		
+	};
+	this.changeOpacityOfSoundContents = function(opacity, mindObjectId){
+		
+	};	
 	
 	
 	this.drawWebPreviewContents = function(x, y, z, info, value, mindObjectId){	
@@ -721,6 +784,9 @@ function PaperJS_DrawingCCInterface(backBoneType, canvasName){
 			}
 				
 		}
+	};
+	this.resizeWebPreviewContents = function(info,mindObjectId){
+		
 	};
 	this.changeOpacityOfWebPreviewContents = function(opacity, mindObjectId){
 		

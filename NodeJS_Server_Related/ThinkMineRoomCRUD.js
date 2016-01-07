@@ -376,6 +376,7 @@ exports.Update = function(data){
 		
 		break;
 	case Constants.CODE_MIND_RESIZE_SHAPE :
+		console.log(data.toString());
 		var mindMap = MindMapObjects_HM.get(data.MMID);
 		var targetMindObj = null;
 		for(var i=0; i< mindMap.lenOfMindObjectsArray(); i++){

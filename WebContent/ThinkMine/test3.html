@@ -1,0 +1,43 @@
+<html>
+<body width=2000 height=2000>
+	<canvas id="testcanvas" style="background: #d6e6f5; border-width : 0px;"></canvas>
+	<button id="testbtn" style="background: #d6e6f5; border-width : 0px; cursor : default; width:100;">Font Size : </button>
+	<script>
+		var maxWidth = 1000;
+		var maxHeight = 1000;
+		
+		var minWidth = 100;
+		var minHeight = 100;
+		
+		var curWidth = 100;
+		var curHeight = 100;
+		
+		var orientation = 1;
+		
+		var testcanvas = document.getElementById("testcanvas");
+		var testbtn = document.getElementById("testbtn");
+		
+		
+		setInterval(
+			function(){ 
+				
+				if(curWidth == maxWidth)
+					orientation = -1;
+				if(curWidth == minWidth)
+					orientation = 1;
+				
+				curWidth += orientation;
+				curHeight += orientation;			
+
+				
+				//testcanvas.setAttribute("style","width:"+ curWidth+"px");
+				//testcanvas.setAttribute("style","height:"+ curHeight+"px");
+				alert(curWidth);
+				//alert(testbtn.style);
+				alert(testbtn.style.width);
+				testbtn.setAttribute("style","width:"+ curWidth+"px");
+				testbtn.setAttribute("style","height:"+ curHeight+"px");
+			}, 1);
+	</script>
+</body>
+</html>

@@ -14,7 +14,7 @@ const tcpSocketIdDelimiter = "/";
 const nullCharValue = 0;
 
 
-const ROUTING_SERVER_ADDRESS = "127.0.0.1";
+const ROUTING_SERVER_ADDRESS = "210.100.239.227";
 const ROUTING_SERVER_PORT = 52272;
 
 const MAX_EVENT_LISTENERS = 0; //unlimited
@@ -107,7 +107,7 @@ var InternalCommunicationSocket = net.connect(ROUTING_SERVER_PORT, ROUTING_SERVE
 		
 		
 		RoomSocketIo = socketio.listen(RoomServer_SocketIO,{log:false});
-		RoomSocketIo.set('log level',1);
+		RoomSocketIo.set('log level',0);
 
 		RoomSocketIo.sockets.on('connection', function (socket){
 			socket.on('JoinReq',function(data){

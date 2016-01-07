@@ -2,6 +2,7 @@
 <html>
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>	
+	<script src="/ThinkMineCV/js/ThinkMineUILib.js"></script>
 	<script>
 		if(!window.ContentsModule)
 			ContentsModule = {};
@@ -20,13 +21,13 @@
 		addJavascript("/Common/Constants/ThinkMineConstants.js");
 		addJavascript("ContentsFrameConstants.js");
 		addJavascript("GridGen.js");
-		addJavascript("AdaptiveVideoPlayer/js/AdaptiveVideoPlayer.js");
+		addJavascript("/AdaptiveVideoPlayer/js/AdaptiveVideoPlayer.js");
 		addJavascript("/thirdparty/JavaScript-ID3-Reader/dist/id3-minimized.js");		
 		
 		var imgFileList;
 		var imgCurrentPage = 0;
 		
-		var mainVDPlayer
+		var mainVDPlayer;
 		var popupVDPlayer;
 		
 	</script>
@@ -304,20 +305,14 @@
 			};		
 			
 			ContentsModule.Interface.notifyLogInStatus("jdj9354",true);		
-
-			if(parent.ThinkMine){			
-				parent.ThinkMine.Lib.ExternalUI.TextContentsImageButton.attach("div_textcontents",parent.TmCanvas);
-				parent.ThinkMine.Lib.ExternalUI.ImageContentsImageButton.attach("div_imagecontents",parent.TmCanvas);
-				parent.ThinkMine.Lib.ExternalUI.MovieContentsImageButton.attach("div_moviecontents",parent.TmCanvas);
-				parent.ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("div_soundcontents",parent.TmCanvas);
-				parent.ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("div_webcontents",parent.TmCanvas);
-				
-				parent.ThinkMine.Lib.ExternalUI.TextContentsValueInput.attach("TextValue",parent.TmCanvas);
-				parent.ThinkMine.Lib.ExternalUI.ImageContentsValueInput.attach("ImageURL",parent.TmCanvas);
-				parent.ThinkMine.Lib.ExternalUI.MovieContentsValueInput.attach("VideoURL",parent.TmCanvas);
-				parent.ThinkMine.Lib.ExternalUI.SoundContentsValueInput.attach("SoundURL",parent.TmCanvas);
-				parent.ThinkMine.Lib.ExternalUI.WebPreviewContentsValueInput.attach("WebURL",parent.TmCanvas);
-			}			
+			
+			try{
+				if(ThinkMine){			
+					initExternalUIElem(parent.TMCanvas);
+				}
+			}
+			catch (e){
+			}
 			
 			gridGenerator = new GridPageGenerator(null,null);
 			
@@ -330,6 +325,21 @@
 			popupVDPlayer = new AdaptiveVideoPlayer.player(document.getElementById('popupVideoObj'),"");
 			
 		};
+		
+		document.initContentsFrameExternalUIElem = function(tmCanvas){
+			ThinkMine.Lib.ExternalUI.TextContentsImageButton.attach("div_textcontents",tmCanvas);
+			ThinkMine.Lib.ExternalUI.ImageContentsImageButton.attach("div_imagecontents",tmCanvas);
+			ThinkMine.Lib.ExternalUI.MovieContentsImageButton.attach("div_moviecontents",tmCanvas);
+			ThinkMine.Lib.ExternalUI.SoundContentsImageButton.attach("div_soundcontents",tmCanvas);
+			ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton.attach("div_webcontents",tmCanvas);
+			
+			ThinkMine.Lib.ExternalUI.TextContentsValueInput.attach("TextValue",tmCanvas);
+			ThinkMine.Lib.ExternalUI.ImageContentsValueInput.attach("ImageURL",tmCanvas);
+			ThinkMine.Lib.ExternalUI.MovieContentsValueInput.attach("VideoURL",tmCanvas);
+			ThinkMine.Lib.ExternalUI.SoundContentsValueInput.attach("SoundURL",tmCanvas);
+			ThinkMine.Lib.ExternalUI.WebPreviewContentsValueInput.attach("WebURL",tmCanvas);			
+		}
+		
 		function on_reqImgFileList(){
 			var url = "http://"+CONTENTS_SERVER_ADDR+":"+CONTENTS_SERVER_PORT+"/list";
 			var params = "CT="+ContentsModule.Interface.Val_CT+"&UI="+ContentsModule.Interface.Val_UI;	

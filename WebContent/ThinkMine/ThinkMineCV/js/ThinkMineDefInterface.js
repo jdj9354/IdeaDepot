@@ -122,6 +122,9 @@ function DrawingCCInterface(backBoneType){
 	this.moveTextContents = function(x, y, z, mindObjectId){
 		
 	};
+	this.resizeTextContents = function(info,mindObjectId){
+		
+	};
 	this.changeFillingOfTextContents = function(filling, mindObjectId){
 		
 	};
@@ -138,6 +141,9 @@ function DrawingCCInterface(backBoneType){
 	this.moveImageContents = function(x, y, z, mindObjectId){
 		
 	};
+	this.resizeImageContents = function(info,mindObjectId){
+		
+	};
 	this.changeOpacityOfImageContents = function(opacity, mindObjectId){
 		
 	};
@@ -151,9 +157,28 @@ function DrawingCCInterface(backBoneType){
 	this.moveMovieContents = function(x, y, z, mindObjectId){
 		
 	};
+	this.resizeMovieContents = function(info,mindObjectId){
+		
+	};
 	this.changeOpacityOfMovieContents = function(opacity, mindObjectId){
 		
 	};
+	
+	this.drawSoundContents = function(x, y, z, info, value, mindObjectId){
+		
+	};
+	this.eraseSoundContents = function(mindObjectId){
+		
+	};
+	this.moveSoundContents = function(x, y, z, mindObjectId){
+		
+	};
+	this.resizeSoundContents = function(info,mindObjectId){
+		
+	};
+	this.changeOpacityOfSoundContents = function(opacity, mindObjectId){
+		
+	};	
 	
 	this.drawWebPreviewContents = function(x, y, z, info, value, mindObjectId){
 		
@@ -162,6 +187,9 @@ function DrawingCCInterface(backBoneType){
 		
 	};
 	this.moveWebPreviewContents = function(x, y, z, mindObjectId){
+		
+	};
+	this.resizeWebPreviewContents = function(info,mindObjectId){
 		
 	};
 	this.changeOpacityOfWebPreviewContents = function(opacity, mindObjectId){

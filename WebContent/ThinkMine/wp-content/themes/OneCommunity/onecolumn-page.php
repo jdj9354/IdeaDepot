@@ -164,7 +164,7 @@ color : #3a6163; }
 								<img src="/ThinkMineCV/res/PolygonShape.png" id="PolygonShapeImage" width='50' height='50' />
 							</div>
 						</div>
-						<iframe width='800px' height='1000px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
+						<iframe id="contentsFrame" width='800px' height='1000px' scrolling="no" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/contents/ContentsFrame.html"></iframe>
 					</div>									
 				</div>
 			</div>
@@ -490,7 +490,7 @@ color : #3a6163; }
 					var drawingCC_Interface = new PaperJS_DrawingCCInterface("PaperJS",'tmCanvas');			
 
 					TMCanvas = new ThinkMineCanvas(drawingCC_Interface);
-					
+					document.TMCanvas = TMCanvas;
 					
 					wrappedEventHandler = new WrappedPaperJSEventHandler();
 					wrappedEventHandler.setOnMouseDown(function(event){					
@@ -600,7 +600,11 @@ color : #3a6163; }
 					ThinkMine.Lib.ExternalUI.StarImageButton.attach("StarShapeImage",TMCanvas);
 					ThinkMine.Lib.ExternalUI.PolygonImageButton.attach("PolygonShapeImage",TMCanvas);			
 
-			
+					var contentsFrame = document.getElementById('contentsFrame');
+					var innerDoc = (contentsFrame.contentDocument) ? contentsFrame.contentDocument : contentsFrame.contentWindow.document;
+
+					
+					innerDoc.initContentsFrameExternalUIElem(TMCanvas);
 					
 					
 					initPaperJSMindMap(1000,600,wrappedEventHandler);

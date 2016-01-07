@@ -26,6 +26,7 @@ const RELATIVE_PATH_ANIMATION_WORKER = "/ThinkMineCV/js/AnimationWorker.js";
 
 
 addJavascript("/ThinkMineCV/js/paper-full.js");
+addJavascript("/AdaptiveVideoPlayer/js/AdaptiveVideoPlayer.js");
 //addJavascript("js/socket.io.js");
 addJavascript(RELATIVE_PATH_DRAWING_WORKER);
 addJavascript(RELATIVE_PATH_EVENT_PARSER_WORKER);
@@ -265,7 +266,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	var fSelectedShapeType = "CircleShape";
 	var fSelectedShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorFilling("#FF0000"),1.0);
 	var fSelectedContentsType = "TextContents";
-	var fSelectedContentsTypeDependentInfo = new TextContentsTypeDependentInfo("#FFFFFF",'Courier New','bold',25);
+	var fSelectedContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF"),200,50);
 	
 	//Outter Menu Selection related variables
 	
@@ -286,7 +287,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 									ContentsTypeEnum.WebPreview];
 									
 	var fMenuSelectedContents = fMenuAvailableContents[0];									
-	var fMenuInsertedCDI = null;
+	var fMenuInsertedCDI = new TextContentsTypeDependentInfo('Courier New','bold',25, new SimpleColorFilling("#FFFFFF"),200,50);
 	
 	
 	var fMenuAvailableFilling = [FillingTypeEnum.SimpleColor,
@@ -514,9 +515,15 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 	this.setMenuInsertedCDI = function(contentsDependentInfo){
 		fMenuInsertedCDI = contentsDependentInfo;
 	};
+	this.getMenuInsertedCDI = function(){
+		return fMenuInsertedCDI;
+	};
 	
 	this.setMenuInsertedCV = function(contentsValue){
 		fMenuInsertedCV = contentsValue;
+	};
+	this.getMenuInsertedCV = function(){
+		return fMenuInsertedCV;
 	};
 	
 	this.setMenuSelectedFilling = function(fillingIndex){
@@ -625,7 +632,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				var tempShapeTypeDependentInfo = new CircleShapeTypeDependentInfo(50,new SimpleColorFilling("#FF0000"),1.0);
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF"));
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF"),200,50);
 				
 				tempShape = new Shape(ShapeTypeEnum.Circle,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"Ok!!!");
@@ -669,7 +676,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				var tempShapeTypeDependentInfo = new StarShapeTypeDependentInfo(5,200,100,new SimpleColorFilling("#0FEF1F"),1.0);
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#2FF1F3"));
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF"),200,50);
 				
 				tempShape = new Shape(ShapeTypeEnum.Star,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"This is a Star Shape");
@@ -681,7 +688,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				var tempShapeTypeDependentInfo = new PolygonShapeTypeDependentInfo(12,200,new SimpleColorFilling("#FF0F0F"));
 				
 				var tempContents;
-				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#2FF1F3"));
+				var tempContentsTypeDependentInfo = new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF"),200,50);
 				
 				tempShape = new Shape(ShapeTypeEnum.Polyon,tempShapeTypeDependentInfo);
 				tempContents = new Contents(ContentsTypeEnum.Text,tempContentsTypeDependentInfo,"This is a Polygon Shape");
@@ -1040,11 +1047,16 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					break;							
 				}
 				
+				fMenuInsertedCDI.fWidth = 8;
+				fMenuInsertedCDI.fHeight = 8;
+				
 				fVirtualMindObject = {fX : x,
 										fY : y,
 										fZ : z,
 										fShape:{fShapeType : fMenuSelectedShape,
-												fShapeTypeDependentInfo:fMenuInsertedSDI}};
+												fShapeTypeDependentInfo:fMenuInsertedSDI},
+										fContents:{fContentsType : fMenuSelectedContents,
+												fContentsTypeDependentInfo:fMenuInsertedCDI}};
 				
 				fAddEventStartPointX = x;
 				fAddEventStartPointY = y;
@@ -1057,7 +1069,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				fDrawingCCInterface["draw"+fMenuSelectedContents](x,y,z,fMenuInsertedCDI,fMenuInsertedCV,"virtual");
 				
 				fDrawingCCInterface["changeOpacityOf"+fMenuSelectedShape](0.5,"virtual");
-				fDrawingCCInterface["changeOpacityOf"+fMenuSelectedContents](0.5,"virtual");
+
 			}
 			else{
 
@@ -1110,8 +1122,7 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					
 					var newRadius = eDistance/2;
 
-					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fRadius = newRadius;
-					
+					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fRadius = newRadius;	
 					break;
 				case ShapeTypeEnum.Rectangle :
 					var xDiff = x - fAddEventStartPointX;
@@ -1123,11 +1134,8 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					newZ = (z + fAddEventStartPointZ)/2;
 					
 					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fWidth = xDiff>0?xDiff:-xDiff;
-					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fHeight = yDiff>0?yDiff:-yDiff;
-					
-						
-					break;
-					
+					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fHeight = yDiff>0?yDiff:-yDiff;					
+					break;					
 				case ShapeTypeEnum.Star :
 				
 					var xDiff = x - fAddEventStartPointX;
@@ -1173,6 +1181,10 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fFirstRadius = firstRadius > secondRadius ? newRadius : newRadius/fsRatio;
 					fVirtualMindObject.fShape.fShapeTypeDependentInfo.fSecondRadius = firstRadius > secondRadius ? newRadius*fsRatio : newRadius;
 					
+					var smallerRadius = fVirtualMindObject.fShape.fShapeTypeDependentInfo.fFirstRadius 
+										> fVirtualMindObject.fShape.fShapeTypeDependentInfo.fSecondRadius ?
+												fVirtualMindObject.fShape.fShapeTypeDependentInfo.fSecondRadius
+													: fVirtualMindObject.fShape.fShapeTypeDependentInfo.fFirstRadius ;
 					break;					
 					//fMenuInsertedSDI.fRadius = newRadius;					
 				}
@@ -1186,17 +1198,24 @@ function ThinkMineCanvas(userDefinedDrawingCCInterface){ //MindMap객체를 가지고 
 				
 				
 				var fillingType = fVirtualMindObject.fShape.fShapeTypeDependentInfo.fFilling.fFillType;
-				var changedShapeTypeDependentInfo = fVirtualMindObject.fShape.fShapeTypeDependentInfo;
+				var changedShapeTypeDependentInfo = fVirtualMindObject.fShape.fShapeTypeDependentInfo;				
 				
 				scaleFilling(fillingType, changedShapeTypeDependentInfo.fFilling, originalShapeTypeDependentInfo, changedShapeTypeDependentInfo, fVirtualMindObject);
+				scaleContents(fVirtualMindObject.fContents.fContentsType, fVirtualMindObject.fContents, originalShapeTypeDependentInfo, changedShapeTypeDependentInfo, fVirtualMindObject);	
+				
+				fMenuInsertedCDI = fVirtualMindObject.fContents.fContentsTypeDependentInfo;
+				
 								
 				fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
 										{fMindObjectId : "virtual",
 										fShape : {fShapeType : fMenuSelectedShape,
 													fShapeTypeDependentInfo : changedShapeTypeDependentInfo
+										},
+										fContents : {fContentsType : fVirtualMindObject.fContents.fContentsType,
+													fContentsTypeDependentInfo : fVirtualMindObject.fContents.fContentsTypeDependentInfo
 										}},
 										[]]);
-				
+
 				//fDrawingInterface["resize"+fMenuSelectedShape](fVirtualMindObject.fShape.fShapeTypeDependentInfo,"virtual");
 				//fDrawingInterface["move"+fMenuSelectedShape](x,y,z,"virtual");
 				//fDrawingInterface["move"+fMenuSelectedContents](x,y,z,"virtual");
@@ -1963,8 +1982,10 @@ function JobHandler(drawingObj){
 				fDrawingObj.pushNewJob([CODE_MIND_RESIZE_SHAPE,
 					{fMindObjectId : tempMindObject.fMindObjectId,
 					fShape : {fShapeType : tempShapeTypeForDrawing,
-								fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing
-					}},
+								fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing},
+					fContents : {fContentsType : tempContentsType,
+								fContentsTypeDependentInfo : tempContentsTypeDependentInfo}
+					},
 					[]]);
 				
 			}
@@ -2579,19 +2600,28 @@ console.log(now);
 			return;
 		else{
 			
-			var fillingType = fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo.fFilling.fFillType;
-			var originalShapeTypeDependentInfo = fMindMap.getMindObjectOnIndex(targetIndex).fShape.fShapeTypeDependentInfo;
+			var mindObject = fMindMap.getMindObjectOnIndex(targetIndex);
+			var fillingType = mindObject.fShape.fShapeTypeDependentInfo.fFilling.fFillType;
+			var originalShapeTypeDependentInfo = mindObject.fShape.fShapeTypeDependentInfo;
 			
 			scaleFilling(fillingType, tempShapeTypeDependentInfo.fFilling, originalShapeTypeDependentInfo, tempShapeTypeDependentInfo, fMindMap.getMindObjectOnIndex(targetIndex));
+			scaleContents(mindObject.fContents.fContentsType, mindObject.fContents, originalShapeTypeDependentInfo, tempShapeTypeDependentInfo, fMindMap.getMindObjectOnIndex(targetIndex));
 						
-			fMindMap.getMindObjectOnIndex(targetIndex).changeShape(new Shape(tempShapeType,tempShapeTypeDependentInfo));
+			mindObject.changeShape(new Shape(tempShapeType,tempShapeTypeDependentInfo));
 		}
 
 		var tempShapeTypeForDrawing = fDecoder.decodeShapeType(eventCode.ST);
 		var tempShapeTypeDependentInfoForDrawing = tempShapeTypeDependentInfo;
 		
+		var tempContentsTypeForDrawing = mindObject.fContents.fContentsType;
+		var tempContentsTypeDependentInfoForDrawing = mindObject.fContents.fContentsTypeDependentInfo;
+		
+		//From here
+		
 		var tempMindObjectForDrawing = {fShape : {fShapeType : ""+tempShapeTypeForDrawing,
 													fShapeTypeDependentInfo : tempShapeTypeDependentInfoForDrawing},
+										fContents : {fContentsType : ""+tempContentsTypeForDrawing,
+													fContentsTypeDependentInfo : tempContentsTypeDependentInfoForDrawing},
 										fMindObjectId : fMindMap.getMindObjectOnIndex(targetIndex).fMindObjectId						
 										};
 		
@@ -3530,6 +3560,8 @@ function DrawingObj(drawingCCInterface){
 																				mindObjectInfo.fMindObjectId);
 		fDrawingCCInterface["resize"+mindObjectInfo.fShape.fShapeType](mindObjectInfo.fShape.fShapeTypeDependentInfo,mindObjectInfo.fMindObjectId);
 		fDrawingCCInterface.syncCirclesOnShapeVertex(mindObjectInfo.fMindObjectId);		
+		
+		fDrawingCCInterface["resize"+mindObjectInfo.fContents.fContentsType](mindObjectInfo.fContents.fContentsTypeDependentInfo,mindObjectInfo.fMindObjectId);
 								
 		for(var j=0; j<movEdgeInfo.length; j++){
 			var connectedMindObj = compareIdValue(mindObjectInfo.fMindObjectId,movEdgeInfo[j].fFirstMindObject.fMindObjectId)?

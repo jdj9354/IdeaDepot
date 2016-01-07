@@ -646,9 +646,9 @@ ThinkMine.Lib.ExternalUI.CircleImageButton = new function(undefined){
 		}
 			
 		//Currently Test Code
-		fTmCanvas.setMenuSelectedContents(0);
-		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25, new SimpleColorFilling("#FFFFFF")));
-		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
+		//fTmCanvas.setMenuSelectedContents(0);
+		//fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25, new SimpleColorFilling("#FFFFFF")));
+		//fTmCanvas.setMenuInsertedCV("UI Interaction Test");
 		//Currently Test Code
 		
 	};
@@ -693,9 +693,9 @@ ThinkMine.Lib.ExternalUI.RectangleImageButton = new function(undefined){
 		}
 			
 		//Currently Test Code
-		fTmCanvas.setMenuSelectedContents(0);
-		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25, new SimpleColorFilling("#FFFFFF")));
-		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
+		//fTmCanvas.setMenuSelectedContents(0);
+		//fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25, new SimpleColorFilling("#FFFFFF")));
+		//fTmCanvas.setMenuInsertedCV("UI Interaction Test");
 		//Currently Test Code
 		
 	};
@@ -741,9 +741,9 @@ ThinkMine.Lib.ExternalUI.StarImageButton = new function(undefined){
 		}
 			
 		//Currently Test Code
-		fTmCanvas.setMenuSelectedContents(0);
-		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF")));
-		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
+		//fTmCanvas.setMenuSelectedContents(0);
+		//fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF")));
+		//fTmCanvas.setMenuInsertedCV("UI Interaction Test");
 		//Currently Test Code
 		
 	};
@@ -789,9 +789,9 @@ ThinkMine.Lib.ExternalUI.PolygonImageButton = new function(undefined){
 		}
 			
 		//Currently Test Code
-		fTmCanvas.setMenuSelectedContents(0);
-		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF")));
-		fTmCanvas.setMenuInsertedCV("UI Interaction Test");
+		//fTmCanvas.setMenuSelectedContents(0);
+		//fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25,new SimpleColorFilling("#FFFFFF")));
+		//fTmCanvas.setMenuInsertedCV("UI Interaction Test");
 		//Currently Test Code
 		
 	};
@@ -822,6 +822,8 @@ ThinkMine.Lib.ExternalUI.TextContentsImageButton = new function(undefined){
 	
 	this.sendInfoToTmCanvas = function(){		
 		fTmCanvas.setMenuSelectedContents(0);		
+		//need to apply ui interaction
+		fTmCanvas.setMenuInsertedCDI(new TextContentsTypeDependentInfo('Courier New','bold',25, fTmCanvas.setMenuInsertedCDI(),200,50));
 	};
 }
 
@@ -848,7 +850,9 @@ ThinkMine.Lib.ExternalUI.ImageContentsImageButton = new function(undefined){
 	};
 	
 	this.sendInfoToTmCanvas = function(){		
-		fTmCanvas.setMenuSelectedContents(1);		
+		fTmCanvas.setMenuSelectedContents(1);
+		//need to apply ui interaction
+		fTmCanvas.setMenuInsertedCDI(new ImageContentsTypeDependentInfo(0,0,1.0,fTmCanvas.setMenuInsertedCDI()));		
 	};
 }
 
@@ -875,7 +879,9 @@ ThinkMine.Lib.ExternalUI.MovieContentsImageButton = new function(undefined){
 	};
 	
 	this.sendInfoToTmCanvas = function(){		
-		fTmCanvas.setMenuSelectedContents(2);		
+		fTmCanvas.setMenuSelectedContents(2);	
+		//need to apply ui interaction		
+		fTmCanvas.setMenuInsertedCDI(new MovieContentsTypeDependentInfo(0,0,fTmCanvas.setMenuInsertedCDI()));		
 	};
 }
 
@@ -903,7 +909,9 @@ ThinkMine.Lib.ExternalUI.SoundContentsImageButton = new function(undefined){
 	};
 	
 	this.sendInfoToTmCanvas = function(){		
-		fTmCanvas.setMenuSelectedContents(3);		
+		fTmCanvas.setMenuSelectedContents(3);
+		//need to apply ui interaction
+		fTmCanvas.setMenuInsertedCDI(new SoundContentsTypeDependentInfo(fTmCanvas.setMenuInsertedCDI()));		
 	};
 }
 
@@ -930,7 +938,9 @@ ThinkMine.Lib.ExternalUI.WebPreviewContentsImageButton = new function(undefined)
 	};
 	
 	this.sendInfoToTmCanvas = function(){		
-		fTmCanvas.setMenuSelectedContents(4);		
+		fTmCanvas.setMenuSelectedContents(4);
+		//need to apply ui interaction
+		fTmCanvas.setMenuInsertedCDI(new WebPreviewContentsTypeDependentInfo(0,0, "1280X840",1.0,fTmCanvas.setMenuInsertedCDI()));		
 	};
 }
 
@@ -1133,7 +1143,7 @@ ThinkMine.Lib.ExternalUI.TextContentsValueInput = new function(undefined){
 			fInputElement.onclick = null;
 		}
 		
-		fInputName = imageButtonName;		
+		fInputName = inputName;		
 		fInputElement = document.getElementById(fInputName);
 		fTmCanvas = tmCanvas;
 		
@@ -1141,7 +1151,7 @@ ThinkMine.Lib.ExternalUI.TextContentsValueInput = new function(undefined){
 			console.log("There is no such fInputElement element " + fInputName);
 			return;
 		}
-		fInputElement.addEventListener("change", sendInfoToTmCanvas);		
+		fInputElement.addEventListener("change", this.sendInfoToTmCanvas);		
 	};
 	
 	this.sendInfoToTmCanvas = function(){		
@@ -1159,7 +1169,7 @@ ThinkMine.Lib.ExternalUI.ImageContentsValueInput = new function(undefined){
 			fInputElement.onclick = null;
 		}
 		
-		fInputName = imageButtonName;		
+		fInputName = inputName;		
 		fInputElement = document.getElementById(fInputName);
 		fTmCanvas = tmCanvas;
 		
@@ -1167,7 +1177,7 @@ ThinkMine.Lib.ExternalUI.ImageContentsValueInput = new function(undefined){
 			console.log("There is no such fInputElement element " + fInputName);
 			return;
 		}
-		fInputElement.addEventListener("change", sendInfoToTmCanvas);		
+		fInputElement.addEventListener("change", this.sendInfoToTmCanvas);		
 	};
 	
 	this.sendInfoToTmCanvas = function(){		
@@ -1185,7 +1195,7 @@ ThinkMine.Lib.ExternalUI.MovieContentsValueInput = new function(undefined){
 			fInputElement.onclick = null;
 		}
 		
-		fInputName = imageButtonName;		
+		fInputName = inputName;		
 		fInputElement = document.getElementById(fInputName);
 		fTmCanvas = tmCanvas;
 		
@@ -1193,7 +1203,7 @@ ThinkMine.Lib.ExternalUI.MovieContentsValueInput = new function(undefined){
 			console.log("There is no such fInputElement element " + fInputName);
 			return;
 		}
-		fInputElement.addEventListener("change", sendInfoToTmCanvas);		
+		fInputElement.addEventListener("change", this.sendInfoToTmCanvas);		
 	};
 	
 	this.sendInfoToTmCanvas = function(){		
@@ -1211,7 +1221,7 @@ ThinkMine.Lib.ExternalUI.SoundContentsValueInput = new function(undefined){
 			fInputElement.onclick = null;
 		}
 		
-		fInputName = imageButtonName;		
+		fInputName = inputName;		
 		fInputElement = document.getElementById(fInputName);
 		fTmCanvas = tmCanvas;
 		
@@ -1219,7 +1229,7 @@ ThinkMine.Lib.ExternalUI.SoundContentsValueInput = new function(undefined){
 			console.log("There is no such fInputElement element " + fInputName);
 			return;
 		}
-		fInputElement.addEventListener("change", sendInfoToTmCanvas);		
+		fInputElement.addEventListener("change", this.sendInfoToTmCanvas);		
 	};
 	
 	this.sendInfoToTmCanvas = function(){		
@@ -1237,7 +1247,7 @@ ThinkMine.Lib.ExternalUI.WebPreviewContentsValueInput = new function(undefined){
 			fInputElement.onclick = null;
 		}
 		
-		fInputName = imageButtonName;		
+		fInputName = inputName;		
 		fInputElement = document.getElementById(fInputName);
 		fTmCanvas = tmCanvas;
 		
@@ -1245,7 +1255,7 @@ ThinkMine.Lib.ExternalUI.WebPreviewContentsValueInput = new function(undefined){
 			console.log("There is no such fInputElement element " + fInputName);
 			return;
 		}
-		fInputElement.addEventListener("change", sendInfoToTmCanvas);		
+		fInputElement.addEventListener("change", this.sendInfoToTmCanvas);		
 	};
 	
 	this.sendInfoToTmCanvas = function(){		

@@ -665,10 +665,14 @@ function Contents(contentsType, contentsTypeDependentInfo, value){
 
 function ContentsTypeDependentInfo(){
 	this.fFilling;
+	this.fWidth;
+	this.fHeight;
 }
 
-function TextContentsTypeDependentInfo(fontFamily, fontWeight, fontSize, filling){
+function TextContentsTypeDependentInfo(fontFamily,fontWeight, fontSize, filling, width,height){
 	this.fFilling = filling;
+	this.fWidth = width;
+	this.fHeight = height;
 	this.fFontFamily = fontFamily;
 	this.fFontWeight = fontWeight;
 	this.fFontSize = fontSize;
@@ -696,6 +700,13 @@ function MovieContentsTypeDependentInfo(width, height, filling){
 
 MovieContentsTypeDependentInfo.prototype = new ContentsTypeDependentInfo();
 MovieContentsTypeDependentInfo.constructor = MovieContentsTypeDependentInfo;
+
+function SoundContentsTypeDependentInfo(filling){
+	this.fFilling = filling;
+}
+
+SoundContentsTypeDependentInfo.prototype = new ContentsTypeDependentInfo();
+SoundContentsTypeDependentInfo.constructor = SoundContentsTypeDependentInfo;
 
 function WebPreviewContentsTypeDependentInfo(width, height, resolution, opacity, filling){
 	this.fFilling = filling;
@@ -734,6 +745,9 @@ var genObjTypeDependentInfo = function(type, info){
 		break;
 	case ContentsTypeEnum.Image :
 		ret = new ImageContentsTypeDependentInfo();
+		break;
+	case ContentsTypeEnum.Sound :
+		ret = new SoundContentsTypeDependentInfo();
 		break;
 	case ContentsTypeEnum.Movie :
 		ret = new MovieContentsTypeDependentInfo();
@@ -912,6 +926,34 @@ var scaleFilling = function(fillingType, toBeScaledFilling, originalSDI, resized
 
 }
 
+var scaleContents = function(contentsType, toBeScaledContents, originalSDI, resizedSDI, mindObject){	
+	
+	switch(contentsType){
+	case ContentsTypeEnum.Text :		
+	case ContentsTypeEnum.Image :		
+	case ContentsTypeEnum.Movie :		
+	case ContentsTypeEnum.Sound :		
+	case ContentsTypeEnum.WebPreview :
+		var scaledHalfCoord = getScaledXYZFromCenter(originalSDI, 
+														resizedSDI, 
+														mindObject.fShape.fShapeType, 
+														[mindObject.fX, mindObject.fY, mindObject.fZ],
+														[mindObject.fX + toBeScaledContents.fContentsTypeDependentInfo.fWidth/2,
+														mindObject.fY + toBeScaledContents.fContentsTypeDependentInfo.fHeight/2,
+														mindObject.fZ + 0]);
+		console.log("scaledHalfCoord : " + scaledHalfCoord[0]);
+		console.log("scaledHalfCoord : " + scaledHalfCoord[1]);
+		
+		toBeScaledContents.fContentsTypeDependentInfo.fWidth = Math.abs(mindObject.fX - scaledHalfCoord[0])*2;
+		toBeScaledContents.fContentsTypeDependentInfo.fHeight = Math.abs(mindObject.fY - scaledHalfCoord[1])*2;		
+		console.log(toBeScaledContents.fContentsTypeDependentInfo.fWidth);
+		console.log(toBeScaledContents.fContentsTypeDependentInfo.fHeight);
+		break;
+		
+	}	
+	return;
+}
+
 
 if(typeof module != "undefined"){
 	if(module != null){
@@ -949,10 +991,12 @@ if(typeof module != "undefined"){
 		module.exports.TextContentsTypeDependentInfo = TextContentsTypeDependentInfo;
 		module.exports.ImageContentsTypeDependentInfo = ImageContentsTypeDependentInfo;
 		module.exports.MovieContentsTypeDependentInfo = MovieContentsTypeDependentInfo;
+		module.exports.SoundContentsTypeDependentInfo = SoundContentsTypeDependentInfo;
 		module.exports.WebPreviewContentsTypeDependentInfo = WebPreviewContentsTypeDependentInfo;		
 		
 		module.exports.genObjTypeDependentInfo = genObjTypeDependentInfo;
 		module.exports.getScaledXYZFromCenter = getScaledXYZFromCenter;
 		module.exports.scaleFilling = scaleFilling;
+		module.exports.scaleContents = scaleContents;
 	}
 }

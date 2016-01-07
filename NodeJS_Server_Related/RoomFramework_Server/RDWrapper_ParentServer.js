@@ -30,7 +30,6 @@ var dbHelperProcess = childProcessModule.fork(__dirname + '/'+DB_HELPER_JS_NAME)
 var SocketIORoutingServer = net.createServer(function(conn){	
 	console.log(conn.remoteFamily);
 	console.log("RDWrapper Child Server Connected : " + conn.remoteAddress);
-	console.log(conn.localPort);
 	
 	conn.on('end', function() {
 		for(var j=0; j < RDWrapperChildServers.length; j++){
@@ -78,7 +77,7 @@ var SocketIORoutingServer = net.createServer(function(conn){
 								roomList : [],								
 								clientCount : 0
 							};
-		
+
 				RDWrapperChildServers.push(newRDWrapperChildServer);
 				
 				console.log("Child Server ("+conn.remoteAddress+") has started SocketIo Server on port : " + webSocketPort +", TCP Server on port : " + tcpSocketPort);
@@ -188,7 +187,7 @@ var SocketIORoutingServer = net.createServer(function(conn){
 		}
 		//Need to handle close event
 		
-		console.log(conn);
+	//	console.log(conn);
 		console.log('close');
 	});
 });

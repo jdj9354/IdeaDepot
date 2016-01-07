@@ -32,5 +32,4 @@ public class Constants {
 	public static final String HBASE_MASTER_ADDR = "127.0.0.1";
 	public static final String[] HBASE_ZK_QUORUM_ADDRS = {"127.0.0.1"};
 	public static final String HBASE_ZK_CLIENT_PORT = "2181";	
-
 }

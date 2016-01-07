@@ -23,12 +23,13 @@ const Nested_SocketCommuDelimiter_1 = ",";
 const Nested_SocketCommuDelimiter_2 = "/";
 const Nested_SocketCommuDelimiter_3 = ".";
 
+const CONTENTS_SHAPE_RATIO = 0.8;
 
 const DB_HELPER_JS_NAME = "ThinkMineDBHelper.js";
 const THINK_MINE_MAIN_PAGE_NAME = "ThinkMine_MainPage_DEV.html";
 const THINK_MINE_MIND_MAP_PAGE_NAME = "ThinkMine_MindMapPage_DEV.html";
 
-const THINK_MINE_RDWRAPPER_PARENT_SERVER_ADDR = "127.0.0.1";
+const THINK_MINE_RDWRAPPER_PARENT_SERVER_ADDR = "210.100.239.227";
 const THINK_MINE_RDWRAPPER_PARENT_SOCKET_IO_SERVER_PORT = 52274;
 
 const THINK_MINE_WEB_SERVER_ADDR = "210.100.239.227";
@@ -65,6 +66,7 @@ if(typeof module != "undefined"){
 		module.exports.Nested_SocketCommuDelimiter_2 = Nested_SocketCommuDelimiter_2;
 		module.exports.Nested_SocketCommuDelimiter_3 = Nested_SocketCommuDelimiter_3;
 
+		module.exports.CONTENTS_SHAPE_RATIO = CONTENTS_SHAPE_RATIO;
 
 		module.exports.DB_HELPER_JS_NAME = DB_HELPER_JS_NAME;
 		module.exports.THINK_MINE_MAIN_PAGE_NAME = THINK_MINE_MAIN_PAGE_NAME;
